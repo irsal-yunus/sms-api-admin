@@ -1,0 +1,16 @@
+Change an administrator account
+
+
+Usage: php [php-options] admin-passwd.php --user=<admin name> --set=<new password>
+       php [php-options] admin-passwd.php --help
+
+
+Parameters:
+  --user=<admin name>            The administrator user name
+  --set=<new password>           The administrator new password
+  --help                         Display this help
+
+
+
+Example:
+  php -q admin-passwd.php --user=adminA --set=aNewPassWord

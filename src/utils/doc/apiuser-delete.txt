@@ -1,0 +1,35 @@
+Delete API user record and create backup of deleted files
+Affected tables are: USER, SENDER, USER_IP, VIRTUAL_NUMBER
+
+May also affect these tables (depends on options): SMS_DISPATCHER_SERVER,
+REPLY_SMS, USER_MESSAGE_STATUS
+
+Usage: php [php-options] apiuser-delete.php --user=<username> --client=<client ID>
+       php [php-options] apiuser-delete.php --user=<username> --client=<client ID> [OPTIONS]
+       php [php-options] apiuser-delete.php --help
+
+
+Parameters:
+  --user=<username>              The API user name
+  --client=<client ID>           The API user's clientID
+  --confirm[=true|false]         Prompt for confirmation (true) or ask no question (false)
+                                 The default is true.
+  --test[=true|false]            Do a simulation (don't commit any transactions)
+                                 The default is true.
+
+Delete Options:
+  --delete-replysms              Also delete associated records in REPLY_SMS
+  --delete-smsdispatcher         Also delete associated records in SMS_DISPATCHER
+  --delete-messagestatus         Also delete associated records in USER_MESSAGE_STATUS.
+                                 Require option --delete-smsdispatcher
+  --delete-all                   Implies --delete-replysms, --delete-smsdispatcher,
+                                 --delete-messagestatus
+
+Backup Options:
+  --backup-file=<backup file>    Create backup as <backup file>
+  --no-backup                    Do not create backup
+  --help                         Display this help
+
+
+Example:
+  php -q apiuser-delete.php --user=userA --client=95 --backup-file=userdata-backup.tar.gz

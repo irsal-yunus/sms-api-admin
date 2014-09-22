@@ -1,0 +1,6 @@
+List registered client in database
+
+Usage: php [php-options] client-list.php --user=<username>
+       php [php-options] client-list.php --help
+
+  --help                   Display this help

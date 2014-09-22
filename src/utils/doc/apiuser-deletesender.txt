@@ -1,0 +1,23 @@
+Delete API user sender record
+
+
+Usage: php [php-options] apiuser-deletesender.php --user=<username> --sender-name=<sender-name>
+       php [php-options] apiuser-deletesender.php --user=<username> --sender-name=<sender-name> [OPTIONS]
+       php [php-options] apiuser-deletesender.php --help
+
+
+Parameters:
+  --user=<username>              The API user name
+  --sender-name=<sender-name>    The API user's sender name
+  --confirm[=true|false]         Prompt for confirmation (true) or ask no question (false)
+                                 The default is true.
+  --test[=true|false]            Do a simulation (don't commit any transactions)
+                                 The default is true
+
+Backup Options:
+  --backup-file=<backup file>    Create backup as <backup file>
+  --no-backup                    Do not create backup
+  --help                         Display this help
+
+Example:
+  php -q apiuser-deletesender.php --user=userA --sender-name=1rstWAP --backup-file=senderdata-backup.tar.gz

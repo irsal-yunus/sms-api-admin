@@ -1,0 +1,6 @@
+List all administrators accounts
+
+Usage: php [php-options] admin-list.php --user=<username>
+       php [php-options] admin-list.php --help
+
+  --help                   Display this help

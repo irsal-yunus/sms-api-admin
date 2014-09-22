@@ -1,0 +1,30 @@
+Edit an administrator account
+
+
+Usage: php [php-options] admin-edit.php --user=<admin name> [CHANGES] [OPTIONS]
+       php [php-options] admin-edit.php --help
+
+
+Parameters:
+  --user=<admin name>            The administrator user name
+  --test[=true|false]            Do a simulation (don't commit any transactions)
+                                 The default is true.
+  --help                         Display this help
+
+Change Options:
+  --change-name                  Change account user name
+                                 When this option is enabled, application prompt for new user name
+                                 Allowable characters : A-za-z0-9_
+                                 Length : 3 - 16
+  --change-displayname           Change account displayed name
+                                 When this option is enabled, application prompt for new display name
+                                 Length : 1 - 32, can not only empty string or spaces
+  --change-login                 Change login permission
+                                 When this option is enabled, application prompt for account's login permission
+  --change-all                   Change all
+                                 Overrides --change-name, --change-displayname, --change-login
+
+
+
+Example:
+  php -q admin-edit.php --user=adminA --change-all

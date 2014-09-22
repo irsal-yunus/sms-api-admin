@@ -1,0 +1,1 @@
+<img src="skin/images/welcome-bg.jpg" class="float-centre"/>

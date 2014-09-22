@@ -1,0 +1,1 @@
+Welcome <strong>{$welcomeName}</strong>,

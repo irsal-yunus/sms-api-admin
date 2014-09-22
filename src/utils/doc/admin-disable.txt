@@ -1,0 +1,7 @@
+Disable or ban an user from login to admin application
+
+Usage: php [php-options] admin-disable.php --user=<username>
+       php [php-options] admin-disable.php --help
+
+  --user=<username>        The admin user name
+  --help                   Display this help

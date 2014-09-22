@@ -1,0 +1,34 @@
+Delete API user sender record
+
+
+Usage: php [php-options] credit-deletehistory.php
+       php [php-options] credit-deletehistory.php [OPTIONS]
+       php [php-options] credit-deletehistory.php --help
+
+
+Parameters:
+  --user=<username>              The API user name
+  --sender-name=<sender-name>    The API user's sender name
+  --confirm[=true|false]         Prompt for confirmation (true) or ask no question (false)
+                                 The default is true.
+  --test[=true|false]            Do a simulation (don't commit any transactions)
+                                 The default is true
+
+Filter Options:
+  --user=<user name>             Only record with user name = <user name>
+  --date-from=<start date>       Only record with created date >= <start date>
+                                 Date is in format: 2010-01-30
+  --date-end=<end date>          Only record with created date <= <end date>
+                                 Date is in format: 2010-01-30
+
+Backup Options:
+  --backup-file=<backup file>    Create backup as <backup file>
+  --no-backup                    Do not create backup
+  --help                         Display this help
+
+Example:
+  Delete all records
+  php -q credit-deletehistory.php --user=userA --date-to="2010-08-30" --backup-file=history-backup.tar.gz
+
+  Delete records of user userA until date 30 August 2010
+  php -q credit-deletehistory.php --user=userA --date-to="2010-08-30" --backup-file=history-backup.tar.gz

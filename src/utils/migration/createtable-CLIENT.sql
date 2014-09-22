@@ -1,0 +1,56 @@
+-- phpMyAdmin SQL Dump
+-- version 3.3.7
+-- http://www.phpmyadmin.net
+--
+-- Host: 10.32.6.242:3306
+-- Generation Time: Oct 08, 2010 at 11:00 AM
+-- Server version: 5.0.77
+-- PHP Version: 5.2.5
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+--
+-- Database: `SMS_API_V22`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CLIENT`
+--
+
+DROP TABLE IF EXISTS `CLIENT`;
+CREATE TABLE `CLIENT` (
+  `CLIENT_ID` int(11) NOT NULL auto_increment,
+  `COMPANY_NAME` varchar(32) NOT NULL,
+  `COMPANY_URL` varchar(50) NOT NULL default '',
+  `COUNTRY_CODE` varchar(3) NOT NULL,
+  `CONTACT_NAME` varchar(32) NOT NULL,
+  `CONTACT_EMAIL` varchar(32) NOT NULL default '',
+  `CONTACT_PHONE` varchar(32) NOT NULL default '',
+  `CREATED_DATE` datetime NOT NULL,
+  `UPDATED_DATE` datetime default NULL,
+  `CREATED_BY` int(11) NOT NULL,
+  `UPDATED_BY` int(11) default NULL,
+  PRIMARY KEY  (`CLIENT_ID`),
+  KEY `CREATED_BY` (`CREATED_BY`),
+  KEY `UPDATED_BY` (`UPDATED_BY`),
+  KEY `COUNTRY_CODE` (`COUNTRY_CODE`),
+  KEY `COMPANY_NAME` (`COMPANY_NAME`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+--
+-- Constraints for table `CLIENT`
+--
+ALTER TABLE `CLIENT`
+  ADD CONSTRAINT `CLIENT_COUNTRY_CODE` FOREIGN KEY (`COUNTRY_CODE`) REFERENCES `COUNTRY` (`COUNTRY_CODE`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  ADD CONSTRAINT `CLIENT_CREATED_BY` FOREIGN KEY (`CREATED_BY`) REFERENCES `ADMIN` (`ADMIN_ID`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  ADD CONSTRAINT `CLIENT_UPDATED_BY` FOREIGN KEY (`UPDATED_BY`) REFERENCES `ADMIN` (`ADMIN_ID`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+--
+-- Dump data
+--
+INSERT INTO `CLIENT` (`CLIENT_ID`, `COMPANY_NAME`, `COMPANY_URL`, `COUNTRY_CODE`, `CONTACT_NAME`, `CONTACT_EMAIL`, `CONTACT_PHONE`, `CREATED_DATE`, `UPDATED_DATE`, `CREATED_BY`, `UPDATED_BY`) VALUES
+(1, 'Migration', 'http://www.1rstwap.com', 'IDN', 'Operation Dept.', 'ops@1rstwap.com', '', NOW(), NULL, 0, NULL);
+
+update `USER` set CLIENT_ID=1;

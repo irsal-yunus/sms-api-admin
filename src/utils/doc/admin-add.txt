@@ -1,0 +1,10 @@
+Add a new admin user
+
+Usage: php [php-options] admin-add.php --user=<username> --pass=<password> --name=<display name>
+       php [php-options] admin-add.php --help
+
+  --user=<username>        Set username
+  --pass=<password>        Set the password with <password>
+  --name=<real name>       Set user's real name
+
+  --help                   Display this help

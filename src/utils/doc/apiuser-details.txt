@@ -1,0 +1,7 @@
+Show details about an API user
+
+Usage: php [php-options] apiuser-details.php --user=<username>
+       php [php-options] apiuser-details.php --help
+
+  --user=<username>        The API user name
+  --help                   Display this help

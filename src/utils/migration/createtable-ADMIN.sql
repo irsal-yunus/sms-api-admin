@@ -1,0 +1,33 @@
+-- phpMyAdmin SQL Dump
+-- version 3.3.7
+-- http://www.phpmyadmin.net
+--
+-- Host: 10.32.6.242:3306
+-- Generation Time: Oct 08, 2010 at 10:37 AM
+-- Server version: 5.0.77
+-- PHP Version: 5.2.5
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+--
+-- Database: `SMS_API_V22`
+--
+
+CREATE TABLE IF NOT EXISTS `ADMIN` (
+  `ADMIN_ID` int(11) NOT NULL auto_increment,
+  `ADMIN_USERNAME` varchar(16) NOT NULL,
+  `ADMIN_PASSWORD` varchar(40) NOT NULL,
+  `ADMIN_DISPLAYNAME` varchar(32) NOT NULL,
+  `LOGIN_ENABLED` bit(1) NOT NULL,
+  PRIMARY KEY  (`ADMIN_ID`),
+  UNIQUE KEY `ADMIN_USERNAME` (`ADMIN_USERNAME`),
+  KEY `LOGIN_ENABLED` (`LOGIN_ENABLED`),
+  KEY `ADMIN_USERPASSWORD_CHECK` (`ADMIN_USERNAME`,`ADMIN_PASSWORD`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
+
+--
+-- Dumping data for table `ADMIN`
+--
+
+INSERT INTO `ADMIN` (`ADMIN_ID`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `ADMIN_DISPLAYNAME`, `LOGIN_ENABLED`) VALUES
+	('0', 'system', SHA1('ZY9yzty2YBDaaVtB'), 'System', b'0');

@@ -1,0 +1,8 @@
+Change client ID of an SMS API user
+
+Usage: php [php-options] apiuser-setclientid.php --user=<username>
+       php [php-options] apiuser-setclientid.php --help
+
+  --user=<username>        The API user name
+  --client=<client ID>     New client ID
+  --help                   Display this help

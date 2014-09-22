@@ -1,0 +1,7 @@
+Show details about an admin user
+
+Usage: php [php-options] admin-details.php --user=<username>
+       php [php-options] admin-details.php --help
+
+  --user=<username>        The admin user name
+  --help                   Display this help

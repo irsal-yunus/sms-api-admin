@@ -1,0 +1,7 @@
+Enable an user to login to admin application
+
+Usage: php [php-options] admin-enable.php --user=<username>
+       php [php-options] admin-enable.php --help
+
+  --user=<username>        The admin user name
+  --help                   Display this help
