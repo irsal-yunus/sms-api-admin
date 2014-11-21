@@ -100,7 +100,7 @@ $app.form.openAutoDialog = function(serviceName, serviceArgs,activityTitle,dialo
 	} catch (ex) {
 		$1.error("[$app.openAutoDialog] Error.",ex);
 	}
-}
+};
 /**
  * Open a dialogue and load the content from an app service
  *
@@ -126,13 +126,47 @@ $app.form.openDialog = function(serviceName,data,complete,dialogOptions){
 	}
 };
 
-$app.form.closeDialog = function(){
+$app.form.showExtDialog = function(serviceName, data, complete,dialog) {
 	try {
-		if(!dialogForm.dialog('isOpen'))
+                if (dialog.length < 1) {
+                    $('#btnCobrander').after('<div style="display: none;" class="containerDialog" title="Select Cobrander ID"></div>');
+                    dialog = $('.containerDialog');
+                    var over = $('.ui-widget-overlay');
+                    if (over.length > 1) {
+                    $('body').find('#overDialogExt').remove();
+                    }
+                    $('body').append('<div id="overDialogExt" class="ui-widget-overlay" style="z-index: 1001;"></div>');
+                }
+                $app.content(serviceName, data, complete, dialog);
+            } catch (ex) {
+                $1.error("[$app.form.openDialog] Error.", ex);
+            }
+        };
+
+$app.form.hideDialog = function() {
+            try {
+                dialogForm.dialog('close');
+            } catch (ex) {
+                $1.error("[$app.form.closeDialog] Error.", ex);
+            }
+        };
+
+$app.form.showDialog = function() {
+            try {
+                dialogForm.dialog('open');
+            } catch (ex) {
+                $1.error("[$app.form.closeDialog] Error.", ex);
+            }
+        };
+
+$app.form.closeDialog = function() {
+            try {
+                if (!dialogForm.dialog('isOpen'))
 			throw 'Dialog was not opened';
 		dialogForm
 			.html('')
 			.dialog('close');
+                $('body').find('#overDialogExt').remove();
 		return this;
 	} catch (ex) {
 		$1.error("[$app.form.closeDialog] Error.",ex);

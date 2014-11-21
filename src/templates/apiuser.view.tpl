@@ -14,7 +14,7 @@
 			<dl class="admin-definitions">
 				<dt>Username</dt><dd>{$details.userName}</dd>
 				<dt>Client Company</dt><dd><a href="#">{$details.clientCompanyName}</a></dd>
-				<dt>Cobrander ID</dt><dd>{$details.cobranderID}</dd>
+				<dt>Cobrander ID (User)</dt><dd>{$details.cobranderID}</dd>
 				<dt>Status</dt><dd>{$details.statusName}</dd>
 				<dt>Status Delivery</dt><dd>{$details.statusDeliveryStatusName}</dd>
 				<dt>Delivery URL</dt><dd>{$details.statusDeliveryUrl}</dd>
@@ -47,7 +47,8 @@
 						<th class="zebra-odd">Sender Name</th>
 						<th class="zebra-even">Range Start</th>
 						<th class="zebra-odd">Range End</th>
-						<th class="zebra-even">Status</th>
+                                                <th class="zebra-even">CobranderId</th>
+						<th class="zebra-odd">Status</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -56,6 +57,7 @@
 						<td class="type-text">{$senderID[sender].senderName}</td>
 						<td class="type-phone">{$senderID[sender].rangeStart}</td>
 						<td class="type-phone">{$senderID[sender].rangeEnd}</td>
+                                                <td class="type-text">{$senderID[sender].cobranderId}</td>
 						<td class="type-status">{$senderID[sender].senderStatusName}</td>
 					</tr>
 					{/section}

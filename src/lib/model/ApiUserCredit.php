@@ -28,7 +28,8 @@ class ApiUserCredit extends ApiBaseModel{
 
 	public function getTransactionHistory($userID){
 		try {
-			if(!$this->apiuser->checkExistence($userID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (!$this->apiuser->checkExistence($userID))
 				throw new Exception('User not found!');
 			$query = "select
 					c.CREDIT_TRANSACTION_ID as creditTransactionID,
@@ -56,11 +57,11 @@ class ApiUserCredit extends ApiBaseModel{
 					left join ADMIN as a2 on c.UPDATED_BY=a2.ADMIN_ID
 				where c.USER_ID=:userID
 				order by c.CREATED_DATE desc";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->execute();
-
-			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $getHistory = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $getHistory;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception('Query error');
@@ -74,6 +75,7 @@ class ApiUserCredit extends ApiBaseModel{
 	}
 	public function getTransactionDetailsByIDOrRef($tranID, $tranRef=null){
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = "select
 					c.CREDIT_TRANSACTION_ID as creditTransactionID,
 					c.TRANSACTION_REF as transactionRef,
@@ -115,12 +117,14 @@ class ApiUserCredit extends ApiBaseModel{
 				throw new InvalidArgumentException("Missing transaction ID/Ref : $tranID/$tranRef");
 			}			
 
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(1, $key, $type);
 			$stmt->execute();
 			if(!$stmt->rowCount())
 				return array();
-			return $stmt->fetch(PDO::FETCH_ASSOC);
+            $getDetails = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $getDetails;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception('Query error');
@@ -129,14 +133,16 @@ class ApiUserCredit extends ApiBaseModel{
 
 	public function getUserCredit($userID){
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$this->apiuser->checkExistence($userID, true);
 			$query = "select CREDIT from USER where USER_ID=?";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(1, $userID, PDO::PARAM_INT);
 			$stmt->execute();
 			if(!$stmt->rowCount())
 				return 0;
-			return $stmt->fetchColumn(0);
+            $getUserCredit = $stmt->fetchColumn(0);
+            return $getUserCredit;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception('Query error');
@@ -148,8 +154,9 @@ class ApiUserCredit extends ApiBaseModel{
 	 * @param array $transaction
 	 * @return <type>
 	 */
-	public function topUp($userID, array $transaction){
-		try{
+    public function topUp($userID, array $transaction) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$this->apiuser->checkExistence($userID, true);
 			$rules = SmsApiAdmin::getConfig('transaction');
 			
@@ -215,7 +222,7 @@ class ApiUserCredit extends ApiBaseModel{
 			if($paymentMethod == '')
 				throw new Exception('Invalid payment method!');
 
-			$logStmt = $this->db->prepare($logQuery);
+            $logStmt = $db->prepare($logQuery);
 			$logStmt->bindValue(':transactionCredit', $transactionCredit, PDO::PARAM_INT);
 			$logStmt->bindValue(':transactionPrice', $transactionPrice, PDO::PARAM_STR);
 			$logStmt->bindValue(':transactionCurrency', $transactionCurrency, PDO::PARAM_STR);
@@ -226,18 +233,18 @@ class ApiUserCredit extends ApiBaseModel{
 			$logStmt->bindValue(':adminID', $adminID, PDO::PARAM_INT);
 			$logStmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 
-			$creditStmt = $this->db->prepare($creditQuery);
+            $creditStmt = $db->prepare($creditQuery);
 			$creditStmt->bindValue(':transactionCredit', $transactionCredit, PDO::PARAM_INT);
 			$creditStmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 
-			$this->db->beginTransaction();
-			try{
+            $db->beginTransaction();
+            try {
 				$logStmt->execute();
-				$transactionID=$this->db->lastInsertId();
+                $transactionID = $db->lastInsertId();
 				$creditStmt->execute();
-				$this->db->commit();
-			} catch(Exception $e){
-				$this->db->rollBack();
+                $db->commit();
+            } catch (Exception $e) {
+                $db->rollBack();
 				$this->logger->error("$e");
 				throw new Exception("Transaction has failed, query was rolled back");
 			}
@@ -248,8 +255,9 @@ class ApiUserCredit extends ApiBaseModel{
 		}
 	}
 
-	public function deduct($userID, array $transaction){
-		try{
+    public function deduct($userID, array $transaction) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$this->apiuser->checkExistence($userID, true);
 			$rules = SmsApiAdmin::getConfig('transaction');
 
@@ -288,7 +296,7 @@ class ApiUserCredit extends ApiBaseModel{
 			if($currentBalance < $transactionCredit)
 				throw new Exception("Can not deduct user credit more than current balance. Requested=$transactionCredit, balance=$currentBalance");
 
-			$logStmt = $this->db->prepare($logQuery);
+            $logStmt = $db->prepare($logQuery);
 			$logStmt->bindValue(':transactionCredit', -$transactionCredit, PDO::PARAM_INT);
 			$logStmt->bindValue(':transactionRemark', $transactionRemark, PDO::PARAM_STR);
 			$logStmt->bindValue(':transactionCurrency', $rules['defaultCurrency'], PDO::PARAM_STR);
@@ -296,18 +304,18 @@ class ApiUserCredit extends ApiBaseModel{
 			$logStmt->bindValue(':adminID', $adminID, PDO::PARAM_INT);
 			$logStmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 
-			$creditStmt = $this->db->prepare($creditQuery);
+            $creditStmt = $db->prepare($creditQuery);
 			$creditStmt->bindValue(':transactionCredit', $transactionCredit, PDO::PARAM_INT);
 			$creditStmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 
-			$this->db->beginTransaction();
-			try{
+            $db->beginTransaction();
+            try {
 				$logStmt->execute();
-				$transactionID=$this->db->lastInsertId();
+                $transactionID = $db->lastInsertId();
 				$creditStmt->execute();
-				$this->db->commit();
-			} catch(Exception $e){
-				$this->db->rollBack();
+                $db->commit();
+            } catch (Exception $e) {
+                $db->rollBack();
 				$this->logger->error("$e");
 				throw new Exception("Transaction has failed, query was rolled back");
 			}
@@ -318,8 +326,9 @@ class ApiUserCredit extends ApiBaseModel{
 		}
 	}
 
-	public function acknowledgePayment($tranID, array $payment){
-		try{
+    public function acknowledgePayment($tranID, array $payment) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$this->checkExistence($tranID, true);
 			if(empty($payment))
 				throw new InvalidArgumentException('No payment details');
@@ -343,21 +352,23 @@ class ApiUserCredit extends ApiBaseModel{
 						UPDATED_BY=:adminID,
 						UPDATED_DATE=now(),
 						$queryFields where CREDIT_TRANSACTION_ID=:tranID";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':tranID', $tranID, PDO::PARAM_INT);
 			$stmt->bindValue(':adminID', SmsApiAdmin::getCurrentUser()->getID(), PDO::PARAM_INT);
 			parent::bindDynamicValues($rules, $payment, $stmt);
 			$stmt->execute();
-			return $stmt->rowCount() > 0;
+            $rowCount = $stmt->rowCount() > 0;
+            return $rowCount;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception('Query error!');
 		}
 	}
 
-	public function updateTransaction($tranID, array $updates){
-		try{
-			if(!$this->checkIsTransactionEditable($tranID, true))
+    public function updateTransaction($tranID, array $updates) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (!$this->checkIsTransactionEditable($tranID, true))
 				throw Exception('Closed transaction is not editable!');
 			if(empty ($updates))
 				throw new Exception("Empty data");
@@ -371,12 +382,13 @@ class ApiUserCredit extends ApiBaseModel{
 			if(!$queryFields)
 				throw new Exception("No update field");
 			$query = "update CREDIT_TRANSACTION set UPDATED_BY=:adminID, UPDATED_DATE=now(), $queryFields where CREDIT_TRANSACTION_ID=:tranID";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':tranID', $tranID, PDO::PARAM_INT);
 			$stmt->bindValue(':adminID', SmsApiAdmin::getCurrentUser()->getID(), PDO::PARAM_INT);
 			parent::bindDynamicValues($rules, $updates, $stmt);
 			$stmt->execute();
-			return $stmt->rowCount() > 0;
+            $rowCount = $stmt->rowCount() > 0;
+            return $rowCount;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception('Query error!');
@@ -385,15 +397,17 @@ class ApiUserCredit extends ApiBaseModel{
 
 	public function  getRefOfTransactionID($tranID) {
 		try {
-			if(empty($tranID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($tranID))
 				throw new Exception("Invalid transaction ID ($tranID)");
 			$query = 'select TRANSACTION_REF from CREDIT_TRANSACTION where CREDIT_TRANSACTION_ID=?';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(1, $tranID, PDO::PARAM_INT);
 			$stmt->execute();
 			if($stmt->rowCount()<=0)
 				return null;
-			return $stmt->fetchColumn(0);
+            $getRef = $stmt->fetchColumn(0);
+            return $getRef;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception("Query error");
@@ -401,15 +415,17 @@ class ApiUserCredit extends ApiBaseModel{
 	}
 	public function  getIDOfTransactionRef($tranRef) {
 		try {
-			if(empty($tranRef))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($tranRef))
 				throw new Exception("Invalid transaction ID ($tranRef)");
 			$query = 'select CREDIT_TRANSACTION_ID from CREDIT_TRANSACTION where TRANSACTION_REF=?';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(1, $tranRef, PDO::PARAM_STR);
 			$stmt->execute();
 			if($stmt->rowCount()<=0)
 				return null;
-			return $stmt->fetchColumn(0);
+            $getId = $stmt->fetchColumn(0);
+            return $getId;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception("Query error");
@@ -417,13 +433,14 @@ class ApiUserCredit extends ApiBaseModel{
 	}
 	public function  checkExistence($tranID, $autoException=false) {
 		try {
-			if(empty($tranID)){
-				if($autoException)
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($tranID)) {
+                if ($autoException)
 					throw new Exception("Invalid transaction ID ($tranID)");
 				return false;
 			}
 			$query = 'select count(*) from CREDIT_TRANSACTION where CREDIT_TRANSACTION_ID=?';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(1, $tranID, PDO::PARAM_INT);
 			$stmt->execute();
 			if($stmt->fetchColumn(0) <= 0){
@@ -449,10 +466,11 @@ class ApiUserCredit extends ApiBaseModel{
 
 	public function checkIsTransactionEditable($tranID){
 		try {
-			if(empty($tranID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($tranID))
 				throw new Exception("Invalid transaction ID ($tranID)");
 			$query = 'select PAYMENT_ACK=1 from CREDIT_TRANSACTION where CREDIT_TRANSACTION_ID=?';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(1, $tranID, PDO::PARAM_INT);
 			$stmt->execute();
 			if($stmt->rowCount()<1)

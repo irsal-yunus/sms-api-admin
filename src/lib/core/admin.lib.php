@@ -64,9 +64,10 @@ final class SmsApiAdminLoginManager
 	 */
 	public function login($username, $password) {
 		try {
-			$db = SmsApiAdmin::getDB();
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$encPassword = self::encryptPassword($password);
-			$stmt = $db->prepare("select ADMIN_ID, LOGIN_ENABLED=1 as enabled from ADMIN where ADMIN_USERNAME=:username and ADMIN_PASSWORD=:password");
+            $query = "select ADMIN_ID, LOGIN_ENABLED=1 as enabled from ADMIN where ADMIN_USERNAME=:username and ADMIN_PASSWORD=:password";
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(":username", $username, PDO::PARAM_STR);
 			$stmt->bindValue(":password", $encPassword, PDO::PARAM_STR);
 			$stmt->execute();
@@ -207,7 +208,7 @@ final class SmsApiAdminUser
 	public function __construct($userID) {
 		try {
 			$this->logger = Logger::getLogger(__CLASS__);
-			$db = SmsApiAdmin::getDB();
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$stmt = $db->prepare("select ADMIN_ID, ADMIN_DISPLAYNAME, ADMIN_USERNAME, LOGIN_ENABLED=1 as loginPermission from ADMIN where ADMIN_ID=:adminID");
 			$stmt->bindValue(":adminID", $userID, PDO::PARAM_INT);
 			$stmt->execute();
@@ -335,7 +336,11 @@ class AppJsonService{
 	}
 }
 
-final class SmsApiAdmin{
+final class SmsApiAdmin {
+
+    const DB_SMSAPI = 'default';
+    const DB_COBRANDER = 'cobrander';
+
 	/**
 	 *
 	 * @var Logger
@@ -423,9 +428,12 @@ final class SmsApiAdmin{
 	 * @param string $conn Connection config name
 	 * @return PDO
 	 */
-	public static function getDB($conn='default'){
-		if(isset(self::$db[$conn])){
-			if(!(self::$db[$conn] instanceof PDO))
+    public static function getDB($conn) {
+        
+        if (isset(self::$db[$conn])) {
+            $conn = $conn ? self::DB_SMSAPI : self::DB_COBRANDER;
+//               self::$db[$conn] = self::$db[$conn]? self::DB_SMSAPI : self::DB_COBRANDER;
+            if (!(self::$db[$conn] instanceof PDO))
 				throw new RuntimeException('Broken cached database connection');
 			return self::$db[$conn];
 		}
