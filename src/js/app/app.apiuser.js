@@ -39,8 +39,8 @@ mod.createUser = function(clientID){
 		}
 		var title = 'User Registration';
 		$app.form.openAutoDialog(('apiuser.new'), regData, title, {
-			width: '45em',
-			height: 300
+			width: '40em',
+			height: 316
 		}, function(reply){
 			if(typeof reply.attachment.userID != 'undefined'){
 				$app.confirm("API User account has been created, do you want to edit the user details",
@@ -240,8 +240,8 @@ mod.addSender = function(userID){
 	try {
 		checkValidRecordID(userID);
 		$app.form.openAutoDialog(('apiuser.newSender'), {userID:userID}, 'Sender Identity Registration', {
-			width: '30em',
-			height: 250
+			width: '40em',
+			height: 254
 		}, function(reply){
 			mod.editUser(userID, 'sender');
 		});
@@ -249,8 +249,26 @@ mod.addSender = function(userID){
 		$1.error("[mod:apiuser.addSender] Error.",ex);
 	}
 };
-mod.editSender = function(senderID, userID){
+
+mod.selectCobranderID = function() {
 	try {
+                $app.form.showExtDialog(('apiuser.cobranderId'), {}, 'Select Cobrander ID',$('.containerDialog'));
+            } catch (ex) {
+                $1.error("[mod:apiuser.selectCobranderId] Error.", ex);
+            }
+};
+        
+        
+mod.getValueCobrander = function (cobranderId) {
+        try {
+                $app.form.getValueCobrander(cobranderId);
+            }catch (ex){
+                $1.error("[mod:apiuser.getValueCobrander]",ex);
+            }
+        };
+
+mod.editSender = function(senderID, userID) {
+            try {
 		checkValidRecordID(senderID);
 		$app.form.openAutoDialog(('apiuser.editSingleSender'), {senderID:senderID}, 'Sender Identity Edit', {
 			height: 250

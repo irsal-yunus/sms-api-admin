@@ -11,18 +11,13 @@
 abstract class ApiBaseModel {
 	/**
 	 *
-	 * @var PDO
-	 */
-	protected $db;
-	/**
-	 *
 	 * @var Logger
 	 */
 	protected $logger;
 	public static $cacheDir = '';
 
 	public function __construct() {
-		$this->db = SmsApiAdmin::getDB();
+		$db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 		$this->logger = Logger::getLogger(get_class($this));
 	}
 	/**

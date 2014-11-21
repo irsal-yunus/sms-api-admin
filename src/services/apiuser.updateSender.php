@@ -18,6 +18,7 @@ try {
 	$data['senderName'] = filter_input(INPUT_POST, 'senderName', FILTER_VALIDATE_REGEXP, $senderNameValidationOpt);
 	$data['senderRangeStart'] = isset ($_POST['senderRangeStart'])? $_POST['senderRangeStart'] : '';
 	$data['senderRangeEnd'] = isset ($_POST['senderRangeEnd'])? $_POST['senderRangeEnd'] : '';
+        $data['cobranderID'] = isset($_POST['cobranderID'])? $_POST['cobranderID']:'';
 
 	if(Logger::getRootLogger()->isDebugEnabled()) {
 		Logger::getRootLogger()->debug($_POST);

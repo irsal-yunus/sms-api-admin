@@ -22,6 +22,7 @@ try{
 	$senderName = filter_input(INPUT_POST, 'senderName', FILTER_VALIDATE_REGEXP, $senderNameValidationOpt);
 	$rangeStart = isset($_POST['senderRangeStart'])? trim($_POST['senderRangeStart']) : '';
 	$rangeEnd = isset($_POST['senderRangeEnd'])? trim($_POST['senderRangeEnd']) : '';
+        $cobranderId = filter_input(INPUT_POST, 'cobranderId',FILTER_UNSAFE_RAW);
 	$enabled = filter_input(INPUT_POST, 'senderEnabled', FILTER_VALIDATE_BOOLEAN);
 
 	if(!$senderName)
@@ -49,7 +50,7 @@ try{
 	}
 
 	$model = new ApiUser();
-	$senderID = $model->addSender($userID, $senderName, $rangeStart, $rangeEnd, $enabled);
+	$senderID = $model->addSender($userID, $senderName, $rangeStart, $rangeEnd, $cobranderId, $enabled);
 	$service->setStatus(true);
 	$service->attach('senderID', $senderID);
 	$service->deliver();

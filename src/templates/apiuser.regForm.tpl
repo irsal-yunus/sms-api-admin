@@ -1,8 +1,28 @@
+{literal}
 <script type="text/javascript"> 
-    $(function($) {
+    $(function() {
             $("#apiuser-regform-expired-date").datepicker();
     });
+        function createDialog() {
+            $app.module('apiuser').selectCobranderID();
+
+            $('.containerDialog').dialog({
+                width: 450,
+                heigth: 900,
+                modal: true,
+                buttons: {"Close": function() {
+                        $(this).dialog("close");
+                    }},
+                close: function(ev, ui) {
+                    $(this).remove();
+                }
+
+            });
+            $('.containerDialog').dialog("open");
+        }
 </script>
+{/literal}
+
 <form action="apiuser.register" class="admin-xform" >
 	<fieldset style="width:95%" class="float-centre">
 		{if $clientLock}
@@ -17,7 +37,8 @@
 		<span class="ui-helper-clearfix"></span>
 		<label class="form-flag-required">User Name</label><input name="userName" value="" type="text" maxlength="32"/><span class="ui-helper-clearfix"></span>
 		<label class="form-flag-required">Password</label><input name="userPassword" value="" type="text"/><span class="ui-helper-clearfix"></span>
-		<label class="form-flag-required">Cobrander ID</label><input name="cobranderID" value="" type="text" maxlength="16"/><span class="ui-helper-clearfix"></span>
+        <label class="form-flag-required">Cobrander ID</label><input name="cobranderID" id="cobranderId" value="" type="text" maxlength="16" readonly/> 
+        <span class="ui-helper-clearfix"></span>
 		<label>Activate</label><input name="active" value="true" type="checkbox" checked="checked" /><span class="ui-helper-clearfix"></span>
 		<label>Status Delivery</label>
 			<input name="statusDeliveryActive" value="1" type="radio" onclick="if($(this).is(':checked')) $('#apiuser-regform-deliveryurl').removeAttr('readonly');" />
@@ -36,4 +57,6 @@
                 <label>Expired Date</label><input id="apiuser-regform-expired-date" name="expiredDate" value="" type="text" style="width: 11em;"/>        
 	</fieldset>
 	<span class="ui-helper-clearfix"></span>
+        <a id="btnCobrander" onclick="createDialog();" class="form-button" style="height: auto; margin-left:4px;" >Select Cobrander ID</a>
+        <div style="display: none;" class="containerDialog" title="Select Cobrander Id"></div>
 </form>

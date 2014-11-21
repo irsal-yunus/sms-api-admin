@@ -19,11 +19,12 @@ class ApiCountry extends ApiBaseModel{
 	 */
 	public function getAll() {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			static $list = null;
 			if($list !== null)
 				return $list;
 			$query = 'select COUNTRY_CODE, COUNTRY_NAME from COUNTRY order by COUNTRY_NAME';
-			$result = $this->db->query($query);
+            $result = $db->query($query);
 			$result->setFetchMode(PDO::FETCH_NUM);
 			$list = array();
 			while($row = $result->fetch())

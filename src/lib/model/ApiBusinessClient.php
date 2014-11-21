@@ -19,6 +19,7 @@ class ApiBusinessClient extends ApiBaseModel{
 	 */
 	public function  getAll() {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = 'select
 					c.CLIENT_ID as clientID,
 					c.COMPANY_NAME as companyName,
@@ -39,7 +40,8 @@ class ApiBusinessClient extends ApiBaseModel{
 					left join ADMIN as a2 on c.UPDATED_BY=a2.ADMIN_ID
 					left join COUNTRY as cn on c.COUNTRY_CODE=cn.COUNTRY_CODE
 				order by c.COMPANY_NAME';
-			return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            $getAll = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            return $getAll;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception("Query error");
@@ -48,8 +50,9 @@ class ApiBusinessClient extends ApiBaseModel{
 	}
 	public function  getAllPaired() {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = 'select CLIENT_ID, COMPANY_NAME from CLIENT order by COMPANY_NAME asc';
-			$result = $this->db->query($query);
+            $result = $db->query($query);
 			$result->setFetchMode(PDO::FETCH_NUM);
 			$list = array();
 			while($fields = $result->fetch()){
@@ -64,6 +67,7 @@ class ApiBusinessClient extends ApiBaseModel{
 	}
 	public function  register($data) {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = 'insert into CLIENT (
 						COMPANY_NAME, COMPANY_URL, COUNTRY_CODE,
 						CONTACT_NAME, CONTACT_EMAIL, CONTACT_PHONE,
@@ -75,7 +79,7 @@ class ApiBusinessClient extends ApiBaseModel{
 						:adminID, now()
 						)';
 			$adminID = SmsApiAdmin::getCurrentUser()->getID();
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':companyName', $data['companyName'], PDO::PARAM_STR);
 			$stmt->bindValue(':companyUrl', $data['companyUrl'], PDO::PARAM_STR);
 			$stmt->bindValue(':countryCode', $data['countryCode'], PDO::PARAM_STR);
@@ -84,7 +88,8 @@ class ApiBusinessClient extends ApiBaseModel{
 			$stmt->bindValue(':contactPhone', $data['contactPhone'], PDO::PARAM_STR);
 			$stmt->bindValue(':adminID', $adminID, PDO::PARAM_INT);
 			$stmt->execute();
-			return $this->db->lastInsertId();
+            $lastInsertId = $db->lastInsertId();
+            return $lastInsertId;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception("Query error!");
@@ -92,6 +97,7 @@ class ApiBusinessClient extends ApiBaseModel{
 	}
 	public function  update($clientID, $updates) {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$fields = array(
 				'companyName'=>array(':companyName', 'COMPANY_NAME', PDO::PARAM_STR),
 				'companyUrl'=>array(':companyUrl', 'COMPANY_URL', PDO::PARAM_STR),
@@ -110,20 +116,20 @@ class ApiBusinessClient extends ApiBaseModel{
 			}
 			if(!$assignment)
 				throw new Exception("No valid update field");
-			$stmt = $this->db->prepare($query.implode(',', $assignment).' where CLIENT_ID=:clientID');
-			foreach ($assignment as $key=>$value){
+            $stmt = $db->prepare($query . implode(',', $assignment) . ' where CLIENT_ID=:clientID');
+            foreach ($assignment as $key => $value) {
 				$definition = $fields[$key];
 				$stmt->bindValue($definition[0], $updates[$key], $definition[2]);
 			}
 			$stmt->bindValue(':adminID', SmsApiAdmin::getCurrentUser()->getID(), PDO::PARAM_INT);
 			$stmt->bindValue(':clientID', $clientID, PDO::PARAM_INT);
-			$this->db->beginTransaction();
+            $db->beginTransaction();
 			try {
 				$stmt->execute();
-				$this->db->commit();
+                $db->commit();
 			} catch (PDOException $e) {
 				$this->logger->error("Insert client query failed. $e");
-				$this->db->rollBack();
+                $db->rollBack();
 				throw new Exception("Failed registering new client");
 			}
 			return true;
@@ -133,10 +139,11 @@ class ApiBusinessClient extends ApiBaseModel{
 		}
 	}
 
-	public function countUsers($clientID){
-		try{			
+    public function countUsers($clientID) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = 'select count(*) from USER where CLIENT_ID=:clientID';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':clientID', $clientID, PDO::PARAM_INT);
 			$stmt->execute();
 			$count = $stmt->fetchColumn(0);
@@ -147,20 +154,22 @@ class ApiBusinessClient extends ApiBaseModel{
 			throw new Exception('Query error');
 		}
 	}
-	public function  delete($clientID) {
-		try{
-			if($this->countUsers($clientID) > 0)
-				throw new Exception ("Can not delete client which has existing user accounts");
+
+    public function delete($clientID) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if ($this->countUsers($clientID) > 0)
+                throw new Exception("Can not delete client which has existing user accounts");
 			$query = 'delete from CLIENT where CLIENT_ID=:clientID';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':clientID', $clientID, PDO::PARAM_INT);
-			$this->db->beginTransaction();
+            $db->beginTransaction();
 			try {
 				$stmt->execute();
-				$this->db->commit();
+                $db->commit();
 				unset($stmt);
 			} catch (Exception $e) {
-				$this->db->rollBack();
+                $db->rollBack();
 				unset($stmt);
 				throw  $e;
 			}
@@ -171,6 +180,7 @@ class ApiBusinessClient extends ApiBaseModel{
 	}
 	public function  getDetails($clientID) {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = 'select 
 					c.CLIENT_ID as clientID,
 					c.COMPANY_NAME as companyName,
@@ -191,7 +201,7 @@ class ApiBusinessClient extends ApiBaseModel{
 					left join ADMIN as a2 on c.UPDATED_BY=a2.ADMIN_ID
 					left join COUNTRY as cn on c.COUNTRY_CODE=cn.COUNTRY_CODE
 				 where CLIENT_ID=:clientID';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':clientID', $clientID, PDO::PARAM_INT);
 			$stmt->execute();
 			$details = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -207,8 +217,9 @@ class ApiBusinessClient extends ApiBaseModel{
 //	}
 	public function  checkExistence($clientID) {
 		try {
+            $db =SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = 'select count(*) from CLIENT where CLIENT_ID=:clientID';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':clientID', $clientID, PDO::PARAM_INT);
 			$stmt->execute();
 			$count = $stmt->fetchColumn(0);

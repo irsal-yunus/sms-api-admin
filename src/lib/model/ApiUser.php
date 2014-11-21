@@ -25,6 +25,7 @@ class ApiUser extends ApiBaseModel{
 	 */
 	public function  getAll() {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = "select
 					u.USER_ID as userID,
 					u.CLIENT_ID as clientID,
@@ -55,7 +56,8 @@ class ApiUser extends ApiBaseModel{
 					inner join ADMIN as a1 on u.CREATED_BY=a1.ADMIN_ID
 					left join ADMIN as a2 on u.UPDATED_BY=a2.ADMIN_ID
 				order by u.USER_NAME asc";
-			return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            return $list;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception("Query failed");
@@ -63,6 +65,7 @@ class ApiUser extends ApiBaseModel{
 	}
 	public function  getAllClientUsers($clientID) {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = "select
 					u.USER_ID as userID,
 					u.CLIENT_ID as clientID,
@@ -94,7 +97,7 @@ class ApiUser extends ApiBaseModel{
 					left join ADMIN as a2 on u.UPDATED_BY=a2.ADMIN_ID
 				where u.CLIENT_ID=:clientID
 				order by u.USER_NAME asc";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':clientID', $clientID, PDO::PARAM_INT);
 			if(!$stmt->execute())
 				throw new Exception('Query error!');
@@ -109,6 +112,7 @@ class ApiUser extends ApiBaseModel{
 	}
 	public function  findAll(array $filters) {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = "select
 					u.USER_ID as userID,
 					u.CLIENT_ID as clientID,
@@ -148,13 +152,15 @@ class ApiUser extends ApiBaseModel{
 				$query .= $whereClause;
 			}
 			$query.=" order by u.USER_NAME asc";
-			if($whereClause){
-				$stmt  = $this->db->prepare($query);
+            if ($whereClause) {
+                $stmt = $db->prepare($query);
 				self::bindDynamicValues($filterRules, $filters, $stmt);
 				$stmt->execute();
-				return $stmt->fetchAll(PDO::FETCH_ASSOC);
-			}else{
-				return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+                $listOrder = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $listOrder;
+            } else {
+                $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+                return $list;
 			}			
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
@@ -165,6 +171,7 @@ class ApiUser extends ApiBaseModel{
 
 	public function  register($data) {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = 'insert into USER (
 							USER_NAME, PASSWORD, CLIENT_ID,EXPIRED_DATE, ACTIVE,
 							COBRANDER_ID, USE_BLACKLIST, IS_POSTPAID,
@@ -201,7 +208,7 @@ class ApiUser extends ApiBaseModel{
 												1 : 0;
                         error_log($query);
                         
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userName', $data['userName'], PDO::PARAM_STR);
 			$stmt->bindValue(':userPassword', $this->encryptPassword($data['userPassword']), PDO::PARAM_STR);
 			$stmt->bindValue(':active', !empty($data['active']), PDO::PARAM_BOOL);
@@ -213,8 +220,8 @@ class ApiUser extends ApiBaseModel{
 			$stmt->bindValue(':clientID', $data['clientID'], PDO::PARAM_INT);
 			$stmt->bindValue(':statusDeliveryUrl', $data['statusDeliveryUrl'], $deliveryStatusFieldType);
 			$stmt->execute();
-			$userID = $this->db->lastInsertId();
-			if(!$userID)
+            $userID = $db->lastInsertId();
+            if (!$userID)
 				throw new RuntimeException('Failed getting newly inserted user ID');
 			return $userID;
 		} catch (PDOException $e) {
@@ -235,8 +242,9 @@ class ApiUser extends ApiBaseModel{
 	
 	public function validateUserPassword($userID, $password){
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = 'select count(*) from USER where USER_ID=:userID and PASSWORD=md5(:oldPassword)';
-			$pwdStmt = $this->db->prepare($query);
+            $pwdStmt = $db->prepare($query);
 			$pwdStmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$pwdStmt->bindValue(':oldPassword', $userID, PDO::PARAM_STR);
 			$pwdStmt->execute();
@@ -248,17 +256,19 @@ class ApiUser extends ApiBaseModel{
 		}
 	}
 	
-	public function  changePassword($userID, $password) {
-		try{
-			if(!$this->checkExistence($userID))
-				throw new Exception('Attempt to update a nonexisting API user account, ID='.$userID);
+    public function changePassword($userID, $password) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (!$this->checkExistence($userID))
+                throw new Exception('Attempt to update a nonexisting API user account, ID=' . $userID);
 			$this->validatePasswordString($password);
-			$stmt = $this->db->prepare('update USER set PASSWORD=?, UPDATED_BY=?, UPDATED_DATE=now() where USER_ID=?');
+            $stmt = $db->prepare('update USER set PASSWORD=?, UPDATED_BY=?, UPDATED_DATE=now() where USER_ID=?');
 			$stmt->bindValue(1, $this->encryptPassword($password), PDO::PARAM_STR);
 			$stmt->bindValue(2, SmsApiAdmin::getCurrentUser()->getID(), PDO::PARAM_INT);
 			$stmt->bindValue(3, $userID, PDO::PARAM_INT);
 			$stmt->execute();
-			return $stmt->rowCount() > 0;
+            $rowCount = $stmt->rowCount() > 0;
+            return $rowCount;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw  new Exception("Query error");
@@ -266,19 +276,21 @@ class ApiUser extends ApiBaseModel{
 	}
 	public function  getUserSenderID($userID) {
 		try {
-			if(empty ($userID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($userID))
 				throw new Exception("Invalid UserID");
 			$query = "select
 						SENDER_ID  as senderID,
 						SENDER_NAME  as senderName,
 						RANGE_START  as rangeStart,
 						RANGE_END  as rangeEnd,
+						COBRANDER_ID as cobranderId,
 						SENDER_ENABLED = 1  as senderEnabled,
 						IF(SENDER_ENABLED, 'Enabled', 'Disabled')  as senderStatusName
 					from SENDER
 					where USER_ID=:userID ";
 
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->execute();
 			$list = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -291,6 +303,7 @@ class ApiUser extends ApiBaseModel{
 	
 	public function  update($userID, $data) {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$this->checkExistence($userID, true);
 			if(empty ($data))
 				throw new Exception("Empty data");
@@ -325,48 +338,54 @@ class ApiUser extends ApiBaseModel{
 				$queryFields.=', URL_LAST_RETRY=null, URL_INVALID_COUNT=0';
 			}
 			$query = "update USER set UPDATED_BY=:adminID, UPDATED_DATE=now(), $queryFields where USER_ID=:userID";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->bindValue(':adminID', SmsApiAdmin::getCurrentUser()->getID(), PDO::PARAM_INT);
 			parent::bindDynamicValues($rules, $data, $stmt);
 			$stmt->execute();
-			return $stmt->rowCount() > 0;
+            $rowCount = $stmt->rowCount() > 0;
+            return $rowCount;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception("Query failed");
 		}
 	}
 	
-	public function  activateUser($userID) {
-		try{
+    public function activateUser($userID) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$this->checkExistence($userID, true);
-			$stmt = $this->db->prepare('update USER set ACTIVE=1 where USER_ID=?');
+            $stmt = $db->prepare('update USER set ACTIVE=1 where USER_ID=?');
 			$stmt->bindValue(1, $userID, PDO::PARAM_INT);
 			$stmt->execute();
-			return $stmt->rowCount() > 0;
+            $rowCount = $stmt->rowCount() > 0;
+            return $rowCount;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception("Query failed");
 		}
 	}
 
-	public function  deactivateUser($userID) {
-		try{
+    public function deactivateUser($userID) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$this->checkExistence($userID, true);
-			$stmt = $this->db->prepare('update USER set ACTIVE=0 where USER_ID=?');
+            $stmt = $db->prepare('update USER set ACTIVE=0 where USER_ID=?');
 			$stmt->bindValue(1, $userID, PDO::PARAM_INT);
 			$stmt->execute();
-			return $stmt->rowCount() > 0;
+            $rowCount = $stmt->rowCount() > 0;
+            return $rowCount;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception("Query failed");
 		}
 	}
 
-	public function  checkUserActivation($userID) {
-		try{
+    public function checkUserActivation($userID) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$this->checkExistence($userID, true);
-			$stmt = $this->db->prepare('select ACTIVE=1 from USER where USER_ID=?');
+            $stmt = $db->prepare('select ACTIVE=1 from USER where USER_ID=?');
 			$stmt->bindValue(1, $userID, PDO::PARAM_INT);
 			$stmt->execute();
 			$active = $stmt->fetchColumn(0);
@@ -385,8 +404,9 @@ class ApiUser extends ApiBaseModel{
 
 	public function  getUsernameOfUserID($userID) {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = 'select USER_NAME from USER where USER_ID=:userID';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->execute();
 			$username = $stmt->fetchColumn(0);
@@ -400,8 +420,9 @@ class ApiUser extends ApiBaseModel{
 
 	public function  getUserIDOfUsername($username) {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = 'select USER_ID from USER where USER_NAME=:username';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
 			$userID = $stmt->fetchColumn(0);
@@ -415,7 +436,8 @@ class ApiUser extends ApiBaseModel{
 	
 	private function  getDetailsByIDOrUsername($userID, $username=null) {
 		try {
-			if(empty ($userID) && empty ($username))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($userID) && empty($username))
 				throw new InvalidArgumentException("Invalid UserID");
 			$query = "select
 					u.USER_ID as userID,
@@ -449,11 +471,11 @@ class ApiUser extends ApiBaseModel{
 					inner join ADMIN as a1 on u.CREATED_BY=a1.ADMIN_ID
 					left join ADMIN as a2 on u.UPDATED_BY=a2.ADMIN_ID";
 
-			if($username!==null){
-				$stmt = $this->db->prepare("$query where u.USER_NAME=:username");
+            if ($username !== null) {
+                $stmt = $db->prepare("$query where u.USER_NAME=:username");
 				$stmt->bindValue(':username', $username, PDO::PARAM_STR);
-			}else{
-				$stmt = $this->db->prepare("$query where u.USER_ID=:userID");
+            } else {
+                $stmt = $db->prepare("$query where u.USER_ID=:userID");
 				$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			}
 			$stmt->execute();
@@ -482,20 +504,22 @@ class ApiUser extends ApiBaseModel{
 	 */
 	public function getSenderDetails($senderID) {
 		try {
-			if(empty ($senderID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($senderID))
 				throw new Exception("Invalid sender ID");
 			$query = "select
 						SENDER_ID  as senderID,
 						SENDER_NAME  as senderName,
 						RANGE_START  as senderRangeStart,
 						RANGE_END  as senderRangeEnd,
+                                                COBRANDER_ID as cobranderId,
 						SENDER_ENABLED = 1  as senderEnabled,
 						IF(SENDER_ENABLED, 'Enabled', 'Disabled')  as senderStatusName,
 						USER_ID as userID
 					from SENDER
 					where SENDER_ID=:senderID ";
 
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':senderID', $senderID, PDO::PARAM_INT);
 			$stmt->execute();
 			$list = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -512,11 +536,13 @@ class ApiUser extends ApiBaseModel{
 	 * @param string $senderName
 	 * @param string $rangeStart
 	 * @param string $rangeEnd
+     * @param string $cobranderId
 	 * @param bool $enabled
 	 * @return int New sender IDs
 	 */
-	public function addSender($userID, $senderName, $rangeStart=null, $rangeEnd=null, $enabled=false) {
-		try{
+    public function addSender($userID, $senderName, $rangeStart = null, $rangeEnd = null, $cobranderId, $enabled = false) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$this->checkExistence($userID, true);
 			$senderName = trim($senderName);
 			if($senderName==='')
@@ -529,16 +555,17 @@ class ApiUser extends ApiBaseModel{
 				throw new InvalidArgumentException("Range start can not be empty if range end is given!");
 			if(!$this->checkSenderNameAvailability($senderName, $userID))
 				throw new Exception("Sender name '$senderName' exists for this user");
-			$query = "insert into SENDER (USER_ID, SENDER_NAME, RANGE_START, RANGE_END, SENDER_ENABLED)
-						values (:userID, :senderName, :rangeStart, :rangeEnd, :senderEnabled)";
-			$stmt = $this->db->prepare($query);
+            $query = "insert into SENDER (USER_ID, SENDER_NAME, RANGE_START, RANGE_END,COBRANDER_ID,SENDER_ENABLED)
+						values (:userID, :senderName, :rangeStart, :rangeEnd, :cobranderId ,:senderEnabled)";
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->bindValue(':senderName', $senderName, PDO::PARAM_STR);
 			$stmt->bindValue(':rangeStart', $rangeStart, PDO::PARAM_INT);
 			$stmt->bindValue(':rangeEnd', $rangeEnd, PDO::PARAM_INT);
+            $stmt->bindValue(':cobranderId', $cobranderId, PDO::PARAM_STR);
 			$stmt->bindValue(':senderEnabled', !empty($enabled), PDO::PARAM_BOOL);
 			$stmt->execute();
-			$senderID = $this->db->lastInsertId();
+            $senderID = $db->lastInsertId();
 			return $senderID;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
@@ -549,15 +576,17 @@ class ApiUser extends ApiBaseModel{
 
 	public function updateSender($senderID, array $data) {
 		try {
-			if(empty ($senderID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($senderID))
 				throw new Exception("Invalid sender ID");
 			if(empty ($data))
 				throw new Exception("Empty data");
 
 			$rules = array(
-				'senderName'=>array('param'=>':senderName', 'field'=>'SENDER_NAME', 'type'=>PDO::PARAM_STR),
-				'senderRangeStart'=>array('param'=>':senderRangeStart', 'field'=>'RANGE_START', 'type'=>PDO::PARAM_STR),
-				'senderRangeEnd'=>array('param'=>':senderRangeEnd', 'field'=>'RANGE_END', 'type'=>PDO::PARAM_STR)
+                'senderName' => array('param' => ':senderName', 'field' => 'SENDER_NAME', 'type' => PDO::PARAM_STR),
+                'senderRangeStart' => array('param' => ':senderRangeStart', 'field' => 'RANGE_START', 'type' => PDO::PARAM_STR),
+                'senderRangeEnd' => array('param' => ':senderRangeEnd', 'field' => 'RANGE_END', 'type' => PDO::PARAM_STR),
+                'cobranderID' => array('param' => ':senderCobranderId', 'field' => 'COBRANDER_ID', 'type' => PDO::PARAM_STR)
 			);
 
 			$senderDetails = $this->getSenderDetails($senderID);
@@ -576,9 +605,15 @@ class ApiUser extends ApiBaseModel{
 			}
 			
 			$noSenderRangeEnd = empty($data['senderRangeEnd']);
-			if($noSenderRangeEnd) {
+            $noSenderRangeStart = empty($data['senderRangeStart']);
+
+
+            if ($noSenderRangeEnd) {
 				unset($data['senderRangeEnd']);
 			}
+            if ($noSenderRangeStart) {
+                unset($data['senderRangeStart']);
+            }
 
 			$queryFields = parent::buildDynamicUpdateClause($rules, $data);
 			
@@ -586,14 +621,19 @@ class ApiUser extends ApiBaseModel{
 				$queryFields .= $queryFields? ',RANGE_END=null' : 'RANGE_END=null';
 			}
 
-			if(!$queryFields)
+            if ($noSenderRangeStart) {
+                $queryFields .= $queryFields ? ',RANGE_START=null' : 'RANGE_START=null';
+            }
+
+            if (!$queryFields)
 				throw new Exception("No update field");
 			$query = "update SENDER set $queryFields where SENDER_ID=:senderID";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':senderID', $senderID, PDO::PARAM_INT);
 			parent::bindDynamicValues($rules, $data, $stmt);
 			$stmt->execute();
-			return $stmt->rowCount() > 0;
+            $rowCount = $stmt->rowCount() > 0;
+            return $rowCount;
 		} catch (PDOException $e) {
 			$this->logger->error("$e");
 			throw new Exception("Query failed");
@@ -607,11 +647,13 @@ class ApiUser extends ApiBaseModel{
 			throw new Exception('DB error');
 		}
 	}
-	public function  enableSender($senderID) {
-		try{
-			if(empty($senderID))
+
+    public function enableSender($senderID) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($senderID))
 				throw new InvalidArgumentException('Invalid sender ID!');
-			$stmt = $this->db->prepare("update SENDER set SENDER_ENABLED=1 where SENDER_ID=:senderID");
+            $stmt = $db->prepare("update SENDER set SENDER_ENABLED=1 where SENDER_ID=:senderID");
 			$stmt->bindValue(':senderID', $senderID, PDO::PARAM_INT);
 			$stmt->execute();
 			unset($stmt);
@@ -622,11 +664,13 @@ class ApiUser extends ApiBaseModel{
 			throw new Exception('Query error');
 		}
 	}
-	public function  disableSender($senderID) {
-		try{
-			if(empty($senderID))
+
+    public function disableSender($senderID) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($senderID))
 				throw new InvalidArgumentException('Invalid sender ID!');
-			$stmt = $this->db->prepare("update SENDER set SENDER_ENABLED=0 where SENDER_ID=:senderID");
+            $stmt = $db->prepare("update SENDER set SENDER_ENABLED=0 where SENDER_ID=:senderID");
 			$stmt->bindValue(':senderID', $senderID, PDO::PARAM_INT);
 			$stmt->execute();
 			unset($stmt);
@@ -639,23 +683,24 @@ class ApiUser extends ApiBaseModel{
 	}
 
 	/////////////////// IP ///////////////////
-	public function  setIPPermission($userID, $ip) {
-		try{
-			if(!$this->checkExistence($userID))
-				throw new Exception('Attempt to update a nonexisting API user account, ID='.$userID);
-			if(!filter_var($ip, FILTER_VALIDATE_IP))
-				throw new InvalidArgumentException('Invalid IP: '.$ip);
-			$checkStmt = $this->db->prepare("select count(*) from USER_IP where USER_ID=:userID and IP_ADDRESS=:ip");
+    public function setIPPermission($userID, $ip) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (!$this->checkExistence($userID))
+                throw new Exception('Attempt to update a nonexisting API user account, ID=' . $userID);
+            if (!filter_var($ip, FILTER_VALIDATE_IP))
+                throw new InvalidArgumentException('Invalid IP: ' . $ip);
+            $checkStmt = $db->prepare("select count(*) from USER_IP where USER_ID=:userID and IP_ADDRESS=:ip");
 			$checkStmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$checkStmt->bindValue(':ip', $ip, PDO::PARAM_STR);
 			$checkStmt->execute();
-			if($checkStmt->fetchColumn(0))
-				throw new Exception('Duplicate IP: '.$ip);
-			$stmt = $this->db->prepare("insert into USER_IP (USER_ID, IP_ADDRESS) values (:userID, :ip)");
+            if ($checkStmt->fetchColumn(0))
+                throw new Exception('Duplicate IP: ' . $ip);
+            $stmt = $db->prepare("insert into USER_IP (USER_ID, IP_ADDRESS) values (:userID, :ip)");
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->bindValue(':ip', $ip, PDO::PARAM_STR);
 			$stmt->execute();
-			$ipID = $this->db->lastInsertId();
+            $ipID = $db->lastInsertId();
 			unset($stmt);
 			return $ipID;
 		} catch (PDOException $e) {
@@ -667,19 +712,21 @@ class ApiUser extends ApiBaseModel{
 			throw new Exception('DB error: '.$e->getCode());
 		}
 	}
-	public function  unsetIPPermission($userID, $ip) {
-		try{
-			if(!$this->checkExistence($userID))
-				throw new Exception('Attempt to update a nonexisting API user account, ID='.$userID);
-			if(!filter_var($ip, FILTER_VALIDATE_IP))
-				throw new InvalidArgumentException('Invalid IP: '.$ip);
-			$checkStmt = $this->db->prepare("select count(*) from USER_IP where USER_ID=:userID and IP_ADDRESS=:ip");
+
+    public function unsetIPPermission($userID, $ip) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (!$this->checkExistence($userID))
+                throw new Exception('Attempt to update a nonexisting API user account, ID=' . $userID);
+            if (!filter_var($ip, FILTER_VALIDATE_IP))
+                throw new InvalidArgumentException('Invalid IP: ' . $ip);
+            $checkStmt = $db->prepare("select count(*) from USER_IP where USER_ID=:userID and IP_ADDRESS=:ip");
 			$checkStmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$checkStmt->bindValue(':ip', $ip, PDO::PARAM_STR);
 			$checkStmt->execute();
-			if(!$checkStmt->fetchColumn(0))
-				throw new Exception('IP was not exist: '.$ip);
-			$stmt = $this->db->prepare("delete from USER_IP where USER_ID=:userID and IP_ADDRESS=:ip");
+            if (!$checkStmt->fetchColumn(0))
+                throw new Exception('IP was not exist: ' . $ip);
+            $stmt = $db->prepare("delete from USER_IP where USER_ID=:userID and IP_ADDRESS=:ip");
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->bindValue(':ip', $ip, PDO::PARAM_STR);
 			$stmt->execute();
@@ -697,10 +744,11 @@ class ApiUser extends ApiBaseModel{
 	
 	public function  getUserIP($userID) {
 		try {
-			if(empty ($userID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($userID))
 				throw new Exception("Invalid UserID");
 			$query = "select USER_IP_ID as ipID, IP_ADDRESS as ipAddress from USER_IP where USER_ID=:userID";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->execute();
 			$list = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -713,9 +761,10 @@ class ApiUser extends ApiBaseModel{
 	}
 
 	public function blacklistReplyNumber($userID, $msisdn) {
-		try{
-			if(!$this->checkExistence($userID))
-				throw new Exception('Attempt to update a nonexisting API user account, ID='.$userID);
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (!$this->checkExistence($userID))
+                throw new Exception('Attempt to update a nonexisting API user account, ID=' . $userID);
 
 			$validMsisdn = filter_var($msisdn, FILTER_VALIDATE_REGEXP, array(
 				'options'=>
@@ -723,9 +772,9 @@ class ApiUser extends ApiBaseModel{
 						'regexp'=>  $this->userConfig['msisdnPattern']
 					)
 				));
-			if(!$validMsisdn)
-				throw new InvalidArgumentException('Invalid MSISDN: '.$msisdn);
-			$checkStmt = $this->db->prepare("select count(*) from REPLY_BLACKLIST
+            if (!$validMsisdn)
+                throw new InvalidArgumentException('Invalid MSISDN: ' . $msisdn);
+            $checkStmt = $db->prepare("select count(*) from REPLY_BLACKLIST
 										where USER_ID=:userID and MSISDN=:msisdn");
 			$checkStmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$checkStmt->bindValue(':msisdn', $validMsisdn, PDO::PARAM_STR);
@@ -733,12 +782,12 @@ class ApiUser extends ApiBaseModel{
 			if($checkStmt->fetchColumn(0))
 				throw new Exception('Duplicate MSISDN: '.$validMsisdn);
 			unset($checkStmt);
-			$stmt = $this->db->prepare("insert into REPLY_BLACKLIST (USER_ID, MSISDN)
+            $stmt = $db->prepare("insert into REPLY_BLACKLIST (USER_ID, MSISDN)
 										values (:userID, :msisdn)");
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->bindValue(':msisdn', $validMsisdn, PDO::PARAM_STR);
 			$stmt->execute();
-			$blacklistID = $this->db->lastInsertId();
+            $blacklistID = $db->lastInsertId();
 			unset($stmt);
 			return $blacklistID;
 		} catch (PDOException $e) {
@@ -751,27 +800,27 @@ class ApiUser extends ApiBaseModel{
 		}
 	}
 
-
-	public function  unblacklistReplyNumber($userID, $msisdn) {
-		try{
-			if(!$this->checkExistence($userID))
-				throw new Exception('Attempt to update a nonexisting API user account, ID='.$userID);
+    public function unblacklistReplyNumber($userID, $msisdn) {
+        try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (!$this->checkExistence($userID))
+                throw new Exception('Attempt to update a nonexisting API user account, ID=' . $userID);
 			$validMsisdn = filter_var($msisdn, FILTER_VALIDATE_REGEXP, array(
 				'options'=>
 					array(
 						'regexp'=>  $this->userConfig['msisdnPattern']
 					)
 				));
-			if(!$validMsisdn)
-				throw new InvalidArgumentException('Invalid MSISDN: '.$msisdn);
-			$checkStmt = $this->db->prepare("select count(*) from REPLY_BLACKLIST
+            if (!$validMsisdn)
+                throw new InvalidArgumentException('Invalid MSISDN: ' . $msisdn);
+            $checkStmt = $db->prepare("select count(*) from REPLY_BLACKLIST
 										where USER_ID=:userID and MSISDN=:msisdn");
 			$checkStmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$checkStmt->bindValue(':msisdn', $validMsisdn, PDO::PARAM_STR);
 			$checkStmt->execute();
-			if(!$checkStmt->fetchColumn(0))
-				throw new Exception('MSISDN was not exist: '.$validMsisdn);
-			$stmt = $this->db->prepare("delete from REPLY_BLACKLIST where USER_ID=:userID and MSISDN=:msisdn");
+            if (!$checkStmt->fetchColumn(0))
+                throw new Exception('MSISDN was not exist: ' . $validMsisdn);
+            $stmt = $db->prepare("delete from REPLY_BLACKLIST where USER_ID=:userID and MSISDN=:msisdn");
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->bindValue(':msisdn', $msisdn, PDO::PARAM_STR);
 			$stmt->execute();
@@ -789,12 +838,13 @@ class ApiUser extends ApiBaseModel{
 
 	public function  getUserReplyBlacklist($userID) {
 		try {
-			if(empty ($userID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($userID))
 				throw new Exception("Invalid UserID");
 			$query = "select REPLY_BLACKLIST_ID as replyBlacklistID, 
 							MSISDN as replyBlacklistMsisdn
 							from REPLY_BLACKLIST where USER_ID=:userID";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->execute();
 			$list = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -809,7 +859,8 @@ class ApiUser extends ApiBaseModel{
 	/////////////////// VIRTUAL NUMBER ///////////////////
 	public function  getUserVirtualNumbers($userID) {
 		try {
-			if(empty ($userID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($userID))
 				throw new Exception("Invalid UserID");
 			$query = "select
 						VIRTUAL_NUMBER_ID  as virtualNumberID,
@@ -822,7 +873,7 @@ class ApiUser extends ApiBaseModel{
 					from VIRTUAL_NUMBER
 					where USER_ID=:userID ";
 
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->execute();
 			$list = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -836,7 +887,8 @@ class ApiUser extends ApiBaseModel{
 	
 	public function  getVirtualNumberDetails($virtualNumberID) {
 		try {
-			if(empty ($virtualNumberID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($virtualNumberID))
 				throw new Exception("Invalid virtualNumberID");
 			$query = "select
 						VIRTUAL_NUMBER_ID  as virtualNumberID,
@@ -849,7 +901,7 @@ class ApiUser extends ApiBaseModel{
 					from VIRTUAL_NUMBER
 					where VIRTUAL_NUMBER_ID=:virtualNumberID ";
 
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':virtualNumberID', $virtualNumberID, PDO::PARAM_INT);
 			$stmt->execute();
 			$details = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -862,6 +914,7 @@ class ApiUser extends ApiBaseModel{
 	}
 	public function  addVirtualNumber($userID, $data) {
 		try {
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$this->checkExistence($userID, true);
 			$destination = isset($data['virtualDestination'])? trim($data['virtualDestination']) : '';
 			$url = isset($data['virtualUrl'])? trim($data['virtualUrl']) : '';
@@ -872,13 +925,13 @@ class ApiUser extends ApiBaseModel{
 						(USER_ID, DESTINATION, FORWARD_URL, URL_ACTIVE, URL_INVALID_COUNT, URL_LAST_RETRY)
 						values
 						(:userID, :virtualDestination, :virtualUrl, :virtualUrlActive, null, null)";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->bindValue(':virtualDestination', $destination, PDO::PARAM_STR);
 			$stmt->bindValue(':virtualUrl', $url, PDO::PARAM_STR);
 			$stmt->bindValue(':virtualUrlActive', $active? 1 : 0, PDO::PARAM_INT);
 			$stmt->execute();
-			$id = $this->db->lastInsertId();
+            $id = $db->lastInsertId();
 			unset ($stmt);
 			return $id;
 		} catch (PDOException $e) {
@@ -888,7 +941,8 @@ class ApiUser extends ApiBaseModel{
 	}
 	public function  updateVirtualNumber($virtualNumberID, $data) {
 		try {
-			if(empty($virtualNumberID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($virtualNumberID))
 				throw new Exception('Invalid virtual number ID');
 			$destination = isset($data['virtualDestination'])? trim($data['virtualDestination']) : '';
 			$url = isset($data['virtualUrl'])? trim($data['virtualUrl']) : '';
@@ -906,7 +960,7 @@ class ApiUser extends ApiBaseModel{
 							URL_INVALID_COUNT=0,
 							URL_LAST_RETRY=null
 						where VIRTUAL_NUMBER_ID=:virtualNumberID";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':virtualNumberID', $virtualNumberID, PDO::PARAM_INT);
 			$stmt->bindValue(':virtualDestination', $destination, PDO::PARAM_STR);
 			$stmt->bindValue(':virtualUrl', $url, PDO::PARAM_STR);
@@ -920,10 +974,11 @@ class ApiUser extends ApiBaseModel{
 	}
 	public function  removeVirtualNumber($virtualNumberID) {
 		try {
-			if(empty($virtualNumberID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($virtualNumberID))
 				throw new Exception('Invalid virtual number ID');
 			$query = "delete from VIRTUAL_NUMBER where VIRTUAL_NUMBER_ID=:virtualNumberID";
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':virtualNumberID', $virtualNumberID, PDO::PARAM_INT);
 			$stmt->execute();
 			unset ($stmt);
@@ -942,13 +997,14 @@ class ApiUser extends ApiBaseModel{
 	 */
 	public function  checkExistence($userID, $autoException=false) {
 		try {
-			if(empty($userID)){
-				if($autoException)
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($userID)) {
+                if ($autoException)
 					throw new Exception("Invalid user ID ($userID)");
 				return false;
 			}
 			$query = 'select count(*) from USER where USER_ID=:userID';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->execute();
 			if($stmt->fetchColumn(0) <= 0){
@@ -965,10 +1021,11 @@ class ApiUser extends ApiBaseModel{
 
 	public function  checkUsernameAvailability($userName) {
 		try {
-			if(!$this->checkUserNameFormat($userName))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (!$this->checkUserNameFormat($userName))
 				throw new InvalidArgumentException('Invalid user name format');
 			$query = 'select count(*) from USER where USER_NAME=:userName';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userName', $userName, PDO::PARAM_STR);
 			$stmt->execute();
 			$available = $stmt->fetchColumn(0) == 0;
@@ -989,10 +1046,11 @@ class ApiUser extends ApiBaseModel{
 	 */
 	protected function  checkIsSenderNameModified($senderName, $senderID) {
 		try {
-			if(empty($senderID))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (empty($senderID))
 				throw new InvalidArgumentException('Invalid sender ID');
 			$query = 'select SENDER_NAME from SENDER where SENDER_ID=:senderID';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':senderID', $senderID, PDO::PARAM_STR);
 			$stmt->execute();
 			if($stmt->rowCount() < 1)
@@ -1014,10 +1072,11 @@ class ApiUser extends ApiBaseModel{
 	 */
 	protected function  checkIsUserNameModified($userName, $userID) {
 		try {
-			if("$userID"==="")
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if ("$userID" === "")
 				throw new InvalidArgumentException('Invalid user name');
 			$query = 'select USER_NAME from USER where USER_ID=:userID';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
 			$stmt->execute();
 			if($stmt->rowCount() < 1)
@@ -1041,11 +1100,12 @@ class ApiUser extends ApiBaseModel{
 	 */
 	public function  checkSenderNameAvailability($senderName, $userID) {
 		try {
-			if(!$this->checkSenderNameFormat($senderName))
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+            if (!$this->checkSenderNameFormat($senderName))
 				throw new InvalidArgumentException('Invalid sender name format');
 			
 			$query = 'select SENDER_NAME from SENDER where SENDER_NAME=:senderName and USER_ID=:userId';
-			$stmt = $this->db->prepare($query);
+            $stmt = $db->prepare($query);
 			$stmt->bindValue(':senderName', $senderName, PDO::PARAM_STR);
 			$stmt->bindValue(':userId', $userID, PDO::PARAM_INT);
 			$stmt->execute();

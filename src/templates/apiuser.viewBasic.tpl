@@ -2,7 +2,7 @@
 <dl class="admin-definitions">
 	<dt>Username</dt><dd>{$details.userName}</dd>
 	<dt>Client Company</dt><dd><a href="#">{$details.clientCompanyName}</a></dd>
-	<dt>Cobrander ID</dt><dd>{$details.cobranderID}</dd>
+	<dt>Cobrander ID (User)</dt><dd>{$details.cobranderID}</dd>
 	<dt>Status</dt><dd>{$details.statusName}</dd>
 	<dt>Status Delivery</dt><dd>{$details.statusDeliveryStatusName}</dd>
 	<dt>Delivery URL</dt><dd>{$details.statusDeliveryUrl}</dd>

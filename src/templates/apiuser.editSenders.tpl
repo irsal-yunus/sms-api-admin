@@ -5,8 +5,9 @@
 				<th class="zebra-odd" style="width:20%;">Sender name</th>
 				<th class="zebra-even" style="width:20%;">Range Start</th>
 				<th class="zebra-odd" style="width:20%;">Range End</th>
-				<th class="zebra-even" style="width:10%;">Status</th>
-				<th class="zebra-odd" style="width:30%;">
+                                <th class="zebra-even" style="width: 10%">Cobrander ID</th>
+				<th class="zebra-odd" style="width:10%;">Status</th>           
+				<th class="zebra-even" style="width:20%;">
 					<a href="#" onclick="$app.module('apiuser').addSender({$userID})" class="form-button">
 						<img title="Register" src="skin/images/icon-add.png" class="form-button-image" alt="" />
 						<span class="form-button-text">Add Sender</span>
@@ -20,6 +21,7 @@
 				<td class="type-text">{$senderID[sender].senderName}</td>
 				<td class="type-phone">{$senderID[sender].rangeStart}</td>
 				<td class="type-phone">{$senderID[sender].rangeEnd}</td>
+                                <td class="type-text">{$senderID[sender].cobranderId}</td>
 				<td class="type-status">{$senderID[sender].senderStatusName}</td>
 				<td class="type-action">
 					{if $senderID[sender].senderEnabled}

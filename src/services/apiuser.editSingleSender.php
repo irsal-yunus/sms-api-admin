@@ -18,4 +18,6 @@ $page->assign('senderID', $details['senderID']);
 $page->assign('senderName', $details['senderName']);
 $page->assign('senderRangeStart', $details['senderRangeStart']);
 $page->assign('senderRangeEnd', $details['senderRangeEnd']);
+$page->assign('cobranderID',$details['cobranderId']);
+$page->assign('userID',$details['userID']);
 $page->display('apiuser.editSenderForm.tpl');
