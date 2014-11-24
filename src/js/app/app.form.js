@@ -142,6 +142,16 @@ $app.form.showExtDialog = function(serviceName, data, complete,dialog) {
                 $1.error("[$app.form.openDialog] Error.", ex);
             }
         };
+        
+$app.form.clearCobranderID = function () {
+            try {
+                if($('#cobranderId').val().length > 0){
+                    $('#cobranderId').val('');
+                }
+            } catch (ex){
+                $1.error("[$app.clearText ]",ex);
+            }  
+        };
 
 $app.form.hideDialog = function() {
             try {

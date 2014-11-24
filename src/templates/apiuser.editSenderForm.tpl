@@ -17,6 +17,12 @@
             $('.containerDialog').dialog("open");
 
         }
+        function clearDialog() {
+            var txtCobrander = $('#cobranderId').val();
+            if(txtCobrander.length > 0) {
+                $('#cobranderId').val('');
+            }
+        }
     </script>
 {/literal}
 
@@ -28,9 +34,10 @@
 	<label>Range Start</label><input name="senderRangeStart" value="{$senderRangeStart}" type="text" maxlength="20"/><span class="ui-helper-clearfix"></span>
 	<label>Range End</label><input name="senderRangeEnd" value="{$senderRangeEnd}" type="text" maxlength="20"/><span class="ui-helper-clearfix"></span>
         <label>Cobrander ID</label><input id="cobranderId" name="cobranderID" value="{$cobranderID}" type="text" maxlength="20"readonly/>
+        <a id="btnCobrander" onclick="createDialog();" class="form-button" style="height: auto; margin-left:4px;">Select</a>
+        <a id="btnClearCobrander" onclick="clearDialog();" class="form-button" style="height: auto;">Clear</a>
         <span class="ui-helper-clearfix"></span>
 </fieldset>
     <span class="ui-helper-clearfix"></span>
-    <a id="btnCobrander" onclick="createDialog();" class="form-button" style="height: auto; margin-left:4px;">Select Cobrander ID</a>
     <div style="display: none;" class="containerDialog" title="Select Cobrander Id"></div>
 </form>
