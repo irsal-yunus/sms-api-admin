@@ -1,5 +1,8 @@
 <script type="text/javascript">
     {literal}
+        $(function() {
+            $("#apiuser-regform-expired-date").datepicker();
+         });
         function createDialog() {
             $app.module('apiuser').selectCobranderID();
 
