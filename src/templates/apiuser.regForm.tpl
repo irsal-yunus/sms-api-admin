@@ -20,6 +20,12 @@
             });
             $('.containerDialog').dialog("open");
         }
+        function clearDialog() {
+            var txtCobrander = $('#cobranderId').val();
+            if(txtCobrander.length > 0) {
+                $('#cobranderId').val('');
+            }
+        }
 </script>
 {/literal}
 
@@ -38,6 +44,8 @@
 		<label class="form-flag-required">User Name</label><input name="userName" value="" type="text" maxlength="32"/><span class="ui-helper-clearfix"></span>
 		<label class="form-flag-required">Password</label><input name="userPassword" value="" type="text"/><span class="ui-helper-clearfix"></span>
         <label class="form-flag-required">Cobrander ID</label><input name="cobranderID" id="cobranderId" value="" type="text" maxlength="16" readonly/> 
+                <a id="btnCobrander" onclick="createDialog();" class="form-button" style="height: auto; margin-left:4px;" >Select</a>
+                <a id="btnClearCobrander" onclick="clearDialog();" class="form-button" style="height: auto;">Clear</a>
         <span class="ui-helper-clearfix"></span>
 		<label>Activate</label><input name="active" value="true" type="checkbox" checked="checked" /><span class="ui-helper-clearfix"></span>
 		<label>Status Delivery</label>
@@ -57,6 +65,5 @@
                 <label>Expired Date</label><input id="apiuser-regform-expired-date" name="expiredDate" value="" type="text" style="width: 11em;"/>        
 	</fieldset>
 	<span class="ui-helper-clearfix"></span>
-        <a id="btnCobrander" onclick="createDialog();" class="form-button" style="height: auto; margin-left:4px;" >Select Cobrander ID</a>
         <div style="display: none;" class="containerDialog" title="Select Cobrander Id"></div>
 </form>

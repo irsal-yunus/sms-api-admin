@@ -46,8 +46,6 @@ try {
 	}
 	if(isset($_POST['cobranderID'])){
 		$inquiry['cobranderID'] = trim(filter_var($_POST['cobranderID'], FILTER_SANITIZE_STRING, array('flags'=>FILTER_FLAG_STRIP_HIGH| FILTER_FLAG_STRIP_LOW)));
-		if($_POST['cobranderID'] == '')
-			$errorFields['cobranderID']= 'Cobrander ID can not be empty';
 	}	
 	$inquiry['replyBlacklistEnabled'] = filter_input(INPUT_POST, 'replyBlacklistEnabled', 
 										FILTER_VALIDATE_BOOLEAN )? 1 : 0;

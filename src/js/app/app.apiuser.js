@@ -257,8 +257,15 @@ mod.selectCobranderID = function() {
                 $1.error("[mod:apiuser.selectCobranderId] Error.", ex);
             }
 };
-        
-        
+
+ mod.clearCobranderID = function() {
+            try {
+                $app.form.clearCobranderID();
+            } catch (ex){
+                $1.error("[mod:apiuser.clearCobranderId] Error.",ex);
+            }
+};
+                
 mod.getValueCobrander = function (cobranderId) {
         try {
                 $app.form.getValueCobrander(cobranderId);

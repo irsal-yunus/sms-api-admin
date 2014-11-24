@@ -53,8 +53,6 @@ try {
 	}
 	if($regData['userPassword']=='')
 		$errorFields['userPassword']= 'Password must be set!';
-	if($regData['cobranderID']=='')
-		$errorFields['cobranderID']= 'Cobrander ID must be set!';
 	if(empty($regData['clientID']))
 		$errorFields['clientID']= 'Client must be set!';
 	if(empty($regData['expiredDate']))
