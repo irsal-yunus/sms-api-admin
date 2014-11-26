@@ -36,14 +36,7 @@ try {
 	}
         $tomorrow  = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
         $dateNow= date('Y-m-d H:i:s',$tomorrow);
-	if(isset($_POST['expiredDate'])){
-		$inquiry['expiredDate'] = trim(filter_var($_POST['expiredDate'], FILTER_SANITIZE_STRING, array('flags'=>FILTER_FLAG_STRIP_HIGH| FILTER_FLAG_STRIP_LOW)));
-		if($_POST['expiredDate'] == '')
-			$errorFields['expiredDate']= 'Expired date can not be empty';
-		else if($_POST['expiredDate'] < $dateNow)
-			$errorFields['expiredDate']= 'Expired date must be greater then today';
-                
-	}
+
 	if(isset($_POST['cobranderID'])){
 		$inquiry['cobranderID'] = trim(filter_var($_POST['cobranderID'], FILTER_SANITIZE_STRING, array('flags'=>FILTER_FLAG_STRIP_HIGH| FILTER_FLAG_STRIP_LOW)));
 	}	
