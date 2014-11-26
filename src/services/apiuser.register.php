@@ -54,8 +54,6 @@ try {
 		$errorFields['userPassword']= 'Password must be set!';
 	if(empty($regData['clientID']))
 		$errorFields['clientID']= 'Client must be set!';
-	if(empty($regData['expiredDate']))
-		$errorFields['expiredDate']= 'Expired Date must be set!';
         
         $tomorrow  = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
         $dateNow= date('Y-m-d H:i:s',$tomorrow);
