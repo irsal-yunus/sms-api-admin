@@ -15,7 +15,7 @@
 		<dt>Created On</dt><dd>{$details.createdTimestamp}</dd>
 		<dt>Updated By</dt><dd>{$details.updatedByName}</dd>
 		<dt>Updated On</dt><dd>{$details.updatedTimestamp}</dd>
-		<dt>Expired On</dt><dd>{$details.expiredDate}</dd>
+
 	</dl>
 </fieldset>
 <fieldset class="form-fieldset-submission">

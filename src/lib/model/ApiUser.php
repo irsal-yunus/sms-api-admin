@@ -39,7 +39,6 @@ class ApiUser extends ApiBaseModel{
 					u.URL_INVALID_COUNT as statusDeliveryUrlInvalidCount,
 					(u.URL_ACTIVE=1) as statusDeliveryActive,
 					u.URL_LAST_RETRY as statusDeliveryUrlLastRetry,
-                                        u.EXPIRED_DATE as expiredDate,
 					(u.USE_BLACKLIST=1) as replyBlacklistEnabled,
 					if(u.USE_BLACKLIST=1,'Enabled','Disabled') as replyBlacklistStatusName,
 					(u.IS_POSTPAID=1) as isPostpaid,
@@ -79,7 +78,6 @@ class ApiUser extends ApiBaseModel{
 					u.URL_INVALID_COUNT as statusDeliveryUrlInvalidCount,
 					(u.URL_ACTIVE=1) as statusDeliveryActive,
 					u.URL_LAST_RETRY as statusDeliveryUrlLastRetry,
-					u.EXPIRED_DATE as expiredDate,
 					(u.USE_BLACKLIST=1) as replyBlacklistEnabled,
 					if(u.USE_BLACKLIST=1,'Enabled','Disabled') as replyBlacklistStatusName,
 					(u.IS_POSTPAID=1) as isPostpaid,
@@ -126,7 +124,6 @@ class ApiUser extends ApiBaseModel{
 					u.URL_INVALID_COUNT as statusDeliveryUrlInvalidCount,
 					(u.URL_ACTIVE=1) as statusDeliveryActive,
 					u.URL_LAST_RETRY as statusDeliveryUrlLastRetry,
-                                        u.EXPIRED_DATE as expiredDate,
 					(u.USE_BLACKLIST=1) as replyBlacklistEnabled,
 					if(u.USE_BLACKLIST=1,'Enabled','Disabled') as replyBlacklistStatusName,
 					(u.IS_POSTPAID=1) as isPostpaid,
@@ -173,13 +170,13 @@ class ApiUser extends ApiBaseModel{
 		try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$query = 'insert into USER (
-							USER_NAME, PASSWORD, CLIENT_ID,EXPIRED_DATE, ACTIVE,
+							USER_NAME, PASSWORD, CLIENT_ID, ACTIVE,
 							COBRANDER_ID, USE_BLACKLIST, IS_POSTPAID,
 							CREATED_BY, CREATED_DATE,
 							CREDIT, LAST_ACCESS, version, COUNTER,
 							DELIVERY_STATUS_URL, URL_ACTIVE , URL_LAST_RETRY, URL_INVALID_COUNT)
 						values(
-							:userName, :userPassword, :clientID, :expiredDate, :active,
+							:userName, :userPassword, :clientID, :active,
 							:cobranderID, :replyBlacklistEnabled, :isPostpaid,
 							:adminID, now(),
 							0, null, 0, null,
@@ -213,7 +210,6 @@ class ApiUser extends ApiBaseModel{
 			$stmt->bindValue(':userPassword', $this->encryptPassword($data['userPassword']), PDO::PARAM_STR);
 			$stmt->bindValue(':active', !empty($data['active']), PDO::PARAM_BOOL);
 			$stmt->bindValue(':cobranderID', $data['cobranderID'], PDO::PARAM_STR);
-			$stmt->bindValue(':expiredDate', $data['expiredDate'], PDO::PARAM_STR);
 			$stmt->bindValue(':replyBlacklistEnabled', $data['replyBlacklistEnabled'], PDO::PARAM_INT);
 			$stmt->bindValue(':isPostpaid', $data['isPostpaid'], PDO::PARAM_INT);
 			$stmt->bindValue(':adminID', $adminID, PDO::PARAM_INT);
@@ -309,7 +305,6 @@ class ApiUser extends ApiBaseModel{
 				throw new Exception("Empty data");
 			$rules = array(
 				'userName'=>array('param'=>':userName', 'field'=>'USER_NAME', 'type'=>PDO::PARAM_STR),
-				'expiredDate'=>array('param'=>':expiredDate', 'field'=>'EXPIRED_DATE', 'type'=>PDO::PARAM_STR),
 				'cobranderID'=>array('param'=>':cobranderID', 'field'=>'COBRANDER_ID', 'type'=>PDO::PARAM_INT),
 				'replyBlacklistEnabled'=>array('param'=>':replyBlacklistEnabled', 'field'=>'USE_BLACKLIST', 'type'=>PDO::PARAM_INT),
 				'isPostpaid'=>array('param'=>':isPostpaid', 'field'=>'IS_POSTPAID', 'type'=>PDO::PARAM_INT),
@@ -453,7 +448,6 @@ class ApiUser extends ApiBaseModel{
 					u.DELIVERY_STATUS_URL as statusDeliveryUrl,
 					u.URL_INVALID_COUNT as statusDeliveryUrlInvalidCount,
 					u.URL_LAST_RETRY as statusDeliveryUrlLastRetry,
-                                        u.EXPIRED_DATE as expiredDate,
 					(u.USE_BLACKLIST=1) as replyBlacklistEnabled,
 					if(u.USE_BLACKLIST=1,'Enabled','Disabled') as replyBlacklistStatusName,
 					(u.IS_POSTPAID=1) as isPostpaid,

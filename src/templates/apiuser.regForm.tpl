@@ -1,8 +1,8 @@
 {literal}
 <script type="text/javascript"> 
-    $(function() {
-            $("#apiuser-regform-expired-date").datepicker();
-    });
+//    $(function() {
+//            $("#apiuser-regform-expired-date").datepicker();
+//    });
         function createDialog() {
             $app.module('apiuser').selectCobranderID();
 
@@ -62,7 +62,7 @@
 			<input name="isPostpaid" value="0" type="radio" checked="checked" />
 			<label class="flexible-width">No</label>
 			<span class="ui-helper-clearfix"></span>
-                <label>Expired Date</label><input id="apiuser-regform-expired-date" name="expiredDate" value="" type="text" style="width: 11em;"/>        
+               <!-- <label>Expired Date</label><input id="apiuser-regform-expired-date" name="expiredDate" value="" type="text" style="width: 11em;"/> -->       
 	</fieldset>
 	<span class="ui-helper-clearfix"></span>
         <div style="display: none;" class="containerDialog" title="Select Cobrander Id"></div>

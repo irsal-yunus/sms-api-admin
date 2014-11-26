@@ -23,7 +23,6 @@ try {
 		'active' => FILTER_VALIDATE_BOOLEAN,
 		'replyBlacklistEnabled' => FILTER_VALIDATE_BOOLEAN,
 		'isPostpaid' => FILTER_VALIDATE_BOOLEAN,
-		'expiredDate' => FILTER_SANITIZE_STRING,
 		'statusDeliveryActive' => FILTER_VALIDATE_INT,
 		'statusDeliveryUrl' => array(
 			'filter'=>FILTER_VALIDATE_URL,
@@ -55,13 +54,9 @@ try {
 		$errorFields['userPassword']= 'Password must be set!';
 	if(empty($regData['clientID']))
 		$errorFields['clientID']= 'Client must be set!';
-	if(empty($regData['expiredDate']))
-		$errorFields['expiredDate']= 'Expired Date must be set!';
         
         $tomorrow  = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
         $dateNow= date('Y-m-d H:i:s',$tomorrow);
-        if(!empty($regData['expiredDate']) && $_POST['expiredDate'] < $dateNow)
-                $errorFields['expiredDate']= 'Expired date must be greater then today';
 
 
 	if($errorFields){
