@@ -278,7 +278,8 @@ mod.editSender = function(senderID, userID) {
             try {
 		checkValidRecordID(senderID);
 		$app.form.openAutoDialog(('apiuser.editSingleSender'), {senderID:senderID}, 'Sender Identity Edit', {
-			height: 250
+                            width:'40em',
+                            height: 250
 		}, function(reply){
 			mod.editUser(userID, 'sender');
 		});
