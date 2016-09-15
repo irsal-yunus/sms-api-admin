@@ -119,6 +119,22 @@ mod.removeClient = function(clientID){
 	}
 };
 
+
+mod.smsBilling = function(clientID){
+	try {
+		checkValidRecordID(clientID);
+		$app.form.openAutoDialog('client.billing', {clientID:clientID}, 'Billing Options', {
+			height:350
+		}, function(reply){
+			if(reply !== false){
+				mod.viewClient(clientID);
+			}
+		});
+	} catch (ex) {
+		$1.error("[mod:client.editClient] Error.",ex);
+	}
+};
+
 mod.showClientList= function(options){
 	try {
 		var args= (typeof options == 'object')? options : null;

@@ -73,7 +73,6 @@ class LoggerAppenderFile extends LoggerAppender {
 				mkdir($dir, 0777, true);
 			}
 		}
-
 		$this->fp = fopen($fileName, ($this->getAppend()? 'a':'w'));
 		if($this->fp) {
 			if(flock($this->fp, LOCK_EX)) {

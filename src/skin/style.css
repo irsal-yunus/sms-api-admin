@@ -494,6 +494,36 @@ form.admin-tabform > .ui-tabs > .ui-tabs-panel > fieldset:first-child{
 	margin-top: 0;
 }
 
+/*ReportTabForm*/
+form.report-tabform{
+/* position: fixed;
+top: 30%;*/
+	display: block;
+        top:30%;
+	width: 100%;
+	border: none;
+	padding: 0;
+	margin: 0 auto;
+	clear: both;
+	float: none;
+}
+form.report-tabform > .ui-tabs{
+	width: 95%;
+	margin: 0 auto;
+	padding: 0;
+}
+form.report-tabform > .ui-tabs > .ui-tabs-panel > fieldset{
+	margin-top: 10px;
+	width: 100%;
+	display: block;
+	float: none;
+	padding: 10px 0;
+	-moz-border-radius : 0px 0px 5px 5px;
+}
+form.report-tabform > .ui-tabs > .ui-tabs-panel > fieldset:first-child{
+	margin-top: 0;
+}
+
 
 
 form fieldset label,

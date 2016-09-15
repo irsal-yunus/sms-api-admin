@@ -1,0 +1,635 @@
+Wed Sep 14 02:10:17 2016,052 [3487] ERROR SmsApiAdminLoginManager - exception 'PDOException' with message 'SQLSTATE[42000] [1049] Unknown database 'SMS_API_V2'' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:444
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(444): PDO->__construct('mysql:host=10.3...', 'qateam', 'qateam')
+#1 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(67): SmsApiAdmin::getDB('default')
+#2 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#3 {main}
+Wed Sep 14 02:10:17 2016,053 [3487] ERROR service/login - exception 'Exception' with message 'Query error' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:87
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#1 {main}
+Wed Sep 14 02:12:57 2016,335 [1991] ERROR SmsApiAdminLoginManager - exception 'PDOException' with message 'SQLSTATE[42000] [1049] Unknown database 'SMS_API_V2'' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:444
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(444): PDO->__construct('mysql:host=10.3...', 'qateam', 'qateam')
+#1 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(67): SmsApiAdmin::getDB('default')
+#2 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#3 {main}
+Wed Sep 14 02:12:57 2016,335 [1991] ERROR service/login - exception 'Exception' with message 'Query error' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:87
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#1 {main}
+Wed Sep 14 02:12:59 2016,783 [1991] ERROR SmsApiAdminLoginManager - exception 'PDOException' with message 'SQLSTATE[42000] [1049] Unknown database 'SMS_API_V2'' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:444
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(444): PDO->__construct('mysql:host=10.3...', 'qateam', 'qateam')
+#1 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(67): SmsApiAdmin::getDB('default')
+#2 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#3 {main}
+Wed Sep 14 02:12:59 2016,783 [1991] ERROR service/login - exception 'Exception' with message 'Query error' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:87
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#1 {main}
+Wed Sep 14 02:13:05 2016,539 [1992] ERROR SmsApiAdminLoginManager - exception 'PDOException' with message 'SQLSTATE[42000] [1049] Unknown database 'SMS_API_V2'' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:444
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(444): PDO->__construct('mysql:host=10.3...', 'qateam', 'qateam')
+#1 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(67): SmsApiAdmin::getDB('default')
+#2 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#3 {main}
+Wed Sep 14 02:13:05 2016,539 [1992] ERROR service/login - exception 'Exception' with message 'Query error' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:87
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#1 {main}
+Wed Sep 14 02:23:02 2016,785 [3489] ERROR SmsApiAdminLoginManager - exception 'PDOException' with message 'SQLSTATE[42000] [1049] Unknown database 'SMS_API_V2'' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:444
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(444): PDO->__construct('mysql:host=10.3...', 'qateam', 'qateam')
+#1 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(67): SmsApiAdmin::getDB('default')
+#2 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#3 {main}
+Wed Sep 14 02:23:02 2016,785 [3489] ERROR service/login - exception 'Exception' with message 'Query error' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:87
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#1 {main}
+Wed Sep 14 02:23:51 2016,908 [1988] ERROR SmsApiAdminLoginManager - exception 'PDOException' with message 'SQLSTATE[42000] [1049] Unknown database 'SMS_API_V2'' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:444
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(444): PDO->__construct('mysql:host=10.3...', 'qateam', 'qateam')
+#1 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(67): SmsApiAdmin::getDB('default')
+#2 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#3 {main}
+Wed Sep 14 02:23:51 2016,909 [1988] ERROR service/login - exception 'Exception' with message 'Query error' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:87
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#1 {main}
+Wed Sep 14 02:27:59 2016,356 [3481] ERROR SmsApiAdminLoginManager - exception 'PDOException' with message 'SQLSTATE[42000] [1049] Unknown database 'SMS_API_V2'' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:450
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(450): PDO->__construct('mysql:host=10.3...', 'qateam', 'qateam')
+#1 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(67): SmsApiAdmin::getDB('default')
+#2 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#3 {main}
+Wed Sep 14 02:27:59 2016,356 [3481] ERROR service/login - exception 'Exception' with message 'Query error' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:87
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#1 {main}
+Wed Sep 14 02:30:59 2016,170 [3487] ERROR SmsApiAdminLoginManager - exception 'PDOException' with message 'SQLSTATE[42000] [1049] Unknown database 'SMS_API_V2'' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:450
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(450): PDO->__construct('mysql:host=10.3...', 'qateam', 'qateam')
+#1 /var/www/html/sms-api-admin/src/lib/core/admin.lib.php(67): SmsApiAdmin::getDB('default')
+#2 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#3 {main}
+Wed Sep 14 02:30:59 2016,170 [3487] ERROR service/login - exception 'Exception' with message 'Query error' in /var/www/html/sms-api-admin/src/lib/core/admin.lib.php:87
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/login.php(21): SmsApiAdminLoginManager->login('mktg', 'ricky')
+#1 {main}
+Wed Sep 14 04:43:55 2016,713 [4776] INFO root - exception 'ErrorException' with message 'Undefined index: provided' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:195
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(195): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 195, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(97): ApiBusinessClient->updateBilling(3, Array)
+#2 {main}
+Wed Sep 14 04:43:55 2016,713 [4776] WARN root - exception 'ErrorException' with message 'Invalid argument supplied for foreach()' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:114
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(114): SmsApiAdmin::catchError(2, 'Invalid argumen...', '/var/www/html/s...', 114, Array)
+#1 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(195): ApiBusinessClient->addSparation(NULL)
+#2 /var/www/html/sms-api-admin/src/services/client.billing.update.php(97): ApiBusinessClient->updateBilling(3, Array)
+#3 {main}
+Wed Sep 14 04:43:55 2016,713 [4776] INFO root - exception 'ErrorException' with message 'Undefined index: errorCode' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:198
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(198): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 198, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(97): ApiBusinessClient->updateBilling(3, Array)
+#2 {main}
+Wed Sep 14 04:43:55 2016,713 [4776] INFO root - exception 'ErrorException' with message 'Undefined index: undelivered' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:247
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(247): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 247, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(97): ApiBusinessClient->updateBilling(3, Array)
+#2 {main}
+Wed Sep 14 04:43:55 2016,713 [4776] INFO root - exception 'ErrorException' with message 'Undefined index: showDelivered' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:247
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(247): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 247, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(97): ApiBusinessClient->updateBilling(3, Array)
+#2 {main}
+Wed Sep 14 04:43:55 2016,713 [4776] INFO root - exception 'ErrorException' with message 'Undefined index: deliveredDesc' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:247
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(247): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 247, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(97): ApiBusinessClient->updateBilling(3, Array)
+#2 {main}
+Wed Sep 14 04:43:55 2016,714 [4776] INFO root - exception 'ErrorException' with message 'Undefined index: totalSms' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:247
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(247): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 247, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(97): ApiBusinessClient->updateBilling(3, Array)
+#2 {main}
+Wed Sep 14 04:43:55 2016,714 [4776] INFO root - exception 'ErrorException' with message 'Undefined index: showProvider' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:247
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(247): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 247, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(97): ApiBusinessClient->updateBilling(3, Array)
+#2 {main}
+Wed Sep 14 04:43:55 2016,830 [4776] INFO root - exception 'ErrorException' with message 'Undefined variable: clientcontactEmail' in /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php:287
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php(287): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 287, Array)
+#1 /var/www/html/sms-api-admin/src/templates_compiled/a069a9e4dfad6b000f8445e4cd4862f3e2c3b5d5.file.client.view.tpl.php(36): Smarty_Internal_Data->getVariable('clientcontactEm...')
+#2 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(423): include('/var/www/html/s...')
+#3 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(555): Smarty_Internal_Template->renderTemplate()
+#4 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(335): Smarty_Internal_Template->getRenderedTemplate()
+#5 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(379): Smarty->fetch('client.view.tpl', NULL, NULL, NULL, true)
+#6 /var/www/html/sms-api-admin/src/services/client.view.php(23): Smarty->display('client.view.tpl')
+#7 {main}
+Wed Sep 14 04:45:58 2016,710 [1991] INFO root - exception 'ErrorException' with message 'Undefined variable: clientID' in /var/www/html/sms-api-admin/src/services/apiuser.table.php:71
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.table.php(71): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 71, Array)
+#1 {main}
+Wed Sep 14 04:47:14 2016,413 [4649] INFO root - exception 'ErrorException' with message 'Undefined variable: year' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:23
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(23): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 23, Array)
+#1 {main}
+Wed Sep 14 04:47:14 2016,414 [4649] INFO root - exception 'ErrorException' with message 'Undefined variable: sms_dr' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:25
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(25): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 25, Array)
+#1 {main}
+Wed Sep 14 04:47:14 2016,414 [4649] INFO root - exception 'ErrorException' with message 'Undefined variable: month' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:26
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(26): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 26, Array)
+#1 {main}
+Wed Sep 14 04:47:37 2016,860 [4766] WARN root - exception 'ErrorException' with message 'include(../classes/PHPExcel/PHPExcel_ReferenceHelper.php): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(../clas...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:47:37 2016,860 [4766] WARN root - exception 'ErrorException' with message 'include(): Failed opening '../classes/PHPExcel/PHPExcel_ReferenceHelper.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear')' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(): Fail...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:47:37 2016,861 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: sms_dr' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:31
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(31): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 31, Array)
+#1 {main}
+Wed Sep 14 04:47:37 2016,861 [4766] INFO root - exception 'ErrorException' with message 'Use of undefined constant SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT - assumed 'SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT'' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:217
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(217): SmsApiAdmin::catchError(8, 'Use of undefine...', '/var/www/html/s...', 217, Array)
+#1 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance.xlsx', '03', '2016')
+#2 {main}
+Wed Sep 14 04:47:37 2016,862 [4766] WARN root - exception 'ErrorException' with message 'filesize(): stat failed for SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2016-03/womfinance.xlsx' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:224
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'filesize(): sta...', '/var/www/html/s...', 224, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(224): filesize('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance.xlsx', '03', '2016')
+#3 {main}
+Wed Sep 14 04:47:37 2016,862 [4766] WARN root - exception 'ErrorException' with message 'readfile(SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2016-03/womfinance.xlsx): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:225
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'readfile(SMSAPI...', '/var/www/html/s...', 225, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(225): readfile('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance.xlsx', '03', '2016')
+#3 {main}
+Wed Sep 14 04:47:37 2016,891 [4766] WARN root - exception 'ErrorException' with message 'include(../classes/PHPExcel/PHPExcel_ReferenceHelper.php): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(../clas...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:47:37 2016,892 [4766] WARN root - exception 'ErrorException' with message 'include(): Failed opening '../classes/PHPExcel/PHPExcel_ReferenceHelper.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear')' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(): Fail...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:47:37 2016,892 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: sms_dr' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:31
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(31): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 31, Array)
+#1 {main}
+Wed Sep 14 04:47:37 2016,893 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: check' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:32
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(32): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 32, Array)
+#1 {main}
+Wed Sep 14 04:47:37 2016,893 [4766] INFO root - exception 'ErrorException' with message 'Use of undefined constant SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT - assumed 'SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT'' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:217
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(217): SmsApiAdmin::catchError(8, 'Use of undefine...', '/var/www/html/s...', 217, Array)
+#1 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance.xlsx', '03', '2016')
+#2 {main}
+Wed Sep 14 04:47:37 2016,893 [4766] WARN root - exception 'ErrorException' with message 'filesize(): stat failed for SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2016-03/womfinance.xlsx' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:224
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'filesize(): sta...', '/var/www/html/s...', 224, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(224): filesize('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance.xlsx', '03', '2016')
+#3 {main}
+Wed Sep 14 04:47:37 2016,893 [4766] WARN root - exception 'ErrorException' with message 'readfile(SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2016-03/womfinance.xlsx): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:225
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'readfile(SMSAPI...', '/var/www/html/s...', 225, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(225): readfile('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance.xlsx', '03', '2016')
+#3 {main}
+Wed Sep 14 04:47:52 2016,637 [1990] INFO root - exception 'ErrorException' with message 'Undefined variable: year' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:23
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(23): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 23, Array)
+#1 {main}
+Wed Sep 14 04:47:52 2016,639 [1990] INFO root - exception 'ErrorException' with message 'Undefined variable: sms_dr' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:25
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(25): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 25, Array)
+#1 {main}
+Wed Sep 14 04:47:52 2016,639 [1990] INFO root - exception 'ErrorException' with message 'Undefined variable: month' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:26
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(26): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 26, Array)
+#1 {main}
+Wed Sep 14 04:48:03 2016,060 [3481] WARN root - exception 'ErrorException' with message 'include(../classes/PHPExcel/PHPExcel_ReferenceHelper.php): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(../clas...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:03 2016,061 [3481] WARN root - exception 'ErrorException' with message 'include(): Failed opening '../classes/PHPExcel/PHPExcel_ReferenceHelper.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear')' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(): Fail...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:03 2016,061 [3481] INFO root - exception 'ErrorException' with message 'Undefined index: sms_dr' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:31
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(31): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 31, Array)
+#1 {main}
+Wed Sep 14 04:48:03 2016,062 [3481] INFO root - exception 'ErrorException' with message 'Use of undefined constant SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT - assumed 'SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT'' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:217
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(217): SmsApiAdmin::catchError(8, 'Use of undefine...', '/var/www/html/s...', 217, Array)
+#1 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#2 {main}
+Wed Sep 14 04:48:03 2016,062 [3481] WARN root - exception 'ErrorException' with message 'filesize(): stat failed for SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2015-03/womfinance2.xlsx' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:224
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'filesize(): sta...', '/var/www/html/s...', 224, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(224): filesize('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#3 {main}
+Wed Sep 14 04:48:03 2016,062 [3481] WARN root - exception 'ErrorException' with message 'readfile(SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2015-03/womfinance2.xlsx): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:225
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'readfile(SMSAPI...', '/var/www/html/s...', 225, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(225): readfile('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#3 {main}
+Wed Sep 14 04:48:03 2016,086 [3481] WARN root - exception 'ErrorException' with message 'include(../classes/PHPExcel/PHPExcel_ReferenceHelper.php): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(../clas...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:03 2016,086 [3481] WARN root - exception 'ErrorException' with message 'include(): Failed opening '../classes/PHPExcel/PHPExcel_ReferenceHelper.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear')' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(): Fail...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:03 2016,087 [3481] INFO root - exception 'ErrorException' with message 'Undefined index: sms_dr' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:31
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(31): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 31, Array)
+#1 {main}
+Wed Sep 14 04:48:03 2016,087 [3481] INFO root - exception 'ErrorException' with message 'Undefined index: check' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:32
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(32): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 32, Array)
+#1 {main}
+Wed Sep 14 04:48:03 2016,088 [3481] INFO root - exception 'ErrorException' with message 'Use of undefined constant SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT - assumed 'SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT'' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:217
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(217): SmsApiAdmin::catchError(8, 'Use of undefine...', '/var/www/html/s...', 217, Array)
+#1 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#2 {main}
+Wed Sep 14 04:48:03 2016,088 [3481] WARN root - exception 'ErrorException' with message 'filesize(): stat failed for SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2015-03/womfinance2.xlsx' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:224
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'filesize(): sta...', '/var/www/html/s...', 224, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(224): filesize('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#3 {main}
+Wed Sep 14 04:48:03 2016,088 [3481] WARN root - exception 'ErrorException' with message 'readfile(SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2015-03/womfinance2.xlsx): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:225
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'readfile(SMSAPI...', '/var/www/html/s...', 225, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(225): readfile('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#3 {main}
+Wed Sep 14 04:48:11 2016,006 [4649] INFO root - exception 'ErrorException' with message 'Undefined variable: year' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:23
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(23): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 23, Array)
+#1 {main}
+Wed Sep 14 04:48:11 2016,008 [4649] INFO root - exception 'ErrorException' with message 'Undefined variable: sms_dr' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:25
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(25): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 25, Array)
+#1 {main}
+Wed Sep 14 04:48:11 2016,008 [4649] INFO root - exception 'ErrorException' with message 'Undefined variable: month' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:26
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(26): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 26, Array)
+#1 {main}
+Wed Sep 14 04:48:25 2016,876 [4766] WARN root - exception 'ErrorException' with message 'include(../classes/PHPExcel/PHPExcel_ReferenceHelper.php): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(../clas...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:25 2016,876 [4766] WARN root - exception 'ErrorException' with message 'include(): Failed opening '../classes/PHPExcel/PHPExcel_ReferenceHelper.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear')' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(): Fail...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:25 2016,877 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: sms_dr' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:31
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(31): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 31, Array)
+#1 {main}
+Wed Sep 14 04:48:25 2016,877 [4766] INFO root - exception 'ErrorException' with message 'Use of undefined constant SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT - assumed 'SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT'' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:217
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(217): SmsApiAdmin::catchError(8, 'Use of undefine...', '/var/www/html/s...', 217, Array)
+#1 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#2 {main}
+Wed Sep 14 04:48:25 2016,877 [4766] WARN root - exception 'ErrorException' with message 'filesize(): stat failed for SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2015-03/womfinance2.xlsx' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:224
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'filesize(): sta...', '/var/www/html/s...', 224, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(224): filesize('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#3 {main}
+Wed Sep 14 04:48:25 2016,877 [4766] WARN root - exception 'ErrorException' with message 'readfile(SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2015-03/womfinance2.xlsx): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:225
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'readfile(SMSAPI...', '/var/www/html/s...', 225, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(225): readfile('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#3 {main}
+Wed Sep 14 04:48:25 2016,902 [4766] WARN root - exception 'ErrorException' with message 'include(../classes/PHPExcel/PHPExcel_ReferenceHelper.php): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(../clas...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:25 2016,902 [4766] WARN root - exception 'ErrorException' with message 'include(): Failed opening '../classes/PHPExcel/PHPExcel_ReferenceHelper.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear')' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(): Fail...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:25 2016,903 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: sms_dr' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:31
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(31): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 31, Array)
+#1 {main}
+Wed Sep 14 04:48:25 2016,903 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: check' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:32
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(32): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 32, Array)
+#1 {main}
+Wed Sep 14 04:48:25 2016,903 [4766] INFO root - exception 'ErrorException' with message 'Use of undefined constant SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT - assumed 'SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT'' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:217
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(217): SmsApiAdmin::catchError(8, 'Use of undefine...', '/var/www/html/s...', 217, Array)
+#1 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#2 {main}
+Wed Sep 14 04:48:25 2016,903 [4766] WARN root - exception 'ErrorException' with message 'filesize(): stat failed for SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2015-03/womfinance2.xlsx' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:224
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'filesize(): sta...', '/var/www/html/s...', 224, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(224): filesize('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#3 {main}
+Wed Sep 14 04:48:25 2016,903 [4766] WARN root - exception 'ErrorException' with message 'readfile(SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2015-03/womfinance2.xlsx): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:225
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'readfile(SMSAPI...', '/var/www/html/s...', 225, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(225): readfile('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2015')
+#3 {main}
+Wed Sep 14 04:48:31 2016,042 [1990] WARN root - exception 'ErrorException' with message 'include(../classes/PHPExcel/PHPExcel_ReferenceHelper.php): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(../clas...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:31 2016,042 [1990] WARN root - exception 'ErrorException' with message 'include(): Failed opening '../classes/PHPExcel/PHPExcel_ReferenceHelper.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear')' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(): Fail...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:31 2016,043 [1990] INFO root - exception 'ErrorException' with message 'Undefined index: sms_dr' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:31
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(31): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 31, Array)
+#1 {main}
+Wed Sep 14 04:48:31 2016,043 [1990] INFO root - exception 'ErrorException' with message 'Use of undefined constant SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT - assumed 'SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT'' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:217
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(217): SmsApiAdmin::catchError(8, 'Use of undefine...', '/var/www/html/s...', 217, Array)
+#1 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2016')
+#2 {main}
+Wed Sep 14 04:48:31 2016,043 [1990] WARN root - exception 'ErrorException' with message 'filesize(): stat failed for SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2016-03/womfinance2.xlsx' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:224
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'filesize(): sta...', '/var/www/html/s...', 224, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(224): filesize('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2016')
+#3 {main}
+Wed Sep 14 04:48:31 2016,044 [1990] WARN root - exception 'ErrorException' with message 'readfile(SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2016-03/womfinance2.xlsx): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:225
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'readfile(SMSAPI...', '/var/www/html/s...', 225, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(225): readfile('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2016')
+#3 {main}
+Wed Sep 14 04:48:31 2016,067 [1990] WARN root - exception 'ErrorException' with message 'include(../classes/PHPExcel/PHPExcel_ReferenceHelper.php): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(../clas...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:31 2016,068 [1990] WARN root - exception 'ErrorException' with message 'include(): Failed opening '../classes/PHPExcel/PHPExcel_ReferenceHelper.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear')' in /var/www/html/sms-api-admin/src/services/ExportReportExcel.php:16
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): SmsApiAdmin::catchError(2, 'include(): Fail...', '/var/www/html/s...', 16, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExportReportExcel.php(16): include()
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(16): require_once('/var/www/html/s...')
+#3 {main}
+Wed Sep 14 04:48:31 2016,069 [1990] INFO root - exception 'ErrorException' with message 'Undefined index: sms_dr' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:31
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(31): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 31, Array)
+#1 {main}
+Wed Sep 14 04:48:31 2016,069 [1990] INFO root - exception 'ErrorException' with message 'Undefined index: check' in /var/www/html/sms-api-admin/src/services/generateReportUser.php:32
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/generateReportUser.php(32): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 32, Array)
+#1 {main}
+Wed Sep 14 04:48:31 2016,069 [1990] INFO root - exception 'ErrorException' with message 'Use of undefined constant SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT - assumed 'SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT'' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:217
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(217): SmsApiAdmin::catchError(8, 'Use of undefine...', '/var/www/html/s...', 217, Array)
+#1 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2016')
+#2 {main}
+Wed Sep 14 04:48:31 2016,069 [1990] WARN root - exception 'ErrorException' with message 'filesize(): stat failed for SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2016-03/womfinance2.xlsx' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:224
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'filesize(): sta...', '/var/www/html/s...', 224, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(224): filesize('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2016')
+#3 {main}
+Wed Sep 14 04:48:31 2016,069 [1990] WARN root - exception 'ErrorException' with message 'readfile(SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT2016-03/womfinance2.xlsx): failed to open stream: No such file or directory' in /var/www/html/sms-api-admin/src/services/ExcelSpout.php:225
+Stack trace:
+#0 [internal function]: SmsApiAdmin::catchError(2, 'readfile(SMSAPI...', '/var/www/html/s...', 225, Array)
+#1 /var/www/html/sms-api-admin/src/services/ExcelSpout.php(225): readfile('SMSAPIADMIN_ARC...')
+#2 /var/www/html/sms-api-admin/src/services/generateReportUser.php(57): ExcelSpout->getLastRecordDateTime('womfinance2.xls...', '03', '2016')
+#3 {main}
+Wed Sep 14 04:48:45 2016,508 [4656] INFO root - exception 'ErrorException' with message 'Undefined variable: year' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:23
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(23): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 23, Array)
+#1 {main}
+Wed Sep 14 04:48:45 2016,510 [4656] INFO root - exception 'ErrorException' with message 'Undefined variable: sms_dr' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:25
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(25): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 25, Array)
+#1 {main}
+Wed Sep 14 04:48:45 2016,510 [4656] INFO root - exception 'ErrorException' with message 'Undefined variable: month' in /var/www/html/sms-api-admin/src/services/apiuser.report.php:26
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.report.php(26): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 26, Array)
+#1 {main}
+Wed Sep 14 04:51:56 2016,823 [4649] INFO root - exception 'ErrorException' with message 'Undefined variable: clientcontactEmail' in /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php:287
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php(287): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 287, Array)
+#1 /var/www/html/sms-api-admin/src/templates_compiled/a069a9e4dfad6b000f8445e4cd4862f3e2c3b5d5.file.client.view.tpl.php(36): Smarty_Internal_Data->getVariable('clientcontactEm...')
+#2 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(423): include('/var/www/html/s...')
+#3 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(555): Smarty_Internal_Template->renderTemplate()
+#4 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(335): Smarty_Internal_Template->getRenderedTemplate()
+#5 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(379): Smarty->fetch('client.view.tpl', NULL, NULL, NULL, true)
+#6 /var/www/html/sms-api-admin/src/services/client.view.php(23): Smarty->display('client.view.tpl')
+#7 {main}
+Wed Sep 14 04:55:36 2016,210 [3481] INFO root - exception 'ErrorException' with message 'Undefined variable: clientID' in /var/www/html/sms-api-admin/src/services/apiuser.table.php:71
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.table.php(71): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 71, Array)
+#1 {main}
+Wed Sep 14 04:58:21 2016,265 [1991] INFO root - exception 'ErrorException' with message 'Undefined variable: clientcontactEmail' in /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php:287
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php(287): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 287, Array)
+#1 /var/www/html/sms-api-admin/src/templates_compiled/a069a9e4dfad6b000f8445e4cd4862f3e2c3b5d5.file.client.view.tpl.php(36): Smarty_Internal_Data->getVariable('clientcontactEm...')
+#2 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(423): include('/var/www/html/s...')
+#3 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(555): Smarty_Internal_Template->renderTemplate()
+#4 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(335): Smarty_Internal_Template->getRenderedTemplate()
+#5 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(379): Smarty->fetch('client.view.tpl', NULL, NULL, NULL, true)
+#6 /var/www/html/sms-api-admin/src/services/client.view.php(23): Smarty->display('client.view.tpl')
+#7 {main}
+Wed Sep 14 04:58:25 2016,868 [1991] INFO root - exception 'ErrorException' with message 'Undefined variable: clientID' in /var/www/html/sms-api-admin/src/services/apiuser.table.php:71
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.table.php(71): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 71, Array)
+#1 {main}
+Wed Sep 14 05:00:38 2016,803 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: provided' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:155
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(155): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 155, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(104): ApiBusinessClient->insertBilling(13, Array)
+#2 {main}
+Wed Sep 14 05:00:38 2016,804 [4766] WARN root - exception 'ErrorException' with message 'Invalid argument supplied for foreach()' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:114
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(114): SmsApiAdmin::catchError(2, 'Invalid argumen...', '/var/www/html/s...', 114, Array)
+#1 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(155): ApiBusinessClient->addSparation(NULL)
+#2 /var/www/html/sms-api-admin/src/services/client.billing.update.php(104): ApiBusinessClient->insertBilling(13, Array)
+#3 {main}
+Wed Sep 14 05:00:38 2016,804 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: errorCode' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:158
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(158): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 158, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(104): ApiBusinessClient->insertBilling(13, Array)
+#2 {main}
+Wed Sep 14 05:00:38 2016,804 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: undelivered' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:168
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(168): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 168, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(104): ApiBusinessClient->insertBilling(13, Array)
+#2 {main}
+Wed Sep 14 05:00:38 2016,804 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: showDelivered' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:169
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(169): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 169, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(104): ApiBusinessClient->insertBilling(13, Array)
+#2 {main}
+Wed Sep 14 05:00:38 2016,804 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: deliveredDesc' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:170
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(170): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 170, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(104): ApiBusinessClient->insertBilling(13, Array)
+#2 {main}
+Wed Sep 14 05:00:38 2016,804 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: totalSms' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:171
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(171): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 171, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(104): ApiBusinessClient->insertBilling(13, Array)
+#2 {main}
+Wed Sep 14 05:00:38 2016,804 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: totalCharge' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:172
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(172): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 172, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(104): ApiBusinessClient->insertBilling(13, Array)
+#2 {main}
+Wed Sep 14 05:00:38 2016,804 [4766] INFO root - exception 'ErrorException' with message 'Undefined index: showProvider' in /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php:173
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/model/ApiBusinessClient.php(173): SmsApiAdmin::catchError(8, 'Undefined index...', '/var/www/html/s...', 173, Array)
+#1 /var/www/html/sms-api-admin/src/services/client.billing.update.php(104): ApiBusinessClient->insertBilling(13, Array)
+#2 {main}
+Wed Sep 14 05:00:38 2016,884 [4766] INFO root - exception 'ErrorException' with message 'Undefined variable: clientcontactEmail' in /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php:287
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php(287): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 287, Array)
+#1 /var/www/html/sms-api-admin/src/templates_compiled/a069a9e4dfad6b000f8445e4cd4862f3e2c3b5d5.file.client.view.tpl.php(36): Smarty_Internal_Data->getVariable('clientcontactEm...')
+#2 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(423): include('/var/www/html/s...')
+#3 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(555): Smarty_Internal_Template->renderTemplate()
+#4 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(335): Smarty_Internal_Template->getRenderedTemplate()
+#5 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(379): Smarty->fetch('client.view.tpl', NULL, NULL, NULL, true)
+#6 /var/www/html/sms-api-admin/src/services/client.view.php(23): Smarty->display('client.view.tpl')
+#7 {main}
+Wed Sep 14 05:00:41 2016,938 [4766] INFO root - exception 'ErrorException' with message 'Undefined variable: clientID' in /var/www/html/sms-api-admin/src/services/apiuser.table.php:71
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.table.php(71): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 71, Array)
+#1 {main}
+Wed Sep 14 05:02:21 2016,157 [4776] INFO root - exception 'ErrorException' with message 'Undefined variable: clientID' in /var/www/html/sms-api-admin/src/services/apiuser.table.php:71
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.table.php(71): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 71, Array)
+#1 {main}
+Wed Sep 14 05:02:42 2016,364 [4766] ERROR root - exception 'Exception' with message 'Username 'test' exists' in /var/www/html/sms-api-admin/src/lib/model/ApiUser.php:199
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.register.php(72): ApiUser->register(Array)
+#1 {main}
+Wed Sep 14 05:06:10 2016,840 [4766] ERROR root - exception 'InvalidArgumentException' with message 'Sender name can not be empty' in /var/www/html/sms-api-admin/src/lib/model/ApiUserCredit.php:345
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/credit.ackTransaction.php(43): ApiUserCredit->acknowledgePayment(3157, Array)
+#1 {main}
+Wed Sep 14 05:06:14 2016,584 [4766] ERROR root - exception 'InvalidArgumentException' with message 'Sender name can not be empty' in /var/www/html/sms-api-admin/src/lib/model/ApiUserCredit.php:345
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/credit.ackTransaction.php(43): ApiUserCredit->acknowledgePayment(3157, Array)
+#1 {main}
+Wed Sep 14 05:06:26 2016,777 [3488] ERROR root - exception 'InvalidArgumentException' with message 'Sender name can not be empty' in /var/www/html/sms-api-admin/src/lib/model/ApiUserCredit.php:345
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/credit.ackTransaction.php(43): ApiUserCredit->acknowledgePayment(3157, Array)
+#1 {main}
+Wed Sep 14 05:07:43 2016,241 [4766] INFO root - exception 'ErrorException' with message 'Undefined variable: clientID' in /var/www/html/sms-api-admin/src/services/apiuser.table.php:71
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.table.php(71): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 71, Array)
+#1 {main}
+Wed Sep 14 05:08:31 2016,601 [1990] INFO root - exception 'ErrorException' with message 'Undefined variable: clientID' in /var/www/html/sms-api-admin/src/services/apiuser.table.php:71
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.table.php(71): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 71, Array)
+#1 {main}
+Wed Sep 14 05:09:13 2016,485 [4766] INFO root - exception 'ErrorException' with message 'Undefined variable: clientcontactEmail' in /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php:287
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php(287): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 287, Array)
+#1 /var/www/html/sms-api-admin/src/templates_compiled/a069a9e4dfad6b000f8445e4cd4862f3e2c3b5d5.file.client.view.tpl.php(36): Smarty_Internal_Data->getVariable('clientcontactEm...')
+#2 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(423): include('/var/www/html/s...')
+#3 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(555): Smarty_Internal_Template->renderTemplate()
+#4 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(335): Smarty_Internal_Template->getRenderedTemplate()
+#5 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(379): Smarty->fetch('client.view.tpl', NULL, NULL, NULL, true)
+#6 /var/www/html/sms-api-admin/src/services/client.view.php(23): Smarty->display('client.view.tpl')
+#7 {main}
+Wed Sep 14 05:09:17 2016,302 [4766] INFO root - exception 'ErrorException' with message 'Undefined variable: clientID' in /var/www/html/sms-api-admin/src/services/apiuser.table.php:71
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.table.php(71): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 71, Array)
+#1 {main}
+Wed Sep 14 05:29:44 2016,915 [4649] INFO root - exception 'ErrorException' with message 'Undefined variable: clientcontactEmail' in /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php:287
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php(287): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 287, Array)
+#1 /var/www/html/sms-api-admin/src/templates_compiled/a069a9e4dfad6b000f8445e4cd4862f3e2c3b5d5.file.client.view.tpl.php(36): Smarty_Internal_Data->getVariable('clientcontactEm...')
+#2 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(423): include('/var/www/html/s...')
+#3 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(555): Smarty_Internal_Template->renderTemplate()
+#4 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(335): Smarty_Internal_Template->getRenderedTemplate()
+#5 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(379): Smarty->fetch('client.view.tpl', NULL, NULL, NULL, true)
+#6 /var/www/html/sms-api-admin/src/services/client.view.php(23): Smarty->display('client.view.tpl')
+#7 {main}
+Wed Sep 14 05:29:57 2016,250 [4656] INFO root - exception 'ErrorException' with message 'Undefined variable: clientID' in /var/www/html/sms-api-admin/src/services/apiuser.table.php:71
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.table.php(71): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 71, Array)
+#1 {main}
+Wed Sep 14 05:36:16 2016,996 [3481] INFO root - exception 'ErrorException' with message 'Undefined variable: clientcontactEmail' in /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php:287
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php(287): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 287, Array)
+#1 /var/www/html/sms-api-admin/src/templates_compiled/a069a9e4dfad6b000f8445e4cd4862f3e2c3b5d5.file.client.view.tpl.php(36): Smarty_Internal_Data->getVariable('clientcontactEm...')
+#2 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(423): include('/var/www/html/s...')
+#3 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(555): Smarty_Internal_Template->renderTemplate()
+#4 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(335): Smarty_Internal_Template->getRenderedTemplate()
+#5 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(379): Smarty->fetch('client.view.tpl', NULL, NULL, NULL, true)
+#6 /var/www/html/sms-api-admin/src/services/client.view.php(23): Smarty->display('client.view.tpl')
+#7 {main}
+Wed Sep 14 05:36:19 2016,733 [3481] INFO root - exception 'ErrorException' with message 'Undefined variable: clientID' in /var/www/html/sms-api-admin/src/services/apiuser.table.php:71
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.table.php(71): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 71, Array)
+#1 {main}
+Wed Sep 14 05:37:18 2016,716 [1991] INFO root - exception 'ErrorException' with message 'Undefined variable: clientcontactEmail' in /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php:287
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_data.php(287): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 287, Array)
+#1 /var/www/html/sms-api-admin/src/templates_compiled/a069a9e4dfad6b000f8445e4cd4862f3e2c3b5d5.file.client.view.tpl.php(36): Smarty_Internal_Data->getVariable('clientcontactEm...')
+#2 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(423): include('/var/www/html/s...')
+#3 /var/www/html/sms-api-admin/src/lib/com/smarty/sysplugins/smarty_internal_template.php(555): Smarty_Internal_Template->renderTemplate()
+#4 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(335): Smarty_Internal_Template->getRenderedTemplate()
+#5 /var/www/html/sms-api-admin/src/lib/com/smarty/Smarty.class.php(379): Smarty->fetch('client.view.tpl', NULL, NULL, NULL, true)
+#6 /var/www/html/sms-api-admin/src/services/client.view.php(23): Smarty->display('client.view.tpl')
+#7 {main}
+Wed Sep 14 05:37:20 2016,697 [1991] INFO root - exception 'ErrorException' with message 'Undefined variable: clientID' in /var/www/html/sms-api-admin/src/services/apiuser.table.php:71
+Stack trace:
+#0 /var/www/html/sms-api-admin/src/services/apiuser.table.php(71): SmsApiAdmin::catchError(8, 'Undefined varia...', '/var/www/html/s...', 71, Array)
+#1 {main}

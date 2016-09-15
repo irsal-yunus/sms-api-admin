@@ -29,7 +29,15 @@
 <form action="apiuser.updateAccount" class="admin-xform">
 	<input type="hidden" name="userID" value="{$userID}">
 	<fieldset style="width:95%" class="float-centre">
-		<label class="form-flag-required">Client Company</label><label class="flexible-width">{$details.clientCompanyName}</label><span class="ui-helper-clearfix"></span>
+		{*<label class="form-flag-required">Client Company</label><label class="flexible-width">{$details.clientCompanyName}</label><span class="ui-helper-clearfix"></span> *}
+                
+                <label class="form-flag-required">Client Company</label>
+                <select name="clientID" size="1" class="flexible-width">
+				{html_options options=$clientList selected=$details.clientID}
+			</select>
+                
+               <span class="ui-helper-clearfix"></span>
+                
 		<label class="form-flag-required">User Name</label><input name="userName" value="{$details.userName}" type="text"/><span class="ui-helper-clearfix"></span>
         <label class="form-flag-required">Cobrander ID (User)</label><input name="cobranderID" id="cobranderId" value="{$details.cobranderID}" type="text" readonly/>
                 <a id="btnCobrander"onclick="createDialog();" class="form-button" style="height: auto; margin-left:4px;" >Select</a>
