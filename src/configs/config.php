@@ -15,7 +15,7 @@ define('SMSAPIADMIN_TEMPLATE_DIR', SMSAPIADMIN_BASE_DIR.'templates/');
 //define('SMSAPIADMIN_TEMPLATE_CACHE_DIR', SMSAPIADMIN_BASE_DIR.'templates_cache/');
 define('SMSAPIADMIN_TEMPLATE_COMPILE_DIR', SMSAPIADMIN_BASE_DIR.'templates_compiled/');
 //define('SMSAPIADMIN_BASE_URL', 'http://localhost/smsadmin/');
-define('SMSAPIADMIN_BASE_URL', 'http://10.32.6.25/sms-api-admin/src/'); // Configured as the url
+define('SMSAPIADMIN_BASE_URL', 'http://10.32.6.55/sms-api-admin/src/'); // Configured as the url
 define('SMSAPIADMIN_SERVICE_URL', SMSAPIADMIN_BASE_URL.'services/');
 define('SMSAPIADMIN_SERVER_TIMEZONE', 'UTC');
 define('SMSAPIADMIN_SESSION_NAME', 'SmsApiAdmin');
