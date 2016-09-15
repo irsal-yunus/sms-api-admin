@@ -10,6 +10,7 @@ $service = new AppJsonService();
 try {
 	$errorFields = array();
 	$userID = filter_input(INPUT_POST, 'userID', FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
+        $clientID = filter_input(INPUT_POST, 'clientID', FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
 	$inquiry = array();
 	if(!$userID)
 		SmsApiAdmin::returnError('Missing userID in arguments!');
@@ -39,7 +40,12 @@ try {
 
 	if(isset($_POST['cobranderID'])){
 		$inquiry['cobranderID'] = trim(filter_var($_POST['cobranderID'], FILTER_SANITIZE_STRING, array('flags'=>FILTER_FLAG_STRIP_HIGH| FILTER_FLAG_STRIP_LOW)));
-	}	
+	}
+        
+        if(isset($_POST['clientID'])){
+		$inquiry['clientID'] = trim(filter_var($_POST['clientID'], FILTER_SANITIZE_STRING, array('flags'=>FILTER_FLAG_STRIP_HIGH| FILTER_FLAG_STRIP_LOW)));
+	}
+        
 	$inquiry['replyBlacklistEnabled'] = filter_input(INPUT_POST, 'replyBlacklistEnabled', 
 										FILTER_VALIDATE_BOOLEAN )? 1 : 0;
 	$inquiry['isPostpaid'] = filter_input(INPUT_POST, 'isPostpaid',
@@ -52,6 +58,7 @@ try {
 	}
 	$dataManager = new ApiUser();
 	$dataManager->update($userID, $inquiry);
+//        $dataManager->update($clientID, $inquiry);
 	$service->setStatus(true);
 	$service->deliver();
 } catch (Exception $e) {

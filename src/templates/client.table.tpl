@@ -30,6 +30,7 @@
 				<a href="#" title="Edit" class="form-button" onclick="$app.module('client').editClient({$clients[list].clientID});"><img src="skin/images/icon-edit.png" class="icon-image" alt="" /></a>
 				<a href="#" title="Delete" class="form-button" onclick="$app.module('client').removeClient({$clients[list].clientID});"><img src="skin/images/icon-remove.png" class="icon-image" alt="" /></a>
 				<a href="#" title="Manage Users" class="form-button" onclick="$app.module('client').manageUsers({$clients[list].clientID});"><img src="skin/images/icon-user.png" class="icon-image" alt="" /></a>
+                                <a href="#" title="Billing Options" class="form-button" onclick="$app.module('client').smsBilling({$clients[list].clientID});"><img src="skin/images/icon-client.png" class="icon-image" alt="" /></a>
 			</td>
 		</tr>
 		{/section}

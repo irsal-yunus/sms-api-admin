@@ -340,6 +340,8 @@ final class SmsApiAdmin {
 
     const DB_SMSAPI = 'default';
     const DB_COBRANDER = 'cobrander';
+    const DB_ALL = 'dball';
+    const DB_DUASATU = 'dbas';
 
 	/**
 	 *
@@ -429,7 +431,6 @@ final class SmsApiAdmin {
 	 * @return PDO
 	 */
     public static function getDB($conn) {
-        
         if (isset(self::$db[$conn])) {
             $conn = $conn ? self::DB_SMSAPI : self::DB_COBRANDER;
 //               self::$db[$conn] = self::$db[$conn]? self::DB_SMSAPI : self::DB_COBRANDER;
