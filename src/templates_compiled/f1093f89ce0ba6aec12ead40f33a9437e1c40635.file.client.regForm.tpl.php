@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.0.5, created on 2016-09-14 04:57:21
+<?php /* Smarty version Smarty-3.0.5, created on 2016-09-28 06:41:38
          compiled from "/var/www/html/sms-api-admin/src/templates/client.regForm.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:16824527557d8d8b16397e4-17080733%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_smarty_tpl->decodeProperties(array (
     'f1093f89ce0ba6aec12ead40f33a9437e1c40635' => 
     array (
       0 => '/var/www/html/sms-api-admin/src/templates/client.regForm.tpl',
-      1 => 1473742354,
+      1 => 1474528347,
       2 => 'file',
     ),
   ),
