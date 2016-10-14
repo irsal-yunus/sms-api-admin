@@ -68,8 +68,8 @@ class ApiReport extends ApiBaseModel {
                         USER_ID,
                         MESSAGE_COUNT,
                         IF(X.IS_RECREDITED = 1, MESSAGE_COUNT, 0) AS UNCHARGED,
-                        IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Delivered' ,   MESSAGE_COUNT, 0), 0) AS DELIVERED,
-                        IF(X.IS_RECREDITED = 1, IF(X.STATUS <>  'Delivered' ,   MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
+                        IF(X.IS_RECREDITED = 0, MESSAGE_COUNT, 0) AS DELIVERED,
+                        IF(X.IS_RECREDITED = 1, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
                         IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED
                         FROM
                     (SELECT 
@@ -93,6 +93,7 @@ class ApiReport extends ApiBaseModel {
                          AND (B.SEND_DATETIME > '{$lastUpdated}' AND B.SEND_DATETIME < NOW())) AS X
                     WHERE 
                             X.IS_RECREDITED IN ('0','1') AND X.USER_ID_NUMBER = '{$userId}'  ORDER BY SEND_DATETIME ASC";
+//                        IF(X.IS_RECREDITED = 1, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
             //die($query);
             $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
             
@@ -192,8 +193,8 @@ class ApiReport extends ApiBaseModel {
                         USER_ID,
                         MESSAGE_COUNT,
                         IF(X.IS_RECREDITED = 1, MESSAGE_COUNT, 0) AS UNCHARGED,
-                        IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Delivered' ,   MESSAGE_COUNT, 0), 0) AS DELIVERED,
-                        IF(X.IS_RECREDITED = 1, IF(X.STATUS <>  'Delivered' ,   MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
+                        IF(X.IS_RECREDITED = 0, MESSAGE_COUNT, 0) AS DELIVERED,
+                        IF(X.IS_RECREDITED = 1, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
                         IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED
                         FROM
                     (SELECT 
@@ -216,6 +217,7 @@ class ApiReport extends ApiBaseModel {
                         (SEND_DATETIME >= '{$startDate}' AND SEND_DATETIME <= '{$endDate}')) AS X
                     WHERE 
                             X.IS_RECREDITED IN ('0','1') AND X.USER_ID = '{$userId}' ORDER BY SEND_DATETIME ASC";
+//                        IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Delivered' ,   MESSAGE_COUNT, 0), 0) AS DELIVERED,
 //                        (MONTH(SEND_DATETIME) = ".date('m')." AND YEAR(SEND_DATETIME) = ".date('Y').") AND
             $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
             $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);

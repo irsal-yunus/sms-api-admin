@@ -155,7 +155,7 @@ class ExcelSpout extends ApiBaseModel {
                 $keyName = $row[0];
                 
                 switch ($keyName){
-                    case 'Generated Report On'          : $row[1]  =  date("j F Y (H:i)"); break;
+                    case 'Generated Report On'          : $row[1]  = date("j F Y (H:i)"); break;
                     case 'DELIVERED SMS'                : $row[1] += $deliveredCount;      break;
                     case 'UNDELIVERED SMS (CHARGED)'    : $row[1] += $undeliveredCount;    break;
                     case 'UNDELIVERED SMS (NOT CHARGED)': $row[1] += $unchargedCount;      break;
@@ -207,11 +207,16 @@ class ExcelSpout extends ApiBaseModel {
 
         $today = date("j F Y (H:i)");
         
-        $totalCount = array_sum(array_column($lsReport, 'MESSAGE_COUNT'));
-        $unchargedCount = array_sum(array_column($lsReport, 'UNDELIVERED_UNCHARGED'));
-        $deliveredCount = array_sum(array_column($lsReport, 'DELIVERED'));
+        $totalCount       = array_sum(array_column($lsReport, 'MESSAGE_COUNT'));
+        $deliveredCount   = array_sum(array_column($lsReport, 'DELIVERED'));
+        $unchargedCount   = array_sum(array_column($lsReport, 'UNDELIVERED_UNCHARGED'));
         $undeliveredCount = array_sum(array_column($lsReport, 'UNDELIVERED'));
-        $totalCharged = (int) $undeliveredCount + (int)$deliveredCount;
+//        MESSAGE_COUNT,
+//        IF(X.IS_RECREDITED = 1, MESSAGE_COUNT, 0) AS UNCHARGED,
+//        IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Delivered' ,   MESSAGE_COUNT, 0), 0) AS DELIVERED,
+//        IF(X.IS_RECREDITED = 1, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
+//        IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED
+        $totalCharged     = (int) $undeliveredCount + (int)$deliveredCount;
 
         // ... and a writer to create the new file
         $writer = WriterFactory::create(Type::XLSX);
