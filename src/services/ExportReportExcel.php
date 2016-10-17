@@ -13,7 +13,7 @@
 include_once '../classes/PHPExcel.php';
 include_once '../classes/PHPExcel/IOFactory.php';
 include '../classes/PHPExcel/Writer/Excel2007.php';
-include '../classes/PHPExcel/PHPExcel_ReferenceHelper.php';
+include '../classes/PHPExcel/ReferenceHelper.php';
 require_once '../configs/config.php';
 require_once '../init.d/init.php';
 

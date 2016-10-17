@@ -17,64 +17,72 @@ require_once '../lib/model/ApiBilling.php';
 require_once 'ExportReportExcel.php';
 require_once 'ExcelSpout.php';
 
-$logger = Logger::getRootLogger();
-$service = new AppJsonService();
-//SmsApiAdmin::filterAccess();
-try {
-    ini_set('max_execution_time', 7200);
-    ini_set('memory_limit', '4024M');
-    // Set variable from parameters
-    // Get report data based clientid
-    $apiReport = new ApiReport();
-//    $apiBilling = new ApiBilling();
-    $exportData = new ExportReportExcel();
-    $exportDataSpout = new ExcelSpout();
-//    $client = $apiReport->getProfileClient($clientId);
-    $listClient = $apiReport->getBillingClient();
-   
-    foreach ($listClient as $client){
-        
-    $billedSMS = $client['BILLED_SMS'];
-    $idClient = $client['CLIENT_ID'];
-    $unknown = $client['UNKNOWN'];
-    $pending = $client['PENDING'];
-    $delivered = $client['DELIVERED'];
-    $deliveredDesc = $client['DELIVERED_DESC'];
-    $undelivered = $client['UNDELIVERED'];
-    $totalSms = $client['TOTAL_SMS'];
-    $totalCharge = $client['TOTAL_CHARGE'];
-    $provider = $client['PROVIDER'];
-    $providerDesc = $client['PROVIDER_DESC'];
-
-    $arrBilledSMS = explode(";", $billedSMS);
-    $errorCode = false;
-
-    $finBilledSMS = 0;
-    if (in_array('Y', $arrBilledSMS)) {
-        $finBilledSMS += 1;
-    }
-    if (in_array('N', $arrBilledSMS)) {
-        $finBilledSMS += 2;
-    }
-    if (in_array('E', $arrBilledSMS)) {
-        $errorCode = true;
-    }
-
-    $listUser = $apiReport->getUser($idClient);
-    
-//    var_dump($idClient);
-    foreach ($listUser as $user) {
-        $userId = $user['USER_NAME'];
-        $lsReport = $apiReport->getDataCronReport($userId);
-        $exportDataSpout->getDataScheduled($userId, $lsReport);
-        break;
-    }
+function microtime_float(){
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
 }
 
 
+$logger = Logger::getRootLogger();
+$logger->info("Start generating billing report");
 
-    exit();
-} catch (Exception $e) {
-    $logger->error("$e");
-    SmsApiAdmin::returnError($e->getMessage());
+try {
+    $execute_time = microtime_float();
+    
+    ini_set('max_execution_time', 7200);
+    ini_set('memory_limit', '4024M');
+    $apiReport = new ApiReport();
+    $exportData = new ExportReportExcel();
+    $exportDataSpout = new ExcelSpout();
+    $listClient = $apiReport->getBillingClient();
+    
+    
+    $memory = []; 
+    foreach ($listClient as $client){
+        $idClient = $client['CLIENT_ID'];
+        $listUser = $apiReport->getUser($idClient);
+        
+        $exportDataSpout = new ExcelSpout();
+        $generateLastMonth = false;
+        $lastMonth = date('m', strtotime('last month'));
+        $lastYear = date('Y');
+        if($lastMonth == '12') {
+            $lastYear = date('Y', strtotime('last year'));
+        } 
+
+        $directory = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . $lastYear . '-' . $lastMonth . '/';
+
+        // check if there is report generated last month if now is in date 1st
+        if (is_dir($directory) && date('d') == '01') {
+            $generateLastMonth = true;
+        }
+
+        foreach ($listUser as $user) {
+            $userId = $user['USER_NAME'];
+
+            if($generateLastMonth) {
+                $lastUpdated = $exportDataSpout->getLastDateFromReport($userId, $lastMonth, $lastYear);
+                $lsReport = $apiReport->getDataCronReport($userId, $lastMonth, $lastYear, $lastUpdated);
+                $exportDataSpout->getDataScheduled($userId, $lsReport);
+            }
+
+            $lastUpdated = $exportDataSpout->checkFile($userId, date('m'), date('Y'));
+            $lastUpdated = $lastUpdated === false ? false : date("Y-m-d", strtotime("$lastUpdated +1 days"));
+
+            $lsReport = $apiReport->getDataCronReport($userId, date('m'), date('Y'), $lastUpdated);
+            //if(count($lsReport) != 0){
+                //var_dump($lsReport);
+                $exportDataSpout->getDataScheduled($userId, $lsReport);
+            //}
+            $memory[] = memory_get_peak_usage(1);
+        }
+    }
+    
+    $memory       = round((array_sum($memory) / count($memory))/1024/1024, 2); 
+    $execute_time = microtime_float() - $execute_time;
+    $execute_time = substr($execute_time,0,4);
+    
+    $logger->info("Finished generating billing report | Execution Time: ".$execute_time ."s | Memory: ".$memory."MB");
+} catch (Throwable $e) {
+    $logger->error($e->getMessage());
 }

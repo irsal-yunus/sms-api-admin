@@ -151,9 +151,13 @@ $app.ready(function ($app) {
                                 }
                                 
                                 var url = serviceName + '?' + $form.serialize();
+                                console.log(url);
                                 var checkUrl = url + "&check=TRUE";
                                 $.post(checkUrl, function(response){
-                                    if($.trim(response) == "File Doesn't Exist"){
+//                                    if($.trim(response) !== "File Doesn't Exist"){
+                                    if($.trim(response) === "File Doesn't Exist"){
+                                        console.log(response);
+                                        console.log('t  '+response.responseTest);
                                         alert(response);
                                     } else {
 //                                        var newWin=window.open(url,'','width=100,height=100');
@@ -164,6 +168,7 @@ $app.ready(function ($app) {
     //                                window.location = serviceName + '?' + $form.serialize();
 //                                        window.location.replace("http://"+url);
                                     }
+                                    return false;
                                 });
                                 
                             } catch (ex) {

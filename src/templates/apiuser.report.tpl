@@ -1,4 +1,5 @@
-<form id="apiuser-editform" class="report-tabform" action="services/generateReportUser.php" method="post" style="width: 100%;">
+<!--<form id="apiuser-editform" class="report-tabform" action="services/generateReportUser.php" method="post" style="width: 100%;">-->
+<form id="apiuser-editform" class="report-tabform" action="services/generateReportUser.php" method="get" style="width: 100%;">
     <input type="hidden" name="userID" value="{$details.userID}" />
     <input type="hidden" name="userName" value="{$details.userName}" />
     <fieldset class="float-centre">
@@ -15,7 +16,7 @@
             <label class="form-flag-required">
                 Month 
                 <select name="month" style="float:none;display: inline">
-                    <option value="">- Select -</option>
+                    <!--<option value="">- Select -</option>-->
                     <option value="01">January</option>
                     <option value="02">February</option>
                     <option value="03">March</option>
@@ -34,12 +35,12 @@
 {*            <input type="text" name="fromDate" value="{$details.paymentDate}" class="form-datepicker" maxlength="10"/><span class="ui-helper-clearfix"></span>*}
             <label class="form-flag-required">Year  
                  <select name="year" style="float:none;display: inline">
-                    <option value="">- Select -</option>
-                    <option value={php}
-                                    for($year = 2010 ; $year <= date('Y'); $year++){
-                                      echo "<option>$year</option>";
-                                   }
-                                    {/php}></option>
+                    <!--<option value="">- Select -</option>-->
+                    {php}
+                        for($year = 2010 ; $year <= date('Y'); $year++){
+                          echo "<option value='$year'>$year</option>";
+                        }
+                    {/php}>
                 </select>
             </label>
 {*            <input type="text" name="endDate" value="{$details.paymentDate}" class="form-datepicker" maxlength="10"/><span class="ui-helper-clearfix"></span>*}

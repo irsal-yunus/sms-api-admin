@@ -9,6 +9,7 @@
 /**
  * @author irsyah.mardiah(icha)
  * @author Fathir Wafda
+ * @author Dwikky Maradhiza
  */
 class ApiReport extends ApiBaseModel {
 
@@ -27,7 +28,7 @@ class ApiReport extends ApiBaseModel {
 
             $list = $db->query($query)->fetch(PDO::FETCH_ASSOC);
             return $list;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->logger->error("$e");
             throw new Exception("Query failed get Profile");
         }
@@ -36,16 +37,14 @@ class ApiReport extends ApiBaseModel {
      public function getBillingClient() {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
-            $query = "SELECT CLIENT_ID, BILLED_SMS, UNKNOWN, PENDING, ";
-            $query .= "UNDELIVERED, DELIVERED, DELIVERED_DESC, TOTAL_SMS, ";
-            $query .= "TOTAL_CHARGE, PROVIDER, PROVIDER_DESC ";
-            $query .= "FROM SMS_API_V2.BILLING_OPTIONS A";
+              $query = "SELECT CLIENT_ID ";
+            $query .= "FROM SMS_API_V2.CLIENT A";
             
             $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
             
             return $list;
             
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->logger->error("$e");
 	    throw new Exception("Query failed get Profile");
         }
@@ -53,7 +52,12 @@ class ApiReport extends ApiBaseModel {
     
     public function getDataReport($userId, $month, $year, $lastUpdated) {
         try {
-            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_ALL);            
+            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_ALL);       
+            
+            //HARDCODE
+            //$month = '03';
+            //$year = '2016';
+            
             $query = "SELECT 
                         MESSAGE_ID,
                         DESTINATION,
@@ -64,8 +68,9 @@ class ApiReport extends ApiBaseModel {
                         USER_ID,
                         MESSAGE_COUNT,
                         IF(X.IS_RECREDITED = 1, MESSAGE_COUNT, 0) AS UNCHARGED,
-                        IF(X.IS_RECREDITED = 0, IF(X.STATUS = 'Delivered' , MESSAGE_COUNT, 0), 0) AS DELIVERED,
-                        IF(X.IS_RECREDITED = 0, IF(X.STATUS = 'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED
+                        IF(X.IS_RECREDITED = 0, MESSAGE_COUNT, 0) AS DELIVERED,
+                        IF(X.IS_RECREDITED = 1, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
+                        IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED
                         FROM
                     (SELECT 
                         B.MESSAGE_ID,
@@ -87,27 +92,97 @@ class ApiReport extends ApiBaseModel {
                          MONTH(B.SEND_DATETIME) = '{$month}' AND YEAR(B.SEND_DATETIME) = '{$year}'
                          AND (B.SEND_DATETIME > '{$lastUpdated}' AND B.SEND_DATETIME < NOW())) AS X
                     WHERE 
-                            X.IS_RECREDITED IN ('0','1') AND X.USER_ID_NUMBER = '{$userId}'";
-            
+                            X.IS_RECREDITED IN ('0','1') AND X.USER_ID_NUMBER = '{$userId}'  ORDER BY SEND_DATETIME ASC";
+//                        IF(X.IS_RECREDITED = 1, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
+            //die($query);
             $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
             
             $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
             
             return $list;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->logger->error("$e");
             throw new Exception("Query failed get Data report: " . $e->getMessage());
         }
     }
+
+/*    
+//    public function getDataCronReport($userId, $month = '', $year = '', $lastUpdated = '') {
+//        try {
+//            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_ALL);
+//            
+//            $lastDate = date("Y-m-d", strtotime("-4 months"));
+//            $filterQuery = '';
+//            if(empty($month)) {
+//                $month = date('m');
+//            }
+//            if(empty($year)) {
+//                $year = date('Y');
+//            }
+//            if(!empty($lastUpdated)) {
+//                $filterQuery .= " AND B.SEND_DATETIME >  '{$lastUpdated}' ";
+//            }
+//            
+//            //HARDCODE
+//           // $month = '03';
+//           // $year = '2016';
+//            
+//            $query = "SELECT 
+//                        MESSAGE_ID,
+//                        DESTINATION,
+//                        MESSAGE_CONTENT,
+//                        MESSAGE_STATUS,
+//                        SEND_DATETIME,
+//                        SENDER,
+//                        USER_ID,
+//                        MESSAGE_COUNT,
+//                        IF(X.IS_RECREDITED = 0, IF(X.STATUS = 'Delivered' , MESSAGE_COUNT, 0), 0) AS DELIVERED,
+//                        IF(X.IS_RECREDITED = 1, IF(X.STATUS != 'Delivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
+//                        IF(X.IS_RECREDITED = 0, IF(X.STATUS != 'Delivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED
+//                        FROM
+//                    (SELECT 
+//                        B.MESSAGE_ID,     
+//                        B.DESTINATION,
+//                        B.MESSAGE_CONTENT, B.MESSAGE_STATUS,
+//                        B.SEND_DATETIME,
+//                        B.SENDER,
+//                        B.USER_ID,
+//                        IF(LENGTH(B.MESSAGE_CONTENT) <= 160,
+//                            1,
+//                            CEILING(LENGTH(B.MESSAGE_CONTENT) / 153)) AS MESSAGE_COUNT,
+//                            D.IS_RECREDITED,
+//                            D.STATUS,
+//                        B.USER_ID_NUMBER
+//                    FROM SMS_API_V2.USER_MESSAGE_STATUS B FORCE INDEX (`IDX_SENT_TIMESTAMP2`) 
+//                    INNER JOIN BILL_U_MESSAGE.DELIVERY_STATUS D ON B.MESSAGE_STATUS = D.ERROR_CODE
+//                    WHERE
+//                        MONTH(B.SEND_DATETIME) = '{$month}' AND YEAR(B.SEND_DATETIME) = '{$year}'
+//                        {$filterQuery}
+//                        AND (B.SEND_DATETIME < '{$lastDate}')) AS X
+//                    WHERE 
+//                            X.IS_RECREDITED IN ('0','1') AND X.USER_ID = '{$userId}'";
+////            die($query);
+//            $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+//            
+//            $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+//            return $list;
+//        } catch (Exception $e) {
+//            $this->logger->error("$e");
+//            throw new Exception("Query failed get Data report: " . $e->getMessage());
+//        }
+//    }
+*/
     
-    public function getDataCronReport($userId) {
+    public function getDataCronReport($userId, $month = false, $year = false, $lastUpdateDate = false) {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_ALL);
             
-         //   $startDate = date("Y-m-d", strtotime("-3 days"));
-        //    $endDate = date("Y-m-d", strtotime("0 days"));
-$startDate = date("Y-m-d", strtotime("2016-03-01"));
-            $endDate = date("Y-m-d", strtotime("2016-03-20"));
+            $month     = $month === false ? date("m") : $month;
+            $year      = $year  === false ? date("Y") : $year;
+            $startDate = $lastUpdateDate === false || $lastUpdateDate == '' ? date("Y-m-d", strtotime("-3 days")) : $lastUpdateDate;
+            $endDate   = date("Y-m-d", strtotime("0 days"));
+            //$startDate = date("Y-m-d", strtotime("2016-03-01"));
+            //$endDate = date("Y-m-d", strtotime("2016-03-20"));
             $query = "SELECT 
                         MESSAGE_ID,
                         DESTINATION,
@@ -118,8 +193,9 @@ $startDate = date("Y-m-d", strtotime("2016-03-01"));
                         USER_ID,
                         MESSAGE_COUNT,
                         IF(X.IS_RECREDITED = 1, MESSAGE_COUNT, 0) AS UNCHARGED,
-                        IF(X.IS_RECREDITED = 0, IF(X.STATUS = 'Delivered' , MESSAGE_COUNT, 0), 0) AS DELIVERED,
-                        IF(X.IS_RECREDITED = 0, IF(X.STATUS = 'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED
+                        IF(X.IS_RECREDITED = 0, MESSAGE_COUNT, 0) AS DELIVERED,
+                        IF(X.IS_RECREDITED = 1, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
+                        IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED
                         FROM
                     (SELECT 
                         B.MESSAGE_ID,
@@ -137,31 +213,37 @@ $startDate = date("Y-m-d", strtotime("2016-03-01"));
                     FROM SMS_API_V2.USER_MESSAGE_STATUS B FORCE INDEX (`IDX_SENT_TIMESTAMP2`) 
                     INNER JOIN BILL_U_MESSAGE.DELIVERY_STATUS D ON B.MESSAGE_STATUS = D.ERROR_CODE
                     WHERE
-                        (MONTH(SEND_DATETIME) = ".date('m')." AND YEAR(SEND_DATETIME) = ".date('Y').") AND
+                        (MONTH(SEND_DATETIME) = $month AND YEAR(SEND_DATETIME) = $year) AND
                         (SEND_DATETIME >= '{$startDate}' AND SEND_DATETIME <= '{$endDate}')) AS X
                     WHERE 
-                            X.IS_RECREDITED IN ('0','1') AND X.USER_ID = '{$userId}'";
-            
+                            X.IS_RECREDITED IN ('0','1') AND X.USER_ID = '{$userId}' ORDER BY SEND_DATETIME ASC";
+//                        IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Delivered' ,   MESSAGE_COUNT, 0), 0) AS DELIVERED,
+//                        (MONTH(SEND_DATETIME) = ".date('m')." AND YEAR(SEND_DATETIME) = ".date('Y').") AND
             $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
-            
             $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            
+            //if(count($list)>0){                
+                //print_r($list);
+                //echo "$query\n";
+            //}
+            
             return $list;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->logger->error("$e");
             throw new Exception("Query failed get Data report: " . $e->getMessage());
         }
     }
-
+    
     public function getUser($clientID) {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 
             $query = "SELECT USER_NAME FROM USER WHERE CLIENT_ID = '" . $clientID . "' AND ACTIVE = TRUE ";
-
+            //echo "$query\n";
             $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
 
             return $list;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->logger->error("$e");
             throw new Exception("Query failed get User");
         }
@@ -216,9 +298,9 @@ $startDate = date("Y-m-d", strtotime("2016-03-01"));
             $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
 
             return $list;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->logger->error("$e");
-            echo $e;
+            //echo $e;
             throw new Exception("Query failed get Header");
         }
     }
@@ -263,9 +345,9 @@ $startDate = date("Y-m-d", strtotime("2016-03-01"));
             $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
 
             return $list;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->logger->error("$e");
-            echo $e;
+            //echo $e;
             throw new Exception("Query failed get Header Provider");
         }
     }
