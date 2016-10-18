@@ -237,12 +237,7 @@ class ApiReport extends ApiBaseModel {
 //                        (MONTH(SEND_DATETIME) = ".date('m')." AND YEAR(SEND_DATETIME) = ".date('Y').") AND
             $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
             $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
-            
-//            if(($userId == 'womfinance')){
-//                print_r($list);
-//                echo "$query\n";
-//            }
-            
+                        
             return $list;
         } catch (Throwable $e) {
             $this->logger->error("$e");
