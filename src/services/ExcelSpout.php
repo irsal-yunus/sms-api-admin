@@ -174,6 +174,7 @@ class ExcelSpout extends ApiBaseModel {
                     unset($rows['DELIVERED']);
                     unset($rows['UNDELIVERED']);
                     unset($rows['UNDELIVERED_UNCHARGED']);
+                    unset($rows['UNCHARGED']);
                     $writer->addRow($rows);
                 }
             } 
@@ -239,7 +240,7 @@ class ExcelSpout extends ApiBaseModel {
 
 
 
-        $writer->addRowWithStyle(['MESSAGE ID', 'DESTINATION', 'MESSAGE CONTENT', 'ERROR CODE', 'SEND DATETIME', 'SENDER',
+        $writer->addRowWithStyle(['MESSAGE ID', 'DESTINATION', 'MESSAGE CONTENT', 'ERROR CODE', 'DESCRIPTION CODE','SEND DATETIME', 'SENDER',
             'USER ID', 'MESSAGE COUNT'], $style);
 
         foreach ($lsReport as $rows) {
@@ -248,7 +249,7 @@ class ExcelSpout extends ApiBaseModel {
             unset($rows['DELIVERED']);
             unset($rows['UNDELIVERED']);
             unset($rows['UNDELIVERED_UNCHARGED']);
-
+            unset($rows['UNCHARGED']);
             $writer->addRow($rows);
         }
 

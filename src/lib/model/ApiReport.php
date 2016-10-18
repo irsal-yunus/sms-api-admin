@@ -63,6 +63,14 @@ class ApiReport extends ApiBaseModel {
                         DESTINATION,
                         MESSAGE_CONTENT,
                         MESSAGE_STATUS,
+                        CASE X.IS_RECREDITED
+                            WHEN 0 THEN 
+                                CASE X.STATUS 
+                                    WHEN 'Undelivered' THEN 'UNDELIVERED (CHARGED)'
+                                    ELSE 'DELIVERED'
+                                END
+                            WHEN 1 THEN 'UNDELIVERED (NOT CHARGED)'
+                        END AS DESCRIPTION_CODE,                        
                         SEND_DATETIME,
                         SENDER,
                         USER_ID,
@@ -188,6 +196,14 @@ class ApiReport extends ApiBaseModel {
                         DESTINATION,
                         MESSAGE_CONTENT,
                         MESSAGE_STATUS,
+                        CASE X.IS_RECREDITED
+                            WHEN 0 THEN 
+                                CASE X.STATUS 
+                                    WHEN 'Undelivered' THEN 'UNDELIVERED (CHARGED)'
+                                    ELSE 'DELIVERED'
+                                END
+                            WHEN 1 THEN 'UNDELIVERED (NOT CHARGED)'
+                        END AS DESCRIPTION_CODE,
                         SEND_DATETIME,
                         SENDER,
                         USER_ID,
@@ -222,10 +238,10 @@ class ApiReport extends ApiBaseModel {
             $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
             $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
             
-            //if(count($list)>0){                
-                //print_r($list);
-                //echo "$query\n";
-            //}
+//            if(($userId == 'womfinance')){
+//                print_r($list);
+//                echo "$query\n";
+//            }
             
             return $list;
         } catch (Throwable $e) {
