@@ -150,10 +150,14 @@ class ExcelSpout extends ApiBaseModel {
             if ($sheetIndex !== 1) {
                 $writer->addNewSheetAndMakeItCurrent();
             }
-
-            foreach ($sheet->getRowIterator() as $row) {
+            
+            $style = (new StyleBuilder())
+                    ->setFontBold()
+                    ->build();
+            $i = 0;
+            foreach ($sheet->getRowIterator() as $row ) {
                 $keyName = $row[0];
-                
+                $i++;
                 switch ($keyName){
                     case 'Generated Report On'          : $row[1]  = date("j F Y (H:i)"); break;
                     case 'DELIVERED SMS'                : $row[1] += $deliveredCount;      break;
@@ -164,7 +168,12 @@ class ExcelSpout extends ApiBaseModel {
                 }
 
                 // ... and copy each row into the new spreadsheet
-                $writer->addRow($row);
+                if($i > 12){
+                    $writer->addRow($row);                    
+                }
+                else{
+                    $writer->addRowWithStyle($row, $style);                    
+                }
             }
 
             if (isset($lsReport[0]['MESSAGE_ID'])) {
@@ -180,7 +189,7 @@ class ExcelSpout extends ApiBaseModel {
             } 
         }
  
-       $reader->close();
+        $reader->close();
         $writer->close();
 
 //        if ($existingFilePath !== $newFilePath){
@@ -212,11 +221,6 @@ class ExcelSpout extends ApiBaseModel {
         $deliveredCount   = array_sum(array_column($lsReport, 'DELIVERED'));
         $unchargedCount   = array_sum(array_column($lsReport, 'UNDELIVERED_UNCHARGED'));
         $undeliveredCount = array_sum(array_column($lsReport, 'UNDELIVERED'));
-//        MESSAGE_COUNT,
-//        IF(X.IS_RECREDITED = 1, MESSAGE_COUNT, 0) AS UNCHARGED,
-//        IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Delivered' ,   MESSAGE_COUNT, 0), 0) AS DELIVERED,
-//        IF(X.IS_RECREDITED = 1, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
-//        IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED
         $totalCharged     = (int) $undeliveredCount + (int)$deliveredCount;
 
         // ... and a writer to create the new file
