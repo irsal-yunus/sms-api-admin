@@ -52,6 +52,7 @@ class ApiReport extends ApiBaseModel {
     
     public function getDataReport($userId, $month, $year, $lastUpdated) {
         try {
+            $lastUpdated = $lastUpdated === false || $lastUpdated == '' ? date("Y-m-1", strtotime("now")) : $lastUpdated;
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_ALL);       
             
             //HARDCODE
@@ -75,8 +76,7 @@ class ApiReport extends ApiBaseModel {
                         SENDER,
                         USER_ID,
                         MESSAGE_COUNT,
-                        IF(X.IS_RECREDITED = 1, MESSAGE_COUNT, 0) AS UNCHARGED,
-                        IF(X.IS_RECREDITED = 0, MESSAGE_COUNT, 0) AS DELIVERED,
+                        IF(X.IS_RECREDITED = 0, IF(X.STATUS <>  'Undelivered' , MESSAGE_COUNT, 0), 0) AS DELIVERED,
                         IF(X.IS_RECREDITED = 1, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
                         IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED
                         FROM
@@ -97,16 +97,17 @@ class ApiReport extends ApiBaseModel {
                     FROM SMS_API_V2.USER_MESSAGE_STATUS B FORCE INDEX (`IDX_SENT_TIMESTAMP2`) 
                     INNER JOIN BILL_U_MESSAGE.DELIVERY_STATUS D ON B.MESSAGE_STATUS = D.ERROR_CODE
                     WHERE
-                         MONTH(B.SEND_DATETIME) = '{$month}' AND YEAR(B.SEND_DATETIME) = '{$year}'
-                         AND (B.SEND_DATETIME > '{$lastUpdated}' AND B.SEND_DATETIME < NOW())) AS X
+                         MONTH(B.SEND_DATETIME) = '$month' AND YEAR(B.SEND_DATETIME) = '$year'
+                         AND (B.SEND_DATETIME > '$lastUpdated' AND B.SEND_DATETIME < NOW())) AS X
                     WHERE 
-                            X.IS_RECREDITED IN ('0','1') AND X.USER_ID_NUMBER = '{$userId}'  ORDER BY SEND_DATETIME ASC";
+                            X.IS_RECREDITED IN ('0','1') AND X.USER_ID_NUMBER = '$userId'  ORDER BY SEND_DATETIME ASC";
+//                        IF(X.IS_RECREDITED = 1, MESSAGE_COUNT, 0) AS UNCHARGED,
 //                        IF(X.IS_RECREDITED = 1, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
             //die($query);
             $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
             
             $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
-            
+
             return $list;
         } catch (Throwable $e) {
             $this->logger->error("$e");
@@ -187,7 +188,7 @@ class ApiReport extends ApiBaseModel {
             
             $month     = $month === false ? date("m") : $month;
             $year      = $year  === false ? date("Y") : $year;
-            $startDate = $lastUpdateDate === false || $lastUpdateDate == '' ? date("Y-m-d", strtotime("-3 days")) : $lastUpdateDate;
+            $startDate = $lastUpdateDate === false || $lastUpdateDate == '' ? date("Y-m-1", strtotime("now")) : $lastUpdateDate;
             $endDate   = date("Y-m-d", strtotime("0 days"));
             //$startDate = date("Y-m-d", strtotime("2016-03-01"));
             //$endDate = date("Y-m-d", strtotime("2016-03-20"));
@@ -208,8 +209,7 @@ class ApiReport extends ApiBaseModel {
                         SENDER,
                         USER_ID,
                         MESSAGE_COUNT,
-                        IF(X.IS_RECREDITED = 1, MESSAGE_COUNT, 0) AS UNCHARGED,
-                        IF(X.IS_RECREDITED = 0, MESSAGE_COUNT, 0) AS DELIVERED,
+                        IF(X.IS_RECREDITED = 0, IF(X.STATUS <>  'Undelivered' , MESSAGE_COUNT, 0), 0) AS DELIVERED,
                         IF(X.IS_RECREDITED = 1, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED_UNCHARGED,
                         IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Undelivered' , MESSAGE_COUNT, 0), 0) AS UNDELIVERED
                         FROM
@@ -229,10 +229,12 @@ class ApiReport extends ApiBaseModel {
                     FROM SMS_API_V2.USER_MESSAGE_STATUS B FORCE INDEX (`IDX_SENT_TIMESTAMP2`) 
                     INNER JOIN BILL_U_MESSAGE.DELIVERY_STATUS D ON B.MESSAGE_STATUS = D.ERROR_CODE
                     WHERE
-                        (MONTH(SEND_DATETIME) = $month AND YEAR(SEND_DATETIME) = $year) AND
-                        (SEND_DATETIME >= '{$startDate}' AND SEND_DATETIME <= '{$endDate}')) AS X
+                        (MONTH(SEND_DATETIME) = '$month' AND YEAR(SEND_DATETIME) = '$year') AND
+                        (SEND_DATETIME >= '$startDate' AND SEND_DATETIME <= '$endDate')) AS X
                     WHERE 
-                            X.IS_RECREDITED IN ('0','1') AND X.USER_ID = '{$userId}' ORDER BY SEND_DATETIME ASC";
+                            X.IS_RECREDITED IN ('0','1') AND X.USER_ID = '$userId' ORDER BY SEND_DATETIME ASC";
+//                        IF(X.IS_RECREDITED = 0, MESSAGE_COUNT, 0) AS DELIVERED,
+//                        IF(X.IS_RECREDITED = 1, MESSAGE_COUNT, 0) AS UNCHARGED,
 //                        IF(X.IS_RECREDITED = 0, IF(X.STATUS  =  'Delivered' ,   MESSAGE_COUNT, 0), 0) AS DELIVERED,
 //                        (MONTH(SEND_DATETIME) = ".date('m')." AND YEAR(SEND_DATETIME) = ".date('Y').") AND
             $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
