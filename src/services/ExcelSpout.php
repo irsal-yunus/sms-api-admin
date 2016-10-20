@@ -296,10 +296,10 @@ class ExcelSpout extends ApiBaseModel {
                 // let's read the entire spreadsheet...
                 foreach ($reader->getSheetIterator() as $sheetIndex => $sheet) {
                     foreach ($sheet->getRowIterator() as $row) {
-                        if(isset($row[4])){
+                        if(isset($row[5])){
                             //echo $row[4]."\n";
-                            if($row[4] != 'SEND DATETIME' && !empty($row[4])) {
-                                $lastDate = $row[4];
+                            if($row[5] != 'SEND DATETIME' && !empty($row[5])) {
+                                $lastDate = $row[5];
                             }                
                         }
                     }
