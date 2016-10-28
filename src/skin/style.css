@@ -1,173 +1,173 @@
 *{
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 body{
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 }
 body,td,p,label,input,form,a,div{
-	font-family: "Lucida Grande", "Lucida Sans", Arial, sans-serif;
-	font-size: 10px;
+    font-family: "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+    font-size: 10px;
 }
 
 #container{
-	display: block;
-	clear: both;
-	width: 90%;
-	height: 100%;
-	overflow: hidden;
-	margin: 0 auto;	
+    display: block;
+    clear: both;
+    width: 90%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0 auto;	
 }
 
 #pageHeader{
-	display: block;
-	clear: both;
-	background-color: #80b1da;
-	color: white;
-	font-weight: bold;
-	text-indent: 20px;
-	height: 64px;
-	width: 100%;
-	overflow: hidden;
-	clear: both;
+    display: block;
+    clear: both;
+    background-color: #80b1da;
+    color: white;
+    font-weight: bold;
+    text-indent: 20px;
+    height: 64px;
+    width: 100%;
+    overflow: hidden;
+    clear: both;
 }
 
 #siteTitle{
-	font-size: 3em;
+    font-size: 3em;
 }
 
 #pageFooter{
-	display: block;
-	clear: both;
-	height: 24px;
-	width: 100%;
-	text-align: center;
-	vertical-align: middle;
-	font-size: xx-small;
-	line-height: 24px;
-	background-color: #80b1da;
-	color: white;
-	font-weight: bold;
+    display: block;
+    clear: both;
+    height: 24px;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    font-size: xx-small;
+    line-height: 24px;
+    background-color: #80b1da;
+    color: white;
+    font-weight: bold;
 }
 
 #navPanel{
-	display: block;
-	clear: both;
-	width: 100%;
-	overflow: hidden;
-/*	background-color: #a8c3d7;*/
-	background-color: #8dc5f0;
-	height: 2.4em;
+    display: block;
+    clear: both;
+    width: 100%;
+    overflow: hidden;
+    /*	background-color: #a8c3d7;*/
+    background-color: #8dc5f0;
+    height: 2.4em;
 }
 
 #titlePanel{
-	height: 1.8em;
-	line-height: 1.8em;
-	background-color: aliceblue;
-	width: 100%;
-	padding: 0;
-	margin: 0;
+    height: 1.8em;
+    line-height: 1.8em;
+    background-color: aliceblue;
+    width: 100%;
+    padding: 0;
+    margin: 0;
 }
 #contentPanel{
-	display: block;
-	clear: both;
-	width: 100%;
-	min-height: 200px;
-/*	overflow:auto;*/
-	margin-bottom: 24px;
-	padding: 20px 0px 10px 0px;
-	position: relative;
+    display: block;
+    clear: both;
+    width: 100%;
+    min-height: 200px;
+    /*	overflow:auto;*/
+    margin-bottom: 24px;
+    padding: 20px 0px 10px 0px;
+    position: relative;
 }
 
 /**********/
 /* PANELS */
 /**********/
 #navPanel > .panel{
-	display: block;
-	float: left;
-	line-height: 2.4em;
-	margin: 0;
-	padding: 0;
-	color: white;
+    display: block;
+    float: left;
+    line-height: 2.4em;
+    margin: 0;
+    padding: 0;
+    color: white;
 }
 #navPanel .panel-header{
-	display: none;
+    display: none;
 }
 
 #navPanel > .panel > .panel-body,
 #navPanel > .panel > .panel-content{
-	width: 100%;
-	height: 100%;
-	display: block;
-	margin: 0;
-	padding: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    margin: 0;
+    padding: 0;
 }
 #navPanel > #welcomeMessage{
-	float: left;
-	text-indent: 1em;
+    float: left;
+    text-indent: 1em;
 }
 #navPanel > #menuPanel{
-	float: right;
-	margin-right: 1em;
+    float: right;
+    margin-right: 1em;
 }
 #titlePanel{
-	text-indent: 1em;
+    text-indent: 1em;
 }
 
 #contentPanel > .panel{
-/*	width: 95%;*/
+    /*	width: 95%;*/
 }
 #contentPanel .panel{
-	width: 95%;
-	display: block;
-	clear: both;
-	overflow-x: hidden;
-	margin: 5px auto;
-	border: 1px solid #79B7E7;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
+    width: 95%;
+    display: block;
+    clear: both;
+    overflow-x: hidden;
+    margin: 5px auto;
+    border: 1px solid #79B7E7;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 
 }
 #contentPanel .panel > .panel-header {
-	background-color: #87B7D9;
-	display: block;
-	width: 100%;
-	height: 24px;
-	overflow: hidden;
-	line-height: 24px;
-	font-variant: small-caps;
-	font-weight: bold;
-	text-indent: 10px;
-	color: white;
-	-moz-border-radius: 9px 9px 0px 0px;
-	border-radius: 9px 9px 0px 0px;
-	vertical-align: middle;
+    background-color: #87B7D9;
+    display: block;
+    width: 100%;
+    height: 24px;
+    overflow: hidden;
+    line-height: 24px;
+    font-variant: small-caps;
+    font-weight: bold;
+    text-indent: 10px;
+    color: white;
+    -moz-border-radius: 9px 9px 0px 0px;
+    border-radius: 9px 9px 0px 0px;
+    vertical-align: middle;
 }
 
 #contentPanel .panel > .panel-header > .icon-image{
-	vertical-align: middle;
-	margin-right: 6px;
-	line-height: 24px;
+    vertical-align: middle;
+    margin-right: 6px;
+    line-height: 24px;
 }
 #contentPanel .panel > .panel-header > .icon-image + span{
-	height: 24px;
-	line-height: 24px;
+    height: 24px;
+    line-height: 24px;
 }
 
 #contentPanel .panel > .panel-body{
-	width: 100%;
+    width: 100%;
 }
 
 #contentPanel .panel > .panel-body  > .panel-content{
-	width: 98%;
-	max-width: 98%;
-	border: none;
-	margin: 5px auto;
-	overflow: hidden;
-	overflow-x: hidden;
-	-moz-border-radius: 0px 0px 10px 10px;
-	border-radius: 0px 0px 10px 10px;
+    width: 98%;
+    max-width: 98%;
+    border: none;
+    margin: 5px auto;
+    overflow: hidden;
+    overflow-x: hidden;
+    -moz-border-radius: 0px 0px 10px 10px;
+    border-radius: 0px 0px 10px 10px;
 }
 
 /********/
@@ -175,53 +175,53 @@ body,td,p,label,input,form,a,div{
 /********/
 
 #menuPanel .menu-set{
-	list-style-type: none;
+    list-style-type: none;
 }
 #menuPanel .menu-set {
-	display: block;	
+    display: block;	
 }
 
 #menuPanel .menu-set > .menu-item{
-	float: left;
-	display: block;
-	line-height: 2.4em;
-	height: 2.4em;
-	padding: 0;
+    float: left;
+    display: block;
+    line-height: 2.4em;
+    height: 2.4em;
+    padding: 0;
 }
 #menuPanel .menu-set > .menu-item + .menu-item{
-	margin-left: .1em;
-	border-left: #1d5987 2px groove;
+    margin-left: .1em;
+    border-left: #1d5987 2px groove;
 }
 #menuPanel .menu-set > .menu-item > a{
-	display: block;
-	text-decoration: none;
-	font-weight: bold;
-	line-height: 2.4em;
-	height: 100%;
-	margin: 0em .4em;
-	padding: 0;
-	color: #363636;
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    line-height: 2.4em;
+    height: 100%;
+    margin: 0em .4em;
+    padding: 0;
+    color: #363636;
 }
 #menuPanel .menu-set > .menu-item > a > .icon-image{
-	margin-right: .5em;
-	margin-top: .5em;
-	height: 16px;
-	width: 16px;
+    margin-right: .5em;
+    margin-top: .5em;
+    height: 16px;
+    width: 16px;
 }
 
 #menuPanel .menu-set > .menu-item:hover,
 #menuPanel .menu-set > .menu-item:hover > a{
-	background-color: #c5dbec;
-	color: #1d5987;
+    background-color: #c5dbec;
+    color: #1d5987;
 }
 a.menu-item,
 a.menu-item:hover,
 a.menu-item:visited,
 a.menu-item:active{
-	text-decoration: none;
+    text-decoration: none;
 }
 a.menu-item:hover{
-	background-color: #f5f8f9
+    background-color: #f5f8f9
 }
 /**********/
 /* TABLES */
@@ -242,82 +242,82 @@ a.menu-item:hover{
 .type-nav {text-align: left; text-indent: .5em;}
 
 th{
-	text-align: center;
-	font-weight: bold;
-	vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+    vertical-align: middle;
 }
 table.admin-table{
-	width: 90%;
-	margin: 1em auto;
-	border-spacing: 0px;
-	border-collapse: collapse;
+    width: 90%;
+    margin: 1em auto;
+    border-spacing: 0px;
+    border-collapse: collapse;
 }
 
 table.admin-table caption{
-	text-transform: capitalize;
-	font-size: 1.5em;
-	padding: .5em 0em;
+    text-transform: capitalize;
+    font-size: 1.5em;
+    padding: .5em 0em;
 }
 table.admin-table > thead > tr >  th,
 table.admin-table > tfoot > tr >  th{
-	background-color: #8dc5f0;
-	color: #1b3346;
-	height: 2em;
+    background-color: #8dc5f0;
+    color: #1b3346;
+    height: 2em;
 }
 table.admin-table > thead > tr >  th{
-	border:  1px #4b7290 solid;
-	padding: .4em 0em;
+    border:  1px #4b7290 solid;
+    padding: .4em 0em;
 }
 
 table.admin-table > tbody{
-	min-height:0em;
-	max-height:40em;
-	height:auto;
-	overflow-x:hidden;
-	overflow-y:auto;
+    min-height:0em;
+    max-height:40em;
+    height:auto;
+    overflow-x:hidden;
+    overflow-y:auto;
 }
 table.admin-table > tbody > tr > td{
-	padding-top: .4em;
-	padding-bottom: .4em;
+    padding-top: .4em;
+    padding-bottom: .4em;
 
 }
 table.admin-table > tbody > tr.zebra-odd > td{
-	background-color: #fff;
+    background-color: #fff;
 }
 
 table.admin-table > tbody > tr.zebra-even > td{
-	background-color: lemonchiffon;
+    background-color: lemonchiffon;
 }
 table.admin-table > tbody > tr > td.type-action > .ui-icon {
-	display: inline-block;
+    display: inline-block;
 }
 table.admin-table > tbody > tr.table-row-highlight{
-	outline: #d6b8b8 .2em solid;
+    outline: #d6b8b8 .2em solid;
 }
 table.admin-table > tbody > tr.table-row-highlight > td{
-	background-color: rgba(255,215,0,.6);
+    background-color: rgba(255,215,0,.6);
 }
 
 
 
 table.admin-simpletable{
-	border-spacing: 0px;
-	border-collapse: collapse;
-	margin: 1em auto;
-	width: 95%;
+    border-spacing: 0px;
+    border-collapse: collapse;
+    margin: 1em auto;
+    width: 95%;
 }
 table.admin-simpletable caption{
-	text-align: left;
-	height: 3em;
+    text-align: left;
+    height: 3em;
 }
 
 table.admin-simpletable > thead{
-	border-top: 1px solid rgb(230,230,230) ;
+    border-top: 1px solid rgb(230,230,230) ;
 }
 table.admin-simpletable > thead,
 table.admin-simpletable > tbody{
-	border-bottom: .2em solid #aaaaaa;
-	width: 100%;
+    border-bottom: .2em solid #aaaaaa;
+    width: 100%;
 }
 table.admin-simpletable > tfoot,
 table.admin-simpletable > thead,
@@ -325,203 +325,203 @@ table.admin-simpletable > tbody,
 table.admin-simpletable > thead > tr,
 table.admin-simpletable > tfoot > tr,
 table.admin-simpletable > tbody > tr{
-	width: 100%;
+    width: 100%;
 }
 table.admin-simpletable > thead > tr > th,
 table.admin-simpletable > tbody > tr > td{
-	height: 2.2em;
-	padding: 0.2em 0em;
+    height: 2.2em;
+    padding: 0.2em 0em;
 }
 table.admin-simpletable > thead > tr > th.zebra-odd{
 
 }
 table.admin-simpletable > thead > tr > th.zebra-even{
-	background-color: rgb(230,230,230);
+    background-color: rgb(230,230,230);
 }
 table.admin-simpletable > tbody > tr.zebra-odd > td{
-	background-color: rgb(230,230,230);
+    background-color: rgb(230,230,230);
 }
 
 
 
 
 dl.admin-definitions {
-	display: block;
-/*	margin-top: 1em;*/
-/*	margin-bottom: 1em;*/
+    display: block;
+    /*	margin-top: 1em;*/
+    /*	margin-bottom: 1em;*/
 }
 dl.admin-definitions > dt,
 dl.admin-definitions > dd{
-	display: block;
-	float: left;
-	padding: .25em 0em;
-	line-height: 1.5em;
-	min-height: 1.5em;
-	margin: .1em 0em;
-/*	padding: .25em 0em;*/
-	text-indent: .5em;
-	vertical-align: top;
+    display: block;
+    float: left;
+    padding: .25em 0em;
+    line-height: 1.5em;
+    min-height: 1.5em;
+    margin: .1em 0em;
+    /*	padding: .25em 0em;*/
+    text-indent: .5em;
+    vertical-align: top;
 }
 dl.admin-definitions > dt{
-	clear: left;
-	min-width: 10em;
-	width: 30%;
-	font-weight: bold;
-	background-color: lightsteelblue;
-	background-color: #a8c3d7;
-/*	color: #1D5987;*/
-	color: #444;
+    clear: left;
+    min-width: 10em;
+    width: 30%;
+    font-weight: bold;
+    background-color: lightsteelblue;
+    background-color: #a8c3d7;
+    /*	color: #1D5987;*/
+    color: #444;
 }
 dl.admin-definitions > dd{
-	clear: right;
-	width: 70%;
-	background-color: #f5f8f9;
+    clear: right;
+    width: 70%;
+    background-color: #f5f8f9;
 }
 
 /********/
 /* MISC */
 /********/
 .spacer-v{
-	display: inline-block;
-	width: 10px;
-	margin: 0;
-	padding: 0;
+    display: inline-block;
+    width: 10px;
+    margin: 0;
+    padding: 0;
 }
 .spacer-h{
-	display: block;
-	width: 100%;
-	margin: 0; 
-	padding: 0;
-	height: 10px;
+    display: block;
+    width: 100%;
+    margin: 0; 
+    padding: 0;
+    height: 10px;
 }
 .float-centre{
-	float: none;
-	clear: both;
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
+    float: none;
+    clear: both;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 .flexible-width{
-	min-width: 0;
+    min-width: 0;
 }
 /*********/
 /* FORMS */
 /*********/
 form {
-	
+
 }
 form fieldset{
-	display: inline-block;
-	float: left;
-	border: #1d5987 dashed .1em;
-	-moz-border-radius : 5px;
+    display: inline-block;
+    float: left;
+    border: #1d5987 dashed .1em;
+    -moz-border-radius : 5px;
 }
 form fieldset > legend{
-	font-weight: bold;
-	margin: 3px 5px;
-	padding: 0 2px;
+    font-weight: bold;
+    margin: 3px 5px;
+    padding: 0 2px;
 }
 form fieldset.form-fieldset-submission{
-	float: none;
-	clear: both;
-	text-align: right;
-	border: none;
-	background-color: #c5dbec;
-	margin-left: auto;
-	margin-right: auto;
+    float: none;
+    clear: both;
+    text-align: right;
+    border: none;
+    background-color: #c5dbec;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 form fieldset.form-fieldset-submission>*:first-child{
-	margin-left: 1em;
+    margin-left: 1em;
 }
 form fieldset.form-fieldset-submission>*:last-child{
-	margin-right: 1em;
+    margin-right: 1em;
 }
 /* XForm */
 form.admin-xform{
-	display: block;
-	width: 95%;
-	margin: 0 auto;
-	padding: 0;
-	clear: both;
-	float: none;
+    display: block;
+    width: 95%;
+    margin: 0 auto;
+    padding: 0;
+    clear: both;
+    float: none;
 }
 form.admin-xform fieldset{
-	margin: .5em auto;
-	padding: 1.2em 0;
+    margin: .5em auto;
+    padding: 1.2em 0;
 }
 
 /* StdForm */
 form.admin-stdform{
-	display: block;
-	width: 100%;
-	border: none;
-	margin: 0 auto;
-	clear: both;
-	float: none;
+    display: block;
+    width: 100%;
+    border: none;
+    margin: 0 auto;
+    clear: both;
+    float: none;
 }
 form.admin-stdform fieldset{
-/*	float: left;*/
-	margin: .5em auto;
-	padding: 1.2em 0;
-	width:90%;
+    /*	float: left;*/
+    margin: .5em auto;
+    padding: 1.2em 0;
+    width:90%;
 }
 
 /*TabForm*/
 form.admin-tabform{
-	display: block;
-	width: 100%;
-	border: none;
-	padding: 0;
-	margin: 0 auto;
-	clear: both;
-	float: none;
+    display: block;
+    width: 100%;
+    border: none;
+    padding: 0;
+    margin: 0 auto;
+    clear: both;
+    float: none;
 }
 form.admin-tabform > .ui-tabs{
-	width: 95%;
-	margin: 0 auto;
-	padding: 0;
+    width: 95%;
+    margin: 0 auto;
+    padding: 0;
 }
 form.admin-tabform > .ui-tabs > .ui-tabs-panel > fieldset{
-	margin-top: 10px;
-	width: 100%;
-	display: block;
-	float: none;
-	padding: 10px 0;
-	-moz-border-radius : 0px 0px 5px 5px;
+    margin-top: 10px;
+    width: 100%;
+    display: block;
+    float: none;
+    padding: 10px 0;
+    -moz-border-radius : 0px 0px 5px 5px;
 }
 form.admin-tabform > .ui-tabs > .ui-tabs-panel > fieldset:first-child{
-	margin-top: 0;
+    margin-top: 0;
 }
 
 /*ReportTabForm*/
 form.report-tabform{
-/* position: fixed;
-top: 30%;*/
-	display: block;
-        top:30%;
-	width: 100%;
-	border: none;
-	padding: 0;
-	margin: 0 auto;
-	clear: both;
-	float: none;
+    /* position: fixed;
+    top: 30%;*/
+    display: block;
+    top:30%;
+    width: 100%;
+    border: none;
+    padding: 0;
+    margin: 0 auto;
+    clear: both;
+    float: none;
 }
 form.report-tabform > .ui-tabs{
-	width: 95%;
-	margin: 0 auto;
-	padding: 0;
+    width: 95%;
+    margin: 0 auto;
+    padding: 0;
 }
 form.report-tabform > .ui-tabs > .ui-tabs-panel > fieldset{
-	margin-top: 10px;
-	width: 100%;
-	display: block;
-	float: none;
-	padding: 10px 0;
-	-moz-border-radius : 0px 0px 5px 5px;
+    margin-top: 10px;
+    width: 100%;
+    display: block;
+    float: none;
+    padding: 10px 0;
+    -moz-border-radius : 0px 0px 5px 5px;
 }
 form.report-tabform > .ui-tabs > .ui-tabs-panel > fieldset:first-child{
-	margin-top: 0;
+    margin-top: 0;
 }
 
 
@@ -530,28 +530,28 @@ form fieldset label,
 form fieldset textarea,
 form fieldset select,
 form fieldset input{
-	display: block;
-	margin-left: .5em;
-	margin-top: .2em;
-	height: 1.5em;
-	border: .1em #aaaaaa solid;
-	float:left;
-	padding: 0;
-	background: #fff;
-	color:#333;
+    display: block;
+    margin-left: .5em;
+    margin-top: .2em;
+    height: 1.5em;
+    border: .1em #aaaaaa solid;
+    float:left;
+    padding: 0;
+    background: #fff;
+    color:#333;
 }
 
 form fieldset select{
-	height: 1.7em;
+    height: 1.7em;
 }
 form fieldset input[type=checkbox]{
-	vertical-align: top;
-	height: auto;
-	margin-top: .6em;
+    vertical-align: top;
+    height: auto;
+    margin-top: .6em;
 }
 form fieldset input[type=radio]{
-	vertical-align: top;
-	margin-top: .5em;
+    vertical-align: top;
+    margin-top: .5em;
 }
 form fieldset select[disabled],
 form fieldset select[disabled] > option,
@@ -561,69 +561,89 @@ form fieldset select[readonly],
 form fieldset select[readonly] > option,
 form fieldset textarea[readonly],
 form fieldset input[readonly]{
-	background: #ccc;
-	color: #000;
+    background: #ccc;
+    color: #000;
 }
 
 form fieldset label{
-	border: none;
-	min-width: 10em;
-	line-height: 1.7em;
+    border: none;
+    min-width: 10em;
+    line-height: 1.7em;
 }
 
 label.form-flag-invalid{
-	color: #cd0a0a;
-	font-weight: bold;
+    color: #cd0a0a;
+    font-weight: bold;
 }
 textarea.form-flag-invalid,
 select.form-flag-invalid option,
 input.form-flag-invalid{
-	background-color: mistyrose;
-	outline: .1em lightpink solid;
+    background-color: mistyrose;
+    outline: .1em lightpink solid;
 }
 
 label.form-flag-required{
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .form-button .form-button-image{
-	border: none;
-	width: 16px;
-	height: 16px;
-	display: inline-block;
-	vertical-align: middle;
-	margin-bottom: 1px;
+    border: none;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 1px;
 }
 
 .form-button .form-button-text{
-	line-height: 16px;
-	height: 16px;
-	display: inline-block;
+    line-height: 16px;
+    height: 16px;
+    display: inline-block;
 }
 
 .form-button .form-button-image + .form-button-text{
-	margin-left: .4em;
+    margin-left: .4em;
 }
 .form-button .ui-button-text {
-	height: 16px;
-	line-height: 16px;
-	height: 16px;
-	vertical-align: middle;
+    height: 16px;
+    line-height: 16px;
+    height: 16px;
+    vertical-align: middle;
 }
 /*********/
 /* ICONS */
 /*********/
 .icon-image{
-	border: none;
-	outline: none;
-	width: 16px;
-	height: 16px;
+    border: none;
+    outline: none;
+    width: 16px;
+    height: 16px;
 }
 .icon-image.icon-size-small{
-	width: 16px;
-	height: 16px;
+    width: 16px;
+    height: 16px;
 }
 ul.ui-tabs-nav > li .icon-image + span{
-	margin-left: .4em;
-	vertical-align: .06em;
+    margin-left: .4em;
+    vertical-align: .06em;
+}
+
+/*
+===============
+LOADING
+===============
+*/
+.loader-container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background: rgba(0,0,0, 0.5);
+    z-index: 9999999;
+    display: block;
+}
+
+.loader{
+    margin: 5% auto !important;
+    color: white;
+    text-align: center;
 }
