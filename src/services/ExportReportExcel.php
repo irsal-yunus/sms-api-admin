@@ -10,12 +10,12 @@
  * @author Fathir Wafda
  */
 //call excelWriter
-include_once '../classes/PHPExcel.php';
-include_once '../classes/PHPExcel/IOFactory.php';
-include '../classes/PHPExcel/Writer/Excel2007.php';
-include '../classes/PHPExcel/ReferenceHelper.php';
-require_once '../configs/config.php';
-require_once '../init.d/init.php';
+include_once __DIR__.'/../classes/PHPExcel.php';
+include_once __DIR__.'/../classes/PHPExcel/IOFactory.php';
+include __DIR__.'/../classes/PHPExcel/Writer/Excel2007.php';
+include __DIR__.'/../classes/PHPExcel/ReferenceHelper.php';
+require_once __DIR__.'/../configs/config.php';
+require_once __DIR__.'/../init.d/init.php';
 
 class ExportReportExcel extends ApiBaseModel {
 

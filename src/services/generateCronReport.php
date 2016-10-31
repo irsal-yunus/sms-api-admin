@@ -10,12 +10,12 @@
  * @author Fathir Wafda 
  *
  */
-require_once '../init.d/init.service.php';
-require_once '../init.d/init.php';
-require_once '../lib/model/ApiReport.php';
-require_once '../lib/model/ApiBilling.php';
-require_once 'ExportReportExcel.php';
-require_once 'ExcelSpout.php';
+require_once __DIR__.'/../init.d/init.service.php';
+require_once __DIR__.'/../init.d/init.php';
+require_once __DIR__.'/../lib/model/ApiReport.php';
+require_once __DIR__.'/../lib/model/ApiBilling.php';
+require_once __DIR__.'/ExportReportExcel.php';
+require_once __DIR__.'/ExcelSpout.php';
 
 function microtime_float(){
     list($usec, $sec) = explode(" ", microtime());
@@ -42,38 +42,53 @@ try {
         $idClient = $client['CLIENT_ID'];
         $listUser = $apiReport->getUser($idClient);
         
-        $exportDataSpout = new ExcelSpout();
+        $exportDataSpout   = new ExcelSpout();
         $generateLastMonth = false;
-        $lastMonth = date('m', strtotime('last month'));
-        $lastYear = date('Y');
-        if($lastMonth == '12') {
-            $lastYear = date('Y', strtotime('last year'));
-        } 
+        $initDate     = (int)date('d');
+        $fistDay      = date('Y-m-01');
+        $today        = date('Y-m-d');
+        $lastMonth    = date('m', strtotime("$fistDay -1 month"));
+        $lastYear     = date('Y', strtotime("$fistDay -1 month"));
+        $currentMonth = date('m');
+        $currentYear  = date('Y');
+        
+        //if($lastMonth == '12') {
+        //    $lastYear = date('Y', strtotime('last year'));
+        //} 
 
         $directory = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . $lastYear . '-' . $lastMonth . '/';
 
         // check if there is report generated last month if now is in date 1st
-        if (is_dir($directory) && date('d') == '01') {
+        if (is_dir($directory) && $initDate < 4) {
             $generateLastMonth = true;
         }
+        //$generateLastMonth = true;
 
         foreach ($listUser as $user) {
             $userId = $user['USER_NAME'];
-
+            //echo "$userId\n";
             if($generateLastMonth) {
+                //$logger->info("LAST MONTH $lastYear-$lastMonth");
                 $lastUpdated = $exportDataSpout->getLastDateFromReport($userId, $lastMonth, $lastYear);
-                $lsReport = $apiReport->getDataCronReport($userId, $lastMonth, $lastYear, $lastUpdated);
-                $exportDataSpout->getDataScheduled($userId, $lsReport);
+                $lsReport = $apiReport->getDataCronReport($userId, $lastMonth, $lastYear, $lastUpdated, true);
+                $exportDataSpout->getDataScheduled($userId, $lsReport, $lastMonth, $lastYear);
             }
+            
+            if($initDate > 3){
+                //$lastUpdated = $exportDataSpout->checkFile($userId, date('m'), date('Y'));
+                $lastUpdated = $exportDataSpout->checkFile($userId, $currentMonth, $currentYear);
+                $lastUpdated = $lastUpdated !== false ? date("Y-m-d", strtotime("$lastUpdated +1 days")) : false;
 
-            $lastUpdated = $exportDataSpout->checkFile($userId, date('m'), date('Y'));
-            $lastUpdated = $lastUpdated === false ? false : date("Y-m-d", strtotime("$lastUpdated +1 days"));
-
-            $lsReport = $apiReport->getDataCronReport($userId, date('m'), date('Y'), $lastUpdated);
-            //if(count($lsReport) != 0){
-                //var_dump($lsReport);
-                $exportDataSpout->getDataScheduled($userId, $lsReport);
-            //}
+                //$lsReport = $apiReport->getDataCronReport($userId, date('m'), date('Y'), $lastUpdated);
+                $lsReport = $apiReport->getDataCronReport($userId, $currentMonth, $currentYear, $lastUpdated);
+                if(count($lsReport) != 0){
+                    $exportDataSpout->getDataScheduled($userId, $lsReport);
+                }
+//                else{
+//                    $logger->info("$currentYear-$currentMonth Report for user $userId not generated, there is no data.");
+//                }
+                
+            }
             $memory[] = memory_get_peak_usage(1);
         }
     }
@@ -84,5 +99,5 @@ try {
     
     $logger->info("Finished generating billing report | Execution Time: ".$execute_time ."s | Memory: ".$memory."MB");
 } catch (Throwable $e) {
-    $logger->error($e->getMessage());
+    $logger->error('generateCronReport Error: '.$e->getMessage());
 }

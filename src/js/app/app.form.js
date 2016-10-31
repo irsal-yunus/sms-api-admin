@@ -150,23 +150,30 @@ $app.ready(function ($app) {
                                     return;
                                 }
                                 
-                                var url = serviceName + '?' + $form.serialize();
-                                console.log(url);
-                                var checkUrl = url + "&check=TRUE";
+                                $('body').prepend("<div class='loader-container'><div class='loader'><h3>Processing..</h3><img src='skin/images/wheel.gif'></div></div>");
+                                
+                                var loading = $('.loader-container'),
+                                    url = serviceName + '?' + $form.serialize(),                                
+                                    checkUrl = url + "&check=TRUE";
+                                    
+                                loading.show();
                                 $.post(checkUrl, function(response){
 //                                    if($.trim(response) !== "File Doesn't Exist"){
                                     if($.trim(response) === "File Doesn't Exist"){
-                                        console.log(response);
-                                        console.log('t  '+response.responseTest);
+//                                        console.log(response);
+//                                        console.log('t  '+response.responseTest);
+                                        loading.remove();
                                         alert(response);
                                     } else {
+//                                        window.
 //                                        var newWin=window.open(url,'','width=100,height=100');
 //                                        newWin.document.write('<script>alert(top.location.href);</script>');
 //                                        window.open(url, '_blank');
+//                                        $.fileDownload(url)
+//                                            .done(function () { })
+//                                            .fail(function () { loading.remove(); alert("There was a problem generating your report, please try again.")});
                                         top.location.href = url;
-//                                        window.open(url, '_blank');
-    //                                window.location = serviceName + '?' + $form.serialize();
-//                                        window.location.replace("http://"+url);
+                                        loading.remove();
                                     }
                                     return false;
                                 });

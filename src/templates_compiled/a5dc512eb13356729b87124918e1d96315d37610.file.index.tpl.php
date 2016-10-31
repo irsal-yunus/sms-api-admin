@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.0.5, created on 2016-10-10 13:46:34
+<?php /* Smarty version Smarty-3.0.5, created on 2016-10-24 09:43:29
          compiled from "/var/www/html/sms-api-admin-61/src/templates/index.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:51928969557fb9bbaef8ac7-38409716%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:876904141580dd7c175fe33-77749346%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'a5dc512eb13356729b87124918e1d96315d37610' => 
     array (
       0 => '/var/www/html/sms-api-admin-61/src/templates/index.tpl',
-      1 => 1476098728,
+      1 => 1477302156,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '51928969557fb9bbaef8ac7-38409716',
+  'nocache_hash' => '876904141580dd7c175fe33-77749346',
   'function' => 
   array (
   ),
@@ -37,6 +37,7 @@ Copyright(c) 2010 1rstWAP. All rights reserved.
 		<script type="text/javascript" src="js/ui.hourglass/jquery.ui.hourglass.min.js"></script>
 		<script type="text/javascript" src="js/app/app.js"></script>
 		<script type="text/javascript" src="skin/skin.js"></script>
+		<script type="text/javascript" src="js/jquery.fileDownload.js"></script>
         <script type="text/javascript" src="js/datatable/jquery.dataTables.min.js"></script>
         
 		<script type="text/javascript">
