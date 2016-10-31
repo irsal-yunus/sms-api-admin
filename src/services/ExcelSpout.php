@@ -39,7 +39,7 @@ class ExcelSpout extends ApiBaseModel {
         $dirOk  = true;
         if (!@is_dir($dir)) {            
             $this->logger->info("Creating report directory $dir");                
-            if(!@mkdir($directory, 0777, TRUE)){
+            if(!@mkdir($dir, 0777, TRUE)){
                 $this->logger->error("Could not create report directory '$dir'");
                 $dirOk = false;                    
             }
@@ -54,7 +54,7 @@ class ExcelSpout extends ApiBaseModel {
             if(file_exists($file)){
                 if(!is_writable($file)){
                     $fileOk = false;                
-                    $this->logger->error("File '$file' is not writeable.");
+                    $this->logger->warn("File '$file' is not writeable.");
                 }
                 if(!is_readable($file)){
                     $fileOk = false;
@@ -88,10 +88,13 @@ class ExcelSpout extends ApiBaseModel {
             if($this->prepareDirectory($directory)){
                 if(is_writable(SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT)){
                     $fileName = $directory.$userName.'.xlsx';
-                    if (file_exists($fileName)) {
-                        $this->updateReportFile($lsReport, $userName, $month, $year);
-                    } else {
-                        $this->generateReportFile($lsReport, $fileName);
+                    $totalRows = count($lsReport);
+                    if($totalRows > 0 ){
+                        if (file_exists($fileName)) {
+                                $this->updateReportFile($lsReport, $userName, $month, $year);
+                        } else {
+                            $this->generateReportFile($lsReport, $fileName);
+                        }                
                     }
                 }
                 else{
@@ -199,7 +202,7 @@ class ExcelSpout extends ApiBaseModel {
                 if(!@rename($newFilePath, $existingFilePath)) {
                     $this->logger->warn("Cannot rename '$newFilePath' to '$existingFilePath', please check the permission.");
                 }
-                else{$this->logger->info("$year-$month Report for user $userName updated.");}
+                else{$this->logger->info("$year-$month Report for user $userName updated +".count($lsReport)." row(s).");}
             }
         }
         else {
@@ -226,14 +229,11 @@ class ExcelSpout extends ApiBaseModel {
         $undeliveredCount = array_sum(array_column($lsReport, 'UNDELIVERED'));
         $totalCharged     = (int) $undeliveredCount + (int)$deliveredCount;
 
-        // ... and a writer to create the new file
         try{
             $writer = WriterFactory::create(Type::XLSX);
             $writer->openToFile($newFilePath);
 
-            // At this point, the new spreadsheet contains the same data as the existing one.
-            // Add the new data:
-
+            // Report Description
             $writer->addRow(['']);
             $writer->addRow(['']);
             $writer->addRowWithStyle(['Generated Report On',            $today],            $style);
@@ -246,10 +246,9 @@ class ExcelSpout extends ApiBaseModel {
             $writer->addRow(['']);
             $writer->addRow(['']);
 
-
-
+            // Table Header
             $writer->addRowWithStyle(['MESSAGE ID', 'DESTINATION', 'MESSAGE CONTENT', 'ERROR CODE', 'DESCRIPTION CODE','SEND DATETIME', 'SENDER', 'USER ID', 'MESSAGE COUNT'], $style);
-
+            
             foreach ($lsReport as $rows) {
                 unset($rows['DELIVERED']);
                 unset($rows['UNDELIVERED']);
@@ -258,7 +257,7 @@ class ExcelSpout extends ApiBaseModel {
             }
 
             $writer->close();
-            $this->logger->info($this->currentYear.'-'.$this->currentMonth.' Report for user '.$this->currentUser.' created.');
+            $this->logger->info($this->currentYear.'-'.$this->currentMonth.' Report for user '.$this->currentUser.' created with '.count($lsReport).' row(s).');
         }
         catch (Exception $e){
             $this->logger->error("generateReportFile Error :". $e->getMessage());
@@ -287,36 +286,37 @@ class ExcelSpout extends ApiBaseModel {
     
     
     public function getLastDateFromReport($userName, $month, $year){
-        $lastDate = "{$year}-{$month}-01 00:00:00";
-        $directory = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . "{$year}-{$month}/";
-        $nameFile = $userName . '.xlsx';
-        $existingFilePath = $directory . $nameFile;
+        $lastDate  = "$year-$month-01";// 00:00:00";
+        $directory = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . "$year-$month";
+        //$nameFile  = $userName . '.xlsx';
+        $fileName  = "$directory/$userName.xlsx";//$directory . $nameFile;
         // we need a reader to read the existing file...
-        
-        if(is_readable($existingFilePath)){
-            try{
-                $reader = ReaderFactory::create(Type::XLSX);
-                $reader->open($existingFilePath);
+        if(file_exists($fileName)){
+            if(is_readable($fileName)){
+                try{
+                    $reader = ReaderFactory::create(Type::XLSX);
+                    $reader->open($fileName);
 
-                // let's read the entire spreadsheet...
-                foreach ($reader->getSheetIterator() as $sheetIndex => $sheet) {
-                    foreach ($sheet->getRowIterator() as $row) {
-                        if(isset($row[5])){
-                            if($row[5] != 'SEND DATETIME' && !empty($row[5])) {
-                                $lastDate = $row[5];
-                            }                
+                    // let's read the entire spreadsheet...
+                    foreach ($reader->getSheetIterator() as $sheetIndex => $sheet) {
+                        foreach ($sheet->getRowIterator() as $row) {
+                            if(isset($row[5])){
+                                if($row[5] != 'SEND DATETIME' && !empty($row[5])) {
+                                    $lastDate = $row[5];
+                                }                
+                            }
                         }
                     }
+                    $reader->close();
                 }
-                $reader->close();
-            }
 
-            catch (Throwable $e){
-                $this->logger->error('getLastDateFromReport error: ',$e->getMessage());
+                catch (Throwable $e){
+                    $this->logger->error('getLastDateFromReport error: ',$e->getMessage());
+                }
             }
-        }
-        else{
-            $this->logger->warn("file $existingFilePath not readable, please check the read permission.");
+            else{
+                $this->logger->warn("file '$fileName' not readable, please check the read permission.");
+            }
         }
         return $lastDate;
     }

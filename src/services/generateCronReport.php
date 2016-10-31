@@ -42,10 +42,13 @@ try {
         $idClient = $client['CLIENT_ID'];
         $listUser = $apiReport->getUser($idClient);
         
-        $exportDataSpout = new ExcelSpout();
+        $exportDataSpout   = new ExcelSpout();
         $generateLastMonth = false;
-        $lastMonth    = date('m', strtotime('last month'));
-        $lastYear     = $lastMonth == '12' ? date('Y', strtotime('last year')) : date('Y');
+        $initDate     = (int)date('d');
+        $fistDay      = date('Y-m-01');
+        $today        = date('Y-m-d');
+        $lastMonth    = date('m', strtotime("$fistDay -1 month"));
+        $lastYear     = date('Y', strtotime("$fistDay -1 month"));
         $currentMonth = date('m');
         $currentYear  = date('Y');
         
@@ -56,7 +59,7 @@ try {
         $directory = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . $lastYear . '-' . $lastMonth . '/';
 
         // check if there is report generated last month if now is in date 1st
-        if (is_dir($directory) && date('d') < 4) {
+        if (is_dir($directory) && $initDate < 4) {
             $generateLastMonth = true;
         }
         $generateLastMonth = true;
@@ -65,22 +68,26 @@ try {
             $userId = $user['USER_NAME'];
             //echo "$userId\n";
             if($generateLastMonth) {
+                //$logger->info("LAST MONTH $lastYear-$lastMonth");
                 $lastUpdated = $exportDataSpout->getLastDateFromReport($userId, $lastMonth, $lastYear);
-                $lsReport = $apiReport->getDataCronReport($userId, $lastMonth, $lastYear, $lastUpdated);
+                $lsReport = $apiReport->getDataCronReport($userId, $lastMonth, $lastYear, $lastUpdated, true);
                 $exportDataSpout->getDataScheduled($userId, $lsReport, $lastMonth, $lastYear);
             }
+            
+            if($initDate > 3){
+                //$lastUpdated = $exportDataSpout->checkFile($userId, date('m'), date('Y'));
+                $lastUpdated = $exportDataSpout->checkFile($userId, $currentMonth, $currentYear);
+                $lastUpdated = $lastUpdated !== false ? date("Y-m-d", strtotime("$lastUpdated +1 days")) : false;
 
-            //$lastUpdated = $exportDataSpout->checkFile($userId, date('m'), date('Y'));
-            $lastUpdated = $exportDataSpout->checkFile($userId, $currentMonth, $currentYear);
-            $lastUpdated = $lastUpdated !== false ? date("Y-m-d", strtotime("$lastUpdated +1 days")) : false;
-
-            //$lsReport = $apiReport->getDataCronReport($userId, date('m'), date('Y'), $lastUpdated);
-            $lsReport = $apiReport->getDataCronReport($userId, $currentMonth, $currentYear, $lastUpdated);
-            if(count($lsReport) != 0){
-                $exportDataSpout->getDataScheduled($userId, $lsReport);
-            }
-            else{
-                $logger->info("$currentYear-$currentMonth Report for user $userId not created, there is no data yet.");
+                //$lsReport = $apiReport->getDataCronReport($userId, date('m'), date('Y'), $lastUpdated);
+                $lsReport = $apiReport->getDataCronReport($userId, $currentMonth, $currentYear, $lastUpdated);
+                if(count($lsReport) != 0){
+                    $exportDataSpout->getDataScheduled($userId, $lsReport);
+                }
+                else{
+                    $logger->info("$currentYear-$currentMonth Report for user $userId not generated, there is no data.");
+                }
+                
             }
             $memory[] = memory_get_peak_usage(1);
         }

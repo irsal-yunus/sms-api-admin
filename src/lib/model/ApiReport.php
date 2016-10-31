@@ -52,7 +52,7 @@ class ApiReport extends ApiBaseModel {
     
     public function getDataReport($userId, $month, $year, $lastUpdated) {
         try {
-            $lastUpdated = $lastUpdated === false || $lastUpdated == '' ? date("Y-m-1", strtotime("now")) : date("Y-m-d",  strtotime($lastUpdated));
+            $lastUpdated = $lastUpdated === false || $lastUpdated == '' ? date("Y-m-01", strtotime("now")) : date("Y-m-d",  strtotime($lastUpdated));
             $now         = date("Y-m-d", strtotime("now"));
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_ALL);       
             //HARDCODE
@@ -113,17 +113,24 @@ class ApiReport extends ApiBaseModel {
         }
     }
     
-    public function getDataCronReport($userId, $month = false, $year = false, $lastUpdateDate = false) {
+    public function getDataCronReport($userId, $month = false, $year = false, $lastUpdateDate = false, $lastMonth=false) {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_ALL);
             
             $month     = $month === false ? date("m") : $month;
             $year      = $year  === false ? date("Y") : $year;
-            $startDate = $lastUpdateDate === false || $lastUpdateDate == '' ? date("Y-m-1", strtotime("now")) : date('Y-m-d', strtotome($lastUpdateDate));
-            $endDate   = date('m') == date('m', strtotime($lastUpdateDate)) ? date("Y-m-d", strtotime("-2 days")) : date('Y-m-t', strtotime($lastUpdateDate == false ? "$year-$month-01" : $lastUpdateDate));
-            $this->logger->info("start = $startDate ==> end = $endDate");
-            //$startDate = date("Y-m-d", strtotime("2016-03-01"));
-            //$endDate = date("Y-m-d", strtotime("2016-03-20"));
+            $startDate = $lastUpdateDate === false || $lastUpdateDate == '' ? date("Y-m-01", strtotime("now")) : date('Y-m-d', strtotime($lastUpdateDate));
+
+            $intDate   = (int)date('d') -3;
+            if($lastMonth !== false){
+                $lastDate = date('Y-m-t', strtotime("$lastUpdateDate"));
+                $endDate  = $lastUpdateDate <= $lastDate ? $lastDate : date('Y-m-d', strtotime("$lastUpdateDate $intDate days"));
+            }
+            else{
+                $endDate  = date("Y-m-d", strtotime("-2 days"));
+            }
+            
+            //$this->logger->info("$userId| LastUpdate = $lastUpdateDate| start = $startDate ==> end = $endDate");
             $query = "SELECT 
                         MESSAGE_ID,
                         DESTINATION,
@@ -171,7 +178,7 @@ class ApiReport extends ApiBaseModel {
                         
             return $list;
         } catch (Throwable $e) {
-            $this->logger->error("$e");
+            $this->logger->error($e->getMessage());
             throw new Exception("Query failed get Data report: " . $e->getMessage());
         }
     }
