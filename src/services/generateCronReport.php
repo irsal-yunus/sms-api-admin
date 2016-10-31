@@ -84,9 +84,9 @@ try {
                 if(count($lsReport) != 0){
                     $exportDataSpout->getDataScheduled($userId, $lsReport);
                 }
-                else{
-                    $logger->info("$currentYear-$currentMonth Report for user $userId not generated, there is no data.");
-                }
+//                else{
+//                    $logger->info("$currentYear-$currentMonth Report for user $userId not generated, there is no data.");
+//                }
                 
             }
             $memory[] = memory_get_peak_usage(1);
