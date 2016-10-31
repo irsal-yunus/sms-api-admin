@@ -33,7 +33,7 @@ try {
 
     // Get report data based clientid
     $apiReport = new ApiReport();
-    $exportData = new ExportReportExcel();
+    //$exportData = new ExportReportExcel();
     $exportDataSpout = new ExcelSpout();
     
     if(!empty($sms_dr)){
@@ -72,5 +72,5 @@ try {
     }
 } catch (Throwable $e) {
     $logger->error("generateReportUser error: ".$e->getMessage());
-    //SmsApiAdmin::returnError($e->getMessage());
+    SmsApiAdmin::returnError($e->getMessage());
 }

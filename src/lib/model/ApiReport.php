@@ -54,6 +54,7 @@ class ApiReport extends ApiBaseModel {
         try {
             $lastUpdated = $lastUpdated === false || $lastUpdated == '' ? date("Y-m-01", strtotime("now")) : date("Y-m-d",  strtotime($lastUpdated));
             $now         = date("Y-m-d", strtotime("now"));
+            $now         = date('m', strtotime($lastUpdated)) == date('m', strtotime($now)) ? $now : date("Y-m-t", strtotime($lastUpdated));
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_ALL);       
             //HARDCODE
             //$month = '03';

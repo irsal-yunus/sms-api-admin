@@ -88,8 +88,8 @@ class ExcelSpout extends ApiBaseModel {
             if($this->prepareDirectory($directory)){
                 if(is_writable(SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT)){
                     $fileName = $directory.$userName.'.xlsx';
-                    $totalRows = count($lsReport);
-                    if($totalRows > 0 ){
+                    $rowCount = count($lsReport);
+                    if($rowCount > 0 ){
                         if (file_exists($fileName)) {
                                 $this->updateReportFile($lsReport, $userName, $month, $year);
                         } else {
@@ -208,7 +208,6 @@ class ExcelSpout extends ApiBaseModel {
         else {
             $this->logger->error("Prepare file failed '$existingFilePath'.");
         }
-
     }
 
     /**
