@@ -193,7 +193,7 @@ class ApiReport extends ApiBaseModel {
 
             return $list;
         } catch (Throwable $e) {
-            $this->logger->error("$e");
+            $this->logger->error("getUser errpr: ".$e->getMessage());
             throw new Exception("Query failed get User");
         }
     }
@@ -248,7 +248,7 @@ class ApiReport extends ApiBaseModel {
 
             return $list;
         } catch (Throwable $e) {
-            $this->logger->error("$e");
+            $this->logger->error("getHeader error: ".$e->getMessage());
             //echo $e;
             throw new Exception("Query failed get Header");
         }
@@ -295,7 +295,7 @@ class ApiReport extends ApiBaseModel {
 
             return $list;
         } catch (Throwable $e) {
-            $this->logger->error("$e");
+            $this->logger->error("getHeaderProvider error: ".$e->getMessage());
             //echo $e;
             throw new Exception("Query failed get Header Provider");
         }
