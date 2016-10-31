@@ -62,7 +62,7 @@ try {
         if (is_dir($directory) && $initDate < 4) {
             $generateLastMonth = true;
         }
-        $generateLastMonth = true;
+        //$generateLastMonth = true;
 
         foreach ($listUser as $user) {
             $userId = $user['USER_NAME'];

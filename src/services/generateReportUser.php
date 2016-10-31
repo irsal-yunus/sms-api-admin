@@ -71,6 +71,6 @@ try {
         }
     }
 } catch (Throwable $e) {
-    $logger->error("$e");
+    $logger->error("generateReportUser error: ".$e->getMessage());
     //SmsApiAdmin::returnError($e->getMessage());
 }
