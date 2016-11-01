@@ -297,7 +297,6 @@ class ApiReport extends ApiBaseModel {
             return $list;
         } catch (Throwable $e) {
             $this->logger->error("getHeaderProvider error: ".$e->getMessage());
-            //echo $e;
             throw new Exception("Query failed get Header Provider");
         }
     }

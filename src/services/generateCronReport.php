@@ -101,10 +101,6 @@ try {
     
     $logger->info("Finished generating billing report | Execution Time: ".$execute_time ."s | Memory: ".$memory."MB");
 
-    ini_set('max_execution_time', $defaultMaxExec);
-    ini_set('memory_limit', $defaultMemLimit);
 } catch (Throwable $e) {
     $logger->error('generateCronReport Error: '.$e->getMessage());
-    ini_set('max_execution_time', $defaultMaxExec);
-    ini_set('memory_limit', $defaultMemLimit);
 }
