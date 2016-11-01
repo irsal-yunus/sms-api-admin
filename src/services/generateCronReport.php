@@ -28,9 +28,11 @@ $logger->info("Start generating billing report");
 
 try {
     $execute_time = microtime_float();
-    
+    $defaultMaxExec   = ini_get('max_execution_time');
+    $defaultMemLimit  = ini_get('memory_limit');
     ini_set('max_execution_time', 7200);
     ini_set('memory_limit', '4024M');
+
     $apiReport = new ApiReport();
     $exportData = new ExportReportExcel();
     $exportDataSpout = new ExcelSpout();
@@ -81,9 +83,9 @@ try {
 
                 //$lsReport = $apiReport->getDataCronReport($userId, date('m'), date('Y'), $lastUpdated);
                 $lsReport = $apiReport->getDataCronReport($userId, $currentMonth, $currentYear, $lastUpdated);
-                if(count($lsReport) != 0){
+                //if(count($lsReport) != 0){
                     $exportDataSpout->getDataScheduled($userId, $lsReport);
-                }
+                //}
 //                else{
 //                    $logger->info("$currentYear-$currentMonth Report for user $userId not generated, there is no data.");
 //                }
@@ -98,6 +100,11 @@ try {
     $execute_time = substr($execute_time,0,4);
     
     $logger->info("Finished generating billing report | Execution Time: ".$execute_time ."s | Memory: ".$memory."MB");
+
+    ini_set('max_execution_time', $defaultMaxExec);
+    ini_set('memory_limit', $defaultMemLimit);
 } catch (Throwable $e) {
     $logger->error('generateCronReport Error: '.$e->getMessage());
+    ini_set('max_execution_time', $defaultMaxExec);
+    ini_set('memory_limit', $defaultMemLimit);
 }

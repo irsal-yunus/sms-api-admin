@@ -106,7 +106,7 @@ class ApiReport extends ApiBaseModel {
             $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
             
             $list = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
-            $this->logger->info("query = \n$query");
+            //$this->logger->info("query = \n$query");
             return $list;
         } catch (Throwable $e) {
             $this->logger->error("$e");
