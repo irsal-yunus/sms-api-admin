@@ -87,7 +87,7 @@ final class SmsApiAdminLoginManager
 			throw new Exception("Query error");
 		} catch (LoginException $e) {
 			throw $e;
-		} catch (Throwable $e) {
+		} catch (Exception $e) {
 			$this->logout();
 			$this->logger->error("$e");
 			throw new FailedLoginException($e->getMessage());
@@ -100,7 +100,7 @@ final class SmsApiAdminLoginManager
 		try {
 			$this->clearSession();
 			$this->user = null;
-		} catch (Throwable $e) {
+		} catch (Exception $e) {
 			$this->logger->error("$e");
 			throw new LoginException("Failed logout!");
 		}
@@ -131,7 +131,7 @@ final class SmsApiAdminLoginManager
 			$_SESSION[self::$sessionTimestampLabel] = time();
 		} catch (LoginException $e) {
 			throw $e;
-		} catch (Throwable $e) {
+		} catch (Exception $e) {
 			$this->logger->error("$e");
 			throw new LoginException('Error resuming user session');
 		}
@@ -328,7 +328,7 @@ class AppJsonService{
 			echo $product;
 			if($terminateApp)
 				exit;
-		} catch(Throwable $e){
+		} catch(Exception $e){
 			Logger::getLogger()->error("Failed generating reply: $e");
 			if($terminateApp)
 				exit;
@@ -387,7 +387,7 @@ final class SmsApiAdmin {
 			} catch(ExpiredLoginException $e){
 				self::$logger->debug("Expired login: $e");
 			}
-		} catch (Throwable $e) {
+		} catch (Exception $e) {
 			self::$logger->fatal("Error initialising application: $e");
 			exit;
 		}
@@ -431,7 +431,6 @@ final class SmsApiAdmin {
 	 * @return PDO
 	 */
     public static function getDB($conn) {
-        
         if (isset(self::$db[$conn])) {
             $conn = $conn ? self::DB_SMSAPI : self::DB_COBRANDER;
 //               self::$db[$conn] = self::$db[$conn]? self::DB_SMSAPI : self::DB_COBRANDER;
@@ -516,7 +515,7 @@ final class SmsApiAdmin {
 					break;
 			}
 			exit;
-		} catch (Throwable $e) {
+		} catch (Exception $e) {
 			self::$logger->fatal("$e");
 			exit;
 		}
@@ -546,7 +545,7 @@ final class SmsApiAdmin {
 			
 			self::returnError('Unauthorised access!', self::$mode);
 			exit;
-		} catch (Throwable $e) {
+		} catch (Exception $e) {
 			self::$logger->fatal("Error filtering access: $e");
 			exit;
 		}
@@ -567,7 +566,7 @@ final class SmsApiAdmin {
 					throw new Exception('Invalid service mode');
 					break;
 			}
-		} catch (Throwable $e) {
+		} catch (Exception $e) {
 			self::$logger->error("$e");
 			throw $e;
 		}
@@ -588,8 +587,8 @@ final class SmsApiAdmin {
 						Logger::getRootLogger()->warn("$e");
 						return;
 					case E_STRICT :
-					case E_DEPRECATED :
-					case E_USER_DEPRECATED :
+//					case E_DEPRECATED :
+//					case E_USER_DEPRECATED :
 					case E_NOTICE :
 					case E_USER_NOTICE :
 					case E_CORE_WARNING :
@@ -610,7 +609,7 @@ final class SmsApiAdmin {
 		try {
 			self::catchException(new ErrorException($errstr, 0, $errno, $errfile, $errline));
 			return true;
-		} catch (Throwable $e) {
+		} catch (Exception $e) {
 			error_log("Uncaught exception: $e");
 			return true;
 		}

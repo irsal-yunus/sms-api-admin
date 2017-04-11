@@ -17,7 +17,7 @@ require_once 'ExportReportExcel.php';
 require_once 'ExcelSpout.php';
 
 $logger = Logger::getRootLogger();
-//$service = new AppJsonService();
+$service = new AppJsonService();
 //SmsApiAdmin::filterAccess();
 try {
     ini_set('max_execution_time', 7200);
@@ -28,12 +28,12 @@ try {
     $userName = $_GET['userName'];
     $month = $_GET['month'];
     $year = $_GET['year'];
-    $sms_dr = isset($_GET['sms_dr']) ? $_GET['sms_dr'] : false;
-    $check = isset($_GET['check']) ? $_GET['check'] : false;
+    $sms_dr = $_GET['sms_dr'];
+    $check = $_GET['check'];
 
     // Get report data based clientid
     $apiReport = new ApiReport();
-    //$exportData = new ExportReportExcel();
+    $exportData = new ExportReportExcel();
     $exportDataSpout = new ExcelSpout();
     
     if(!empty($sms_dr)){
@@ -48,29 +48,17 @@ try {
                 exit();                
             }
         }else{
+//            $return = array("error" => "Not exist");
+//            echo json_encode($return);
             echo "File Doesn't Exist";
             exit();
         }
-    } 
-    else {
-        $oldReport = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT ."$year-$month/";
-        $fileName  = $oldReport.$userName.".xlsx"; 
-        if(file_exists($fileName)){
-            if($check != 'TRUE'){
-                //SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . "{$year}-{$month}/{$nameFile}";
-                //$exportDataSpout->getLastRecordDateTime($userName.'.xlsx', $month, $year);
-                $fileName = $userName.".xlsx";
-                $exportDataSpout->getLastRecordDateTime($fileName, $month, $year);
-            }
-            else{
-                echo "Exist";
-            }
-        }
-        else{
-            echo "File Doesn't Exist";            
-        }
+    } else {
+        $exportDataSpout->getLastRecordDateTime($userName.'.xlsx', $month, $year);
     }
-} catch (Throwable $e) {
-    $logger->error("generateReportUser error: ".$e->getMessage());
+
+    exit();
+} catch (Exception $e) {
+    $logger->error("$e");
     SmsApiAdmin::returnError($e->getMessage());
 }
