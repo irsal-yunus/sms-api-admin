@@ -306,6 +306,7 @@ class ApiUser extends ApiBaseModel{
 			$rules = array(
 				'userName'=>array('param'=>':userName', 'field'=>'USER_NAME', 'type'=>PDO::PARAM_STR),
 				'cobranderID'=>array('param'=>':cobranderID', 'field'=>'COBRANDER_ID', 'type'=>PDO::PARAM_INT),
+                                'clientID'=>array('param'=>':clientID', 'field'=>'CLIENT_ID', 'type'=>PDO::PARAM_INT),
 				'replyBlacklistEnabled'=>array('param'=>':replyBlacklistEnabled', 'field'=>'USE_BLACKLIST', 'type'=>PDO::PARAM_INT),
 				'isPostpaid'=>array('param'=>':isPostpaid', 'field'=>'IS_POSTPAID', 'type'=>PDO::PARAM_INT),
 				'statusDeliveryActive'=>array('param'=>':statusDeliveryActive', 'field'=>'URL_ACTIVE', 'type'=>PDO::PARAM_INT),
@@ -332,7 +333,8 @@ class ApiUser extends ApiBaseModel{
 				}
 				$queryFields.=', URL_LAST_RETRY=null, URL_INVALID_COUNT=0';
 			}
-			$query = "update USER set UPDATED_BY=:adminID, UPDATED_DATE=now(), $queryFields where USER_ID=:userID";
+			$query = "update `USER` set UPDATED_BY=:adminID, UPDATED_DATE=now(), $queryFields where USER_ID=:userID";
+
             $stmt = $db->prepare($query);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$stmt->bindValue(':adminID', SmsApiAdmin::getCurrentUser()->getID(), PDO::PARAM_INT);
