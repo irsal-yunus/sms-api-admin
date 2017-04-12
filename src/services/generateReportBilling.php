@@ -56,7 +56,7 @@ try{
 //            $dataWaktu = $mydate->format('Y-m-d H:i:s');
 //            echo ' Data sebelum ' . $dataWaktu . ' ' .$userId .' ';
         foreach ($listUser as $user){
-            var_dump('number : '.$finBilledSMS. '');
+            //var_dump('number : '.$finBilledSMS. '');
             $userId = $user['USER_NAME'];
             $lsReport = $apiBilling->getDataReport($userId, $finBilledSMS, $errorCode, $deliveredDesc);
 //            var_dump(count($lsReport));
@@ -72,8 +72,7 @@ try{
     }
     exit();
    
-} catch (Exception $e) {
+} catch (Throwable $e) {
     $logger->error("$e");
-    SmsApiAdmin::returnError($e->getMessage());
-
+//    SmsApiAdmin::returnError($e->getMessage());
 }

@@ -10,12 +10,12 @@
  * @author Fathir Wafda
  */
 //call excelWriter
-include_once '../classes/PHPExcel.php';
-include_once '../classes/PHPExcel/IOFactory.php';
-include '../classes/PHPExcel/Writer/Excel2007.php';
-include '../classes/PHPExcel/PHPExcel_ReferenceHelper.php';
-require_once '../configs/config.php';
-require_once '../init.d/init.php';
+include_once __DIR__.'/../classes/PHPExcel.php';
+include_once __DIR__.'/../classes/PHPExcel/IOFactory.php';
+include __DIR__.'/../classes/PHPExcel/Writer/Excel2007.php';
+include __DIR__.'/../classes/PHPExcel/ReferenceHelper.php';
+require_once __DIR__.'/../configs/config.php';
+require_once __DIR__.'/../init.d/init.php';
 
 class ExportReportExcel extends ApiBaseModel {
 
@@ -88,12 +88,18 @@ class ExportReportExcel extends ApiBaseModel {
         }
 
         $objSheet->setCellValue('B3', '=SUM(H13:H' . $counter . ')')->getStyle('B3')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED3);
+
         $objSheet->setCellValue('B4', '=SUMIF(D13:D' . $counter . ',"Delivered",H13:H' . $counter . ')')->getStyle('B4')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED3);
+
         $objSheet->setCellValue('B5', '=SUMIF(D13:D' . $counter . ',"Undelivered",H13:H' . $counter . ')')->getStyle('B5')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED3);
+
         $objSheet->setCellValue('B6', '=SUMIF(D13:D' . $counter . ',"Pending",H13:H' . $counter . ')')->getStyle('B6')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED3);
+
         $objSheet->setCellValue('B7', '=SUMIF(D13:D' . $counter . ',"Unknown",H13:H' . $counter . ')')->getStyle('B7')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED3);
+
 //$objSheet->setCellValue('B8','=COUNTIF(B13:B'.$counter.',"62811.*")+COUNTIF(B13:B'.$counter.',"62812.*")+COUNTIF(B13:B'.$counter.',"62813.*")+COUNTIF(B13:B'.$counter.',"62821.*")+COUNTIF(B13:B'.$counter.',"62822.*")+COUNTIF(B13:B'.$counter.',"62823.*")+COUNTIF(B13:B'.$counter.',"62851.*")+COUNTIF(B13:B'.$counter.',"62852.*")+COUNTIF(B13:B'.$counter.',"62853.*")')->getStyle('B8')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED3);;
         $objSheet->setCellValue('B8', '=SUMIF(B13:B' . $counter . ',"62811.*",H13:H' . $counter . ')+SUMIF(B13:B' . $counter . ',"62812.*",H13:H' . $counter . ')+SUMIF(B13:B' . $counter . ',"62813.*",H13:H' . $counter . ')+SUMIF(B13:B' . $counter . ',"62821.*",H13:H' . $counter . ')+SUMIF(B13:B' . $counter . ',"62822.*",H13:H' . $counter . ')+SUMIF(B13:B' . $counter . ',"62823.*",H13:H' . $counter . ')+SUMIF(B13:B' . $counter . ',"62851.*",H13:H' . $counter . ')+SUMIF(B13:B' . $counter . ',"62852.*",H13:H' . $counter . ')+SUMIF(B13:B' . $counter . ',"62853.*",H13:H' . $counter . ')')->getStyle('B8')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED3);
+
         $objSheet->setCellValue('B9', '=SUM(B3-B8)')->getStyle('B9')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED3);
 
 
