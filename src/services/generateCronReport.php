@@ -28,9 +28,11 @@ $logger->info("Start generating billing report");
 
 try {
     $execute_time = microtime_float();
-    
+    $defaultMaxExec   = ini_get('max_execution_time');
+    $defaultMemLimit  = ini_get('memory_limit');
     ini_set('max_execution_time', 7200);
     ini_set('memory_limit', '4024M');
+
     $apiReport = new ApiReport();
     $exportData = new ExportReportExcel();
     $exportDataSpout = new ExcelSpout();
@@ -46,12 +48,14 @@ try {
         $generateLastMonth = false;
         $initDate     = (int)date('d');
         $fistDay      = date('Y-m-01');
-        $today        = date('Y-m-d');
+        $today        = date('Y-m-d', strtotime('now'));
+//        $fistDay      = date('Y-m-01');
+//        $today        = date('Y-m-d');
         $lastMonth    = date('m', strtotime("$fistDay -1 month"));
         $lastYear     = date('Y', strtotime("$fistDay -1 month"));
         $currentMonth = date('m');
         $currentYear  = date('Y');
-        
+        die(json_encode(compact('initDate','firstDay','today')));
         //if($lastMonth == '12') {
         //    $lastYear = date('Y', strtotime('last year'));
         //} 
@@ -81,9 +85,9 @@ try {
 
                 //$lsReport = $apiReport->getDataCronReport($userId, date('m'), date('Y'), $lastUpdated);
                 $lsReport = $apiReport->getDataCronReport($userId, $currentMonth, $currentYear, $lastUpdated);
-                if(count($lsReport) != 0){
+                //if(count($lsReport) != 0){
                     $exportDataSpout->getDataScheduled($userId, $lsReport);
-                }
+                //}
 //                else{
 //                    $logger->info("$currentYear-$currentMonth Report for user $userId not generated, there is no data.");
 //                }
@@ -95,9 +99,11 @@ try {
     
     $memory       = round((array_sum($memory) / count($memory))/1024/1024, 2); 
     $execute_time = microtime_float() - $execute_time;
-    $execute_time = substr($execute_time,0,4);
+    $execute_time = round($execute_time,2);
     
     $logger->info("Finished generating billing report | Execution Time: ".$execute_time ."s | Memory: ".$memory."MB");
+
 } catch (Throwable $e) {
+    echo json_encode($e->getMessage(),192);
     $logger->error('generateCronReport Error: '.$e->getMessage());
 }

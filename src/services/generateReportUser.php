@@ -21,7 +21,7 @@ $logger = Logger::getRootLogger();
 //SmsApiAdmin::filterAccess();
 try {
     ini_set('max_execution_time', 7200);
-    ini_set('memory_limit', '4024M');
+    //ini_set('memory_limit', '4024M');
     // Set variable from parameters
     $clientId = $_GET['clientID'];
     $userId = $_GET['userID'];
@@ -40,6 +40,11 @@ try {
         $lastUpdated = $exportDataSpout->checkFile($userName, $month, $year);
         if(!empty($lastUpdated)){ 
             if($check != 'TRUE'){
+                $fileName = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT ."$year-$month/$userName.xlsx";
+                if(!is_readable($fileName)){
+                    $this->logger->warn("Could not include SMS_DR File '$fileName' is not readable.");
+                    $this->getLastRecordDateTime($fileName, $month, $year);
+                }
                 $lsReport = $apiReport->getDataReport($userId, $month, $year, $lastUpdated);
                 $exportDataSpout->downloadDataSpout($userName, $month, $year, $lsReport);                
             }

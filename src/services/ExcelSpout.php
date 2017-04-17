@@ -52,10 +52,10 @@ class ExcelSpout extends ApiBaseModel {
         $fileOk = true;
         if(is_writable($dir)){            
             if(file_exists($file)){
-                if(!is_writable($file)){
-                    $fileOk = false;                
-                    $this->logger->warn("File '$file' is not writeable.");
-                }
+//                if(!is_writable($file)){
+//                    $fileOk = false;                
+//                    $this->logger->warn("File '$file' is not writeable.");
+//                }
                 if(!is_readable($file)){
                     $fileOk = false;
                     $this->logger->warn("File '$file' is not readable.");
@@ -78,6 +78,7 @@ class ExcelSpout extends ApiBaseModel {
      * @param array  $lsReport
      */
     public function getDataScheduled($userName, $lsReport, $month=false, $year=false) {
+        
         $this->currentUser  = $userName;
         $this->currentMonth = $month !== false ? $month : date('m');
         $this->currentYear  = $year  !== false ? $year  : date('Y');
@@ -133,19 +134,20 @@ class ExcelSpout extends ApiBaseModel {
                     $writer->openToFile($newFilePath);
                 }
                 else {
-                    if(!is_writable($existingFilePath)){
-                        $this->getLastRecordDateTime($fileName, $month, $year);
+                    if(!is_readable($existingFilePath)){
                         $this->logger->warn("Could not include SMS_DR File '$existingFilePath' is not writeable, please check the permission.");
+                        $this->getLastRecordDateTime($fileName, $month, $year);
                     }
                     $newFilePath = $directory . $userName . "_Include_SMS_awaiting_DR.xlsx";
                     $writer->openToBrowser($newFilePath);
                 }
 
-                $totalCount = array_sum(array_column($lsReport, 'MESSAGE_COUNT'));
-                $unchargedCount = array_sum(array_column($lsReport, 'UNDELIVERED_UNCHARGED'));
-                $deliveredCount = array_sum(array_column($lsReport, 'DELIVERED'));
-                $undeliveredCount = array_sum(array_column($lsReport, 'UNDELIVERED'));
-                $totalCharged = (int) $undeliveredCount + (int)$deliveredCount;
+                $totalCount         = array_sum(array_column($lsReport, 'MESSAGE_COUNT'));
+                $unchargedCount     = array_sum(array_column($lsReport, 'UNDELIVERED_UNCHARGED'));
+                $deliveredCount     = array_sum(array_column($lsReport, 'DELIVERED'));
+                $undeliveredCount   = array_sum(array_column($lsReport, 'UNDELIVERED'));
+                $totalCharged       = (int) $undeliveredCount + (int)$deliveredCount;
+                $totalPrice         = array_sum(array_column($lsReport, 'PRICE'));
 
                 // let's read the entire spreadsheet...
                 foreach ($reader->getSheetIterator() as $sheetIndex => $sheet) {
@@ -162,16 +164,17 @@ class ExcelSpout extends ApiBaseModel {
                         $keyName = $row[0];
                         $i++;
                         switch ($keyName){
-                            case 'Generated Report On'          : $row[1]  = date("j F Y (H:i)"); break;
+                            case 'Generated Report On'          : $row[1]  = date("j F Y (H:i)");  break;
                             case 'DELIVERED SMS'                : $row[1] += $deliveredCount;      break;
                             case 'UNDELIVERED SMS (CHARGED)'    : $row[1] += $undeliveredCount;    break;
                             case 'UNDELIVERED SMS (NOT CHARGED)': $row[1] += $unchargedCount;      break;
                             case 'TOTAL SMS'                    : $row[1] += $totalCount;          break;
                             case 'TOTAL SMS CHARGED'            : $row[1] += $totalCharged;        break;
+                            case 'TOTAL PRICE'                  : $row[1]  = 'Rp. '.number_format(filter_var($row[1], FILTER_SANITIZE_NUMBER_INT) + $totalPrice, 0, '', ','); break;
                         }
 
                         // ... and copy each row into the new spreadsheet
-                        if($i > 12){
+                        if($i > 13){
                             $writer->addRow($row);                    
                         }
                         else{
@@ -181,6 +184,8 @@ class ExcelSpout extends ApiBaseModel {
 
                     if (isset($lsReport[0]['MESSAGE_ID'])) {
                         foreach ($lsReport as $rows) {
+                            $rows["MESSAGE_COUNT"]  = (int)$rows["MESSAGE_COUNT"];
+                            $rows["PRICE"]          = (int)$rows["PRICE"];
                             unset($rows['DELIVERED']);
                             unset($rows['UNDELIVERED']);
                             unset($rows['UNDELIVERED_UNCHARGED']);
@@ -226,6 +231,7 @@ class ExcelSpout extends ApiBaseModel {
         $deliveredCount   = array_sum(array_column($lsReport, 'DELIVERED'));
         $unchargedCount   = array_sum(array_column($lsReport, 'UNDELIVERED_UNCHARGED'));
         $undeliveredCount = array_sum(array_column($lsReport, 'UNDELIVERED'));
+        $totalPrice       = array_sum(array_column($lsReport, 'PRICE'));
         $totalCharged     = (int) $undeliveredCount + (int)$deliveredCount;
 
         try{
@@ -243,12 +249,28 @@ class ExcelSpout extends ApiBaseModel {
             $writer->addRowWithStyle(['TOTAL SMS',                      $totalCount],       $style);
             $writer->addRowWithStyle(['TOTAL SMS CHARGED',              $totalCharged],     $style);
             $writer->addRow(['']);
+            $writer->addRowWithStyle(['TOTAL PRICE',                    'Rp. '.number_format($totalPrice, 0, '', ',') ],       $style);
             $writer->addRow(['']);
 
             // Table Header
-            $writer->addRowWithStyle(['MESSAGE ID', 'DESTINATION', 'MESSAGE CONTENT', 'ERROR CODE', 'DESCRIPTION CODE','SEND DATETIME', 'SENDER', 'USER ID', 'MESSAGE COUNT'], $style);
+            $writer
+                ->addRowWithStyle([
+                    'MESSAGE ID', 
+                    'DESTINATION', 
+                    'MESSAGE CONTENT', 
+                    'ERROR CODE', 
+                    'DESCRIPTION CODE',
+                    'SEND DATETIME', 
+                    'SENDER', 
+                    'USER ID', 
+                    'MESSAGE COUNT', 
+                    'OPERATOR',
+                    'PRICE'
+                ], $style);
             
             foreach ($lsReport as $rows) {
+                $rows["MESSAGE_COUNT"]  = (int)$rows["MESSAGE_COUNT"];
+                $rows["PRICE"]          = (int)$rows["PRICE"];
                 unset($rows['DELIVERED']);
                 unset($rows['UNDELIVERED']);
                 unset($rows['UNDELIVERED_UNCHARGED']);
@@ -267,7 +289,7 @@ class ExcelSpout extends ApiBaseModel {
      * 
      */
     public function downloadDataSpout($userName, $month, $year, $lsReport) {
-        
+        $this->logger->info('Create Report with Include_SMS_awaiting_DR for user '.$userName);
         $this->updateReportFile($lsReport, $userName, $month, $year, true);
     }
     
