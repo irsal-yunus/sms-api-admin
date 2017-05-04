@@ -195,6 +195,71 @@ $app.ready(function ($app) {
         };
 
 
+
+        /**
+         * Download All Billing Report Dialog function
+         */
+        $app.form.openDownloadAllReportMesasge = function (serviceName, serviceArgs, activityTitle, dialogOptions, onSuccess) {
+            try {
+                if (dialogForm.dialog('isOpen'))
+                    throw 'Must close current dialogue before opening new one';
+                var options = $.extend(dialogDefaultOptions, dialogOptions, {
+                    'title': activityTitle,
+                    'buttons': {
+                        'Close': function () {
+                            $app.form.closeDialog();
+                        },
+                        'Download Report': function () {
+                            try {
+                                var $form = $('form:first', this);
+                                if (!$form.length) {
+                                    $1.warn("[$app.form.openPrintDialog@print] Can not find form in the dialog");
+                                    return;
+                                }
+                                var serviceName = $form.attr('action');
+                                if (serviceName == '#') {
+                                    $1.warn("[$app.form.openPrintDialog@print] Invalid form action service:", serviceName);
+                                    return;
+                                }
+                                
+                                $('body').prepend("<div class='loader-container'><div class='loader'><h3>Processing..</h3><img src='skin/images/wheel.gif'></div></div>");
+                                
+                                var loading  = $('.loader-container'),
+                                    url      = serviceName + '?' + $form.serialize(),                                
+                                    checkUrl = url + "&check";
+                                    
+                                loading.show();
+                                $.get(checkUrl, function(response){
+                                    if($.trim(response) === "Exist"){
+                                        loading.remove();
+                                        top.location.href = url;
+                                    } else {
+                                        loading.hide();
+                                        alert($.trim(response));
+                                    }
+                                });
+                                
+                                return false;
+                                
+                            } catch (ex) {
+                                $1.error("[$app.form.openPrintDialog@print] Error.", ex);
+                            }
+                        }
+                    }});
+                dialogForm
+                        .html('')
+                        .dialog('option', options)
+                        .dialog('open');
+                $app.content(serviceName, serviceArgs, $.noop, dialogForm);
+                return this;
+            } catch (ex) {
+                $1.error("[$app.openPrintDialog] Error.", ex);
+            }
+        };
+
+
+
+
         /**
          * Open a dialogue and load the content from an app service
          *
