@@ -158,6 +158,32 @@ mod.reportBilling = function(userID){
 	}
 };
 
+
+
+/**
+ * Download All Billing Report
+ */
+mod.showDownloadAllReportMesasge = function(){
+	try {
+		$app
+                    .form
+                    .openDownloadAllReportMesasge(
+                        'apiuser.reportDownloadAll', 
+                        false, 
+                        'Download Billing Report', 
+                        {
+                            height  : 175,
+                            width   : 260
+                        }, 
+                        function() {}
+                    );
+	} catch (ex) {
+		$1.error("[mod:apiuser.reportBilling] Error.",ex);
+	}
+};
+   
+   
+   
 /**
  * Deactivate user account
  * @param userID

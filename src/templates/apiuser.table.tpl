@@ -15,6 +15,9 @@
 					<span class="form-button-text">Show Only Active User</span>
 				</a>
 				{/if}
+                                <a href="#" class="form-button" onclick="$app.module('apiuser').showDownloadAllReportMesasge();" style="float: right;">
+                                    Download Billing Reports
+                                </a>
 			</th>
 		</tr>
 		<tr>
