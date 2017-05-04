@@ -11,24 +11,13 @@
           <label class="form-flag-required">
                  Select the billing period:
                  <select name="period" style="float:none;display: inline; width:100px;">
-                    {php}
-                    	for($year=date('Y'); $year > 2015; $year--){
-                            echo '<optgroup label="'.$year.'">';
-                            $startMonth = date('Y') == $year ? date('m') : 12;
-                            for($month  = $startMonth; $month>0; $month--){
-                                
-                                echo   '<option' 
-                                            .' value="'.$year.'-'.sprintf('%02d', $month).'"'
-                                            . (!( sprintf('%02d', $month) == date('m') && $year == date('Y') )  ?  '' : 'selected')
-                                            .' style="padding-left: 15px;"'
-                                        .'>'
-                                            .(DateTime::createFromFormat('m', $month)->format('F'))
-                                        .'</option>';
-                            }
-
-                            echo '</optgroup>';
-                        }
-                    {/php}>
+                    {foreach from="$availablePeriods" item="months" key="year"}
+                        <optgroup label="{$year}">
+                            {foreach from=$months item="label" key="value"}
+                                <option value="{$value}"  style="padding-left: 15px;" >{$label}</option>
+                            {/foreach}
+                        </optgroup>
+                    {/foreach}
                 </select>
             </label>
         </div>
