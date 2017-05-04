@@ -1,3 +1,4 @@
-/nbproject/
-/src/archive/*
-/logs/
+/src/templates_compiled
+/src/archive
+/nbproject
+/logs
