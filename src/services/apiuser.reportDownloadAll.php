@@ -17,8 +17,23 @@ try {
     SmsApiAdmin::filterAccess();
     try {
         $page = SmsApiAdmin::getTemplate();
+        
+        // Prepare list of months for billing report       
+        $availablePeriods = [];
+        for($year=date('Y'); $year > 2016; $year--){
+            $startMonth = date('Y') == $year ? date('m') : 12;
+            for($month  = $startMonth; $month>0; $month--){
+                $availablePeriods[$year][$year.'-'.sprintf('%02d', $month)] = DateTime::createFromFormat('m', $month)->format('F');
+            }
+        }
+        
+        $logger->info(json_encode($availablePeriods, 192));
+        
+        $page->assign('availablePeriods', $availablePeriods );
         $page->display('apiuser.reportDownloadAll.tpl');
-    } catch (Exception $e) {
+        
+    } 
+    catch (Exception $e) {
         SmsApiAdmin::returnError($e->getMessage());
     }
 } catch (Throwable $e) {
