@@ -45,11 +45,9 @@ try {
         $listUser           = $apiReport->getUser($idClient);
         $exportDataSpout    = new ExcelSpout();
         
-        $initDate           = 3;//(int)date('d');
-        $fistDay            = date('Y-m-01', strtotime('2017-05-03'));
-//        $initDate           = (int)date('d');
-//        $fistDay            = date('Y-m-01');
-//        $today              = date('Y-m-d');
+        $initDate           = (int)date('d');
+        $fistDay            = date('Y-m-01');
+        $today              = date('Y-m-d');
         $lastMonth          = date('m', strtotime("$fistDay -1 month"));
         $lastYear           = date('Y', strtotime("$fistDay -1 month"));
         $currentMonth       = date('m');
