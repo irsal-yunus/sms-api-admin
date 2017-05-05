@@ -1,0 +1,14 @@
+[default]
+dsn = "mysql:host=10.32.6.39;dbname=SMS_API_V2"
+username = "devteam"
+password = "devteam"
+
+[cobrander]
+dsn = "mysql:host=10.32.6.39;dbname=First_Intermedia"
+username = "devteam"
+password = "devteam"
+
+[dball]
+dsn = "mysql:host=10.32.6.39;"
+username = "devteam"
+password = "devteam"

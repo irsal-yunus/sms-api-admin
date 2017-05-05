@@ -17,6 +17,7 @@ Copyright(c) 2010 1rstWAP. All rights reserved.
 		<script type="text/javascript" src="js/ui.hourglass/jquery.ui.hourglass.min.js"></script>
 		<script type="text/javascript" src="js/app/app.js"></script>
 		<script type="text/javascript" src="skin/skin.js"></script>
+		<script type="text/javascript" src="js/jquery.fileDownload.js"></script>
         <script type="text/javascript" src="js/datatable/jquery.dataTables.min.js"></script>
         {literal}
 		<script type="text/javascript">

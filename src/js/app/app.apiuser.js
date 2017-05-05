@@ -140,6 +140,50 @@ mod.editUser = function(userID, section){
 		$1.error("[mod:apiuser.editUser] Error.",ex);
 	}
 };
+
+
+mod.reportBilling = function(userID){
+	try {
+		checkValidRecordID(userID);
+		$app.form.openPrintDialog('apiuser.report', {userID:userID}, 'Billing Report', {
+			height:220 ,
+                        width:360
+		}, function(reply){
+			if(reply !== false){
+				mod.viewClient(userID);
+			}
+		});
+	} catch (ex) {
+		$1.error("[mod:apiuser.reportBilling] Error.",ex);
+	}
+};
+
+
+
+/**
+ * Download All Billing Report
+ */
+mod.showDownloadAllReportMesasge = function(){
+	try {
+		$app
+                    .form
+                    .openDownloadAllReportMesasge(
+                        'apiuser.reportDownloadAll', 
+                        false, 
+                        'Download Billing Report', 
+                        {
+                            height  : 175,
+                            width   : 260
+                        }, 
+                        function() {}
+                    );
+	} catch (ex) {
+		$1.error("[mod:apiuser.reportBilling] Error.",ex);
+	}
+};
+   
+   
+   
 /**
  * Deactivate user account
  * @param userID
