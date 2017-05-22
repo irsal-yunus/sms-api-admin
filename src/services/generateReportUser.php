@@ -21,8 +21,8 @@ $logger = Logger::getRootLogger();
 //SmsApiAdmin::filterAccess();
 try {
     ini_set('max_execution_time', 7200);
-    //ini_set('memory_limit', '4024M');
-    // Set variable from parameters
+    ini_set('memory_limit', '4024M');
+//     Set variable from parameters
     $clientId = $_GET['clientID'];
     $userId = $_GET['userID'];
     $userName = $_GET['userName'];
@@ -42,7 +42,7 @@ try {
             if($check != 'TRUE'){
                 $fileName = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT ."$year-$month/$userName.xlsx";
                 if(!is_readable($fileName)){
-                    $this->logger->warn("Could not include SMS_DR File '$fileName' is not readable.");
+                    $this->log->warn("Could not include SMS_DR File '$fileName' is not readable.");
                     $this->getLastRecordDateTime($fileName, $month, $year);
                 }
                 $lsReport = $apiReport->getDataReport($userId, $month, $year, $lastUpdated);
@@ -62,10 +62,9 @@ try {
         $fileName  = $oldReport.$userName.".xlsx"; 
         if(file_exists($fileName)){
             if($check != 'TRUE'){
-                //SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . "{$year}-{$month}/{$nameFile}";
-                //$exportDataSpout->getLastRecordDateTime($userName.'.xlsx', $month, $year);
-                $fileName = $userName.".xlsx";
-                $exportDataSpout->getLastRecordDateTime($fileName, $month, $year);
+                //$fileName = $userName.".xlsx";
+                ApiReport::downloadreport($userId);
+                //$exportDataSpout->getLastRecordDateTime($fileName, $month, $year);
             }
             else{
                 echo "Exist";
