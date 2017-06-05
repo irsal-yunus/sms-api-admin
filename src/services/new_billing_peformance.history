@@ -67874,3 +67874,4257 @@
     "executionTime": 0.0064120292663574
 }
 ---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00081706047058105
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00052309036254883
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00049996376037598
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00048494338989258
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00070810317993164
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0027899742126465
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00076913833618164
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030050277709961
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068497657775879
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0042009353637695
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0012009143829346
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.0007328987121582
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00046491622924805
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00050902366638184
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072813034057617
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0033450126647949
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0010709762573242
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00078988075256348
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0006859302520752
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00064802169799805
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00075888633728027
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0038769245147705
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00076508522033691
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0032739639282227
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0007479190826416
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0045120716094971
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00075602531433105
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00064802169799805
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0006108283996582
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00049996376037598
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00067400932312012
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030131340026855
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072693824768066
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0028910636901855
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00080394744873047
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0045700073242188
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00075316429138184
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00049686431884766
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0005500316619873
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00049304962158203
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00069308280944824
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0029370784759521
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00064587593078613
+}
+---------------
+{
+    "query": " SELECT OP_ID, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_OPERATOR WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.00052595138549805
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.00043201446533203
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 16 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 0,
+    "executionTime": 0.00096011161804199
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00062799453735352
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0027880668640137
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00063920021057129
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0044071674346924
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00075888633728027
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00049304962158203
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00053906440734863
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00042390823364258
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00081396102905273
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0034160614013672
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072216987609863
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0039157867431641
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00074195861816406
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0045130252838135
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071597099304199
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00050783157348633
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0005340576171875
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.0005030632019043
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00075602531433105
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0027880668640137
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00092005729675293
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00064897537231445
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00066089630126953
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00052499771118164
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0005800724029541
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0032269954681396
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00078892707824707
+}
+---------------
+{
+    "query": " SELECT OP_ID, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_OPERATOR WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.00057506561279297
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.00053691864013672
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 16 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 0,
+    "executionTime": 0.00097513198852539
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00077605247497559
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0029840469360352
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00061893463134766
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0047421455383301
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00065898895263672
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072693824768066
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00051307678222656
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00048017501831055
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00050711631774902
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00058317184448242
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.0004730224609375
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00041604042053223
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00041294097900391
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072407722473145
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00050187110900879
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00050020217895508
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00050783157348633
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00060510635375977
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0026869773864746
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072312355041504
+}
+---------------
+{
+    "query": " SELECT OP_ID, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_OPERATOR WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 2,
+    "executionTime": 0.00050997734069824
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.00052595138549805
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 16 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 0,
+    "executionTime": 0.0010550022125244
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071501731872559
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030498504638672
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00078988075256348
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0042438507080078
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00078010559082031
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00059914588928223
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0033020973205566
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00064802169799805
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00069999694824219
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.00347900390625
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00089406967163086
+}
+---------------
+{
+    "query": " SELECT OP_ID, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_OPERATOR WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 2,
+    "executionTime": 0.00058698654174805
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.0030899047851562
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 16 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 0,
+    "executionTime": 0.0016038417816162
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0027790069580078
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030438899993896
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00060915946960449
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0074319839477539
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00082612037658691
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00073981285095215
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00054287910461426
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00067400932312012
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00066995620727539
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00067687034606934
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00046801567077637
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00047612190246582
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00042605400085449
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00063920021057129
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.010629177093506
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072407722473145
+}
+---------------
+{
+    "query": " SELECT OP_ID, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_OPERATOR WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 3,
+    "executionTime": 0.00047588348388672
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.00048112869262695
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 16 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 0,
+    "executionTime": 0.0010480880737305
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00059604644775391
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0025651454925537
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00076484680175781
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0047039985656738
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00066900253295898
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071001052856445
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00056910514831543
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00066399574279785
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00050187110900879
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00083303451538086
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00048017501831055
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00048589706420898
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.0005650520324707
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006709098815918
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030519962310791
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00078606605529785
+}
+---------------
+{
+    "query": " SELECT OP_ID, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_OPERATOR WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 4,
+    "executionTime": 0.0023059844970703
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.00073599815368652
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 16 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 0,
+    "executionTime": 0.0013880729675293
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00077295303344727
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0037710666656494
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006709098815918
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.006134033203125
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006108283996582
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00076389312744141
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00058698654174805
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00054001808166504
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.0004119873046875
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006110668182373
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00063991546630859
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00053095817565918
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00059294700622559
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00060486793518066
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00090503692626953
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00062298774719238
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00058794021606445
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00046205520629883
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0005958080291748
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0032949447631836
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00067710876464844
+}
+---------------
+{
+    "query": " SELECT OP_ID, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_OPERATOR WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 5,
+    "executionTime": 0.00053095817565918
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.00050902366638184
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 16 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 0,
+    "executionTime": 0.0009610652923584
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0005950927734375
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0042109489440918
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00063514709472656
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0048320293426514
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00065708160400391
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00078797340393066
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00065207481384277
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00051498413085938
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00043797492980957
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071120262145996
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00050592422485352
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0005040168762207
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.0004570484161377
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00074481964111328
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0026869773864746
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00077009201049805
+}
+---------------
+{
+    "query": " SELECT OP_ID, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_OPERATOR WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 6,
+    "executionTime": 0.00056719779968262
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.00060701370239258
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 16 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 0,
+    "executionTime": 0.0010440349578857
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068092346191406
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0033860206604004
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00061511993408203
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.004539966583252
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00064802169799805
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00083518028259277
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00053286552429199
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00061893463134766
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00060415267944336
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068998336791992
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00046896934509277
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00051784515380859
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00050806999206543
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072097778320312
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030438899993896
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00079989433288574
+}
+---------------
+{
+    "query": " SELECT OP_ID, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_OPERATOR WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 6,
+    "executionTime": 0.00057101249694824
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.00064182281494141
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 16 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 0,
+    "executionTime": 0.0011680126190186
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00070309638977051
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030350685119629
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00073099136352539
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0047931671142578
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00066995620727539
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00083208084106445
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00048995018005371
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0005488395690918
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00045919418334961
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00055694580078125
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0029289722442627
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00073599815368652
+}
+---------------
+{
+    "query": " SELECT OP_ID, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_OPERATOR WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 6,
+    "executionTime": 0.00047111511230469
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.00053787231445312
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 16 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 0,
+    "executionTime": 0.0010170936584473
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00084400177001953
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0032289028167725
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00060009956359863
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0047199726104736
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0007939338684082
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00066614151000977
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00058388710021973
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00058507919311523
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.0004880428314209
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00091195106506348
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00056290626525879
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00056791305541992
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00046300888061523
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071907043457031
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030241012573242
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068211555480957
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00058984756469727
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 4,
+    "executionTime": 0.00053811073303223
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00045418739318848
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00043106079101562
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00087308883666992
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0041348934173584
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068402290344238
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0039010047912598
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00078797340393066
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0044140815734863
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00067377090454102
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 4,
+    "executionTime": 0.00045013427734375
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00044107437133789
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00046181678771973
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072288513183594
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0028960704803467
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00066304206848145
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030891895294189
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00057792663574219
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0044448375701904
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0007941722869873
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00074410438537598
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00055694580078125
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00062108039855957
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00055313110351562
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00083613395690918
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.0005500316619873
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0005340576171875
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00047993659973145
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00066018104553223
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.002892017364502
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00063705444335938
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0028610229492188
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00066399574279785
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0040371417999268
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00070905685424805
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00061416625976562
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 6,
+    "executionTime": 0.00042104721069336
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00040793418884277
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00042510032653809
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0008389949798584
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 6,
+    "executionTime": 0.00052309036254883
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00052714347839355
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00054407119750977
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00062394142150879
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030519962310791
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006248950958252
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 0,
+    "executionTime": 0.00050592422485352
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 1,
+    "executionTime": 0.00050997734069824
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 103 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 2,
+    "executionTime": 0.0010960102081299
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00067400932312012
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0031089782714844
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00061202049255371
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0052840709686279
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00070810317993164
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 6,
+    "executionTime": 0.00046300888061523
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00053811073303223
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00052714347839355
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00064802169799805
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0028321743011475
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00084900856018066
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 104",
+    "totalRecords": 2,
+    "executionTime": 0.00068187713623047
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 104",
+    "totalRecords": 1,
+    "executionTime": 0.0005791187286377
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 104 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 3,
+    "executionTime": 0.0010089874267578
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0005650520324707
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0029048919677734
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00060892105102539
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0040428638458252
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00079512596130371
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 6,
+    "executionTime": 0.00052905082702637
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0005640983581543
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00046992301940918
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00063204765319824
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0032351016998291
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00081515312194824
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 6,
+    "executionTime": 0.00053691864013672
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00043892860412598
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00044512748718262
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068998336791992
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0029919147491455
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00060606002807617
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00067710876464844
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00047707557678223
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00044584274291992
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00044107437133789
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00057387351989746
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0028049945831299
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00079607963562012
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 0,
+    "executionTime": 0.00051116943359375
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 1,
+    "executionTime": 0.00050806999206543
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 103 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 2,
+    "executionTime": 0.0010879039764404
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068092346191406
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030648708343506
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00062990188598633
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0051059722900391
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00064206123352051
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00047492980957031
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00047516822814941
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00052905082702637
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00096988677978516
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0032401084899902
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00067901611328125
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 0,
+    "executionTime": 0.00044989585876465
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 1,
+    "executionTime": 0.0004580020904541
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 103 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 2,
+    "executionTime": 0.0009150505065918
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00083112716674805
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0038790702819824
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00080609321594238
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0061829090118408
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00070595741271973
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00052022933959961
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0004420280456543
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.0005500316619873
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00078511238098145
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0029401779174805
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071310997009277
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 0,
+    "executionTime": 0.0004730224609375
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 1,
+    "executionTime": 0.0005500316619873
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 103 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 2,
+    "executionTime": 0.0010030269622803
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068497657775879
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030889511108398
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00070285797119141
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0061371326446533
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00070691108703613
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00045013427734375
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00059890747070312
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00047707557678223
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00056600570678711
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0029070377349854
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00069999694824219
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00049901008605957
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00047492980957031
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00052499771118164
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00075697898864746
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0032219886779785
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00077390670776367
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 0,
+    "executionTime": 0.00051093101501465
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 1,
+    "executionTime": 0.00046586990356445
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 103 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 2,
+    "executionTime": 0.00094199180603027
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072383880615234
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0028262138366699
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071001052856445
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0047979354858398
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00075411796569824
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00053501129150391
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00049185752868652
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00052309036254883
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071191787719727
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0031960010528564
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0007469654083252
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 0,
+    "executionTime": 0.00049614906311035
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 1,
+    "executionTime": 0.00058889389038086
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 103 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 2,
+    "executionTime": 0.00096416473388672
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00076699256896973
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0027439594268799
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00092697143554688
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.004378080368042
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00077700614929199
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00054097175598145
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00056195259094238
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.0004880428314209
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00067710876464844
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0034511089324951
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00077009201049805
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 0,
+    "executionTime": 0.00050091743469238
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 1,
+    "executionTime": 0.0005190372467041
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 103 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 2,
+    "executionTime": 0.0013179779052734
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00084018707275391
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0032038688659668
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00066590309143066
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0047760009765625
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00069594383239746
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00050091743469238
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00051307678222656
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00049090385437012
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00060486793518066
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0028841495513916
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006110668182373
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 0,
+    "executionTime": 0.00047516822814941
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 1,
+    "executionTime": 0.00051999092102051
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 103 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 2,
+    "executionTime": 0.0010449886322021
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071287155151367
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0028128623962402
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00064706802368164
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0043258666992188
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00074386596679688
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00057601928710938
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0004119873046875
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00063991546630859
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00060892105102539
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0029511451721191
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00073695182800293
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0032579898834229
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00057005882263184
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0042159557342529
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00074100494384766
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.0004730224609375
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00045299530029297
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.0004420280456543
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00069189071655273
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.002810001373291
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00080299377441406
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 0,
+    "executionTime": 0.00045990943908691
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 1,
+    "executionTime": 0.00054621696472168
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 103 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 2,
+    "executionTime": 0.0011560916900635
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00075316429138184
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030760765075684
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00065898895263672
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0048511028289795
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00088000297546387
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00044512748718262
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00056695938110352
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00048303604125977
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00058794021606445
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.003040075302124
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00062704086303711
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 0,
+    "executionTime": 0.00042104721069336
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 1,
+    "executionTime": 0.00046396255493164
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 103 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 2,
+    "executionTime": 0.00094199180603027
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068998336791992
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.002918004989624
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.000823974609375
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.011166095733643
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00079703330993652
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.0028719902038574
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00064802169799805
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00061297416687012
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006868839263916
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0038650035858154
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00082993507385254
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 0,
+    "executionTime": 0.0032699108123779
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 103",
+    "totalRecords": 1,
+    "executionTime": 0.00056695938110352
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 103 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 2,
+    "executionTime": 0.0019338130950928
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0027759075164795
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0021228790283203
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00062704086303711
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0070509910583496
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00095891952514648
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00070309638977051
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00067901611328125
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00067496299743652
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00067496299743652
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0041689872741699
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00063204765319824
+}
+---------------
+{
+    "query": " SELECT OP_ID, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_OPERATOR WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 7,
+    "executionTime": 0.00060415267944336
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 16",
+    "totalRecords": 1,
+    "executionTime": 0.0022590160369873
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 16 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 0,
+    "executionTime": 0.00098800659179688
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00086307525634766
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0031650066375732
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00059413909912109
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0090610980987549
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00081992149353027
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00064802169799805
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00081491470336914
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00071811676025391
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00080299377441406
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0042109489440918
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0008089542388916
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00058293342590332
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 4,
+    "executionTime": 0.00041317939758301
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00054383277893066
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00051498413085938
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00061917304992676
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0028500556945801
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00090384483337402
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0029840469360352
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00059294700622559
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0077841281890869
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0009610652923584
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006248950958252
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00046515464782715
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0006248950958252
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.0006859302520752
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0010209083557129
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00054597854614258
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00071501731872559
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00075817108154297
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00067520141601562
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0040280818939209
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00099396705627441
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 105",
+    "totalRecords": 2,
+    "executionTime": 0.00079703330993652
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 105",
+    "totalRecords": 1,
+    "executionTime": 0.00075793266296387
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 105 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 3,
+    "executionTime": 0.0027351379394531
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00073909759521484
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0028860569000244
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00069618225097656
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0044810771942139
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00082683563232422
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.0028419494628906
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00061583518981934
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.0006561279296875
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00060486793518066
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0053761005401611
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00097799301147461
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.0007171630859375
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.000701904296875
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0038838386535645
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00091004371643066
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.00071310997009277
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0031070709228516
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.000885009765625
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.0026969909667969
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00070405006408691
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00064706802368164
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00054001808166504
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0063719749450684
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.002903938293457
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.0007469654083252
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0028181076049805
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0036959648132324
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00075507164001465
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 707",
+    "totalRecords": 1,
+    "executionTime": 0.0030200481414795
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 100 ORDER BY USER_ID",
+    "totalRecords": 9,
+    "executionTime": 0.0015048980712891
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068187713623047
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 707",
+    "totalRecords": 1,
+    "executionTime": 0.00046181678771973
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 100 ORDER BY USER_ID",
+    "totalRecords": 9,
+    "executionTime": 0.00090312957763672
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00082802772521973
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00060796737670898
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00075697898864746
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00057888031005859
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072312355041504
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0032498836517334
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00065708160400391
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00053691864013672
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00065207481384277
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0028138160705566
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00059413909912109
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1017",
+    "totalRecords": 1,
+    "executionTime": 0.00065994262695312
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 100 ORDER BY USER_ID",
+    "totalRecords": 9,
+    "executionTime": 0.0011749267578125
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00061893463134766
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.00061607360839844
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0023548603057861
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00075507164001465
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00053191184997559
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00056886672973633
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00053215026855469
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00058698654174805
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.002701997756958
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00061893463134766
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00044798851013184
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00080013275146484
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0031371116638184
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072884559631348
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.0003960132598877
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0024800300598145
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072097778320312
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.00047802925109863
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0024821758270264
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00064420700073242
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.0004429817199707
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0026659965515137
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00066208839416504
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.00052022933959961
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0025949478149414
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006721019744873
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00047492980957031
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00043106079101562
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00046801567077637
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00056099891662598
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0026950836181641
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.000640869140625
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00044798851013184
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071501731872559
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.002938985824585
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00084805488586426
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.00055789947509766
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0032751560211182
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0011301040649414
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.0008540153503418
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0033550262451172
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00066900253295898
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1011",
+    "totalRecords": 1,
+    "executionTime": 0.00055193901062012
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 100 ORDER BY USER_ID",
+    "totalRecords": 9,
+    "executionTime": 0.00089812278747559
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00069403648376465
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.00040316581726074
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0022380352020264
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00085020065307617
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.00047397613525391
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0028948783874512
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072002410888672
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00053000450134277
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00069308280944824
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.0005340576171875
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006260871887207
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0031108856201172
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.000762939453125
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00049686431884766
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00065708160400391
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0033199787139893
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071120262145996
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.00039505958557129
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0023388862609863
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00071811676025391
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE USER_ID = 1034",
+    "totalRecords": 1,
+    "executionTime": 0.00040888786315918
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID <> 0 ORDER BY USER_ID",
+    "totalRecords": 916,
+    "executionTime": 0.0024089813232422
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00088906288146973
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00063705444335938
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00060105323791504
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00051999092102051
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006868839263916
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0026710033416748
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00063300132751465
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0027778148651123
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00065088272094727
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0041279792785645
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006248950958252
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.00048518180847168
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00043797492980957
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00042295455932617
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072407722473145
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030457973480225
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00078010559082031
+}
+---------------
+{
+    "query": " SELECT SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE FROM BILL_PRICELIST.BILLING_PROFILE_TIERING WHERE BILLING_PROFILE_ID = 105",
+    "totalRecords": 2,
+    "executionTime": 0.00054121017456055
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE WHERE BILLING_PROFILE_ID = 105",
+    "totalRecords": 1,
+    "executionTime": 0.00051403045654297
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER WHERE BILLING_PROFILE_ID = 105 ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 3,
+    "executionTime": 0.0011160373687744
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0011110305786133
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030150413513184
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00062203407287598
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.004486083984375
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00069499015808105
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 5,
+    "executionTime": 0.0004880428314209
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0004429817199707
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00046896934509277
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00060582160949707
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0031218528747559
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00072789192199707
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 6,
+    "executionTime": 0.00062108039855957
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00051498413085938
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00051593780517578
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00064587593078613
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0027639865875244
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0007169246673584
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0033538341522217
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00063896179199219
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0045261383056641
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00077486038208008
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 6,
+    "executionTime": 0.0005640983581543
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00049400329589844
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00046586990356445
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00064611434936523
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0032238960266113
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0007331371307373
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0027267932891846
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00064992904663086
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0040559768676758
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00073790550231934
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 6,
+    "executionTime": 0.00052189826965332
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.0004420280456543
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00044083595275879
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068283081054688
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0030529499053955
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00067591667175293
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0026471614837646
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00062394142150879
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0040240287780762
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00076198577880859
+}
+---------------
+{
+    "query": " SELECT BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_PROFILE",
+    "totalRecords": 6,
+    "executionTime": 0.00055909156799316
+}
+---------------
+{
+    "query": " SELECT BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_TIERING_GROUP",
+    "totalRecords": 3,
+    "executionTime": 0.00061798095703125
+}
+---------------
+{
+    "query": " SELECT BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT FROM BILL_PRICELIST.BILLING_REPORT_GROUP",
+    "totalRecords": 1,
+    "executionTime": 0.00068998336791992
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.0006711483001709
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.0031099319458008
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00068497657775879
+}
+---------------
+{
+    "query": " SELECT USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID FROM SMS_API_V2.USER ORDER BY BILLING_PROFILE_ID",
+    "totalRecords": 919,
+    "executionTime": 0.002377986907959
+}
+---------------
+{
+    "query": " SELECT ERROR_CODE, STATUS, IS_RECREDITED FROM BILL_U_MESSAGE.DELIVERY_STATUS ",
+    "totalRecords": 69,
+    "executionTime": 0.00049591064453125
+}
+---------------
+{
+    "query": " SELECT OPERATOR_UID, OP_COUNTRY_CODE, OP_ID FROM First_Intermedia.OPERATOR",
+    "totalRecords": 646,
+    "executionTime": 0.0034568309783936
+}
+---------------

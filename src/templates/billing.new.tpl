@@ -11,6 +11,13 @@
             errorMessagePosition : 'inline',
         });
         
+
+        /*check type*/
+        var typeValue = $('#select-type').data('val');
+        if(typeValue){
+            $('#select-type').val(typeValue.toLowerCase()).trigger('change');
+            showSettingContainer(typeValue);
+        }
         $(document)        
             .on('click','#add-tiering-field',function(e){
                 addTieringRow();
@@ -21,13 +28,7 @@
             .on('change','#select-type',function(e){
                 selectedType = this.value;
                 rowIndex = 1;
-                if(selectedType == 'operator'){
-                    $('#tiering-container').hide();
-                    $('#operator-container').show();
-                }else{
-                    $('#operator-container').hide();
-                    $('#tiering-container').show();
-                }
+                showSettingContainer(selectedType);
             })
             .on('click', '.btn-operator-remove', function(){
                 length = $('#operator-table').find('tbody tr').length;
@@ -43,24 +44,22 @@
             })
             .on('change', 'input[name="isMax"]', function(){
                 if ( $(this).is(':checked') ){
+                    
                     $(this)
                        .parents('tr')
-                       .find('input[name="tiering_upto"]')
+                       .find('input[id="tiering_upto"]')
                        .val('MAX');
                        
                 }else{
                     $(this)
                            .parents('tr')
-                           .find('input[name="tiering_upto"]')
+                           .find('input[id="tiering_upto"]')
                            .val('');
                 }
             })
             .on('click', '#btn-submit', function(){
                 $('#billingProfile-form').submit();
             });
-            
-            /*check type*/
-            var typeValue = $('#select-type').data('val');
             var operatorValue = $('#operator-table tbody').data('operator') || [];
             loadOperator().done(function(){                
                 if(operatorValue.length > 0){
@@ -78,9 +77,6 @@
                 $('select[name="operatorID[0][operator]"]').attr('disabled', 'disabled');
             });
             
-            if(typeValue){
-                $('#select-type').val(typeValue.toLowerCase()).trigger('change');
-            }
             
             $("#list-user").select2({
                 placeholder: "Select a user"
@@ -95,7 +91,7 @@
                                     +'<img src="skin/images/icon-remove.png" class="form-button-image btn-tiering-remove" alt="Remove" width="13px" style="cursor:pointer;" />'
                             + '</th>'
                             + '<th><input type="text" name="tiering['+rowId+'][from]" data-validation="number"></th>'
-                            + '<th><input type="text" name ="tiering['+rowId+'][to]" data-validation="required"></th>'
+                            + '<th><input type="text" name ="tiering['+rowId+'][to]" id="tiering_upto" data-validation="required"></th>'
                             + '<th width="5%"><input type="checkbox" name="isMax" style="margin-top: 0.5 em;"></th>'
                             + '<th width="5%">Max</th>'
                             + '<th><input type="text" name ="tiering['+rowId+'][price]" data-validation="number"></th>'
@@ -167,6 +163,16 @@
             
         });
     }
+    
+    function showSettingContainer(type){
+        if(type.toLowerCase() == 'operator'){
+           $('#tiering-container').hide();
+           $('#operator-container').show();
+        }else{
+           $('#operator-container').hide();
+           $('#tiering-container').show();
+        }
+    }
    
 </script>
 {/literal}
@@ -224,7 +230,7 @@
                                                                     <th>Price</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody data-operator="{htmlspecialchars(json_encode($operatorSettings))}">
+                                                            <tbody data-operator="{if isset($operatorSettings)}{htmlspecialchars(json_encode($operatorSettings))}{/if}">
                                                             </tbody>
                                                         </table>
                                         

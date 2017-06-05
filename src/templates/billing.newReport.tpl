@@ -14,7 +14,8 @@
             })
             .on('change', '#list-user', function(){
                if($("#list-user :selected").length == 0){
-                   $('#list-user option').removeProp('disabled');
+                   $('#list-user option').prop('disabled', false);
+                   $('#list-user').select2();
                }else if($("#list-user :selected").length == 1){
                     $.ajax({
                          url        : 'services/billing.getUserBillingGroup.php',
@@ -25,7 +26,7 @@
                             $.each(data, function(k,v){
                                     $('#list-user option[value="'+v.USER_ID+'"]').prop('disabled', 'disabled');
                             });
-                            $('select').select2();
+                            $('#list-user').select2();
                          },
 
                      });

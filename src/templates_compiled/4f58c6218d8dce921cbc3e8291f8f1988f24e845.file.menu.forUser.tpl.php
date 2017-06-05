@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.0.5, created on 2017-06-05 03:58:00
+<?php /* Smarty version Smarty-3.0.5, created on 2017-06-05 09:25:49
          compiled from "/var/www/html/sms-api-admin/src/templates/menu.forUser.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:17757988545934d6c888cdf8-90840903%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:5526278215935239dc101a4-04406400%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,7 +11,7 @@ $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '17757988545934d6c888cdf8-90840903',
+  'nocache_hash' => '5526278215935239dc101a4-04406400',
   'function' => 
   array (
   ),

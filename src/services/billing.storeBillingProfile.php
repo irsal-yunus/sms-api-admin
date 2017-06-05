@@ -12,25 +12,30 @@ SmsApiAdmin::filterAccess();
 
 try {
         $apiReport = new ApiReport();
- 
+        
+        /**
+         * Check if action mode is create new billing profile or update the existing one
+         */
         if($_POST['mode'] == 'new'){
             $billingProfileID = $apiReport
                                         ->insertToBillingProfile(
                                                 $_POST['name'], 
-                                                $_POST['price_based'], 
+                                                strtoupper($_POST['price_based']), 
                                                 $_POST['description']
                                             );
             
             if(!empty($billingProfileID)){
+                if(isset($_POST['user']) && !empty($_POST['user'])){
+                    $user = isset($_POST['user']) && !is_null($_POST['user']) ? $_POST['user'] : [];
+                    $updateUserClause = [
+                        'column'        => 'BILLING_PROFILE_ID',
+                        'value'         => $billingProfileID,
+                        'whereClause'   => ' USER_ID IN ('.implode(", ",$user).')',
+                    ];
+                    $apiReport->updateUser($updateUserClause);
+                }
                 
-                $updateUserClause = [
-                    'column'        => 'BILLING_PROFILE_ID',
-                    'value'         => $billingProfileID,
-                    'whereClause'   => ' USER_ID IN ('.implode(", ",$_POST['user']).')',
-                ];
-                $apiReport->updateUser($updateUserClause);
-                
-                if($_POST['price_based'] == 'operator'){
+                if(strtolower($_POST['price_based']) == 'operator'){
                     foreach($_POST['operatorID'] as $key=>$val){
                        $apiReport
                                 ->insertToOperator(
@@ -39,7 +44,7 @@ try {
                                         $val['price']
                                     );
                     }
-                }else if($_POST['price_based'] == 'tiering'){
+                }else if(strtolower($_POST['price_based']) == 'tiering'){
                     foreach($_POST['tiering'] as $key=>$val){
                        $apiReport
                                ->insertToTiering(
@@ -58,26 +63,28 @@ try {
                 $apiReport->updateBillingProfile(
                                                 $billingProfileID, 
                                                 $_POST['name'], 
-                                                $_POST['price_based'], 
+                                                strtoupper($_POST['price_based']), 
                                                 $_POST['description']
                                             );
-                 
-                $updateUserClause = [
-                    'column'        => 'BILLING_PROFILE_ID',
-                    'value'         => 'NULL',
-                    'whereClause'   => ' BILLING_PROFILE_ID = '.$billingProfileID.'',
-                ];
+                if(isset($_POST['user']) && !empty($_POST['user'])){
+                    $updateUserClause = [
+                        'column'        => 'BILLING_PROFILE_ID',
+                        'value'         => 'NULL',
+                        'whereClause'   => ' BILLING_PROFILE_ID = '.$billingProfileID.'',
+                    ];
+
+                    $apiReport->updateUser($updateUserClause);
+
+                    $updateUserClause = [
+                        'column'        => 'BILLING_PROFILE_ID',
+                        'value'         => $billingProfileID,
+                        'whereClause'   => ' USER_ID IN ('.implode(", ",$user).')',
+                    ];
+                    $apiReport->updateUser($updateUserClause);
+
+                }
                 
-                $apiReport->updateUser($updateUserClause);
-               
-                $updateUserClause = [
-                    'column'        => 'BILLING_PROFILE_ID',
-                    'value'         => $billingProfileID,
-                    'whereClause'   => ' USER_ID IN ('.implode(", ",$_POST['user']).')',
-                ];
-                $apiReport->updateUser($updateUserClause);
-                
-                if($_POST['price_based'] == 'operator'){
+                if(strtolower($_POST['price_based']) == 'operator'){
                     $apiReport->deleteBillingProfileOperator($billingProfileID);
                     
                     foreach($_POST['operatorID'] as $key=>$val){
@@ -88,7 +95,7 @@ try {
                                         $val['price']
                                     );
                     }
-                }else if($_POST['price_based'] == 'tiering'){
+                }else if(strtolower ($_POST['price_based']) == 'tiering'){
                     $apiReport->deleteBillingProfileTiering($billingProfileID);
                     
                     foreach($_POST['tiering'] as $key=>$val){
@@ -103,7 +110,8 @@ try {
                 }
             }
         }
-        header("location: ./billing.view.php");
+        //header("location: ./billing.view.php");
+        require_once '../services/billing.view.php';
 } catch (Exception $e) {
     
 }
