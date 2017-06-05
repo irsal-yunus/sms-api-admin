@@ -24,13 +24,6 @@
  * @copyright  Copyright (c) 2006 - 2015 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    ##VERSION##, ##DATE##
- * 
- * 
- * Change Log
- * Date         Author          Version     Request     Comment        
- * 2016-03-07   Fathir Wafda                            Add const FORMAT_NUMBER_COMMA_SEPARATED3 = '#,##'
- * 
- *         
  */
 class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements PHPExcel_IComparable
 {
@@ -43,7 +36,6 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
     const FORMAT_NUMBER_00               = '0.00';
     const FORMAT_NUMBER_COMMA_SEPARATED1 = '#,##0.00';
     const FORMAT_NUMBER_COMMA_SEPARATED2 = '#,##0.00_-';
-    const FORMAT_NUMBER_COMMA_SEPARATED3 = '#,##';
 
     const FORMAT_PERCENTAGE              = '0%';
     const FORMAT_PERCENTAGE_00           = '0.00%';
