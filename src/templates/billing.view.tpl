@@ -1,6 +1,7 @@
 {literal}
 <script language="JavaScript">
     $( document ).ready(function(){
+        loadUserDetail();
         $('#add_user').click(function(){
             selectedUser    = $('#list-user').val();
             var html        = "";
@@ -28,6 +29,21 @@
         });
     });
     
+    function loadUserDetail(){
+        $.ajax({
+            url: 'services/billing.getUserDetail.php',
+            type: 'POST',
+            dataType: 'JSON',
+            success: function (data) {
+                html = '';
+                $.each(data, function(k,v){
+                    html += '<option value="'+v.USER_NAME+'">'+v.USER_NAME+'</option>';
+                });
+                $('#list-user').append(html);
+            },
+            
+        });
+    }
 </script>
 {/literal}
 
@@ -40,7 +56,7 @@
                         
 		</ul>
 		<div id="billing-profile-tab">
-                        <table id="apiuser-simpletable" class="admin-table">
+                        <table id="billing-profile-table" class="admin-table">
                                 <thead>
                                         <tr>
                                                 <th class="type-nav" colspan="5">
@@ -64,98 +80,99 @@
                                         </tr>
                                 </tfoot>
                                 <tbody>
+                                    {section name=list loop=$billingList}
                                     <tr>
-                                        <td class="type-text">Billing Profile May</td>
-                                        <td class="type-text">Tiering base</td>
-                                        <td class="type-counter">2017-05-17</td>
+                                        <td class="type-text">{$billingList[list].DESCRIPTION}</td>
+                                        <td class="type-text">{$billingList[list].BILLING_TYPE}</td>
+                                        <td class="type-text">{$billingList[list].CREATED_AT}</td>
                                         <td class="type-action">
-                                                <a href="#" title="View Details" class="form-button" onclick="$app.module('billing').showBillingDetail()"><img src="skin/images/icon-view.png" class="icon-image" alt="" /></a>
-                                                <a href="#" title="Edit" class="form-button" onclick="$app.module('billing').newBillingProfile()"><img src="skin/images/icon-edit.png" class="icon-image" alt="" /></a>
-                                                <a href="#" title="Delete" class="form-button" onclick=""><img src="skin/images/icon-remove.png" class="icon-image" alt="" /></a>
+                                                <a href="#" title="Edit" class="form-button" onclick="$app.module('billing').newBillingProfile({$billingList[list].BILLING_PROFILE_ID},'{$billingList[list].BILLING_TYPE}','edit')"><img src="skin/images/icon-edit.png" class="icon-image" alt="" /></a>
+                                                <a href="#" title="Delete" class="form-button" onclick="$app.module('billing').deleteBillingProfile('{$billingList[list].BILLING_PROFILE_ID}','{$billingList[list].BILLING_TYPE}')"><img src="skin/images/icon-remove.png" class="icon-image" alt="" /></a>
                                         </td>
                                     </tr>
+                                    {/section}  
                                 </tbody>
                         </table>
 		</div><!-- END Billing profile tab-->
 		
                 <div id="tiering-group-tab">
-                <div class="panel">
-                    <div class="panel-header"><img src="skin/images/icon-history.png" class="icon-image" alt="" /><span>New Tiering Group</span></div>
-                        <div class="panel-body">
-                            <div class="panel-content">
-                                    <fieldset class="float-centre" style="padding-bottom: 10px;padding-top: 10px;">
-                                            <label>Name</label>
-                                            <input type="text" name="input-name" name="input-name">
-                                            <span class="ui-helper-clearfix"></span>
-                                            <label>Settings</label>
-                                                    <select id="list-user" multiple style="height: 50%; min-width: 12%; overflow:auto; float:left;">
-                                                        <option value="User A">User A</option>
-                                                        <option value="User B">User B</option>
-                                                        <option value="User C">User C</option>
-                                                        <option value="User D">User D</option>
-                                                    </select>
-                                            <div>
-                                                <a href="#" class="form-button" id="add_user" style="margin-left: 4px;margin-top: 9px;margin-right: 4px; float:left">></a>
-                                                {*<span class="ui-helper-clearfix"></span>*}
-                                                <a href="#" class="form-button" id="remove_user" style="margin-left: 4px;margin-top: 9px;margin-right: 4px; float:left"><</a>
-                                            </div>    
-                                            <select id="selected-user" style="height: 50%; min-width: 12%;" multiple>
-                                            </select>      
-                                    </fieldset>
-                                    <fieldset class="form-fieldset-submission" style="width: 100%;">
-                                            <a href="#" class="form-button" onclick="$app.module('billing').storeBillingProfile()" style="margin:5px;float:left;">
-                                                    <img src="skin/images/icon-store.png" class="form-button-image" alt="" />
-                                                    <span class="form-button-text">Save</span>
-                                            </a>
-                                            <a href="#" class="form-button" onclick="" style="margin:5px;float:left;">
-                                                    <img src="skin/images/icon-cancel.png" class="form-button-image" alt="" />
-                                                    <span class="form-button-text">Cancel</span>
-                                            </a>
-
-                                    </fieldset>
-                            </div>
-                        </div>
-                    </div>
+                    <table id="tiering-group-table" class="admin-table">
+                            <thead>
+                                    <tr>
+                                            <th class="type-nav" colspan="5">
+                                                    <a href="#" class="form-button" onclick="$app.module('billing').newTieringGroup();">
+                                                       <span class="form-button-text">New Tiering Group</span>
+                                                    </a>
+                                            </th>
+                                    </tr>
+                                    <tr>
+                                            <th style="width: 20%;">Name</th>
+                                            <th style="width: 20%;">Description</th>
+                                             <th style="width: 20%;">Created At</th>
+                                            <th style="width: 40%;">Action(s)</th>
+                                    </tr>
+                            </thead>
+                            <tfoot>
+                                    <tr>
+                                            <th colspan="9">
+                                                    &nbsp;
+                                            </th>
+                                    </tr>
+                            </tfoot>
+                            <tbody>
+                                {section name=list loop=$tieringGroupList}
+                                <tr>
+                                    <td class="type-text">{$tieringGroupList[list].NAME}</td>
+                                    <td class="type-text">{$tieringGroupList[list].DESCRIPTION}</td>
+                                    <td class="type-text">{$tieringGroupList[list].CREATED_AT}</td>
+                                    <td class="type-action">
+                                            <a href="#" title="Edit" class="form-button" onclick="$app.module('billing').newTieringGroup({$tieringGroupList[list].BILLING_TIERING_GROUP_ID},'edit')"><img src="skin/images/icon-edit.png" class="icon-image" alt="" /></a>
+                                            <a href="#" title="Delete" class="form-button" onclick="$app.module('billing').deleteTieringGroup({$tieringGroupList[list].BILLING_TIERING_GROUP_ID})"><img src="skin/images/icon-remove.png" class="icon-image" alt="" /></a>
+                                    </td>
+                                </tr>
+                                {/section}  
+                            </tbody>
+                    </table>
 		</div><!-- END Tiering Group tab-->
                 
                 <div id="report-group-tab">
-                    <div class="panel">
-                        <div class="panel-header"><img src="skin/images/icon-history.png" class="icon-image" alt="" /><span>New Report Group</span></div>
-                            <div class="panel-body">
-                                <div class="panel-content">
-                                        <fieldset class="float-centre" style="padding-bottom: 10px;padding-top: 10px;">
-                                                <label>Name</label>
-                                                <input type="text" name="input-name" name="input-name">
-                                                <span class="ui-helper-clearfix"></span>
-                                                <label>Settings</label>
-                                                        <select id="list-user" multiple style="height: 50%; min-width: 12%; overflow:auto; float:left;">
-                                                            <option value="User A">User A</option>
-                                                            <option value="User B">User B</option>
-                                                            <option value="User C">User C</option>
-                                                            <option value="User D">User D</option>
-                                                        </select>
-                                                <div>
-                                                    <a href="#" class="form-button" id="add_user" style="margin-left: 4px;margin-top: 9px;margin-right: 4px; float:left">></a>
-                                                    {*<span class="ui-helper-clearfix"></span>*}
-                                                    <a href="#" class="form-button" id="remove_user" style="margin-left: 4px;margin-top: 9px;margin-right: 4px; float:left"><</a>
-                                                </div>    
-                                                <select id="selected-user" style="height: 50%; min-width: 12%;" multiple>
-                                                </select>      
-                                        </fieldset>
-                                        <fieldset class="form-fieldset-submission" style="width: 100%;">
-                                                <a href="#" class="form-button" onclick="$app.module('billing').storeBillingProfile()" style="margin:5px;float:left;">
-                                                        <img src="skin/images/icon-store.png" class="form-button-image" alt="" />
-                                                        <span class="form-button-text">Save</span>
-                                                </a>
-                                                <a href="#" class="form-button" onclick="" style="margin:5px;float:left;">
-                                                        <img src="skin/images/icon-cancel.png" class="form-button-image" alt="" />
-                                                        <span class="form-button-text">Cancel</span>
-                                                </a>
-
-                                        </fieldset>
-                                </div>
-                            </div>
-                    </div>
+                    <table id="report-group-table" class="admin-table">
+                            <thead>
+                                    <tr>
+                                            <th class="type-nav" colspan="5">
+                                                    <a href="#" class="form-button" onclick="$app.module('billing').newReportGroup();">
+                                                       <span class="form-button-text">New Report Group</span>
+                                                    </a>
+                                            </th>
+                                    </tr>
+                                    <tr>
+                                            <th style="width: 20%;">Name</th>
+                                            <th style="width: 20%;">Description</th>
+                                             <th style="width: 20%;">Created At</th>
+                                            <th style="width: 40%;">Action(s)</th>
+                                    </tr>
+                            </thead>
+                            <tfoot>
+                                    <tr>
+                                            <th colspan="9">
+                                                    &nbsp;
+                                            </th>
+                                    </tr>
+                            </tfoot>
+                            <tbody>
+                                {section name=list loop=$reportGroupList}
+                                <tr>
+                                    <td class="type-text">{$reportGroupList[list].NAME}</td>
+                                    <td class="type-text">{$reportGroupList[list].DESCRIPTION}</td>
+                                    <td class="type-text">{$reportGroupList[list].CREATED_AT}</td>
+                                    <td class="type-action">
+                                            <a href="#" title="Edit" class="form-button" onclick="$app.module('billing').newReportGroup({$reportGroupList[list].BILLING_REPORT_GROUP_ID},'edit')"><img src="skin/images/icon-edit.png" class="icon-image" alt="" /></a>
+                                            <a href="#" title="Delete" class="form-button" onclick="$app.module('billing').deleteReportGroup({$reportGroupList[list].BILLING_REPORT_GROUP_ID})"><img src="skin/images/icon-remove.png" class="icon-image" alt="" /></a>
+                                    </td>
+                                </tr>
+                                {/section}  
+                            </tbody>
+                    </table>   
 		</div><!-- END Report Group tab-->
                 
 	</div><!-- END Tabs Container -->

@@ -60,35 +60,146 @@ mod.showBillingDetail = function(options){
     }
 };
 
-mod.newBillingProfile = function(options){
+mod.newBillingProfile = function(billingProfileID, billingType, mode){
     try {
-        var args;
-        if((typeof options != 'object') || $.isEmptyObject(options)){
-                args = null;
-        }else{
-                args = options;
-        }
-        $app.content('billing.new', args, function(){
-                title('New Billing Profile');
+        var titles = mode == 'update'? 'Update Biling Profile' : 'New Billing Profile';
+        $app.content(
+                    'billing.new', 
+                    {
+                        billingProfileID    : billingProfileID, 
+                        billingType         : billingType, 
+                        mode                : mode
+                    }, function(){
+                        title(titles);
         });
     } catch(ex) {
         $1.error("[mod:billing.newBillingProfile] Error.",ex);
     }
 };
 
-mod.storeBillingProfile = function(options){
+mod.storeBillingProfile = function(data){
     try {
-        var args;
-        if((typeof options != 'object') || $.isEmptyObject(options)){
-                args = null;
-        }else{
-                args = options;
-        }
-        
+        $app.content(
+                    'billing.storeBillingProfile',  function(){
+        });
         
     } catch(ex) {   
         
     }
+};
+
+mod.newTieringGroup = function(tieringID, mode){
+    try {
+        var titles = mode == 'update'? 'Update Tiering Group' : 'New Tiering Group';
+        $app.content(
+                    'billing.newTiering', 
+                    {
+                        tieringID    : tieringID, 
+                        mode         : mode
+                    }, function(){
+                        title(titles);
+        });
+    } catch(ex) {
+        $1.error("[mod:billing.newTiering] Error.",ex);
+    }
+};
+
+mod.newReportGroup = function(reportID, mode){
+    try {
+        var titles = mode == 'update'? 'Update Report Group' : 'New Report Group';
+        $app.content(
+                    'billing.newReport', 
+                    {
+                        reportID        : reportID, 
+                        mode            : mode
+                    }, function(){
+                        title(titles);
+        });
+    } catch(ex) {
+        $1.error("[mod:billing.newReport] Error.",ex);
+    }
+};
+
+mod.deleteBillingProfile = function(billingProfileID, billingType){
+    try{
+            var title = 'Delete Confirmation';
+            $app
+                .form
+                .openConfirmationDialog(
+                    'billing.deleteConfirmation', 
+                    {
+                        billingProfileID : billingProfileID,
+                        billingType      : billingType
+                    }, 
+                    {
+                        action          : 'billing.deleteBillingProfile',
+                        title           : title,
+                        message         : 'Are you sure want to delete this Billing Profile?'     
+                    }, 
+                    {
+                        width: '25em',
+                        height: 100
+                    }
+                );
+    } catch(ex) {
+      $1.error("[mod:billing.newReport] Error.",ex);
+    }
+
+    
+};
+
+mod.deleteTieringGroup = function(tieringGroupID){
+    try{
+            var title = 'Delete Confirmation';
+            $app
+                .form
+                .openConfirmationDialog(
+                    'billing.deleteConfirmation', 
+                    {
+                        tieringGroupID   : tieringGroupID,
+                    }, 
+                    {
+                        action          : 'billing.deleteTieringGroup',
+                        title           : title,
+                        message         : 'Are you sure want to delete this Tiering Group?'     
+                    },
+                    {
+                        width: '25em',
+                        height: 100
+                    }
+                );
+    } catch(ex) {
+      $1.error("[mod:billing.newReport] Error.",ex);
+    }
+
+    
+};
+
+mod.deleteReportGroup = function(reportGroupID){
+    try{
+            var title = 'Delete Confirmation';
+            $app
+                .form
+                .openConfirmationDialog(
+                    'billing.deleteConfirmation', 
+                    {
+                        reportGroupID   : reportGroupID,
+                    }, 
+                    {
+                        action          : 'billing.deleteReportGroup',
+                        title           : title,
+                        message         : 'Are you sure want to delete this Report Group?'     
+                    },
+                    {
+                        width: '25em',
+                        height: 100
+                    }
+                );
+    } catch(ex) {
+      $1.error("[mod:billing.newReport] Error.",ex);
+    }
+
+    
 };
 
 try{

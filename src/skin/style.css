@@ -648,3 +648,60 @@ LOADING
     text-align: center;
     font-size: 14px;
 }
+
+.select2-container{
+    height: 5% !important;
+}
+.select2-container--default .select2-selection--multiple{
+    margin-top: 5px;
+    max-height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.select2-container--default .select2-selection{
+    border-radius: 0;
+    margin-left: 5px;
+}
+.select2-container--default .select2-selection--single{
+    height: 19px;
+    font-size: 8pt;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 19px;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow b{
+    top: 35%;
+}
+.select2-dropdown{
+     margin-left: 5px;
+}
+
+.help-block.form-error{
+    color : red !important;
+    margin-left: 5px !important;
+    text-align: left;
+    font-weight: bold !important;
+}
+
+#operator-table input{
+    float: none;
+}
+
+#tiering-table input{
+    float: none;
+    padding-left: 5px;
+}
+
+#operator-table th{
+    vertical-align: top !important;
+}
+
+#tiering-table th{
+    vertical-align: top !important;
+}
+
+.operator_list{
+    width: 130px;
+    vertical-align: middle;
+    margin-top:1px;
+}
