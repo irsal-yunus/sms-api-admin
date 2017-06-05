@@ -1,10 +1,6 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- * 
+/**
  * @author Fathir Wafda
  * @author Basri Yasin
  */
@@ -20,14 +16,16 @@ use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Common\Type;
 use Box\Spout\Writer\Style\StyleBuilder;
 
-class ExcelSpout extends ApiBaseModel {
+class ExcelSpout {
     
-    public  $logger;
-    public $currentUser, $currentMonth, $currentYear;
+    public  $log;
+    public  $billingRule,
+            $operators,
+            $messages;
     
     public function __construct() {
         parent::__construct();
-        $this->logger = Logger::getRootLogger();
+        $this->log = Logger::getRootLogger();
     }
 
     /*
@@ -38,9 +36,9 @@ class ExcelSpout extends ApiBaseModel {
     public function prepareDirectory($dir){
         $dirOk  = true;
         if (!@is_dir($dir)) {            
-            $this->logger->info("Creating report directory $dir");                
+            $this->log->info("Creating report directory $dir");                
             if(!@mkdir($dir, 0777, TRUE)){
-                $this->logger->error("Could not create report directory '$dir'");
+                $this->log->error("Could not create report directory '$dir'");
                 $dirOk = false;                    
             }
         }
@@ -48,26 +46,23 @@ class ExcelSpout extends ApiBaseModel {
         return $dirOk;
     }
 
+    
     public function prepareFile($dir, $file){
         $fileOk = true;
         if(is_writable($dir)){            
             if(file_exists($file)){
-//                if(!is_writable($file)){
-//                    $fileOk = false;                
-//                    $this->logger->warn("File '$file' is not writeable.");
-//                }
                 if(!is_readable($file)){
                     $fileOk = false;
-                    $this->logger->warn("File '$file' is not readable.");
+                    $this->log->warn("File '$file' is not readable.");
                 }
             }
             else{
-                $this->logger->info("File '$file' not exist. Creating new Report");
+                $this->log->info("File '$file' not exist. Creating new Report");
             }
         }
         else{
             $fileOk = false;
-            $this->logger->error("Directory '$dir' is no writeable.");
+            $this->log->error("Directory '$dir' is no writeable.");
         }
         return $fileOk;
     }
@@ -99,11 +94,11 @@ class ExcelSpout extends ApiBaseModel {
                     }
                 }
                 else{
-                    $this->logger->error("Folder '".SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT."' not writeable, please check the write permission.");
+                    $this->log->error("Folder '".SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT."' not writeable, please check the write permission.");
                 }
             }
         } catch (Throwable $e) {
-            $this->logger->error('getDataScheduled Error: '.$e->getMessage());
+            $this->log->error('getDataScheduled Error: '.$e->getMessage());
         }
     }
     /**
@@ -135,7 +130,7 @@ class ExcelSpout extends ApiBaseModel {
                 }
                 else {
                     if(!is_readable($existingFilePath)){
-                        $this->logger->warn("Could not include SMS_DR File '$existingFilePath' is not writeable, please check the permission.");
+                        $this->log->warn("Could not include SMS_DR File '$existingFilePath' is not writeable, please check the permission.");
                         $this->getLastRecordDateTime($fileName, $month, $year);
                     }
                     $newFilePath = $directory . $userName . "_Include_SMS_awaiting_DR.xlsx";
@@ -197,21 +192,21 @@ class ExcelSpout extends ApiBaseModel {
                 $reader->close();
             }
             catch (Exception $e){
-                $this->logger->error($e->getMessage());
+                $this->log->error($e->getMessage());
             }
 
             if ($existingFilePath !== $newFilePath && !$sms_dr){
-                if(!@unlink($existingFilePath)){ $this->logger->warn("Cannot remove $existingFilePath, please check the permission.");}
+                if(!@unlink($existingFilePath)){ $this->log->warn("Cannot remove $existingFilePath, please check the permission.");}
                 //else{ $this->logger->info("remove file '$existingFilePath'");}
 
                 if(!@rename($newFilePath, $existingFilePath)) {
-                    $this->logger->warn("Cannot rename '$newFilePath' to '$existingFilePath', please check the permission.");
+                    $this->log->warn("Cannot rename '$newFilePath' to '$existingFilePath', please check the permission.");
                 }
-                else{$this->logger->info("$year-$month Report for user $userName updated +".count($lsReport)." row(s).");}
+                else{$this->log->info("$year-$month Report for user $userName updated +".count($lsReport)." row(s).");}
             }
         }
         else {
-            $this->logger->error("Prepare file failed '$existingFilePath'.");
+            $this->log->error("Prepare file failed '$existingFilePath'.");
         }
     }
 
@@ -278,10 +273,10 @@ class ExcelSpout extends ApiBaseModel {
             }
 
             $writer->close();
-            $this->logger->info($this->currentYear.'-'.$this->currentMonth.' Report for user '.$this->currentUser.' created with '.count($lsReport).' row(s).');
+            $this->log->info($this->currentYear.'-'.$this->currentMonth.' Report for user '.$this->currentUser.' created with '.count($lsReport).' row(s).');
         }
         catch (Exception $e){
-            $this->logger->error("generateReportFile Error :". $e->getMessage());
+            $this->log->error("generateReportFile Error :". $e->getMessage());
         }
     }
 
@@ -289,7 +284,7 @@ class ExcelSpout extends ApiBaseModel {
      * 
      */
     public function downloadDataSpout($userName, $month, $year, $lsReport) {
-        $this->logger->info('Create Report with Include_SMS_awaiting_DR for user '.$userName);
+        $this->log->info('Create Report with Include_SMS_awaiting_DR for user '.$userName);
         $this->updateReportFile($lsReport, $userName, $month, $year, true);
     }
     
@@ -332,11 +327,11 @@ class ExcelSpout extends ApiBaseModel {
                 }
 
                 catch (Throwable $e){
-                    $this->logger->error('getLastDateFromReport error: ',$e->getMessage());
+                    $this->log->error('getLastDateFromReport error: ',$e->getMessage());
                 }
             }
             else{
-                $this->logger->warn("file '$fileName' not readable, please check the read permission.");
+                $this->log->warn("file '$fileName' not readable, please check the read permission.");
             }
         }
         return $lastDate;
