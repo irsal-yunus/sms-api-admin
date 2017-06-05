@@ -5,7 +5,8 @@
  * @author Basri Yasin 
  */
 
-
+require_once dirname((__DIR__)).'/init.d/init.php';
+require_once dirname((__DIR__)).'/lib/model/ApiReport.php';
 proc_nice(8);
 echo exec('clear');
 $log = Logger::getRootLogger();
