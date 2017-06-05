@@ -220,13 +220,13 @@ class ApiReport {
         
         
         
-        echo  "today\t{$today}\n"
-            . "cMont\t{$currentMonth}\n"
-            . "lMont\t{$lastMonth}\n"
-            . "tMont\t{$this->month}\n"
-            . "fDate\t{$this->firstDateOfMonth}\n"
-            . "lDate\t{$this->lastDateOfMonth}\n"
-            . "lfDte\t{$this->lastFinalStatusDate}\n";
+//        echo  "today\t{$today}\n"
+//            . "cMont\t{$currentMonth}\n"
+//            . "lMont\t{$lastMonth}\n"
+//            . "tMont\t{$this->month}\n"
+//            . "fDate\t{$this->firstDateOfMonth}\n"
+//            . "lDate\t{$this->lastDateOfMonth}\n"
+//            . "lfDte\t{$this->lastFinalStatusDate}\n";
         
         
     }
@@ -330,7 +330,23 @@ class ApiReport {
             return [];
         }
     }
-
+    
+    /**
+     * Function to execute query and return the last inserted ID
+     */
+    private function exec_query(String $query) {
+        try {
+            $startTime = $this->getMicroTime();
+            $return    = $this->db->query($query);
+            return $this->db->lastInsertId();
+        } 
+        catch (Exception $e) {
+            $this->log->error('Failed to insert data to database.');
+            $this->log->debug($e->getMessage());
+            $this->log->debug(debug_print_backtrace());
+            return [];
+        }
+    }
     
     /**
      * Get all User list from SMS_API_V2.USER
@@ -350,7 +366,7 @@ class ApiReport {
                         : '';
         
         $billingClause = !is_null($billingProfile)
-                            ? (!is_null($userId) ? ' AND ' : '' ). ' BILLING_PROFILE_ID IS NULL '
+                            ? (!is_null($userId) ? ' AND ' : '' ). ' = BILLING_PROFILE_ID = '.$billingProfile.' '
                             : '';
         return $this->query(
                          ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID '
@@ -358,6 +374,7 @@ class ApiReport {
                         .  $whereClause
                         .  $userClause
                         .  $billingProfile
+                        .  $billingClause
                         .' ORDER BY BILLING_PROFILE_ID'
                     );
     }
@@ -366,6 +383,30 @@ class ApiReport {
     
     
     /**
+     * Function to get all user that in the same billing profile
+     * @param Int $userId
+     * @return Array
+     */
+    public function getUserBillingGroup($userId){
+        $result =  $this->query(
+                 ' SELECT BILLING_PROFILE_ID'
+                .' FROM     '.DB_SMS_API_V2.'.USER '
+                .' WHERE USER_ID = '.$userId.''
+            );
+        
+        foreach($result as $val){
+            $billingProfileID = $val['BILLING_PROFILE_ID'];
+             return $this->query(
+                         ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID'
+                        .' FROM     '.DB_SMS_API_V2.'.USER '
+                        .' WHERE BILLING_PROFILE_ID <> '.$billingProfileID.''
+                        .' ORDER BY USER_ID'
+                    );
+        }
+    }
+
+   
+   /**
      * Get Delivery status from BILL_U_MESSAGE.DELIVERY_STATUS
      * 
      * @return  Array   2D Array [['ERROR_CODE', 'STATUS', 'IS_RECREDITED']]
@@ -409,7 +450,7 @@ class ApiReport {
                                 ? ' WHERE    BILLING_PROFILE_ID = '.$billingProfileId
                                 : '';
         return  $this->query(
-                         ' SELECT   BILLING_PROFILE_ID, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT'
+                         ' SELECT   BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT'
                         .' FROM     '.DB_BILL_PRICELIST.'.BILLING_PROFILE'
                         .  $profileIdClause
                         ,  is_null($billingProfileId) ?: self::QUERY_SINGLE_ROW
@@ -446,8 +487,6 @@ class ApiReport {
                        .  $opClause
                    );
     }    
-    
-    
     
     
     /**
@@ -503,7 +542,7 @@ class ApiReport {
                             : '';
         
         return $this->query(
-                         ' SELECT   NAME, DESCTIPTION, CREATED_AT, UPDATED_AT'
+                         ' SELECT   BILLING_TIERING_GROUP_ID , NAME, DESCRIPTION, CREATED_AT, UPDATED_AT'
                         .' FROM     '.DB_BILL_PRICELIST.'.BILLING_TIERING_GROUP'
                         .  $groupClause
                         ,  is_null($tieringGroupId) ?: self::QUERY_SINGLE_ROW
@@ -523,7 +562,6 @@ class ApiReport {
                          ' SELECT   USER_ID'
                         .' FROM     '.DB_SMS_API_V2.'.USER'
                         .' WHERE    BILLING_TIERING_GROUP_ID = '.$tieringGroupId
-                        ,  self::QUERY_SINGLE_COLUMN
                     );
     }
     
@@ -609,7 +647,6 @@ class ApiReport {
                          ' SELECT   USER_ID'
                         .' FROM     '.DB_SMS_API_V2.'.USER'
                         .' WHERE    BILLING_REPORT_GROUP_ID = '.$reportGroupId
-                        ,  self::QUERY_SINGLE_COLUMN
                     );
     }
 
@@ -1909,9 +1946,212 @@ class ApiReport {
         return $dir.'/'.$fileName. $this->periodSuffix.'.zip';
     }
     
+    /**
+     * Function to update table USER based on specified COLUMN to update
+     * 
+     * @param Array $data ['column','value','whereClause']
+     * @return Array
+     */
+    public function updateUser($data){
+        $updateColumn  = $data['column'];
+        $updateValue   = $data['value'];
+        $whereClause   = $data['whereClause'];
+       
+        return $this->exec_query(   
+                    ' UPDATE '.DB_SMS_API_V2.'.USER '
+                    .' SET '.$updateColumn.'  = '.$updateValue.''
+                    .' WHERE '.$whereClause.''
+                );
+    }
     
+    /**
+     * Function to insert new operator setting into Table BILLING_PROFILE_OPERATOR
+     * 
+     * @param Int $billingProfileID
+     * @param Int $operatorID
+     * @param Int $price
+     * @return Array
+     */
+    public function insertToOperator($billingProfileID, $operatorID, $price){
+        return $this->exec_query(
+                 ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE_OPERATOR VALUES '
+                .' (NULL, '.$billingProfileID.', "'.$operatorID.'", '.$price.') '
+            );
+    }
     
+    /**
+     * Function to insert new tiering setting into Table BILLING_PROFILE_TIERING
+     * 
+     * @param Int $billingProfileID
+     * @param Int $smsCountFrom
+     * @param Int $smsCountUpTo
+     * @param Int $price
+     * @return Array
+     */
+    public function insertToTiering($billingProfileID, $smsCountFrom, $smsCountUpTo, $price){
+        return $this->exec_query(
+                 ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE_TIERING VALUES '
+                .' (NULL, '.$billingProfileID.', "'.$smsCountFrom.'", "'.$smsCountUpTo.'", '.$price.') '
+            );
+    }
     
+    /**
+     * Function to insert new Billing Profile into Table BILLING_PROFILE
+     * 
+     * @param String $name
+     * @param String $billingType
+     * @param String $description
+     * @return Array
+     */
+    public function insertToBillingProfile($name, $billingType, $description){
+        return $this->exec_query(
+                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE VALUES '
+                    .' (NULL, "'.$name.'", "'.$billingType.'", "'.$description.'", now(), now()) '
+                );
+    }
+    
+    /**
+     * Function to insert new Tiering Group into Table BILLING_TIERING_GROUP
+     * 
+     * @param String $name
+     * @param String $description
+     * @return Array
+     */
+    public function insertToTieringGroup($name,  $description){
+        return $this->exec_query(
+                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_TIERING_GROUP VALUES'
+                    .' (NULL, "'.$name.'", "'.$description.'", now(), now()) '
+                );
+    }
+    
+    /**
+     * Function to insert new Report Group into Table BILLING_REPORT_GROUP
+     * 
+     * @param String $name
+     * @param String $description
+     * @return Array
+     */
+    public function insertToReportGroup($name,  $description){
+        return $this->exec_query(
+                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_REPORT_GROUP VALUES'
+                    .' (NULL, "'.$name.'", "'.$description.'", now(), now()) '
+                );
+    }
+    
+    /**
+     * Function to update existing Billing Profile based on updated column
+     * 
+     * @param Int $id
+     * @param String $name
+     * @param String $billingType
+     * @param String $description
+     * @return Array
+     */
+    public function updateBillingProfile($id, $name, $billingType, $description){
+        return $this->exec_query(
+                     ' UPDATE '.DB_BILL_PRICELIST.'.BILLING_PROFILE '
+                    .' SET NAME = "'.$name.'", BILLING_TYPE = "'.$billingType.'", DESCRIPTION = "'.$description.'", UPDATED_AT = now()'
+                    .' WHERE BILLING_PROFILE_ID = '.$id.''
+                );
+    }
+    
+    /**
+     * Function to update existing Tiering Group based on updated column
+     * 
+     * @param Int $id
+     * @param String $name
+     * @param String $description
+     * @return Array
+     */
+    public function updateTieringGroup($id, $name, $description){
+        return $this->exec_query(
+                     ' UPDATE '.DB_BILL_PRICELIST.'.BILLING_TIERING_GROUP '
+                    .' SET NAME = "'.$name.'", DESCRIPTION = "'.$description.'", UPDATED_AT = now()'
+                    .' WHERE BILLING_TIERING_GROUP_ID = '.$id.''
+                );
+    }
+    
+    /**
+     * Function to update existing Report Group based on updated column
+     * @param Int $id
+     * @param String $name
+     * @param String $description
+     * @return Array
+     */
+    public function updateReportGroup($id, $name, $description){
+        return $this->exec_query(
+                     ' UPDATE '.DB_BILL_PRICELIST.'.BILLING_REPORT_GROUP '
+                    .' SET NAME = "'.$name.'", DESCRIPTION = "'.$description.'", UPDATED_AT = now()'
+                    .' WHERE BILLING_REPORT_GROUP_ID = '.$id.''
+                );
+    }
+    
+    /**
+     * Function to delete Billing Profile based on Billing Profile ID
+     * 
+     * @param int $billingProfileID
+     * @return Array
+     */
+    public function deleteBillingProfile($billingProfileID){
+         return $this->exec_query(
+                        ' DELETE FROM '.DB_BILL_PRICELIST.'.BILLING_PROFILE '
+                       .' WHERE BILLING_PROFILE_ID = '.$billingProfileID.''
+                );
+    }
+    
+    /**
+     * Function to delete existing billing profile operator based on billing profile ID
+     * 
+     * @param Int $billingProfileID
+     * @return Array
+     */
+    public function deleteBillingProfileOperator($billingProfileID){
+        return $this->exec_query(
+                        ' DELETE FROM '.DB_BILL_PRICELIST.'.BILLING_PROFILE_OPERATOR '
+                       .' WHERE BILLING_PROFILE_ID = '.$billingProfileID.''
+                );
+    }
+    
+    /**
+     * Function to delete existing billing profile tiering based on billing profile ID
+     * 
+     * @param Int $billingProfileID
+     * @return Array
+     */
+    public function deleteBillingProfileTiering($billingProfileID){
+        return $this->exec_query(
+                        ' DELETE FROM '.DB_BILL_PRICELIST.'.BILLING_PROFILE_TIERING '
+                       .' WHERE BILLING_PROFILE_ID = '.$billingProfileID.''
+                );
+    }
+    
+    /**
+     * Function to delete existing Tiering Group based on tiering group ID
+     * 
+     * @param Int $tieringGroupID
+     * @return Array
+     */
+    public function deleteTieringGroup($tieringGroupID){
+        return $this->exec_query(
+                        ' DELETE FROM '.DB_BILL_PRICELIST.'.BILLING_TIERING_GROUP '
+                       .' WHERE BILLING_TIERING_GROUP_ID = '.$tieringGroupID.''
+                );
+    }
+    
+    /**
+     * Function to deletge report group based on report group ID
+     * 
+     * @param Int $reportGroupID
+     * @return Array
+     */
+    public function deleteReportGroup($reportGroupID){
+        return $this->exec_query(
+                        ' DELETE FROM '.DB_BILL_PRICELIST.'.BILLING_REPORT_GROUP '
+                       .' WHERE BILLING_REPORT_GROUP_ID = '.$reportGroupID.''
+                );
+    }
+    
+
     public function isReportExist($awaiting = false, $userId = null) {
         $fileName = $this->getReportFileName($awaiting, $userId);
         return !is_null($fileName)

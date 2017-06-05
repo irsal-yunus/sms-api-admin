@@ -38,6 +38,7 @@ mod.createUser = function(clientID){
 			regData = null;
 		}
 		var title = 'User Registration';
+                console.log('masuk123');
 		$app.form.openAutoDialog(('apiuser.new'), regData, title, {
 			width: '40em',
 			height: 316
