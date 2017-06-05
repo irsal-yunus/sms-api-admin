@@ -28,11 +28,14 @@ define('SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT',     dirname(__DIR__).'/archive/repor
 /**
  * Database Configuration
  */
-define('REF_DB_HOST',           '10.32.6.71');
-define('REF_DB_USER',           'qateam');
-define('REF_DB_PASSWORD',       'qateam'); 
+//define('REF_DB_HOST',           '10.32.6.71');
+//define('REF_DB_USER',           'qateam');
+//define('REF_DB_PASSWORD',       'qateam'); 
+define('REF_DB_HOST',           '127.0.0.1');
+define('REF_DB_USER',           'root');
+define('REF_DB_PASSWORD',       '1rstwap'); 
 
-define('DB_SMS_API_V2',         'SMS_API_V21');
+define('DB_SMS_API_V2',         'SMS_API_V2');
 define('DB_BILL_U_MESSAGE',     'BILL_U_MESSAGE');
 define('DB_BILL_PRICELIST',     'BILL_PRICELIST');
 define('DB_First_Intermedia',   'First_Intermedia');
@@ -50,4 +53,4 @@ define('SMSAPIADMIN_ARCHIEVE_CMD_CREATE',        SMSAPIADMIN_UTILS_DIR.'archive.
 define('SMSAPIADMIN_ARCHIEVE_CMD_EXTRACT',       'gzip -d {SRC-NAME} | tar -x');
 define('SMSAPIADMIN_ARCHIEVE_CSV_DELIMITER',     ',');
 define('SMSAPIADMIN_ARCHIEVE_CSV_ENCLOSURE',     '"');
-define('REPORT_PER_BATCH_SIZE',                  1000);
+define('REPORT_PER_BATCH_SIZE',                  5000);
