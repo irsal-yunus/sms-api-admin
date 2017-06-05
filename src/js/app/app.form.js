@@ -194,7 +194,39 @@ $app.ready(function ($app) {
             }
         };
 
-
+        $app.form.openConfirmationDialog = function (serviceName,data, serviceArgs, dialogOptions) {
+            try {
+                if (dialogForm.dialog('isOpen'))
+                    throw 'Must close current dialogue before opening new one';
+                var options = $.extend(dialogDefaultOptions, dialogOptions, {
+                    'title': serviceArgs.title,
+                    'buttons': {
+                        'No': function () {
+                            $app.form.closeDialog();
+                        },
+                        'Yes': function () {
+                            try {
+                                $app.form.closeDialog();
+                                $app.content(serviceArgs.action, data);
+                            } catch (ex) {
+                                $1.error("[$app.form.openAutoDialog@save] Error.", ex);
+                            }
+                        }
+                    }});
+                dialogForm
+                        .html('')
+                        .dialog('option', options)
+                        .dialog('open');
+                $app.content(
+                        serviceName,
+                        serviceArgs,
+                        $.noop, 
+                        dialogForm);
+                return this;
+            } catch (ex) {
+                $1.error("[$app.openAutoDialog] Error.", ex);
+            }
+        };
 
         /**
          * Download All Billing Report Dialog function
