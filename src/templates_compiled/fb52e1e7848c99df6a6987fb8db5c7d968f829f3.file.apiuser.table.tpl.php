@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.0.5, created on 2016-09-27 03:45:22
+<?php /* Smarty version Smarty-3.0.5, created on 2017-06-07 03:48:12
          compiled from "/var/www/html/sms-api-admin/src/templates/apiuser.table.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:96136358457da0d793bc891-03533662%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:2025444595937777cb06a55-06845951%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'fb52e1e7848c99df6a6987fb8db5c7d968f829f3' => 
     array (
       0 => '/var/www/html/sms-api-admin/src/templates/apiuser.table.tpl',
-      1 => 1474528347,
+      1 => 1494995998,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '96136358457da0d793bc891-03533662',
+  'nocache_hash' => '2025444595937777cb06a55-06845951',
   'function' => 
   array (
   ),
@@ -38,6 +38,9 @@ $_smarty_tpl->decodeProperties(array (
 					<span class="form-button-text">Show Only Active User</span>
 				</a>
 				<?php }?>
+                                <a href="#" class="form-button" onclick="$app.module('apiuser').showDownloadAllReportMesasge();" style="float: right;">
+                                    Download Billing Reports
+                                </a>
 			</th>
 		</tr>
 		<tr>

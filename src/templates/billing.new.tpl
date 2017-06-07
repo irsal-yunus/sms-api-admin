@@ -79,6 +79,17 @@
             $("#list-user").select2({
                 placeholder: "Select a user"
             });
+            
+            $('#btn-submit').on('click', function(e){
+                e.preventDefault();
+                $('#billingProfile-form').submit();
+            });
+            
+            $('#billingProfile-form').on('submit', function(e){
+                e.preventDefault();
+                data = $(this).serializeArray();
+                $app.module('billing').storeBillingProfile(data);
+            });
 
     });
 
@@ -141,7 +152,6 @@
     function loadUserDetail(){
         $.ajax({
             url: 'services/billing.getUserDetail.php',
-            
             type: 'POST',
             dataType: 'JSON',
             success: function (data) {
@@ -172,11 +182,6 @@
         }
     }
     
-    function storeBilling(){
-        data = $('#billingProfile-form').serializeArray();
-        $app.module('billing').storeBillingProfile(data);
-    }
-   
 </script>
 {/literal}
 
@@ -195,7 +200,9 @@
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
                                             <label>Description</label>
-                                            <textarea rows="40" cols="20" id="text-description" name="description" value="{if isset($description['DESCRIPTION'])}{$description['DESCRIPTION']}{/if}" data-validation="required" ></textarea>
+                                            <textarea rows="3" cols="20" id="text-description" name="description" data-validation="required" >
+                                                {if isset($description['DESCRIPTION'])}{$description['DESCRIPTION']}{/if}
+                                            </textarea>
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
@@ -292,7 +299,7 @@
 				</fieldset>
                                 
                                  <fieldset class="form-fieldset-submission" style="width: 100%;">
-                                        <a href="#" id="btn-submit" class="form-button" onclick="storeBilling()" style="margin:5px;float:left;">
+                                        <a href="#" id="btn-submit" class="form-button" style="margin:5px;float:left;">
 						<img src="skin/images/icon-store.png" class="form-button-image" alt="" />
 						<span class="form-button-text">Save</span>
 					</a>
