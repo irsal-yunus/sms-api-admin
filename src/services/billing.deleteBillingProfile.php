@@ -10,7 +10,8 @@ $page = SmsApiAdmin::getTemplate();
 
 try {
     $apiReport = new ApiReport();
-
+    
+    //Validate if billingProfileID is set
     if(isset($_POST['billingProfileID']) ){
         $billingProfileID = $_POST['billingProfileID'];
         if(strtolower($_POST['billingType'] == 'operator')){

@@ -10,8 +10,10 @@ require_once '../init.d/init.php';
 require_once SMSAPIADMIN_LIB_DIR.'model/ApiReport.php';
 SmsApiAdmin::filterAccess();
 $page = SmsApiAdmin::getTemplate();
-
 $apiReport = new ApiReport();
+isset($_GET['tab']) 
+    ? $page->assign('tab',$_GET['tab']) 
+    : $page->assign('tab','billing');
 $page->assign('billingList', $apiReport->getBilingProfileDetail());
 $page->assign('tieringGroupList',$apiReport->getTieringGroupDetail());
 $page->assign('reportGroupList',$apiReport->getReportGroupDetail());
