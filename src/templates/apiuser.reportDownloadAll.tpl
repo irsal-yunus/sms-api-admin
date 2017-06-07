@@ -1,4 +1,4 @@
-<form id="apiuser-editform" class="report-tabform" action="services/downloadAllBillingReport.php" method="GET" style="width: 100%;">
+<form id="apiuser-editform" class="report-tabform" action="services/billing.downloadAllReport.php" method="GET" style="width: 100%;">
     <fieldset class="float-centre">
         <span class="ui-helper-clearfix"></span><br>
         <div>
@@ -20,8 +20,14 @@
                     {/foreach}
                 </select>
             </label>
-        </div>
-        <span class="ui-helper-clearfix"></span><br><br>
+            <span class="ui-helper-clearfix"></span><br>
+            <div>
+                <input style="float: none;display: inline;margin:0; margin-left: 5px" type="checkbox" name="sms_dr" /> Include SMS awaiting DR
+            </div>
+            <span class="ui-helper-clearfix"></span><br>
+
+            </div>
+            <span class="ui-helper-clearfix"></span><br><br>
     </fieldset>
 
 </form>

@@ -50,8 +50,8 @@ mod.showBillingDetail = function(options){
                     false, 
                     'Download Billing Report', 
                     {
-                        height  : 175,
-                        width   : 260
+                        height  : 230,
+                        width   : 280
                     }, 
                     function() {}
                 );

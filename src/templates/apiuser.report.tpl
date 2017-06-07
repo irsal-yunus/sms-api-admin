@@ -1,5 +1,4 @@
-<!--<form id="apiuser-editform" class="report-tabform" action="services/generateReportUser.php" method="post" style="width: 100%;">-->
-<form id="apiuser-editform" class="report-tabform" action="services/generateReportUser.php" method="get" style="width: 100%;">
+<form id="apiuser-editform" class="report-tabform" action="services/billing.downloadReport.php" method="get" style="width: 100%;">
     <input type="hidden" name="userID" value="{$details.userID}" />
     <input type="hidden" name="userName" value="{$details.userName}" />
     <fieldset class="float-centre">
@@ -37,7 +36,7 @@
                  <select name="year" style="float:none;display: inline">
                     <!--<option value="">- Select -</option>-->
                     {php}
-                        for($year = 2010 ; $year <= date('Y'); $year++){
+                        for($year = 2017 ; $year <= date('Y'); $year++){
                           echo "<option value='$year'>$year</option>";
                         }
                     {/php}>

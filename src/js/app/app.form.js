@@ -154,24 +154,14 @@ $app.ready(function ($app) {
                                 
                                 var loading = $('.loader-container'),
                                     url = serviceName + '?' + $form.serialize(),                                
-                                    checkUrl = url + "&check=TRUE";
+                                    checkUrl = url + "&check";
                                     
                                 loading.show();
-                                $.post(checkUrl, function(response){
-//                                    if($.trim(response) !== "File Doesn't Exist"){
+                                $.get(checkUrl, function(response){
                                     if($.trim(response) === "File Doesn't Exist"){
-//                                        console.log(response);
-//                                        console.log('t  '+response.responseTest);
                                         loading.remove();
                                         alert(response);
                                     } else {
-//                                        window.
-//                                        var newWin=window.open(url,'','width=100,height=100');
-//                                        newWin.document.write('<script>alert(top.location.href);</script>');
-//                                        window.open(url, '_blank');
-//                                        $.fileDownload(url)
-//                                            .done(function () { })
-//                                            .fail(function () { loading.remove(); alert("There was a problem generating your report, please try again.")});
                                         top.location.href = url;
                                         loading.remove();
                                     }
