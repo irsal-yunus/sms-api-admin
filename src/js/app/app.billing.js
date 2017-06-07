@@ -41,6 +41,10 @@ mod.showBilling = function(options){
     }
 };
 
+/**
+ * Show window to download billing report
+ * @param  options
+ */
 mod.showBillingDetail = function(options){
     try {
             $app
@@ -60,6 +64,12 @@ mod.showBillingDetail = function(options){
     }
 };
 
+/**
+ * Show create or update billing profile page
+ * @param Int       billingProfileID    
+ * @param String    billingType
+ * @param String    mode
+ */
 mod.newBillingProfile = function(billingProfileID, billingType, mode){
     try {
         var titles = mode == 'update'? 'Update Biling Profile' : 'New Billing Profile';
@@ -77,6 +87,10 @@ mod.newBillingProfile = function(billingProfileID, billingType, mode){
     }
 };
 
+/**
+ * Call storeBillingProfile services to process the billing profile data from view
+ * @param Array data    [['mode','billingProfileID','name','description','price_based','user','operatorID','tiering']]
+ */
 mod.storeBillingProfile = function(data){
     try {
         $app.content(
@@ -90,6 +104,11 @@ mod.storeBillingProfile = function(data){
     }
 };
 
+/**
+ * Show create or update tiering group page
+ * @param Int       tieringID
+ * @param String    mode        create a new tiering group or update the existing one
+ */
 mod.newTieringGroup = function(tieringID, mode){
     try {
         var titles = mode == 'update'? 'Update Tiering Group' : 'New Tiering Group';
@@ -106,6 +125,10 @@ mod.newTieringGroup = function(tieringID, mode){
     }
 };
 
+/**
+ * Call storeTieringGroup services to process the tiering group data from view
+ * @param Array     data    [['mode','name','description','user']]
+ */
 mod.storeTieringGroup = function(data){
     try {
         $app.content(
@@ -119,6 +142,12 @@ mod.storeTieringGroup = function(data){
     }
 };
 
+/**
+ * Show create or update report group page
+ * 
+ * @param Int       reportID
+ * @param String    mode        create a new report group or update the existing one
+ */
 mod.newReportGroup = function(reportID, mode){
     try {
         var titles = mode == 'update'? 'Update Report Group' : 'New Report Group';
@@ -135,6 +164,11 @@ mod.newReportGroup = function(reportID, mode){
     }
 };
 
+/**
+ * Call storeReportGroup services to process the report group data from view
+ * 
+ * @param Array data    [['mode','name','description','user']]
+ */
 mod.storeReportGroup = function(data){
     try {
         $app.content(
@@ -148,6 +182,12 @@ mod.storeReportGroup = function(data){
     }
 };
 
+/**
+ * Show window confirmation to delete billing profile, then call deleteBillingProfile services
+ * 
+ * @param Int       billingProfileID    
+ * @param String    billingType         tiering or operator   
+ */
 mod.deleteBillingProfile = function(billingProfileID, billingType){
     try{
             var title = 'Delete Confirmation';
@@ -176,6 +216,11 @@ mod.deleteBillingProfile = function(billingProfileID, billingType){
     
 };
 
+/**
+ * Show window confirmation to delete tiering group, then call deleteTieringGroup services
+ * 
+ * @param Int       tieringGroupID    
+ */
 mod.deleteTieringGroup = function(tieringGroupID){
     try{
             var title = 'Delete Confirmation';
@@ -203,6 +248,11 @@ mod.deleteTieringGroup = function(tieringGroupID){
     
 };
 
+/**
+ * Show window confirmation to delete tiering group, then call deleteTieringGroup services
+ * 
+ * @param Int reportGroupID
+ */
 mod.deleteReportGroup = function(reportGroupID){
     try{
             var title = 'Delete Confirmation';

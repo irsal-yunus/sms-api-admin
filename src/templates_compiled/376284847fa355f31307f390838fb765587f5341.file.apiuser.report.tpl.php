@@ -1,24 +1,25 @@
-<?php /* Smarty version Smarty-3.0.5, created on 2016-09-27 10:18:16
+<?php /* Smarty version Smarty-3.0.5, created on 2017-06-07 07:01:28
          compiled from "/var/www/html/sms-api-admin/src/templates/apiuser.report.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:102809093557da0daae44286-31018014%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:69462995937a4c801b8c0-14625580%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '376284847fa355f31307f390838fb765587f5341' => 
     array (
       0 => '/var/www/html/sms-api-admin/src/templates/apiuser.report.tpl',
-      1 => 1474528347,
+      1 => 1494995998,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '102809093557da0daae44286-31018014',
+  'nocache_hash' => '69462995937a4c801b8c0-14625580',
   'function' => 
   array (
   ),
   'has_nocache_code' => false,
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php if (!is_callable('smarty_block_php')) include '/var/www/html/sms-api-admin/src/lib/com/smarty/plugins/block.php.php';
-?><form id="apiuser-editform" class="report-tabform" action="services/generateReportUser.php" method="post" style="width: 100%;">
+?><!--<form id="apiuser-editform" class="report-tabform" action="services/generateReportUser.php" method="post" style="width: 100%;">-->
+<form id="apiuser-editform" class="report-tabform" action="services/generateReportUser.php" method="get" style="width: 100%;">
     <input type="hidden" name="userID" value="<?php echo $_smarty_tpl->getVariable('details')->value['userID'];?>
 " />
     <input type="hidden" name="userName" value="<?php echo $_smarty_tpl->getVariable('details')->value['userName'];?>
@@ -41,7 +42,7 @@ $_smarty_tpl->decodeProperties(array (
             <label class="form-flag-required">
                 Month 
                 <select name="month" style="float:none;display: inline">
-                    <option value="">- Select -</option>
+                    <!--<option value="">- Select -</option>-->
                     <option value="01">January</option>
                     <option value="02">February</option>
                     <option value="03">March</option>
@@ -59,14 +60,14 @@ $_smarty_tpl->decodeProperties(array (
             
             <label class="form-flag-required">Year  
                  <select name="year" style="float:none;display: inline">
-                    <option value="">- Select -</option>
-                    <option value=<?php $_smarty_tpl->smarty->_tag_stack[] = array('php', array()); $_block_repeat=true; smarty_block_php(array(), null, $_smarty_tpl, $_block_repeat);while ($_block_repeat) { ob_start();?>
+                    <!--<option value="">- Select -</option>-->
+                    <?php $_smarty_tpl->smarty->_tag_stack[] = array('php', array()); $_block_repeat=true; smarty_block_php(array(), null, $_smarty_tpl, $_block_repeat);while ($_block_repeat) { ob_start();?>
 
-                                    for($year = 2010 ; $year <= date('Y'); $year++){
-                                      echo "<option>$year</option>";
-                                   }
-                                    <?php $_block_content = ob_get_clean(); $_block_repeat=false; echo smarty_block_php(array(), $_block_content, $_smarty_tpl, $_block_repeat);  } array_pop($_smarty_tpl->smarty->_tag_stack);?>
-></option>
+                        for($year = 2010 ; $year <= date('Y'); $year++){
+                          echo "<option value='$year'>$year</option>";
+                        }
+                    <?php $_block_content = ob_get_clean(); $_block_repeat=false; echo smarty_block_php(array(), $_block_content, $_smarty_tpl, $_block_repeat);  } array_pop($_smarty_tpl->smarty->_tag_stack);?>
+>
                 </select>
             </label>
         </div>

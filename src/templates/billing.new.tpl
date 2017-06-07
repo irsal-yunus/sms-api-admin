@@ -200,7 +200,7 @@
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
                                             <label>Description</label>
-                                            <textarea rows="3" cols="20" id="text-description" name="description" data-validation="required" >
+                                            <textarea rows="3" cols="20" id="text-description" name="description" data-validation="required">
                                                 {if isset($description['DESCRIPTION'])}{$description['DESCRIPTION']}{/if}
                                             </textarea>
                                         </div>
