@@ -27,8 +27,6 @@ try {
             }
         }
         
-        $logger->info(json_encode($availablePeriods, 192));
-        
         $page->assign('availablePeriods', $availablePeriods );
         $page->display('apiuser.reportDownloadAll.tpl');
         

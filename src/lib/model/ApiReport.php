@@ -158,12 +158,13 @@ class ApiReport {
     /**
      * Api Report constructor
      */
-    public function __construct($year = null, $month = null) {
+    public function __construct($year = null, $month = null, $generateMode = false) {
         $this->log               = Logger::getLogger(get_class($this));
         
         $this->year              = sprintf('%02d', $year  ?: date('Y'));
         $this->month             = sprintf('%02d', $month ?: date('m'));
         $this->reportDir         = SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT.$year.'/'.$month;
+        
         $this->prepareReportDir();
         $this->configureBillingPeriod();
       
@@ -269,8 +270,10 @@ class ApiReport {
         $currentMemoryUsed    = (int)(memory_get_usage(1) /1024/1024);
         $this->queryHistory[] = compact('query', 'totalRecords', 'executionTime','currentMemoryUsed');
         $f = fopen('new_billing_peformance.history', file_exists('new_billing_peformance.history') ? 'a' : 'w');
-        fwrite($f, json_encode(compact('query', 'totalRecords', 'executionTime', 'currentMemoryUsed'),192).PHP_EOL.'---------------'.PHP_EOL);
-        fclose($f);
+        if ($f) {
+            fwrite($f, json_encode(compact('query', 'totalRecords', 'executionTime', 'currentMemoryUsed'),192).PHP_EOL.'---------------'.PHP_EOL);
+            fclose($f);
+        }
     }
     
     
@@ -1651,7 +1654,7 @@ class ApiReport {
     private function setSummaryReportHeader(&$excel, $userName, &$data) {
         $sheet     = $excel->setActiveSheetIndex(0);
         $lastCol   = 'G';
-        $userNames = is_array($userName) ? implode(', ', $userName) : $userId;
+        $userNames = is_array($userName) ? implode(', ', $userName) : $userName;
         $style     = $this->getSummaryColorStyle();
         $sum       = [
             'd'    => 0,
@@ -1744,8 +1747,8 @@ class ApiReport {
         $awaitingReport  = $dirAwaiting.    '/'.$fileName.$this->periodSuffix.'*.xlsx';
         
         $fileName        = $fileName == '*' ? self::ALL_REPORT_PACKAGE.$this->periodSuffix : $fileName;
-        $finalPackage    = $dirFinal.       '/'.$fileName.'.zip';
-        $awaitingPackage = $dirAwaiting.    '/'.$fileName.self::SUFFIX_AWAITING_REPORT.'.zip';
+        $finalPackage    = $dirFinal.       '/'.$fileName.$this->periodSuffix.'.zip';
+        $awaitingPackage = $dirAwaiting.    '/'.$fileName.$this->periodSuffix.self::SUFFIX_AWAITING_REPORT.'.zip';
         
         exec('zip -j '.$finalPackage   .' '.$finalReport);
         exec('zip -j '.$awaitingPackage.' '.$awaitingReport);
@@ -1846,7 +1849,7 @@ class ApiReport {
                 $this->log->debug('got '.$userLastSendDate);
                 $counter               = 0;
                 
-                if($userId != 543) continue;
+                
                 /* =======================================
                  *  Get User billing information
                  * ======================================= */
@@ -2113,15 +2116,14 @@ class ApiReport {
      */
     private function getReportFileName($awaiting = false, $userId = null) {
         $dir      = $this->reportDir;
-        $fileName = self::ALL_REPORT_PACKAGE;
+        $fileName = self::ALL_REPORT_PACKAGE.$this->periodSuffix;
         
         if(!is_null($userId) && is_numeric((int)$userId)) {
             $user = $this->getUserDetail($userId);
-            if(empty($user) || !is_array(current($user))) {
+            if(empty($user)) {
                 return null;
             }
             
-            $user = current($user);
             if(!is_null($user['BILLING_REPORT_GROUP_ID'])) {
                 $group    = $this->loadReportGroupCache($user['BILLING_REPORT_GROUP_ID']);
                 $fileName = $group['NAME'];                
@@ -2129,9 +2131,6 @@ class ApiReport {
             else {
                 $fileName = $user['USER_NAME'];
             }
-        }
-        else {
-            return null;
         }
         
         if($awaiting) {
@@ -2142,7 +2141,7 @@ class ApiReport {
             $dir      .= '/'.self::DIR_FINAL_REPORT;
         }
         
-        return $dir.'/'.$fileName. $this->periodSuffix.'.zip';
+        return $dir.'/'.$fileName.'.zip';
     }
 
     
@@ -2429,7 +2428,7 @@ class ApiReport {
             header('Cache-Control: public');
             header('Content-Description: File Transfer');
             header('Content-type: application/octet-stream');
-            header('Content-Disposition: attachment; filename="'.$fileName.'"');
+            header('Content-Disposition: attachment; filename="'.basename($fileName).'"');
             header('Content-Transfer-Encoding: binary');
             header('Content-Length: '.filesize($fileName));
             ob_end_flush();

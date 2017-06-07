@@ -173,8 +173,8 @@ mod.showDownloadAllReportMesasge = function(){
                         false, 
                         'Download Billing Report', 
                         {
-                            height  : 175,
-                            width   : 260
+                            height  : 250,
+                            width   : 280
                         }, 
                         function() {}
                     );
