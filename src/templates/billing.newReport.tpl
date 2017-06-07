@@ -34,6 +34,17 @@
         $("#list-user").select2({
             placeholder: "Select a user"
         });
+        
+        $('#btn-submit').on('click', function(e){
+                e.preventDefault();
+                $('#reportGroup-form').submit();
+        });
+
+        $('#reportGroup-form').on('submit', function(e){
+            e.preventDefault();
+            data = $(this).serializeArray();
+            $app.module('billing').storeReportGroup(data);
+        });
     });
     function loadUserDetail(){
         $.ajax({
@@ -56,11 +67,6 @@
             },
             
         });
-    }
-    
-    function storeReport(){
-            data = $('#reportGroup-form').serializeArray();
-            $app.module('billing').storeReportGroup(data);
     }
 </script>
 {/literal}
@@ -86,7 +92,9 @@
                                 <span class="ui-helper-clearfix"></span>
                                 <div>
                                     <label>Description</label>
-                                    <textarea id="text-description" name="description" value='{if isset($reportDetail['DESCRIPTION'])}{$reportDetail['DESCRIPTION']}{/if}' data-validation="required"></textarea>
+                                    <textarea rows="1" cols="20" id="text-description" name="description" data-validation="required">
+                                        {if isset($reportDetail['DESCRIPTION'])}{$reportDetail['DESCRIPTION']}{/if}
+                                    </textarea>
                                 </div>
                                 <span class="ui-helper-clearfix"></span>
                                 <div>
@@ -101,7 +109,7 @@
                                 </div>
                             </fieldset>
                             <fieldset class="form-fieldset-submission" style="width: 100%;">
-                                    <a href="#" class="form-button" id="btn-submit" onclick="storeReport()" style="margin:5px;float:left;"  {if !$billingList} disabled {/if}>
+                                    <a href="#" class="form-button" id="btn-submit" style="margin:5px;float:left;"  {if !$billingList} disabled {/if}>
                                             <img src="skin/images/icon-store.png" class="form-button-image" alt="" />
                                             <span class="form-button-text">Save</span>
                                     </a>
