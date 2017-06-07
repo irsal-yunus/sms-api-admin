@@ -18,7 +18,7 @@ try {
     // Generate Last month report
     (new ApiReport(
             date('Y',strtotime('-1 months')), 
-            date('Y',strtotime('-1 months'))
+            date('m',strtotime('-1 months'))
         ))->generate();
     
     // Generate current month report
