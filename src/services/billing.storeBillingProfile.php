@@ -67,6 +67,8 @@ try {
                                                 $_POST['description']
                                             );
                 if(isset($_POST['user']) && !empty($_POST['user'])){
+                    $user = isset($_POST['user']) && !is_null($_POST['user']) ? $_POST['user'] : [];       
+
                     $updateUserClause = [
                         'column'        => 'BILLING_PROFILE_ID',
                         'value'         => 'NULL',
@@ -110,8 +112,8 @@ try {
                 }
             }
         }
-        //header("location: ./billing.view.php");
-        require_once '../services/billing.view.php';
+        header('Location: ./billing.view.php');
+        
 } catch (Exception $e) {
     
 }

@@ -12,7 +12,6 @@ SmsApiAdmin::filterAccess();
 $page = SmsApiAdmin::getTemplate();
 
 $apiReport = new ApiReport();
-
 $page->assign('billingList', $apiReport->getBilingProfileDetail());
 $page->assign('tieringGroupList',$apiReport->getTieringGroupDetail());
 $page->assign('reportGroupList',$apiReport->getReportGroupDetail());

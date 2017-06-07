@@ -56,10 +56,8 @@
                            .find('input[id="tiering_upto"]')
                            .val('');
                 }
-            })
-            .on('click', '#btn-submit', function(){
-                $('#billingProfile-form').submit();
             });
+            
             var operatorValue = $('#operator-table tbody').data('operator') || [];
             loadOperator().done(function(){                
                 if(operatorValue.length > 0){
@@ -93,7 +91,7 @@
                             + '<th><input type="text" name="tiering['+rowId+'][from]" data-validation="number"></th>'
                             + '<th><input type="text" name ="tiering['+rowId+'][to]" id="tiering_upto" data-validation="required"></th>'
                             + '<th width="5%"><input type="checkbox" name="isMax" style="margin-top: 0.5 em;"></th>'
-                            + '<th width="5%">Max</th>'
+                            + '<th width="5%" style="padding-top: 6px;">Max</th>'
                             + '<th><input type="text" name ="tiering['+rowId+'][price]" data-validation="number"></th>'
                         + '</tr>';
         $('#tiering-table tbody').append(newRow); 
@@ -173,11 +171,16 @@
            $('#tiering-container').show();
         }
     }
+    
+    function storeBilling(){
+        data = $('#billingProfile-form').serializeArray();
+        $app.module('billing').storeBillingProfile(data);
+    }
    
 </script>
 {/literal}
 
-<form id="billingProfile-form" class="admin-xform" action='services/billing.storeBillingProfile.php' method="post">
+<form id="billingProfile-form" class="admin-xform">
 	<div class="panel">
 		<div class="panel-header"><img src="skin/images/icon-history.png" class="icon-image" alt="" /><span>New Billing Profile</span></div>
 		<div class="panel-body">
@@ -187,12 +190,12 @@
                                         <input type="hidden" name="billingProfileID" value="{if isset($billingProfileID)}{$billingProfileID}{/if}">
                                         <div>
                                             <label>Name</label>
-                                            <input type="text" name="name" value="{if isset($description['NAME'])}{$description['NAME']}{/if}" data-validation="required">
+                                            <input type="text" id="input-name" name="name" value="{if isset($description['NAME'])}{$description['NAME']}{/if}" data-validation="required">
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
                                             <label>Description</label>
-                                            <input type="text" name="description" value="{if isset($description['DESCRIPTION'])}{$description['DESCRIPTION']}{/if}" data-validation="required">
+                                            <textarea rows="40" cols="20" id="text-description" name="description" value="{if isset($description['DESCRIPTION'])}{$description['DESCRIPTION']}{/if}" data-validation="required" ></textarea>
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
@@ -208,7 +211,7 @@
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
                                             <label>Users</label>
-                                            <select id="list-user" name ="user[]" multiple="multiple" style="width: 200px;margin-top : 5px;">
+                                            <select id="list-user" name ="user[]" multiple="multiple">
                                                 <div style="max-height: 100px;overflow-y:scroll;overflow-x:hidden;">
                                                 {if isset($user)}
                                                     {foreach from=$user item=item}
@@ -261,7 +264,7 @@
                                                                                 <th><input type='text' name='tiering[0][from]' value='0' data-validation="number"></th>
                                                                                 <th><input type="text" name ="tiering[0][to]" value='' data-validation="required"></th>
                                                                                 <th width='5%'><input type='checkbox' name='isMax' style='margin-top: 0.5 em;'></th>
-                                                                                <th width='5%'>Max</th>
+                                                                                <th width='5%' style="padding-top: 6px;">Max</th>
                                                                                 <th><input type='text' name ='tiering[0][price]' value='' data-validation="number"></th>
                                                                             </tr>
                                                                     {else}
@@ -273,7 +276,7 @@
                                                                                 <th><input type='text' name='tiering[0][from]' value='{$item['SMS_COUNT_FROM']}' data-validation="number"></th>
                                                                                 <th><input type='text' name ='tiering[0][to]' value='{$item['SMS_COUNT_UP_TO']}' data-validation="required"></th>
                                                                                 <th width='5%'><input type='checkbox' name='isMax' style='margin-top: 0.5 em;' {if $item['SMS_COUNT_UP_TO'] == 'MAX'} checked {/if}></th>
-                                                                                <th width='5%'>Max</th>
+                                                                                <th width='5%' style="padding-top: 6px;">Max</th>
                                                                                 <th><input type='text' name ='tiering[0][price]' value='{$item['PER_SMS_PRICE']}' data-validation="number"></th>
                                                                             </tr>
                                                                         {/foreach}
@@ -289,7 +292,7 @@
 				</fieldset>
                                 
                                  <fieldset class="form-fieldset-submission" style="width: 100%;">
-                                        <a href="#" id="btn-submit" class="form-button" style="margin:5px;float:left;">
+                                        <a href="#" id="btn-submit" class="form-button" onclick="storeBilling()" style="margin:5px;float:left;">
 						<img src="skin/images/icon-store.png" class="form-button-image" alt="" />
 						<span class="form-button-text">Save</span>
 					</a>

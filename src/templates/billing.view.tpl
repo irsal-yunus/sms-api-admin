@@ -50,9 +50,9 @@
 <form id="billing-view" class="admin-tabform" action="#" method="post" style="width: 100%;">
 	<div id="billing-view-tabs" class="panel-tabs">
 		<ul>
-			<li><a href="#billing-profile-tab"><img src="skin/images/icon-history.png" class="icon-image icon-size-small" alt="" /><span>Billing Profile</span></a></li>
-			<li><a href="#tiering-group-tab"><img src="skin/images/icon-history.png" class="icon-image icon-size-small" alt="" /><span>Tiering Group</span></a></li>
-                        <li><a href="#report-group-tab"><img src="skin/images/icon-history.png" class="icon-image icon-size-small" alt="" /><span>Report Group</span></a></li>
+			<li class="{if $tab == "billing"}ui-tabs-selected{/if}"><a href="#billing-profile-tab"><img src="skin/images/icon-history.png" class="icon-image icon-size-small" alt="" /><span>Billing Profile</span></a></li>
+			<li class="{if $tab == "tiering"}ui-tabs-selected{/if}"><a href="#tiering-group-tab"><img src="skin/images/icon-history.png" class="icon-image icon-size-small" alt="" /><span>Tiering Group</span></a></li>
+                        <li class="{if $tab == "report"}ui-tabs-selected{/if}"><a href="#report-group-tab"><img src="skin/images/icon-history.png" class="icon-image icon-size-small" alt="" /><span>Report Group</span></a></li>
                         
 		</ul>
 		<div id="billing-profile-tab">
@@ -66,7 +66,7 @@
                                                 </th>
                                         </tr>
                                         <tr>
-                                                <th style="width: 20%;">Description</th>
+                                                <th style="width: 20%;">Name</th>
                                                 <th style="width: 20%;">Price Base</th>
                                                  <th style="width: 20%;">Created At</th>
                                                 <th style="width: 40%;">Action(s)</th>
@@ -82,7 +82,7 @@
                                 <tbody>
                                     {section name=list loop=$billingList}
                                     <tr>
-                                        <td class="type-text">{$billingList[list].DESCRIPTION}</td>
+                                        <td class="type-text">{$billingList[list].NAME}</td>
                                         <td class="type-text">{$billingList[list].BILLING_TYPE}</td>
                                         <td class="type-text">{$billingList[list].CREATED_AT}</td>
                                         <td class="type-action">

@@ -14,11 +14,11 @@ try {
         $apiReport = new ApiReport();
         
         if($_POST['mode'] == 'new'){
-            
             $tieringGroupID = $apiReport->insertToTieringGroup(
                                             $_POST['name'], 
                                             $_POST['description']
                                 );
+            
             if(!is_null($tieringGroupID)){
                 $updateUserClause = [
                         'column'        => 'BILLING_TIERING_GROUP_ID',
