@@ -6,7 +6,7 @@
 /**
  * Application Url Configuration
  */
-define('SMSAPIADMIN_BASE_URL',      'http://10.32.6.5/sms-api-admin/src/'); // Configured as the url
+define('SMSAPIADMIN_BASE_URL',      'http://10.32.6.25/sms-api-admin/src/'); // Configured as the url
 define('SMSAPIADMIN_SERVICE_URL',   SMSAPIADMIN_BASE_URL.'services/');
 
 
@@ -22,16 +22,15 @@ define('SMSAPIADMIN_UTILS_TMP_DIR',             SMSAPIADMIN_UTILS_DIR.'tmp/');
 define('SMSAPIADMIN_TEMPLATE_DIR',              SMSAPIADMIN_BASE_DIR.'templates/');
 define('SMSAPIADMIN_TEMPLATE_COMPILE_DIR',      SMSAPIADMIN_BASE_DIR.'templates_compiled/');
 define('SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT',     dirname(__DIR__).'/archive/reports/');
-// define('SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT' ,     dirname(__DIR__).'/archive/reports/');
 
 
 /**
  * Database Configuration
  */
 
-define('REF_DB_HOST',           '10.32.6.71');
-define('REF_DB_USER',           'qateam');
-define('REF_DB_PASSWORD',       'qateam'); 
+ define('REF_DB_HOST',           '10.32.6.71');
+ define('REF_DB_USER',           'qateam');
+ define('REF_DB_PASSWORD',       'qateam'); 
 
 define('DB_SMS_API_V2',         'SMS_API_V2');
 define('DB_BILL_U_MESSAGE',     'BILL_U_MESSAGE');
