@@ -35,6 +35,17 @@
         $("#list-user").select2({
             placeholder: "Select a user"
         });
+        
+        $('#btn-submit').on('click', function(e){
+            e.preventDefault();
+            $('#tieringGroup-form').submit();
+        });
+
+        $('#tieringGroup-form').on('submit', function(e){
+            e.preventDefault();
+            data = $(this).serializeArray();
+            $app.module('billing').storeTieringGroup(data);
+        });
     });
     
     function loadUserDetail(){
@@ -60,10 +71,6 @@
         });
     }
     
-    function storeTiering(){
-        var data = $('#tieringGroup-form').serializeArray();
-        $app.module('billing').storeTieringGroup(data);
-    }
 </script>
 {/literal}
 
@@ -88,7 +95,9 @@
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
                                             <label>Description</label>
-                                            <textarea name="description" id="text-description" name="input-description" value="{if isset($tieringDetail['DESCRIPTION'])}{$tieringDetail['DESCRIPTION']}{/if}" data-validation="required"></textarea>
+                                            <textarea rows="3" cols="20" name="description" id="text-description" name="input-description"data-validation="required">
+                                                {if isset($tieringDetail['DESCRIPTION'])}{$tieringDetail['DESCRIPTION']}{/if}
+                                            </textarea>
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
@@ -103,7 +112,7 @@
                                         </div>
                                 </fieldset>
                                 <fieldset class="form-fieldset-submission" style="width: 100%;">
-                                        <a href="#" onclick="storeTiering()" class="form-button" id="btn-submit" style="margin:5px;float:left;"  {if !$billingList} disabled {/if}>
+                                        <a href="#" class="form-button" id="btn-submit" style="margin:5px;float:left;"  {if !$billingList} disabled {/if}>
                                                 <img src="skin/images/icon-store.png" class="form-button-image" alt="" />
                                                 <span class="form-button-text">Save</span>
                                         </a>
