@@ -9,14 +9,12 @@
         });
         
         $ (document)
-            .on('click', '#btn-submit', function(){
-                $('#reportGroup-form').submit();
-            })
             .on('change', '#list-user', function(){
                if($("#list-user :selected").length == 0){
                    $('#list-user option').prop('disabled', false);
                    $('#list-user').select2();
                }else if($("#list-user :selected").length == 1){
+                    $('#list-user option').prop('disabled', 'disabled');
                     $.ajax({
                          url        : 'services/billing.getUserBillingGroup.php',
                          type       : 'POST',
@@ -24,7 +22,7 @@
                          dataType   : 'JSON',
                          success    : function (data) {
                             $.each(data, function(k,v){
-                                    $('#list-user option[value="'+v.USER_ID+'"]').prop('disabled', 'disabled');
+                                    $('#list-user option[value="'+v.USER_ID+'"]').prop('disabled', false);
                             });
                             $('#list-user').select2();
                          },
@@ -59,10 +57,15 @@
             
         });
     }
+    
+    function storeReport(){
+            data = $('#reportGroup-form').serializeArray();
+            $app.module('billing').storeReportGroup(data);
+    }
 </script>
 {/literal}
 
-<form id="reportGroup-form" class="admin-tabform" action='services/billing.storeReportGroup.php' method="post">
+<form id="reportGroup-form" class="admin-tabform">
         <div class="panel">
           <div class="panel-header"><img src="skin/images/icon-history.png" class="icon-image" alt="" /><span>New Report Group</span></div>
               <div class="panel-body">
@@ -78,17 +81,17 @@
                                 <input type="hidden" name="reportGroupID" value="{if isset($reportGroupID)}{$reportGroupID}{/if}">
                                 <div>
                                     <label>Name</label>
-                                    <input type="text" name="name" value='{if isset($reportDetail['NAME'])}{$reportDetail['NAME']}{/if}' data-validation="required">
+                                    <input type="text" id="input-name" name="name" value='{if isset($reportDetail['NAME'])}{$reportDetail['NAME']}{/if}' data-validation="required">
                                 </div>
                                 <span class="ui-helper-clearfix"></span>
                                 <div>
                                     <label>Description</label>
-                                    <input type="text" name="description" value='{if isset($reportDetail['DESCRIPTION'])}{$reportDetail['DESCRIPTION']}{/if}' data-validation="required">
+                                    <textarea id="text-description" name="description" value='{if isset($reportDetail['DESCRIPTION'])}{$reportDetail['DESCRIPTION']}{/if}' data-validation="required"></textarea>
                                 </div>
                                 <span class="ui-helper-clearfix"></span>
                                 <div>
                                     <label>Users</label>
-                                    <select id="list-user" name="user[]" multiple style="height: 100%; min-width: 15%; overflow:auto; float:left;" data-validation="required">
+                                    <select id="list-user" name="user[]" multiple data-validation="required">
                                         {if isset($user)}
                                             {foreach from=$user item=item}
                                                 <option value='{$item['USER_ID']}' selected>{$item['USER_NAME']}</option>
@@ -98,7 +101,7 @@
                                 </div>
                             </fieldset>
                             <fieldset class="form-fieldset-submission" style="width: 100%;">
-                                    <a href="#" class="form-button" id="btn-submit" style="margin:5px;float:left;"  {if !$billingList} disabled {/if}>
+                                    <a href="#" class="form-button" id="btn-submit" onclick="storeReport()" style="margin:5px;float:left;"  {if !$billingList} disabled {/if}>
                                             <img src="skin/images/icon-store.png" class="form-button-image" alt="" />
                                             <span class="form-button-text">Save</span>
                                     </a>

@@ -11,6 +11,7 @@
  * @author Fathir Wafda
  * @author Dwikky Maradhiza
  * @author Basri.Yasin
+ * @author Ayu Musfita
  */
 require_once dirname(dirname(__DIR__)).'/configs/config.php';
 require_once dirname(dirname(__DIR__)).'/classes/spout-2.5.0/src/Spout/Autoloader/autoload.php';
@@ -366,17 +367,17 @@ class ApiReport {
                         : '';
         
         $billingClause = !is_null($billingProfile)
-                            ? (!is_null($userId) ? ' AND ' : '' ). ' = BILLING_PROFILE_ID = '.$billingProfile.' '
+                            ? (!is_null($userId) ? ' AND ' : '' ). ' BILLING_PROFILE_ID = '.$billingProfile.' '
                             : '';
         return $this->query(
-                         ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID '
-                        .' FROM     '.DB_SMS_API_V2.'.USER '
-                        .  $whereClause
-                        .  $userClause
-                        .  $billingProfile
-                        .  $billingClause
-                        .' ORDER BY BILLING_PROFILE_ID'
-                    );
+                 ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID '
+                .' FROM     '.DB_SMS_API_V2.'.USER '
+                .  $whereClause
+                .  $userClause
+                .  $billingClause
+                .' ORDER BY BILLING_PROFILE_ID'
+                , is_null($userId) ?: self::QUERY_SINGLE_ROW
+            );
     }
     
     
@@ -388,21 +389,14 @@ class ApiReport {
      * @return Array
      */
     public function getUserBillingGroup($userId){
-        $result =  $this->query(
-                 ' SELECT BILLING_PROFILE_ID'
-                .' FROM     '.DB_SMS_API_V2.'.USER '
-                .' WHERE USER_ID = '.$userId.''
-            );
-        
-        foreach($result as $val){
-            $billingProfileID = $val['BILLING_PROFILE_ID'];
-             return $this->query(
-                         ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID'
-                        .' FROM     '.DB_SMS_API_V2.'.USER '
-                        .' WHERE BILLING_PROFILE_ID <> '.$billingProfileID.''
-                        .' ORDER BY USER_ID'
-                    );
-        }
+        $user = $this->getUserDetail($userId);
+        $billingProfileId = $user['BILLING_PROFILE_ID'];
+        return $this->query(
+                    ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID'
+                   .' FROM     '.DB_SMS_API_V2.'.USER '
+                   .' WHERE BILLING_PROFILE_ID = '.$billingProfileId
+                   .' ORDER BY USER_ID'
+               );
     }
 
    
@@ -559,7 +553,7 @@ class ApiReport {
      */    
     public function getTieringGroupUserList($tieringGroupId) {
         return $this->query(
-                         ' SELECT   USER_ID'
+                         ' SELECT   USER_ID, USER_NAME'
                         .' FROM     '.DB_SMS_API_V2.'.USER'
                         .' WHERE    BILLING_TIERING_GROUP_ID = '.$tieringGroupId
                     );
@@ -644,7 +638,7 @@ class ApiReport {
      */    
     public function getReportGroupUserList($reportGroupId) {
         return $this->query(
-                         ' SELECT   USER_ID'
+                         ' SELECT   USER_ID, USER_NAME'
                         .' FROM     '.DB_SMS_API_V2.'.USER'
                         .' WHERE    BILLING_REPORT_GROUP_ID = '.$reportGroupId
                     );
@@ -1649,7 +1643,7 @@ class ApiReport {
                 
                 //////////////////////////////////////////////////////////////////
 //                if($userBillingProfileId == 1) continue;
-                if($userId != 543)                    continue;
+//                if($userId != 543)                    continue;
                 //////////////////////////////////////////////////////////////////
                 
                 

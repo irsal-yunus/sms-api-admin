@@ -80,7 +80,9 @@ mod.newBillingProfile = function(billingProfileID, billingType, mode){
 mod.storeBillingProfile = function(data){
     try {
         $app.content(
-                    'billing.storeBillingProfile',  function(){
+                    'billing.storeBillingProfile', 
+                    data,
+                    function(){
         });
         
     } catch(ex) {   
@@ -104,6 +106,19 @@ mod.newTieringGroup = function(tieringID, mode){
     }
 };
 
+mod.storeTieringGroup = function(data){
+    try {
+        $app.content(
+                    'billing.storeTieringGroup', 
+                    data,
+                    function(){
+        });
+        
+    } catch(ex) {   
+        
+    }
+};
+
 mod.newReportGroup = function(reportID, mode){
     try {
         var titles = mode == 'update'? 'Update Report Group' : 'New Report Group';
@@ -117,6 +132,19 @@ mod.newReportGroup = function(reportID, mode){
         });
     } catch(ex) {
         $1.error("[mod:billing.newReport] Error.",ex);
+    }
+};
+
+mod.storeReportGroup = function(data){
+    try {
+        $app.content(
+                    'billing.storeReportGroup', 
+                    data,
+                    function(){
+        });
+        
+    } catch(ex) {   
+        
     }
 };
 
