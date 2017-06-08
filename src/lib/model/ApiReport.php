@@ -595,6 +595,10 @@ class ApiReport {
      * @return  Int
      */
     public function getTieringTraffic($userIds, $awaitingDr = false) {
+        $userIds      = is_array(current($userIds)) 
+                            ? array_column($userIds, 'USER_ID')
+                            : $userIds;
+        
         $usersClause  = is_array($userIds)
                             ? ' IN ('.implode(',', $userIds).') '
                             : ' = '.$userIds;
@@ -1579,11 +1583,12 @@ class ApiReport {
         $fReport        = new PHPExcel();
         $aReport        = new PHPExcel();
         $startRow       = 20;
-        $userList       = $this->getUserDetail($userIds);
-        $userNames      = is_array($userIds)
-                            ? array_column($this->getUserDetail($userIds), 'USER_NAME')
-                            : $this->getUserDetail($userIds)['USER_NAME'];
+        $userNames      = [];
         
+        foreach(is_array($userIds) ? $userIds : [$userIds] as $userId) {
+            $userNames[]= $this->getUserDetail($userId)['USER_NAME'];
+        }
+
         //  set Summary Header
         $this->setSummaryReportHeader($fReport, $userNames, $this->finalReportSummary);
         $this->setSummaryReportHeader($aReport, $userNames, $this->awaitingReportSummary);
@@ -1831,7 +1836,7 @@ class ApiReport {
             $prevBillingProfileId        = null;
             $excludedUser                = []; 
             $newUserLastSendDate         = [];
-            $xxx = 0;
+            
             /**
              * Start Generate user's report
              */
@@ -1847,7 +1852,13 @@ class ApiReport {
                 $getByGroup            = false;
                 $userReportGroupDates  = [];
                 
-                if(++$xxx > 10 ) continue;
+                // ================[ HARDCODE | TEST ONLY ]==============
+                // if(!in_array($userId
+                //      [
+                //          543      // yamahabdg
+                //          1013,    // GratikaSampoerna
+                //      ]) continue;
+                // ======================================================
                 
                 if(is_null($userId) || in_array($userId, $excludedUser)) continue;
                 
@@ -2064,10 +2075,20 @@ class ApiReport {
                         } while(!empty($messages) && count($messages) == REPORT_PER_BATCH_SIZE);
                     }
                     
-                    $userId = $getByGroup ? array_keys($userReportGroupDates) : $userId;
-                    $this->saveReportFile();
-                    $this->saveSummary($fileName, $userId);
-                    $this->createReportPackage($fileName);
+                    if(in_array(
+                            strtoupper($userBillingProfile['BILLING_TYPE']), 
+                            [self::BILLING_OPERATOR_BASE, self::BILLING_TIERING_BASE]
+                        )
+                    ) {
+                        $userId = $getByGroup ? array_keys($userReportGroupDates) : $userId;
+                        $this->saveReportFile();
+                        
+                        $getByGroup 
+                                ? $this->saveSummary($fileName, array_keys($userReportGroupDates))
+                                : $this->saveSummary($fileName, $userId);
+                        
+                        $this->createReportPackage($fileName);
+                    }
                 }
                 else {
                     echo "\033[1;31m".$this->year.'-'.$this->month."\tSkipped  \t".$userBillingProfileId."\t".$userBillingProfile['BILLING_TYPE']." \t".$fileName.PHP_EOL;
@@ -2151,7 +2172,7 @@ class ApiReport {
             $dir      .= '/'.self::DIR_FINAL_REPORT;
         }
         
-        return $dir.'/'.$fileName.'.zip';
+        return preg_replace('/ +/','_', $dir.'/'.$fileName.'.zip');
     }
 
     
@@ -2260,7 +2281,7 @@ class ApiReport {
     public function insertToReportGroup($name,  $description){
         return $this->exec_query(
                      ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_REPORT_GROUP VALUES'
-                    .' (NULL, "'.$name.'", "'.$description.'", now(), now()) '
+                    .' (NULL, "'.preg_replace('/ +/', '_', $name).'", "'.$description.'", now(), now()) '
                 );
     }
 
@@ -2316,7 +2337,7 @@ class ApiReport {
     public function updateReportGroup($id, $name, $description){
         return $this->exec_query(
                      ' UPDATE '.DB_BILL_PRICELIST.'.BILLING_REPORT_GROUP '
-                    .' SET NAME = "'.$name.'", DESCRIPTION = "'.$description.'", UPDATED_AT = now()'
+                    .' SET NAME = "'.preg_replace('/ +/', '_', $name).'", DESCRIPTION = "'.$description.'", UPDATED_AT = now()'
                     .' WHERE BILLING_REPORT_GROUP_ID = '.$id.''
                 );
     }
@@ -2413,6 +2434,7 @@ class ApiReport {
      */
     public function isReportExist($awaiting = false, $userId = null) {
         $fileName = $this->getReportFileName($awaiting, $userId);
+        $this->log->debug('check report file: '.$fileName);
         return !is_null($fileName)
                     ? file_exists($fileName)
                     : false;
@@ -2428,8 +2450,9 @@ class ApiReport {
      * @param   Int   $userId     User Id if want to download for specific user, or set to null for download all report
      */
     public function downloadReport($awaiting = false, $userId = null) {
+        $fileName = $this->getReportFileName($awaiting, $userId);
+        $this->log->debug('downloading '.$fileName);
         if($this->isReportExist($awaiting, $userId)) {
-            $fileName = $this->getReportFileName($awaiting, $userId);
 
             // Zip transfer 
             header('Pragma: public');
@@ -2446,6 +2469,7 @@ class ApiReport {
         }
         else {
             echo 'Report not found. it may have been deleted.';
+            $this->log->warn('Could not download report, file not found: '.$fileName);
         }
     }
 }

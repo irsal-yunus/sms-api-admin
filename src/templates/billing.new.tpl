@@ -2,7 +2,7 @@
 <script language="JavaScript">
     var rowIndex            = 1,
         rowIndexOperator    = $('#operator-table tbody tr').length,
-        rowIndexTiering     = $('#tiering-table tbody tr').length
+        rowIndexTiering     = $('#tiering-table tbody tr').length,
         dataOperator        = [];
     $( document ).ready(function(){
         loadUserDetail();
@@ -109,6 +109,7 @@
                         + '</tr>';
         $('#tiering-table tbody').append(newRow); 
         $('.scroll-container').scrollTop($('#operator-table').height());
+        rowIndexTiering++;
     }
   
     function addOperatorRow(data){
@@ -275,16 +276,16 @@
                                                                                 <th><input type='text' name ='tiering[0][price]' value='' data-validation="number"></th>
                                                                             </tr>
                                                                     {else}
-                                                                        {foreach from=$tieringSettings item=item}
+                                                                        {foreach from=$tieringSettings key=key item=item}
                                                                             <tr>
                                                                                 <th>
                                                                                     <img src='skin/images/icon-remove.png' class='form-button-image btn-tiering-remove' alt='Remove' width='13px' style='cursor:pointer;' />
                                                                                 </th>
-                                                                                <th><input type='text' name='tiering[0][from]' value='{$item['SMS_COUNT_FROM']}' data-validation="number"></th>
-                                                                                <th><input type='text' name ='tiering[0][to]' value='{$item['SMS_COUNT_UP_TO']}' data-validation="required"></th>
+                                                                                <th><input type='text' name='tiering[{$key}][from]' value='{$item['SMS_COUNT_FROM']}' data-validation="number"></th>
+                                                                                <th><input type='text' name ='tiering[{$key}][to]' value='{$item['SMS_COUNT_UP_TO']}' data-validation="required"></th>
                                                                                 <th width='5%'><input type='checkbox' name='isMax' style='margin-top: 0.5 em;' {if $item['SMS_COUNT_UP_TO'] == 'MAX'} checked {/if}></th>
                                                                                 <th width='5%' style="padding-top: 6px;">Max</th>
-                                                                                <th><input type='text' name ='tiering[0][price]' value='{$item['PER_SMS_PRICE']}' data-validation="number"></th>
+                                                                                <th><input type='text' name ='tiering[{$key}][price]' value='{$item['PER_SMS_PRICE']}' data-validation="number"></th>
                                                                             </tr>
                                                                         {/foreach}
                                                                     {/if}
