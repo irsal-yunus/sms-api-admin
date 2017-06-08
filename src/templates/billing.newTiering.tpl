@@ -95,9 +95,7 @@
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
                                             <label>Description</label>
-                                            <textarea rows="3" cols="20" name="description" id="text-description" name="input-description"data-validation="required">
-                                                {if isset($tieringDetail['DESCRIPTION'])}{$tieringDetail['DESCRIPTION']}{/if}
-                                            </textarea>
+                                            <textarea rows="3" cols="20" name="description" id="text-description" name="input-description"data-validation="required">{if isset($tieringDetail['DESCRIPTION'])}{$tieringDetail['DESCRIPTION']}{/if}</textarea>
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
                                         <div>

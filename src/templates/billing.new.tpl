@@ -19,12 +19,6 @@
             showSettingContainer(typeValue);
         }
         $(document)        
-            .on('click','#add-tiering-field',function(e){
-                addTieringRow();
-            })
-            .on('click','#add-operator-field',function(e){
-                addOperatorRow();
-            })
             .on('change','#select-type',function(e){
                 selectedType = this.value;
                 rowIndex = 1;
@@ -56,6 +50,14 @@
                            .find('input[id="tiering_upto"]')
                            .val('');
                 }
+            });
+            
+            $('#add-tiering-field').click(function(){
+                addTieringRow();
+            });
+            
+            $('#add-operator-field').click(function(){
+                addOperatorRow();
             });
             
             var operatorValue = $('#operator-table tbody').data('operator') || [];
@@ -200,9 +202,7 @@
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
                                             <label>Description</label>
-                                            <textarea rows="3" cols="20" id="text-description" name="description" data-validation="required">
-                                                {if isset($description['DESCRIPTION'])}{$description['DESCRIPTION']}{/if}
-                                            </textarea>
+                                            <textarea id="text-description" name="description" data-validation="required">{if isset($description['DESCRIPTION'])}{$description['DESCRIPTION']}{/if}</textarea>
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
                                         <div>

@@ -92,9 +92,7 @@
                                 <span class="ui-helper-clearfix"></span>
                                 <div>
                                     <label>Description</label>
-                                    <textarea rows="1" cols="20" id="text-description" name="description" data-validation="required">
-                                        {if isset($reportDetail['DESCRIPTION'])}{$reportDetail['DESCRIPTION']}{/if}
-                                    </textarea>
+                                    <textarea rows="1" cols="20" id="text-description" name="description" data-validation="required">{if isset($reportDetail['DESCRIPTION'])}{$reportDetail['DESCRIPTION']}{/if}</textarea>
                                 </div>
                                 <span class="ui-helper-clearfix"></span>
                                 <div>
