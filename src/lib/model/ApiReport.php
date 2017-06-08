@@ -101,7 +101,7 @@ class ApiReport {
     
 
     const   DETAILED_REPORT_HEADER          = ['MESSAGE ID', 'DESTINATION', 'MESSAGE CONTENT', 'ERROR CODE', 'DESCRIPTION CODE', 'SEND DATETIME', 'SENDER',    'USER ID', 'MESSAGE COUNT', 'OPERATOR', 'PRICE'],
-            DETAILED_MESSAGE_FORMAT         = ['MESSAGE_ID', 'DESTINATION', 'MESSAGE_CONTENT', 'ERROR_CODE', 'DESCRIPTION_CODE', 'SEND_DATETIME', 'SENDER_ID', 'USER_ID', 'MESSAGE_COUNT', 'OPERATOR', 'PRICE'];
+            DETAILED_MESSAGE_FORMAT         = ['MESSAGE_ID', 'DESTINATION', 'MESSAGE_CONTENT', 'ERROR_CODE', 'DESCRIPTION_CODE', 'SEND_DATETIME', 'SENDER', 'USER_ID', 'MESSAGE_COUNT', 'OPERATOR', 'PRICE'];
     
     
     
@@ -408,7 +408,7 @@ class ApiReport {
         $billingProfileId = $user['BILLING_PROFILE_ID'];
         return $this->query(
                     ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID'
-                   .' FROM     '.DB_SMS_API_V2.'.USER '
+                   .' FROfM     '.DB_SMS_API_V2.'.USER '
                    .' WHERE BILLING_PROFILE_ID = '.$billingProfileId
                    .' ORDER BY USER_ID'
                );
@@ -736,7 +736,7 @@ class ApiReport {
                             : ' = '.$userId;
         
         $messages = $this->query(
-                        ' SELECT    MESSAGE_ID, DESTINATION,  MESSAGE_CONTENT, MESSAGE_STATUS, \'\' AS DESCRIPTION_CODE, SEND_DATETIME, SENDER_ID, USER_ID'
+                        ' SELECT    MESSAGE_ID, DESTINATION,  MESSAGE_CONTENT, MESSAGE_STATUS, \'\' AS DESCRIPTION_CODE, SEND_DATETIME, SENDER, USER_ID'
                        .' FROM      '.DB_SMS_API_V2.'.USER_MESSAGE_STATUS'
                        .' WHERE     USER_ID_NUMBER '.$userIdClause
                        .'           AND SEND_DATETIME >  \''.$startDateTime.'\' '
@@ -773,7 +773,7 @@ class ApiReport {
         }
         
         $messages = $this->query(
-                        ' SELECT    MESSAGE_ID, DESTINATION,  MESSAGE_CONTENT, MESSAGE_STATUS, \'\' AS DESCRIPTION_CODE, SEND_DATETIME, SENDER_ID, USER_ID'
+                        ' SELECT    MESSAGE_ID, DESTINATION,  MESSAGE_CONTENT, MESSAGE_STATUS, \'\' AS DESCRIPTION_CODE, SEND_DATETIME, SENDER, USER_ID'
                        .' FROM      '.DB_SMS_API_V2.'.USER_MESSAGE_STATUS'
                        .' WHERE     ('.implode(' OR ', $userClause).')'
                        .' LIMIT     '.$startIndex.','.$dataSize
@@ -1296,7 +1296,7 @@ class ApiReport {
         foreach(is_array(current($messages)) ? $messages : [$messages] as $message) {
             if(empty($message)) continue;
             
-            $senderId = $message['SENDER_ID'];
+            $senderId = $message['SENDER'];
             $sendDate = date('Y-m-d', strtotime($message['SEND_DATETIME']));
             $userName = $message['USER_ID'];
             $status   = $message['DESCRIPTION_CODE'];
