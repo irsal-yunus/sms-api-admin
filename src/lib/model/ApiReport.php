@@ -3,7 +3,9 @@
  * @author Basri.Yasin  
  * @author Ayu Musfita  
  * 
- * #18802
+ * Copyright(c) 2017 1rstWAP. All rights reserved.
+ * -----------------------------------------------
+ * #18802   2017-05-08  Basri.Y     [SMS Billing Report] Improve Performance & Tiering
  * #19517
  */
 
@@ -268,10 +270,13 @@ class ApiReport {
         $executionTime        = ($this->getMicroTime() - $startTime).' sec';
         $query                = preg_replace('/ +/', ' ', $queryCommand);        
         $currentMemoryUsed    = (int)(memory_get_usage(1) /1024/1024);
+        $executedAt           = date('Y-m-d H:i:s');
+        
         $this->queryHistory[] = compact('query', 'totalRecords', 'executionTime','currentMemoryUsed');
-        $f = fopen('new_billing_peformance.history', file_exists('new_billing_peformance.history') ? 'a' : 'w');
-        if ($f) {
-            fwrite($f, json_encode(compact('query', 'totalRecords', 'executionTime', 'currentMemoryUsed'),192).PHP_EOL.'---------------'.PHP_EOL);
+        $fileName = BILLING_QUERY_HISTORY_DIR.'new_billing_peformance.history';
+        
+        if ($f = fopen($fileName, file_exists($fileName) ? 'a' : 'w')) {
+            fwrite($f, json_encode(compact('query', 'totalRecords', 'executionTime', 'currentMemoryUsed','executedAt'),192).PHP_EOL.'---------------'.PHP_EOL);
             fclose($f);
         }
     }
@@ -1746,7 +1751,7 @@ class ApiReport {
         $finalReport     = $dirFinal.       '/'.$fileName.$this->periodSuffix.'*.xlsx';
         $awaitingReport  = $dirAwaiting.    '/'.$fileName.$this->periodSuffix.'*.xlsx';
         
-        $fileName        = $fileName == '*' ? self::ALL_REPORT_PACKAGE.$this->periodSuffix : $fileName;
+        $fileName        = $fileName == '*' ? self::ALL_REPORT_PACKAGE : $fileName;
         $finalPackage    = $dirFinal.       '/'.$fileName.$this->periodSuffix.'.zip';
         $awaitingPackage = $dirAwaiting.    '/'.$fileName.$this->periodSuffix.self::SUFFIX_AWAITING_REPORT.'.zip';
         
@@ -1816,6 +1821,8 @@ class ApiReport {
      *      BILLING_REPORT_May_2017_Include_Awaiting_Dr.zip
      */
     public function generate() {
+        echo "\033[1;32m-------------------[ START GENERATE REPORT ".$this->periodSuffix.']-------------------'.PHP_EOL;
+        echo "\033[1;97mPERIOD\tSTATUS\tPROFILE ID\tTYPE\t\tREPORT NAME".PHP_EOL;
         $scriptRunningTime = $this->getMicroTime();
         if($this->lastFinalStatusDate !== false) {
 
@@ -1824,7 +1831,7 @@ class ApiReport {
             $prevBillingProfileId        = null;
             $excludedUser                = []; 
             $newUserLastSendDate         = [];
-            
+            $xxx = 0;
             /**
              * Start Generate user's report
              */
@@ -1839,7 +1846,9 @@ class ApiReport {
                 $userReportGroup       = null;
                 $getByGroup            = false;
                 $userReportGroupDates  = [];
-
+                
+                if(++$xxx > 10 ) continue;
+                
                 if(is_null($userId) || in_array($userId, $excludedUser)) continue;
                 
                 $this->log->info('Validate Billing Profile for User "'.$userName.'"');
@@ -1914,7 +1923,7 @@ class ApiReport {
 
                 
                 if($hasNewMessage) {
-                    echo "\033[1;32m{$this->year}-{$this->month}\tGenerate\t$userBillingProfileId\t".$userBillingProfile['BILLING_TYPE']." \t$fileName".PHP_EOL;
+                    echo "\033[1;32m".$this->year.'-'.$this->month."\tGenerate\t".$userBillingProfileId."\t".$userBillingProfile['BILLING_TYPE']." \t".$fileName.PHP_EOL;
                     
                     if(strtoupper($userBillingProfile['BILLING_TYPE']) == self::BILLING_OPERATOR_BASE) {
                         $operatorPrice  = &$userBillingProfile['PRICING'];
@@ -2061,7 +2070,7 @@ class ApiReport {
                     $this->createReportPackage($fileName);
                 }
                 else {
-                    echo "\033[1;31m{$this->year}-{$this->month}\tSkipped  \t$userBillingProfileId\t".$userBillingProfile['BILLING_TYPE']." \t$fileName".PHP_EOL;
+                    echo "\033[1;31m".$this->year.'-'.$this->month."\tSkipped  \t".$userBillingProfileId."\t".$userBillingProfile['BILLING_TYPE']." \t".$fileName.PHP_EOL;
                     $this->log->info('Skip generate report for '.$fileName.', No new messages found.');
                 }
                 
@@ -2088,8 +2097,7 @@ class ApiReport {
             $totalQueryTime    = number_format(array_sum(array_column($this->queryHistory,'executionTime')), 2).' sec';
             $averageExecTime   = number_format(array_sum(array_column($this->queryHistory,'executionTime'))      / count($this->queryHistory), 2).' sec';
 
-            $this->log
-                ->info("Peformance:"
+            $this->log->info("Peformance:"
                         ."\t TotalQueryRecords: "   .$totalQueryRecord
                         ."\t AverageQueryRecords: " .$averageRecords
                         ."\t TotalQueryTime: "      .$totalQueryTime
@@ -2116,7 +2124,7 @@ class ApiReport {
      */
     private function getReportFileName($awaiting = false, $userId = null) {
         $dir      = $this->reportDir;
-        $fileName = self::ALL_REPORT_PACKAGE.$this->periodSuffix;
+        $fileName = self::ALL_REPORT_PACKAGE;
         
         if(!is_null($userId) && is_numeric((int)$userId)) {
             $user = $this->getUserDetail($userId);
@@ -2132,6 +2140,8 @@ class ApiReport {
                 $fileName = $user['USER_NAME'];
             }
         }
+        
+        $fileName     .= $this->periodSuffix;
         
         if($awaiting) {
             $dir      .= '/'.self::DIR_AWAITING_REPORT;

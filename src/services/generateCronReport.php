@@ -2,7 +2,11 @@
 <?php
 
 /**
- * @author Basri Yasin 
+ * @author Basri.Y      
+ * 
+ * Copyright(c) 2017 1rstWAP. All rights reserved.
+ * -----------------------------------------------
+ * #18802   2017-06-07  Basri.Y     [SMS Billing Report] Improve Performance & Tiering
  */
 
 require_once dirname(__DIR__).'/init.d/init.php';

@@ -22,6 +22,7 @@ define('SMSAPIADMIN_UTILS_TMP_DIR',             SMSAPIADMIN_UTILS_DIR.'tmp/');
 define('SMSAPIADMIN_TEMPLATE_DIR',              SMSAPIADMIN_BASE_DIR.'templates/');
 define('SMSAPIADMIN_TEMPLATE_COMPILE_DIR',      SMSAPIADMIN_BASE_DIR.'templates_compiled/');
 define('SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT',     dirname(__DIR__).'/archive/reports/');
+define('BILLING_QUERY_HISTORY_DIR',             dirname(__DIR__).'/archive/reports/history/');
 
 
 /**
