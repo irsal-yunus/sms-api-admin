@@ -54,7 +54,7 @@ try {
                 $apiReport->updateUser($updateUserClause);
              }
         }
-         header("location: ./billing.view.php");
+         header("location: ./billing.view.php?tab=tiering");
 } catch (Exception $e) {
     
 }
