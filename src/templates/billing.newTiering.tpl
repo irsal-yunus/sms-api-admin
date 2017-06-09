@@ -15,6 +15,7 @@
                    $('#list-user').select2();
                }else if($("#list-user :selected").length == 1){
                     $('#list-user option').prop('disabled', 'disabled');
+                    $('#list-user option').attr('title', 'This user is not on the same billing profile as current selected user');
                     $.ajax({
                          url        : 'services/billing.getUserBillingGroup.php',
                          type       : 'POST',
@@ -22,6 +23,7 @@
                          dataType   : 'JSON',
                          success    : function (data) {
                             $.each(data, function(k,v){
+                                    $('#list-user option[value="'+v.USER_ID+'"]').removeAttr('title');
                                     $('#list-user option[value="'+v.USER_ID+'"]').prop('disabled', false);
                             });
                             $('#list-user').select2();
@@ -95,7 +97,7 @@
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
                                             <label>Description</label>
-                                            <textarea rows="3" cols="20" name="description" id="text-description" name="input-description"data-validation="required">{if isset($tieringDetail['DESCRIPTION'])}{$tieringDetail['DESCRIPTION']}{/if}</textarea>
+                                            <textarea rows="3" cols="20" name="description" id="text-description" name="input-description">{if isset($tieringDetail['DESCRIPTION'])}{$tieringDetail['DESCRIPTION']}{/if}</textarea>
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
@@ -107,6 +109,8 @@
                                                         {/foreach}
                                                     {/if}
                                                 </select>
+                                                <span style="font-size:10px;color:red;margin-left:110px;display:block;">* Select users which accumulate the same tiering</span>
+                                                <span style="font-size:10px;color:red;margin-left:110px;display:block;">** You can only select users whose implement the same billing profile</span>
                                         </div>
                                 </fieldset>
                                 <fieldset class="form-fieldset-submission" style="width: 100%;">

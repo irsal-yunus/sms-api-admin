@@ -115,6 +115,7 @@
     function addOperatorRow(data){
         data = data || {OP_ID : "DEFAULT", PER_SMS_PRICE : ""};
         rowId       = rowIndexOperator;
+        note        = rowId == 0 ? ' * This price will be implemented if destination prefix doesn\'t found on listed operator' : '';
         newRow      =   '<tr>'
                             + '<th>'
                                 + '<img src="skin/images/icon-remove.png" class="form-button-image btn-operator-remove" alt="Remove" width="13px" style="cursor:pointer;"/>'
@@ -123,6 +124,7 @@
                             +   '<select class="operator_list" name="operatorID['+rowId+'][operator]"  data-validation="required" data-initvalue="'+data.OP_ID+'"></select>'
                             + '</th>'
                             + '<th><input type="text" name="operatorID['+rowId+'][price]" data-validation="number" value="'+data.PER_SMS_PRICE+'"><th>'
+                            + '<td> <span style="font-size: 10px; color:red;">'+note+'</span></td>'
                         + '</tr>';
         $('#operator-table tbody').append(newRow); 
         $('select[name="operatorID['+rowId+'][operator]"]').select2({
@@ -203,7 +205,7 @@
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
                                             <label>Description</label>
-                                            <textarea id="text-description" name="description" data-validation="required">{if isset($description['DESCRIPTION'])}{$description['DESCRIPTION']}{/if}</textarea>
+                                            <textarea id="text-description" name="description">{if isset($description['DESCRIPTION'])}{$description['DESCRIPTION']}{/if}</textarea>
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
@@ -219,15 +221,16 @@
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
                                             <label>Users</label>
-                                            <select id="list-user" name ="user[]" multiple="multiple">
-                                                <div style="max-height: 100px;overflow-y:scroll;overflow-x:hidden;">
-                                                {if isset($user)}
-                                                    {foreach from=$user item=item}
-                                                        <option value='{$item['USER_ID']}' selected>{$item['USER_NAME']}</option>
-                                                    {/foreach}
-                                                {/if}
-                                                </div>
-                                            </select>
+                                                <select id="list-user" name ="user[]" multiple="multiple">
+                                                    <div style="max-height: 100px;overflow-y:scroll;overflow-x:hidden;">
+                                                    {if isset($user)}
+                                                        {foreach from=$user item=item}
+                                                            <option value='{$item['USER_ID']}' selected>{$item['USER_NAME']}</option>
+                                                        {/foreach}
+                                                    {/if}
+                                                    </div>
+                                                </select>
+                                                <span style="font-size:10px;color:red;margin-left:110px;display:block;">* Select users whose implement this billing profile</span>
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
                                         <label>Settings</label>
