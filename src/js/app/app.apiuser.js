@@ -38,6 +38,7 @@ mod.createUser = function(clientID){
 			regData = null;
 		}
 		var title = 'User Registration';
+                console.log('masuk123');
 		$app.form.openAutoDialog(('apiuser.new'), regData, title, {
 			width: '40em',
 			height: 316
@@ -172,8 +173,8 @@ mod.showDownloadAllReportMesasge = function(){
                         false, 
                         'Download Billing Report', 
                         {
-                            height  : 175,
-                            width   : 260
+                            height  : 250,
+                            width   : 280
                         }, 
                         function() {}
                     );

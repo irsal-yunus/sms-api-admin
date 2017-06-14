@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.0.5, created on 2016-09-22 07:13:41
+<?php /* Smarty version Smarty-3.0.5, created on 2017-06-06 11:26:25
          compiled from "/var/www/html/sms-api-admin/src/templates/index.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:206669651257da0d214917f3-27824161%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:462269727593691614e5930-39577846%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '9474ea0e2e99df1dec3fbfcd53b5696ef9fb7a25' => 
     array (
       0 => '/var/www/html/sms-api-admin/src/templates/index.tpl',
-      1 => 1474528347,
+      1 => 1496663185,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '206669651257da0d214917f3-27824161',
+  'nocache_hash' => '462269727593691614e5930-39577846',
   'function' => 
   array (
   ),
@@ -27,18 +27,22 @@ Copyright(c) 2010 1rstWAP. All rights reserved.
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title><?php echo $_smarty_tpl->getVariable('siteTitle')->value;?>
 </title>
+                <link href="js/select2/css/select2.css" type="text/css" rel="stylesheet" />
 		<link href="skin/style.css" type="text/css" rel="stylesheet" />
-        <link href="js/datatable/jquery.dataTables.css" type="text/css" rel="stylesheet"/>
+                <link href="js/datatable/jquery.dataTables.css" type="text/css" rel="stylesheet"/>
 		<link href="skin/jquery.ui/jquery-ui.css" type="text/css" rel="stylesheet" />
-        <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script> 
+                <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script> 
 		<script type="text/javascript" src="js/ui/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="js/ui/i18n/jquery.ui.datepicker-en-GB.min.js"></script>
 		<script type="text/javascript" src="js/firstwap/firstwap.js"></script>
 		<script type="text/javascript" src="js/ui.hourglass/jquery.ui.hourglass.min.js"></script>
 		<script type="text/javascript" src="js/app/app.js"></script>
 		<script type="text/javascript" src="skin/skin.js"></script>
+                <script type="text/javascript" src="js/select2/js/select2.min.js"></script>
+                <script type="text/javascript" src="js/jquery.form-validator.min.js"></script>
+		<script type="text/javascript" src="js/jquery.fileDownload.js"></script>
         <script type="text/javascript" src="js/datatable/jquery.dataTables.min.js"></script>
-        
+            
 		<script type="text/javascript">
 		//<![CDATA[
                 $(document).ready(function() {
@@ -52,7 +56,7 @@ Copyright(c) 2010 1rstWAP. All rights reserved.
 		});
 		//]]>
 		</script>
-        
+            
     </head>
     <body>
 		<div id="container">

@@ -154,24 +154,14 @@ $app.ready(function ($app) {
                                 
                                 var loading = $('.loader-container'),
                                     url = serviceName + '?' + $form.serialize(),                                
-                                    checkUrl = url + "&check=TRUE";
+                                    checkUrl = url + "&check";
                                     
                                 loading.show();
-                                $.post(checkUrl, function(response){
-//                                    if($.trim(response) !== "File Doesn't Exist"){
+                                $.get(checkUrl, function(response){
                                     if($.trim(response) === "File Doesn't Exist"){
-//                                        console.log(response);
-//                                        console.log('t  '+response.responseTest);
                                         loading.remove();
                                         alert(response);
                                     } else {
-//                                        window.
-//                                        var newWin=window.open(url,'','width=100,height=100');
-//                                        newWin.document.write('<script>alert(top.location.href);</script>');
-//                                        window.open(url, '_blank');
-//                                        $.fileDownload(url)
-//                                            .done(function () { })
-//                                            .fail(function () { loading.remove(); alert("There was a problem generating your report, please try again.")});
                                         top.location.href = url;
                                         loading.remove();
                                     }
@@ -194,7 +184,39 @@ $app.ready(function ($app) {
             }
         };
 
-
+        $app.form.openConfirmationDialog = function (serviceName,data, serviceArgs, dialogOptions) {
+            try {
+                if (dialogForm.dialog('isOpen'))
+                    throw 'Must close current dialogue before opening new one';
+                var options = $.extend(dialogDefaultOptions, dialogOptions, {
+                    'title': serviceArgs.title,
+                    'buttons': {
+                        'No': function () {
+                            $app.form.closeDialog();
+                        },
+                        'Yes': function () {
+                            try {
+                                $app.form.closeDialog();
+                                $app.content(serviceArgs.action, data);
+                            } catch (ex) {
+                                $1.error("[$app.form.openAutoDialog@save] Error.", ex);
+                            }
+                        }
+                    }});
+                dialogForm
+                        .html('')
+                        .dialog('option', options)
+                        .dialog('open');
+                $app.content(
+                        serviceName,
+                        serviceArgs,
+                        $.noop, 
+                        dialogForm);
+                return this;
+            } catch (ex) {
+                $1.error("[$app.openAutoDialog] Error.", ex);
+            }
+        };
 
         /**
          * Download All Billing Report Dialog function
