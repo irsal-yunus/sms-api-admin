@@ -1527,8 +1527,8 @@ class ApiReport {
                     ->setCellValue($col['d']   . $iterator, $traffic['d'])
                     ->setCellValue($col['udC'] . $iterator, $traffic['udC'])
                     ->setCellValue($col['udUc']. $iterator, $traffic['udUc'])
-                    ->setCellValue($col['ts']  . $iterator, $traffic['tsC'])
-                    ->setCellValue($col['tsC'] . $iterator, $traffic['ts'])
+                    ->setCellValue($col['ts']  . $iterator, $traffic['ts'])
+                    ->setCellValue($col['tsC'] . $iterator, $traffic['tsC'])
                     ->setCellValue($col['tp']  . $iterator, $traffic['tp']);
             }
             
