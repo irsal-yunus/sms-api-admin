@@ -142,7 +142,7 @@
                 type: 'POST',
                 dataType: 'JSON',
                 success: function (data) {
-                    html = '';
+                    var html = '';
                     
                     $.each(data, function(k,v){
                         dataOperator.push({id:v.OP_ID,text:v.OP_ID});
@@ -160,9 +160,9 @@
             type: 'POST',
             dataType: 'JSON',
             success: function (data) {
-                html        = '';
-                defaultData = [];
-                $('#selected-user option').each(
+                var html        = '';
+                var defaultData = [];
+                $('#list-user option').each(
                        function(index,el){
                            defaultData.push($(this).attr('value'));
                         }

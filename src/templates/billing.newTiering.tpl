@@ -58,7 +58,7 @@
             success: function (data) {
                 html        = '';
                 defaultData = [];
-                $('#selected-user option').each(
+                $('#list-user option').each(
                        function(index,el){
                            defaultData.push($(this).attr('value'));
                         }
