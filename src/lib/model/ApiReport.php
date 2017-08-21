@@ -499,7 +499,7 @@ class ApiReport {
                         : '' ;
         
         return $this->query(
-                        ' SELECT   OPERATOR_UID, OP_COUNTRY_CODE, OP_ID '
+                        ' SELECT   OP_COUNTRY_CODE, OP_ID '
                        .' FROM     '.DB_First_Intermedia.'.OPERATOR '
                        .  $opClause
                    );
@@ -735,14 +735,14 @@ class ApiReport {
                             ? ' IN ('.implode(',', $userId).')'
                             : ' = '.$userId;
         
-        $messages = $this->query(
-                        ' SELECT    MESSAGE_ID, DESTINATION,  MESSAGE_CONTENT, MESSAGE_STATUS, \'\' AS DESCRIPTION_CODE, SEND_DATETIME, SENDER, USER_ID'
-                       .' FROM      '.DB_SMS_API_V2.'.USER_MESSAGE_STATUS'
-                       .' WHERE     USER_ID_NUMBER '.$userIdClause
-                       .'           AND SEND_DATETIME >  \''.$startDateTime.'\' '
-                       .'           AND SEND_DATETIME <= \''.$endDateTime  .'\' '
-                       .' LIMIT     '.$startIndex.','.$dataSize
-                    );
+        $message  =  ' SELECT    MESSAGE_ID, DESTINATION,  MESSAGE_CONTENT, MESSAGE_STATUS, \'\' AS DESCRIPTION_CODE, SEND_DATETIME, SENDER, USER_ID'
+        .' FROM      '.DB_SMS_API_V2.'.USER_MESSAGE_STATUS'
+        .' WHERE     USER_ID_NUMBER '.$userIdClause
+        .'           AND SEND_DATETIME >  \''.$startDateTime.'\' '
+        .'           AND SEND_DATETIME <= \''.$endDateTime  .'\' '
+        .' LIMIT     '.$startIndex.','.$dataSize;
+        $messages = $this->query($message);
+        $this->log->debug("result ".$message);
         $this->getMessageAdditionalColumn($messages);
 
         return $messages;
@@ -778,6 +778,7 @@ class ApiReport {
                        .' WHERE     ('.implode(' OR ', $userClause).')'
                        .' LIMIT     '.$startIndex.','.$dataSize
                     );
+        $this->log->info('query getGroupMessageStatus '.json_encode($userClause));
         $this->getMessageAdditionalColumn($messages);
         
         return $messages;
@@ -1880,15 +1881,16 @@ class ApiReport {
                     continue;
                 }
                 
+                $this->log->debug('get user billing information');
+                $userBillingProfile    = $this->loadBillingProfileCache($userBillingProfileId);
+                
                 $this->log->debug('check user billing detail');
-                if(is_null($userBillingProfileId)) {
+                if(is_null($userBillingProfile)) {
                     $this->log->warn('User '.$userName.' was assigned to Billing Profile '.$userBillingProfileId.' but not found on any detail on '.DB_BILL_PRICELIST.'.BILLING_PROFILE');
                     $this->log->info('Skip generate report for user '.$userName);
                     continue;
                 }
                 
-                $this->log->debug('get user billing information');
-                $userBillingProfile    = $this->loadBillingProfileCache($userBillingProfileId);
                 /* =======================================
                  *  End Of Get User billing information
                  * ======================================= */
@@ -1928,11 +1930,10 @@ class ApiReport {
                 $this->log->debug('Checking new message for user '.$userName);
                 $hasNewMessage = !empty(
                                     $getByGroup
-                                    ? $this->getGroupMessageStatus($userReportGroupDates, $this->lastFinalStatusDate, 1, 1)
-                                    : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, 1, 1)
+                                    ? $this->getGroupMessageStatus($userReportGroupDates, $this->lastFinalStatusDate, 1, 0)
+                                    : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, 1, 0)
                                 );
-
-                
+               
                 if($hasNewMessage) {
                     echo "\033[1;32m".$this->year.'-'.$this->month."\tGenerate\t".$userBillingProfileId."\t".$userBillingProfile['BILLING_TYPE']." \t".$fileName.PHP_EOL;
                     
@@ -1950,7 +1951,7 @@ class ApiReport {
                             $messages = $getByGroup
                                             ? $this->getGroupMessageStatus($userReportGroupDates,      $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter)
                                             : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter);
-                            
+                           
                             $this->assignMessagePrice(self::BILLING_OPERATOR_BASE, $messages, $operatorPrice, $operatorPrefix);
                             $this->insertIntoReportFile($messages);
                             $this->getMessageSummary($messages);
@@ -2209,8 +2210,9 @@ class ApiReport {
      */
     public function insertToOperator($billingProfileID, $operatorID, $price){
         return $this->exec_query(
-                 ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE_OPERATOR VALUES '
-                .' (NULL, '.$billingProfileID.', "'.$operatorID.'", '.$price.') '
+                 ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE_OPERATOR '
+                .' (BILLING_PROFILE_OPERATOR_ID, BILLING_PROFILE_ID, OP_ID, PER_SMS_PRICE) '
+                .' VALUES (NULL, '.$billingProfileID.', "'.$operatorID.'", '.$price.') '
             );
     }
 
@@ -2228,8 +2230,9 @@ class ApiReport {
      */
     public function insertToTiering($billingProfileID, $smsCountFrom, $smsCountUpTo, $price){
         return $this->exec_query(
-                 ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE_TIERING VALUES '
-                .' (NULL, '.$billingProfileID.', "'.$smsCountFrom.'", "'.$smsCountUpTo.'", '.$price.') '
+                 ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE_TIERING '
+                .' (BILLING_PROFILE_TIERING_ID, BILLING_PROFILE_ID, SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE) '
+                .' VALUES (NULL, '.$billingProfileID.', "'.$smsCountFrom.'", "'.$smsCountUpTo.'", '.$price.') '
             );
     }
 
@@ -2246,8 +2249,9 @@ class ApiReport {
      */
     public function insertToBillingProfile($name, $billingType, $description){
         return $this->exec_query(
-                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE VALUES '
-                    .' (NULL, "'.$name.'", "'.$billingType.'", "'.$description.'", now(), now()) '
+                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE '
+                    .' (BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT) '
+                    .' VALUES (NULL, "'.$name.'", "'.$billingType.'", "'.$description.'", now(), now()) '
                 );
     }
 
@@ -2263,8 +2267,9 @@ class ApiReport {
      */
     public function insertToTieringGroup($name,  $description){
         return $this->exec_query(
-                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_TIERING_GROUP VALUES'
-                    .' (NULL, "'.$name.'", "'.$description.'", now(), now()) '
+                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_TIERING_GROUP '
+                    .' (BILLING_TIERING_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT) '
+                    .' VALUES (NULL, "'.$name.'", "'.$description.'", now(), now()) '
                 );
     }
 
@@ -2280,8 +2285,9 @@ class ApiReport {
      */
     public function insertToReportGroup($name,  $description){
         return $this->exec_query(
-                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_REPORT_GROUP VALUES'
-                    .' (NULL, "'.preg_replace('/ +/', '_', $name).'", "'.$description.'", now(), now()) '
+                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_REPORT_GROUP '
+                    .' (BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT) '
+                    .' VALUES (NULL, "'.preg_replace('/ +/', '_', $name).'", "'.$description.'", now(), now()) '
                 );
     }
 

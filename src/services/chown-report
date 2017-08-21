@@ -1,0 +1,24 @@
+#!/bin/bash
+#                                    #
+#                                    #
+##### Dwiyan Galuh W               ###  
+##### dwiyan.wijatmiko@1rstwap.com ###
+#                                    #
+
+PATH_REPORTS="/www/web/billing/sms_api_v2_admin/reports"
+CHECK=`ls -ltr $PATH_REPORTS | grep root | wc -l`
+
+if [ $CHECK -eq 0 ]
+then
+    echo "`date` tidak ada di rektori yang harus diubah menjadi apache";
+else
+    echo "`date` change directory permission"
+    chown apache:apache -R $PATH_REPORTS;
+fi
+
+
+
+
+
+
+

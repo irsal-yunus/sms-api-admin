@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+##### Pagaruyung remove log /tmp ######
+##### Dwiyan Galuh W             ######
+#
+
+DIR="/tmp"
+CEK=`ls -1 /tmp/xl* 2> /dev/null | wc -l`
+
+if [ $CEK -gt 0 ]
+then
+cd $DIR
+echo "total /tmp : `du -khs /tmp`"
+ls -ltr $DIR/xls*
+echo "`date` Hapus log /tmp"
+rm -rf $DIR/xls*
+else
+echo "`date` tidak ada log yang dihapus";
+fi

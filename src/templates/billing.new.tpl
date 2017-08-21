@@ -89,7 +89,7 @@
             
             $('#billingProfile-form').on('submit', function(e){
                 e.preventDefault();
-                data = $(this).serializeArray();
+                var data = $(this).serializeArray();
                 $app.module('billing').storeBillingProfile(data);
             });
 
@@ -143,7 +143,7 @@
                 dataType: 'JSON',
                 success: function (data) {
                     html = '';
-
+                    
                     $.each(data, function(k,v){
                         dataOperator.push({id:v.OP_ID,text:v.OP_ID});
                         html += '<option value="'+v.OP_ID+'">'+v.OP_ID+'</option>';

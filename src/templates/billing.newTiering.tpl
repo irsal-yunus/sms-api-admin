@@ -9,7 +9,7 @@
         });
         
         $ (document)
-            .on('change', '#list-user', function(){
+            .on('change', '#tieringGroup-form #list-user', function(){
                if($("#list-user :selected").length == 0){
                    $('#list-user option').prop('disabled', false);
                    $('#list-user').select2();
