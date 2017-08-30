@@ -239,6 +239,13 @@ class ApiReport {
                 $this->log->info ('Cancel generate Report.');
             }
         }
+
+        if(!file_exists(BILLING_QUERY_HISTORY_DIR)){
+            if(!@mkdir(BILLING_QUERY_HISTORY_DIR, 0777, true)){
+                $this->log->error('Could not create History directory "'.BILLING_QUERY_HISTORY_DIR.'", please check the permission.');
+                $this->log->info ('Cancel generate Report.');
+            }
+        }
     }
         
     
@@ -511,7 +518,7 @@ class ApiReport {
     /**
      * Get Operator Dial Prefix form First_Intermedia.OPERATOR_DIAL_PREFIX      <br />
      * 
-     * @return  Array   2D Array [['OP_ID', 'PREFIX', 'MIN_LENGTH', 'MAX_LENGTH']]
+     * @return  Array   2D Array [['OP_ID', 'RANGE_LOWER', 'RANGE_UPPER']]
      */
     public function getOperatorDialPrefix(Array $opId = []){
         $opClause = !empty($opId) 
@@ -519,12 +526,11 @@ class ApiReport {
                         : '' ;
         return $this->query(
                          ' SELECT   OP_ID,'
-                        .'          SUBSTRING(OP_DIAL_RANGE_LOWER, 1, LOCATE(\'00\', OP_DIAL_RANGE_LOWER) - 1) AS PREFIX, '
-                        .'          MIN( LENGTH(OP_DIAL_RANGE_LOWER)) AS MIN_LENGTH, '
-                        .'          MAX( LENGTH(OP_DIAL_RANGE_UPPER)) AS MAX_LENGTH '
+                         .'OP_DIAL_RANGE_LOWER as RANGE_LOWER,'
+                         .'OP_DIAL_RANGE_UPPER as RANGE_UPPER '
                         .' FROM     '.DB_First_Intermedia.'.OPERATOR_DIAL_PREFIX '
                         .  $opClause
-                        .' GROUP BY PREFIX '
+                        .' ORDER BY OP_ID '
                     );
     }    
     
@@ -875,18 +881,18 @@ class ApiReport {
      * @param   String  $destination    Destination number wich will be parsing
      * @param   Array   $operators      2D Array of Operator                                <br />
      *                                  could be get from getOperatorDialPrefix()           <br />
-     *                                  [['OP_ID', 'PREFIX', 'MIN_LENGTH', 'MAX_LENGTH']]   <br />
+     *                                  [['OP_ID', 'RANGE_LOWER', 'RANGE_UPPER']]           <br />
      * @return  String                  Operator Name or self::DEFAULT_OPERATOR
      */
     private function getDestinationOperator($destination, &$operators) {
         foreach($operators as &$operator) {
             if( $operator['OP_ID'] !== self::DEFAULT_OPERATOR
-                && !empty($operator['PREFIX'])
-                && preg_match(
-                    '/(?=^'.$operator['PREFIX'].')'
-                    .'(\d{'.$operator['MIN_LENGTH'].','.$operator['MAX_LENGTH'].'})/', 
-                    $destination
-                )) {
+                && !empty($operator['RANGE_LOWER'])
+                && !empty($operator['RANGE_UPPER'])
+                && $destination >= $operator['RANGE_LOWER']
+                && $destination <= $operator['RANGE_UPPER']
+            )
+            {
                 return $operator['OP_ID'];
             }
         }
