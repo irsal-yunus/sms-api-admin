@@ -106,10 +106,10 @@ class ApiReport {
     
     
     /**
-     * Character set for GSM 7Bit
-     * for check if the sms whether Latin or Unicode encoded
+     * Regular Expression to find a character except GSM 7Bit
+     * The messages will set to latin if it only have character are defined on regex
      */
-    const   GSM_7BIT_CHARS                  = '\\\@£\$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !"#¤%&\'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà^{}[~]|€';
+    const   GSM_7BIT_CHARS                  = '~[^A-Za-z0-9 \r\n¤@£$¥èéùìòÇØøÅå\x{0394}_\x{5C}\x{03A6}\x{0393}\x{039B}\x{03A9}\x{03A0}\x{03A8}\x{03A3}\x{0398}\x{039E}ÆæßÉ!\"#$%&\'\(\)*+,\-.\/:;<=>;?¡ÄÖÑÜ§¿äöñüà^{}\[\~\]\|\x{20AC}]~u';
     
     
     /**
@@ -808,13 +808,16 @@ class ApiReport {
      */
     private function getMessageCount($message) {
         $messageLength = mb_strlen($message);
-        return $this->isGsm7bit($message, $messageLength)
-                    ? $messageLength <= self::GSM_7BIT_SINGLE_SMS
+
+        if($this->isGsm7bit($message)){
+            return  $messageLength <= self::GSM_7BIT_SINGLE_SMS
                         ? 1
-                        : ceil( $messageLength / self::GSM_7BIT_MULTIPLE_SMS )
-                    : $messageLength <= self::UNICODE_SINGLE_SMS
+                        : ceil( $messageLength / self::GSM_7BIT_MULTIPLE_SMS );
+        }else{
+            return  $messageLength <= self::UNICODE_SINGLE_SMS
                         ? 1
                         : ceil( $messageLength / self::UNICODE_MULTIPLE_SMS );
+        }
     }
     
     
@@ -853,17 +856,10 @@ class ApiReport {
      * Check if the message was Gsm_7bit or Unicode encoded
      * 
      * @param   String  $message        Message content
-     * @param   Int     $messageLength  Count of Message characters
-     * @return  String                  SMS_TYPE_UNICODE or SMS_TYPE_GSM_7BIT
+     * @return  boolean                 true for Gsm7bit and false for unicode
      */
-    private function isGsm7bit($message, $messageLength) {
-        for($i = 0; $i < $messageLength; $i++) {
-            if( strpos(self::GSM_7BIT_CHARS, $message[$i]) == false 
-                && $message[$i]!='\\' ) {
-                return self::SMS_TYPE_UNICODE;
-            }
-        }
-        return self::SMS_TYPE_GSM_7BIT;
+    private function isGsm7bit($message) {
+        return preg_match(self::GSM_7BIT_CHARS, $message) === 0;
     }
     
     
