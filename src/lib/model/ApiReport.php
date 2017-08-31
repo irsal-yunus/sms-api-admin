@@ -239,6 +239,13 @@ class ApiReport {
                 $this->log->info ('Cancel generate Report.');
             }
         }
+
+        if(!file_exists(BILLING_QUERY_HISTORY_DIR)){
+            if(!@mkdir(BILLING_QUERY_HISTORY_DIR, 0777, true)){
+                $this->log->error('Could not create History directory "'.BILLING_QUERY_HISTORY_DIR.'", please check the permission.');
+                $this->log->info ('Cancel generate Report.');
+            }
+        }
     }
         
     
@@ -511,7 +518,7 @@ class ApiReport {
     /**
      * Get Operator Dial Prefix form First_Intermedia.OPERATOR_DIAL_PREFIX      <br />
      * 
-     * @return  Array   2D Array [['OP_ID', 'PREFIX', 'MIN_LENGTH', 'MAX_LENGTH']]
+     * @return  Array   2D Array [['OP_ID', 'RANGE_LOWER', 'RANGE_UPPER']]
      */
     public function getOperatorDialPrefix(Array $opId = []){
         $opClause = !empty($opId) 
@@ -519,12 +526,11 @@ class ApiReport {
                         : '' ;
         return $this->query(
                          ' SELECT   OP_ID,'
-                        .'          SUBSTRING(OP_DIAL_RANGE_LOWER, 1, LOCATE(\'00\', OP_DIAL_RANGE_LOWER) - 1) AS PREFIX, '
-                        .'          MIN( LENGTH(OP_DIAL_RANGE_LOWER)) AS MIN_LENGTH, '
-                        .'          MAX( LENGTH(OP_DIAL_RANGE_UPPER)) AS MAX_LENGTH '
+                         .'OP_DIAL_RANGE_LOWER as RANGE_LOWER,'
+                         .'OP_DIAL_RANGE_UPPER as RANGE_UPPER '
                         .' FROM     '.DB_First_Intermedia.'.OPERATOR_DIAL_PREFIX '
                         .  $opClause
-                        .' GROUP BY PREFIX '
+                        .' ORDER BY OP_ID '
                     );
     }    
     
@@ -871,18 +877,18 @@ class ApiReport {
      * @param   String  $destination    Destination number wich will be parsing
      * @param   Array   $operators      2D Array of Operator                                <br />
      *                                  could be get from getOperatorDialPrefix()           <br />
-     *                                  [['OP_ID', 'PREFIX', 'MIN_LENGTH', 'MAX_LENGTH']]   <br />
+     *                                  [['OP_ID', 'RANGE_LOWER', 'RANGE_UPPER']]           <br />
      * @return  String                  Operator Name or self::DEFAULT_OPERATOR
      */
     private function getDestinationOperator($destination, &$operators) {
         foreach($operators as &$operator) {
             if( $operator['OP_ID'] !== self::DEFAULT_OPERATOR
-                && !empty($operator['PREFIX'])
-                && preg_match(
-                    '/(?=^'.$operator['PREFIX'].')'
-                    .'(\d{'.$operator['MIN_LENGTH'].','.$operator['MAX_LENGTH'].'})/', 
-                    $destination
-                )) {
+                && !empty($operator['RANGE_LOWER'])
+                && !empty($operator['RANGE_UPPER'])
+                && $destination >= $operator['RANGE_LOWER']
+                && $destination <= $operator['RANGE_UPPER']
+            )
+            {
                 return $operator['OP_ID'];
             }
         }
@@ -950,11 +956,11 @@ class ApiReport {
      *                              ]]
      * @param   Array   $rule       2D array of Pricing  [['OP_ID', 'PER_SMS_PRICE']]
      * @param   Array   $operator   2D Array of Billing Rule                                    <br />
-     *                              [['OP_ID', 'PREFIX', 'MIN_LENGTH', 'MAX_LENGTH']]
+     *                              [['OP_ID', 'RANGE_LOWER', 'RANGE_UPPER']]
      */
     private function assignOperatorPrice(&$messages, &$rules, &$operators) {
         $chargedStatus = [self::SMS_STATUS_DELIVERED, self::SMS_STATUS_UNDELIVERED_CHARGED];
-        $price         =  current($rules)['PER_SMS_PRICE'];
+
         foreach($messages as &$message) {
 
             $message['OPERATOR'] = $this->getDestinationOperator($message['DESTINATION'], $operators);
@@ -963,15 +969,15 @@ class ApiReport {
              * Find the operator index on the pricing list
              * then take the index 
              */
-            $operatorIndex       =  array_search(
+            $operatorIndex      =  array_search(
                                         $message['OPERATOR'],
                                         array_column(
                                             $rules,
                                             'OP_ID'
                                         )
                                     );
-            
-            $message['PRICE']    = in_array($message['DESCRIPTION_CODE'], $chargedStatus) 
+            $price              = $rules[$operatorIndex]['PER_SMS_PRICE'];
+            $message['PRICE']   = in_array($message['DESCRIPTION_CODE'], $chargedStatus)
                                     ? ( $price *  $message['MESSAGE_COUNT'] )
                                     : 0;
         }
@@ -1050,9 +1056,26 @@ class ApiReport {
                             'BILLING_PROFILE_ID'
                         )
                     );
-            $cache = $key !== false
-                        ? $cache[$key]
-                        : null;
+            if($key !== false){
+                $cache = $cache[$key];
+            }else{
+                $newCache = $this->getBilingProfileDetail($profileId);
+                if(!empty($newCache)){
+
+                    if($newCache['BILLING_TYPE'] == self::BILLING_TIERING_BASE) {
+                        $newCache['PRICING'] = $this->getTieringDetail($profileId);
+                    } else {
+                        $newCache['PRICING'] = $this->getOperatorBaseDetail($profileId);
+                        $newCache['PREFIX']  = $this->getOperatorDialPrefix(array_column($newCache['PRICING'], 'OP_ID'));
+                    }
+
+                    $cache[] = $newCache;
+                    $this->saveCache(self::CACHE_BILLING_PROFILE, $cache);
+                    $cache = $newCache;
+                }else{
+                    $cache = null;
+                }
+            }
         }
         
         return $cache;
