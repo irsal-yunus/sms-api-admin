@@ -4,6 +4,12 @@
         rowIndexOperator    = $('#operator-table tbody tr').length,
         rowIndexTiering     = $('#tiering-table tbody tr').length,
         dataOperator        = [];
+
+    /**
+     * Removes all handlers attached to the elements
+     */
+    $(document).unbind();
+    
     $( document ).ready(function(){
         loadUserDetail();
         
@@ -11,6 +17,11 @@
             errorMessagePosition : 'inline',
         });
         
+        /**
+         * 
+         * Set masking number for tiering fied from, up to and price
+         */
+        $("#tiering-table :input:not([readonly])").mask('000.000.000.000.000', {reverse: true});
 
         /*check type*/
         var typeValue = $('#select-type').data('val');
@@ -25,15 +36,18 @@
                 showSettingContainer(selectedType);
             })
             .on('click', '.btn-operator-remove', function(){
-                length = $('#operator-table').find('tbody tr').length;
+                var length = $('#operator-table').find('tbody tr').length;
                 if (length > 1 && $(this).parent('th').parent('tr')){
                     $(this).parent('th').parent('tr').remove();
                 }
             })
             .on('click', '.btn-tiering-remove', function(){
-                length = $('#tiering-table').find('tbody tr').length;
-                if (length > 1 && $(this).parent('th').parent('tr')){
+                var length = $('#tiering-table').find('tbody tr').length;
+                if (length > 1 && $(this).parent('th').parent('tr') ){
                     $(this).parent('th').parent('tr').remove();
+                    $('#tiering-table tr:last .tiering-to')
+                            .val('MAX')
+                            .attr('readonly', true);
                 }
             })
             .on('change', 'input[name="isMax"]', function(){
@@ -41,21 +55,58 @@
                     
                     $(this)
                        .parents('tr')
-                       .find('input[id="tiering_upto"]')
+                       .find('input.tiering-to')
                        .val('MAX');
                        
                 }else{
                     $(this)
                            .parents('tr')
-                           .find('input[id="tiering_upto"]')
+                           .find('input.tiering-to')
                            .val('');
                 }
+            })
+            .on('click', '.btn-tiering-add', function(){
+                $('#tiering-table tr:last .tiering-to')
+                        .val('')
+                        .removeAttr('readonly');
+                
+                addTieringRow(this);
+        
+                $('#tiering-table tr:last .tiering-to')
+                    .val('MAX')
+                    .attr('readonly',true); 
+                $('.scroll-container').scrollTop($('#operator-table').height());
+        
+            })
+            .on('keyup', '.tiering-to', function(e){
+                var uptoVal = parseInt($(this).cleanVal());
+                
+                /* fill the next tiering's from value based on current tiering's up to value */
+                if(uptoVal > 0){
+                    $(this).parents('tr').next().find('.tiering-from')
+                           .val(uptoVal + 1)
+                           .trigger('input');
+                } else {
+                    $(this).parents('tr').next().find('.tiering-from')
+                           .val('');
+                }
+                
+            })
+            .on('keyup', '.tiering-from', function(e){
+                var fromVal = parseInt($(this).cleanVal());
+                
+                /* fill the previous tiering's up to value based on current tiering's from value */
+                if(fromVal > 0){
+                    $(this).parents('tr').prev().find('.tiering-to')
+                           .val(fromVal - 1)
+                           .trigger('input');
+                } else {
+                    $(this).parents('tr').prev().find('.tiering-to')
+                           .val('');
+                }
+                
             });
-            
-            $('#add-tiering-field').click(function(){
-                addTieringRow();
-            });
-            
+
             $('#add-operator-field').click(function(){
                 addOperatorRow();
             });
@@ -89,26 +140,65 @@
             
             $('#billingProfile-form').on('submit', function(e){
                 e.preventDefault();
+                
+                /* unmask all input in tiering tables to get the clean value without separator */
+                $("#tiering-table :input:not([readonly])").unmask();
+                $('#tiering-table .form-error').remove();
+                
+                var from = $('.tiering-from').serializeArray();
+                var to = $('.tiering-to').serializeArray();
+                
+                for(var i = 0; i < from.length-1; i++){
+                    /* Check if there is a gap in tiering range before submit the form */
+                    var diff = from[i+1].value - to[i].value;
+                    if(diff > 1){
+                        var rowT = $('#tiering-table').find('tr').eq(i+1);
+                        
+                        /* add additional empty row for gap range*/
+                        addTieringRow(rowT);
+                        
+                        /* gap's range value*/
+                        var rangeX = parseInt(to[i].value) + 1;
+                        var rangeY = parseInt(from[i+1].value) - 1;
+                        
+                        /* display the error notification for gap's value*/
+                        var errorSpan = '<span class="help-block form-error">Range definition missing for value range '+rangeX+'-'+rangeY+'</span>';
+                        
+                        $(errorSpan).insertAfter($(rowT).next().find('input:text.tiering-from'));
+                        $(rowT)
+                                .next()
+                                .find('input:text.tiering-from')
+                                .parent('th')
+                                .addClass('has-error');
+                        
+                        /* mask all input in tiering tables*/
+                        $("#tiering-table :input:not([readonly])").mask('000.000.000.000.000', {reverse: true});
+                        
+                        return;
+                    }  
+                }
                 var data = $(this).serializeArray();
                 $app.module('billing').storeBillingProfile(data);
             });
 
     });
 
-    function addTieringRow(){
+    function addTieringRow(element){
         rowId       = rowIndexTiering;        
         newRow      =   '<tr>'
                             + '<th>'
                                     +'<img src="skin/images/icon-remove.png" class="form-button-image btn-tiering-remove" alt="Remove" width="13px" style="cursor:pointer;" />'
                             + '</th>'
-                            + '<th><input type="text" name="tiering['+rowId+'][from]" data-validation="number"></th>'
-                            + '<th><input type="text" name ="tiering['+rowId+'][to]" id="tiering_upto" data-validation="required"></th>'
-                            + '<th width="5%"><input type="checkbox" name="isMax" style="margin-top: 0.5 em;"></th>'
-                            + '<th width="5%" style="padding-top: 6px;">Max</th>'
-                            + '<th><input type="text" name ="tiering['+rowId+'][price]" data-validation="number"></th>'
+                            + '<th><input type="text" class="tiering-from" name="tiering['+rowId+'][from]" data-validation="required"></th>'
+                            + '<th><input type="text" class="tiering-to" name ="tiering['+rowId+'][to]" value="" id="tiering_upto" data-validation="required"></th>'
+                            + '<th><input type="text" class="tiering-price" name ="tiering['+rowId+'][price]" data-validation="required"></th>'
+                            + '<th>'
+                                +'<img src="skin/images/icon-add.png" class="form-button-image btn-tiering-add" alt="Add New Field" width="13px" style="cursor:pointer;" />'
+                                +'</th>'
                         + '</tr>';
-        $('#tiering-table tbody').append(newRow); 
-        $('.scroll-container').scrollTop($('#operator-table').height());
+        
+        $(newRow).insertAfter($(element).closest('tr'));
+        
         rowIndexTiering++;
     }
   
@@ -261,9 +351,8 @@
                                                                     <th></th>
                                                                     <th>From</th>
                                                                     <th>Up to</th>
-                                                                    <th></th>
-                                                                    <th></th>
-                                                                    <th>Price</th>
+                                                                    <th>Price</th>  
+                                                                     <th></th> 
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -272,11 +361,12 @@
                                                                                 <th>
                                                                                     <img src='skin/images/icon-remove.png' class='form-button-image btn-tiering-remove' alt='Remove' width='13px' style='cursor:pointer;' />
                                                                                 </th>
-                                                                                <th><input type='text' name='tiering[0][from]' value='0' data-validation="number"></th>
-                                                                                <th><input type="text" name ="tiering[0][to]" value='' data-validation="required"></th>
-                                                                                <th width='5%'><input type='checkbox' name='isMax' style='margin-top: 0.5 em;'></th>
-                                                                                <th width='5%' style="padding-top: 6px;">Max</th>
-                                                                                <th><input type='text' name ='tiering[0][price]' value='' data-validation="number"></th>
+                                                                                <th><input type='text' class='tiering-from' name='tiering[0][from]' value='0' data-validation='required' readonly></th>
+                                                                                <th><input type='text' class='tiering-to' name ='tiering[0][to]' id='tiering_upto' value ='MAX' data-validation='required' readonly></th>
+                                                                                <th><input type='text' class='tiering-price' name ='tiering[0][price]' value='' data-validation='required'></th>
+                                                                                <th>
+                                                                                    <img src='skin/images/icon-add.png' class='form-button-image btn-tiering-add' alt='Add New Field' width='13px' style='cursor:pointer;' />
+                                                                                </th>
                                                                             </tr>
                                                                     {else}
                                                                         {foreach from=$tieringSettings key=key item=item}
@@ -284,11 +374,12 @@
                                                                                 <th>
                                                                                     <img src='skin/images/icon-remove.png' class='form-button-image btn-tiering-remove' alt='Remove' width='13px' style='cursor:pointer;' />
                                                                                 </th>
-                                                                                <th><input type='text' name='tiering[{$key}][from]' value='{$item['SMS_COUNT_FROM']}' data-validation="number"></th>
-                                                                                <th><input type='text' name ='tiering[{$key}][to]' value='{$item['SMS_COUNT_UP_TO']}' data-validation="required"></th>
-                                                                                <th width='5%'><input type='checkbox' name='isMax' style='margin-top: 0.5 em;' {if $item['SMS_COUNT_UP_TO'] == 'MAX'} checked {/if}></th>
-                                                                                <th width='5%' style="padding-top: 6px;">Max</th>
-                                                                                <th><input type='text' name ='tiering[{$key}][price]' value='{$item['PER_SMS_PRICE']}' data-validation="number"></th>
+                                                                                <th><input type='text' class='tiering-from' name='tiering[{$key}][from]' value='{$item['SMS_COUNT_FROM']}' data-validation='required' {if $key == 0} readonly {/if}></th>
+                                                                                <th><input type='text' class='tiering-to' name ='tiering[{$key}][to]' id='tiering_upto' value='{$item['SMS_COUNT_UP_TO']}' data-validation='required' {if $item['SMS_COUNT_UP_TO'] == 'MAX'} readonly {/if}></th>
+                                                                                <th><input type='text' class='tiering-price' name ='tiering[{$key}][price]' value='{$item['PER_SMS_PRICE']}' data-validation='required'></th>
+                                                                                <th>
+                                                                                    <img src='skin/images/icon-add.png' class='form-button-image btn-tiering-add' alt='Add New Field' width='13px' style='cursor:pointer;' />
+                                                                                </th>
                                                                             </tr>
                                                                         {/foreach}
                                                                     {/if}
@@ -296,9 +387,6 @@
                                                         </table>
 
                                                 </div>
-                                                <a href="#" class="form-button" style="margin:5px;float:left;margin-left: 110px;" id="add-tiering-field">
-                                                    <span class="form-button-text">Add Field</span>
-                                                </a>
                                             </div>
 				</fieldset>
                                 
