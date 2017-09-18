@@ -45,7 +45,7 @@
                 var length = $('#tiering-table').find('tbody tr').length;
                 if (length > 1 && $(this).parent('th').parent('tr') ){
                     $(this).parent('th').parent('tr').remove();
-                    $('#tiering-table tr:last #tiering_upto')
+                    $('#tiering-table tr:last .tiering_upto')
                             .val('MAX')
                             .attr('readonly', true);
                 }
@@ -55,24 +55,24 @@
                     
                     $(this)
                        .parents('tr')
-                       .find('input[id="tiering_upto"]')
+                       .find('input.tiering_upto')
                        .val('MAX');
                        
                 }else{
                     $(this)
                            .parents('tr')
-                           .find('input[id="tiering_upto"]')
+                           .find('input.tiering_upto')
                            .val('');
                 }
             })
             .on('click', '.btn-tiering-add', function(){
-                $('#tiering-table tr:last #tiering_upto')
+                $('#tiering-table tr:last .tiering-to')
                         .val('')
                         .removeAttr('readonly');
                 
                 addTieringRow(this);
         
-                $('#tiering-table tr:last #tiering_upto')
+                $('#tiering-table tr:last .tiering-to')
                     .val('MAX')
                     .attr('readonly',true); 
                 $('.scroll-container').scrollTop($('#operator-table').height());
