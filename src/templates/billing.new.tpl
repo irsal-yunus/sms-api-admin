@@ -45,7 +45,7 @@
                 var length = $('#tiering-table').find('tbody tr').length;
                 if (length > 1 && $(this).parent('th').parent('tr') ){
                     $(this).parent('th').parent('tr').remove();
-                    $('#tiering-table tr:last .tiering_upto')
+                    $('#tiering-table tr:last .tiering-to')
                             .val('MAX')
                             .attr('readonly', true);
                 }
@@ -55,13 +55,13 @@
                     
                     $(this)
                        .parents('tr')
-                       .find('input.tiering_upto')
+                       .find('input.tiering-to')
                        .val('MAX');
                        
                 }else{
                     $(this)
                            .parents('tr')
-                           .find('input.tiering_upto')
+                           .find('input.tiering-to')
                            .val('');
                 }
             })
