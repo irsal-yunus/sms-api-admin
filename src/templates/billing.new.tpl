@@ -146,17 +146,20 @@
                 $("#tiering-table :input:not([readonly])").unmask();
                 $('#tiering-table .form-error').remove();
                 
-                var from = $('.tiering-from').serializeArray();
-                var to = $('.tiering-to').serializeArray();
+                var from = $('.tiering-from').serializeArray(),
+                    to = $('.tiering-to').serializeArray(),
+                    rowParent = $('#tiering-table').find('tr'),
+                    rowT,
+                    errorSpan;
                 
                 for(var i = 0; i < from.length-1; i++){
                     /* Check if there is a gap in tiering range before submit the form */
-                    var rowT = $('#tiering-table').find('tr').eq(i+1);
+                    rowT = rowParent.eq(i+1);
                    
                     if(parseInt(from[i].value) > parseInt(to[i].value)){
                        
                         /* display the error notification for gap's value*/
-                        var errorSpan = '<span class="help-block form-error">Tiering up to must be greater than Tiering From</span>';
+                        errorSpan = '<span class="help-block form-error">Tiering up to must be greater than Tiering From</span>';
                         
                         $(errorSpan).insertAfter($(rowT).find('input:text.tiering-to'));
                         $(rowT)
@@ -178,7 +181,7 @@
                         var rangeY = parseInt(from[i+1].value) - 1;
                         
                         /* display the error notification for gap's value*/
-                        var errorSpan = '<span class="help-block form-error">Range definition missing for value range '+rangeX+'-'+rangeY+'</span>';
+                        errorSpan = '<span class="help-block form-error">Range definition missing for value range '+rangeX+'-'+rangeY+'</span>';
                         
                         $(errorSpan).insertAfter($(rowT).next().find('input:text.tiering-from'));
                         $(rowT)
