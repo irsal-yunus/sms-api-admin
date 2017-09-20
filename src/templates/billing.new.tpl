@@ -106,6 +106,7 @@
                 }
                 
             });
+            
 
             $('#add-operator-field').click(function(){
                 addOperatorRow();
@@ -145,15 +146,33 @@
                 $("#tiering-table :input:not([readonly])").unmask();
                 $('#tiering-table .form-error').remove();
                 
-                var from = $('.tiering-from').serializeArray();
-                var to = $('.tiering-to').serializeArray();
+                var from = $('.tiering-from').serializeArray(),
+                    to = $('.tiering-to').serializeArray(),
+                    rowParent = $('#tiering-table').find('tr'),
+                    rowT,
+                    errorSpan;
                 
                 for(var i = 0; i < from.length-1; i++){
                     /* Check if there is a gap in tiering range before submit the form */
+                    rowT = rowParent.eq(i+1);
+                   
+                    if(parseInt(from[i].value) > parseInt(to[i].value)){
+                       
+                        /* display the error notification for gap's value*/
+                        errorSpan = '<span class="help-block form-error">Tiering up to must be greater than Tiering From</span>';
+                        
+                        $(errorSpan).insertAfter($(rowT).find('input:text.tiering-to'));
+                        $(rowT)
+                                .find('input:text.tiering-to')
+                                .parent('th')
+                                .addClass('has-error');
+                        $("#tiering-table :input:not([readonly])").mask('000.000.000.000.000', {reverse: true});
+                        
+                        return;
+                    }
+                    
                     var diff = from[i+1].value - to[i].value;
                     if(diff > 1){
-                        var rowT = $('#tiering-table').find('tr').eq(i+1);
-                        
                         /* add additional empty row for gap range*/
                         addTieringRow(rowT);
                         
@@ -162,7 +181,7 @@
                         var rangeY = parseInt(from[i+1].value) - 1;
                         
                         /* display the error notification for gap's value*/
-                        var errorSpan = '<span class="help-block form-error">Range definition missing for value range '+rangeX+'-'+rangeY+'</span>';
+                        errorSpan = '<span class="help-block form-error">Range definition missing for value range '+rangeX+'-'+rangeY+'</span>';
                         
                         $(errorSpan).insertAfter($(rowT).next().find('input:text.tiering-from'));
                         $(rowT)
