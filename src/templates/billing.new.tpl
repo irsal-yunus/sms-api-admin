@@ -75,7 +75,6 @@
                 $('#tiering-table tr:last .tiering-to')
                     .val('MAX')
                     .attr('readonly',true); 
-                $('.scroll-container').scrollTop($('#operator-table').height());
         
             })
             .on('keyup', '.tiering-to', function(e){
@@ -159,7 +158,7 @@
                     if(parseInt(from[i].value) > parseInt(to[i].value)){
                        
                         /* display the error notification for gap's value*/
-                        errorSpan = '<span class="help-block form-error">Tiering up to must be greater than Tiering From</span>';
+                        errorSpan = '<span class="help-block form-error">Tiering \'up to\' must be greater than Tiering From</span>';
                         
                         $(errorSpan).insertAfter($(rowT).find('input:text.tiering-to'));
                         $(rowT)
@@ -195,6 +194,17 @@
                         
                         return;
                     }  
+                    
+                    /**
+                     * check if range is less than range before
+                     */
+                    if(parseInt(to[i].value) > parseInt(from[i+1].value)) {
+                        errorSpan = '<span class="help-block form-error">This range should be greater than range before</span>';
+                        $(errorSpan).insertAfter($(rowParent.eq(i+1)).next().find('input:text.tiering-from'));
+                        $("#tiering-table :input:not([readonly])").mask('000.000.000.000.000', {reverse: true});
+                        
+                        return;
+                    }
                 }
                 var data = $(this).serializeArray();
                 $app.module('billing').storeBillingProfile(data);
