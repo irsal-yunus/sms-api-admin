@@ -199,7 +199,7 @@
                      * check if range is less than range before
                      */
                     if(parseInt(to[i].value) > parseInt(from[i+1].value)) {
-                        errorSpan = '<span class="help-block form-error">This range should be greater than range before</span>';
+                        errorSpan = '<span class="help-block form-error">From value must be above the previous range!</span>';
                         $(errorSpan).insertAfter($(rowParent.eq(i+1)).next().find('input:text.tiering-from'));
                         $("#tiering-table :input:not([readonly])").mask('000.000.000.000.000', {reverse: true});
                         
