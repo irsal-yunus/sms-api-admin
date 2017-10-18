@@ -21,7 +21,8 @@ Copyright(c) 2010 1rstWAP. All rights reserved.
                 <script type="text/javascript" src="js/select2/js/select2.min.js"></script>
                 <script type="text/javascript" src="js/jquery.form-validator.min.js"></script>
 		<script type="text/javascript" src="js/jquery.fileDownload.js"></script>
-        <script type="text/javascript" src="js/datatable/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="js/jquery.mask.js"></script>
+                <script type="text/javascript" src="js/datatable/jquery.dataTables.min.js"></script>
             {literal}
 		<script type="text/javascript">
 		//<![CDATA[

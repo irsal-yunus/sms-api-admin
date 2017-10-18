@@ -714,3 +714,8 @@ LOADING
 #list-user{
     width: 200px;
 }
+
+.btn-tiering-add{
+    padding-left: 5px;
+    padding-top: 3px;
+}
