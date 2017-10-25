@@ -1,0 +1,20 @@
+{
+    "name": "firstwap/sms-api-admin",
+    "description": "The SMS API Admin in the graphical user interface to managing users, sender ids, co-branders, and other things for the SMS API.",
+    "type": "project",
+    "license": "proprietary",
+    "authors": [],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit":"4.8.*"
+    },
+    "autoload": {
+       "psr-4": {
+            "Firstwap\\SmsApiAdmin\\": "src/",
+            "Firstwap\\SmsApiAdmin\\Test\\":"tests/"
+       }
+    }
+}
