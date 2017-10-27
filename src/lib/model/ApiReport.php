@@ -212,13 +212,13 @@ class ApiReport {
         $currentMonth       = (int)date('m');
         $currentYear        = (int)date('Y');
         $lastMonth          = (int)date('m', strtotime('last month'));
-        
+
         $this->firstDateOfMonth    = $this->serverTimeZone(date('Y-m-01 00:00:00', strtotime($this->year.'-'.$this->month.'-01')));
-        $this->lastDateOfMonth     = $this->serverTimeZone(date('Y-m-d 00:00:00',  strtotime($this->year.'-'.($this->month+1).'-01')));
+        $this->lastDateOfMonth     = $this->serverTimeZone(date('Y-m-01 00:00:00',  strtotime('+1 month', strtotime($this->year.'-'.$this->month.'-01'))));
         
         if($this->month != $currentMonth) {
             if($this->month == $lastMonth &&  $currentDay < 3) {
-                $this->lastFinalStatusDate = $this->serverTimeZone(date('Y-m-d 00:00:00', strtotime(' -3 days')));
+                $this->lastFinalStatusDate = date('Y-m-d 00:00:00', strtotime(' -2 days'));
             }
             else {
                 $this->lastFinalStatusDate = $this->lastDateOfMonth;
@@ -226,7 +226,7 @@ class ApiReport {
         }
         else {
             if( $currentDay >= 3) {
-                $this->lastFinalStatusDate = $this->serverTimeZone(date('Y-m-d 00:00:00', strtotime('-3 days'))) ;
+                $this->lastFinalStatusDate = date('Y-m-d 00:00:00', strtotime('-2 days'));
             }
             else {
                 $this->lastFinalStatusDate = false;
@@ -755,8 +755,8 @@ class ApiReport {
         $message  =  ' SELECT    MESSAGE_ID, DESTINATION,  MESSAGE_CONTENT, MESSAGE_STATUS, \'\' AS DESCRIPTION_CODE, SEND_DATETIME, SENDER, USER_ID'
         .' FROM      '.DB_SMS_API_V2.'.USER_MESSAGE_STATUS'
         .' WHERE     USER_ID_NUMBER '.$userIdClause
-        .'           AND SEND_DATETIME >  \''.$startDateTime.'\' '
-        .'           AND SEND_DATETIME <= \''.$endDateTime  .'\' '
+        .'           AND SEND_DATETIME >=  \''.$startDateTime.'\' '
+        .'           AND SEND_DATETIME < \''.$endDateTime  .'\' '
         .' LIMIT     '.$startIndex.','.$dataSize;
         $messages = $this->query($message);
         $this->log->debug("result ".$message);
@@ -1396,9 +1396,8 @@ class ApiReport {
         
         if(!isset($summary[$group][$member])) {
            $startDate = $this->clientTimeZone($this->firstDateOfMonth);
-           $endDate = new DateTime($this->clientTimeZone($this->lastDateOfMonth));
-           $endDate->modify('-1 second');
-           $period  = $this->getDateRange($startDate, $endDate->format('Y-m-d H:i:s'));
+           $endDate = date('Y-m-d H:i:s', strtotime('-1 second', strtotime($this->clientTimeZone($this->lastDateOfMonth))));
+           $period  = $this->getDateRange($startDate, $endDate);
            $traffic = [
                     'd'     => 0,   // Delivered
                     'udC'   => 0,   // Undelivered Charged
