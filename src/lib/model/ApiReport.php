@@ -2515,13 +2515,13 @@ class ApiReport {
      * @return String
      */
     public function clientTimeZone($value, $format='Y-m-d H:i:s'){
+        
+        $value = $this->parseDatetimeInput($value);
 
-        if (is_numeric($value)) {
-            $value = date('Y-m-d H:i:s', $value);
-        }
-
+        // Create datetime based on input value (GMT)
         $date = new \DateTime($value, new \DateTimeZone($this->timezoneServer));
-
+        
+        // Return datetime corrected for client's timezone (GMT+7)
         return $date->setTimezone(new \DateTimeZone($this->timezoneClient))->format($format);
     }
 
@@ -2534,12 +2534,36 @@ class ApiReport {
      */
     public function serverTimeZone($value, $format='Y-m-d H:i:s'){
 
-        if (is_numeric($value)) {
-            $value = date('Y-m-d H:i:s', $value);
-        }
+        $value = $this->parseDatetimeInput($value, true);
 
         $date = new \DateTime($value, new \DateTimeZone($this->timezoneClient));
 
         return $date->setTimezone(new \DateTimeZone($this->timezoneServer))->format($format);
     }
+
+
+    /**
+     * Parse the dateTime input value
+     * numeric input value as a timestamp value and will convert to default format time
+     * incorrect value will set to client timezone if parameter isServerTimeZone true
+     *
+     * @param mixed $value
+     * @param boolean $isServerTimeZone
+     * @return String
+     */
+    private function parseDatetimeInput($value, $isServerTimeZone = false){
+        // If input value is a unix timestamp
+        if (is_numeric($value)) {
+            $value = date('Y-m-d H:i:s', $value);
+        }
+
+        // If input value is not a correct datetime format
+        if(!strtotime($value)){
+            $currentTimestamp = $isServerTimeZone ? strtotime($this->timezoneClient.' hours') : strtotime('now');
+            $value = date('Y-m-d H:i:s', $currentTimestamp);
+        }
+        
+        return $value;
+    }
+    
 }
