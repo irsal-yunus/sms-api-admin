@@ -154,8 +154,19 @@ class ApiReport {
             $deliveryStatus, 
             $operator;
 
+    /**
+     * server timezone
+     *
+     * @var type String
+     */
+    public  $timezoneServer = "+0";
     
-    
+    /**
+     * server timezone
+     *
+     * @var type String
+     */
+    public  $timezoneClient = "+7";
     
     /**
      * Api Report constructor
@@ -201,13 +212,13 @@ class ApiReport {
         $currentMonth       = (int)date('m');
         $currentYear        = (int)date('Y');
         $lastMonth          = (int)date('m', strtotime('last month'));
-        
-        $this->firstDateOfMonth    = date('Y-m-01 00:00:00', strtotime($this->year.'-'.$this->month.'-01'));
-        $this->lastDateOfMonth     = date('Y-m-t 23:59:59',  strtotime($this->year.'-'.$this->month.'-01'));
+
+        $this->firstDateOfMonth    = $this->serverTimeZone(date('Y-m-01 00:00:00', strtotime($this->year.'-'.$this->month.'-01')));
+        $this->lastDateOfMonth     = $this->serverTimeZone(date('Y-m-01 00:00:00',  strtotime('+1 month', strtotime($this->year.'-'.$this->month.'-01'))));
         
         if($this->month != $currentMonth) {
             if($this->month == $lastMonth &&  $currentDay < 3) {
-                $this->lastFinalStatusDate = date('Y-m-d 23:59:59', strtotime($today. ' -2 days'));
+                $this->lastFinalStatusDate = date('Y-m-d 00:00:00', strtotime(' -2 days'));
             }
             else {
                 $this->lastFinalStatusDate = $this->lastDateOfMonth;
@@ -215,7 +226,7 @@ class ApiReport {
         }
         else {
             if( $currentDay >= 3) {
-                $this->lastFinalStatusDate = date('Y-m-d 23:59:59', strtotime('-2 days')) ;
+                $this->lastFinalStatusDate = date('Y-m-d 00:00:00', strtotime('-2 days'));
             }
             else {
                 $this->lastFinalStatusDate = false;
@@ -744,8 +755,8 @@ class ApiReport {
         $message  =  ' SELECT    MESSAGE_ID, DESTINATION,  MESSAGE_CONTENT, MESSAGE_STATUS, \'\' AS DESCRIPTION_CODE, SEND_DATETIME, SENDER, USER_ID'
         .' FROM      '.DB_SMS_API_V2.'.USER_MESSAGE_STATUS'
         .' WHERE     USER_ID_NUMBER '.$userIdClause
-        .'           AND SEND_DATETIME >  \''.$startDateTime.'\' '
-        .'           AND SEND_DATETIME <= \''.$endDateTime  .'\' '
+        .'           AND SEND_DATETIME >=  \''.$startDateTime.'\' '
+        .'           AND SEND_DATETIME < \''.$endDateTime  .'\' '
         .' LIMIT     '.$startIndex.','.$dataSize;
         $messages = $this->query($message);
         $this->log->debug("result ".$message);
@@ -940,6 +951,8 @@ class ApiReport {
             $message['PRICE']    = in_array($message['DESCRIPTION_CODE'], $chargedStatus) 
                                     ? ($price *  $message['MESSAGE_COUNT'])
                                     : 0;
+
+            $message['SEND_DATETIME'] = $this->clientTimeZone($message['SEND_DATETIME']);
         }
     }
     
@@ -980,6 +993,7 @@ class ApiReport {
             $message['PRICE']   = in_array($message['DESCRIPTION_CODE'], $chargedStatus)
                                     ? ( $price *  $message['MESSAGE_COUNT'] )
                                     : 0;
+            $message['SEND_DATETIME'] = $this->clientTimeZone($message['SEND_DATETIME']);
         }
     }
         
@@ -1163,7 +1177,7 @@ class ApiReport {
     private function saveCache($cacheName, &$contents) {
         $fileName = $this->reportDir.'/cache/'.$cacheName;
         try {
-            if(!is_dir(dirname($fileName)) && !@mkdir(dirname($fileName)) ) {
+            if(!is_dir(dirname($fileName)) && !@mkdir(dirname($fileName), 0777, true) ) {
                 throw new Exception('Failed create cache, could not create directory "'. dirname($fileName).'"');
             }
             return file_put_contents($fileName, json_encode($contents));
@@ -1197,8 +1211,8 @@ class ApiReport {
         $awaitingReport        = $dirAwaiting.    '/'.$fileName.$this->periodSuffix.self::SUFFIX_AWAITING_REPORT.'.xlsx';
         $summaryAwaitingReport = $dirAwaiting.    '/'.$fileName.$this->periodSuffix.self::SUFFIX_SUMMARY_AWAITING_REPORT.'.xlsx';
         
-        is_dir($dirFinal)    ?: @mkdir($dirFinal);
-        is_dir($dirAwaiting) ?: @mkdir($dirAwaiting);
+        is_dir($dirFinal)    ?: @mkdir($dirFinal, 0777, true);
+        is_dir($dirAwaiting) ?: @mkdir($dirAwaiting, 0777, true);
 
         
         $this->finalReportSummary    = ['senderId' => [], 'operator' => [], 'userId' => []];
@@ -1381,7 +1395,9 @@ class ApiReport {
            ?: $summary[$group] = [];
         
         if(!isset($summary[$group][$member])) {
-           $period  = $this->getDateRange($this->firstDateOfMonth, $this->lastDateOfMonth);
+           $startDate = $this->clientTimeZone($this->firstDateOfMonth);
+           $endDate = date('Y-m-d H:i:s', strtotime('-1 second', strtotime($this->clientTimeZone($this->lastDateOfMonth))));
+           $period  = $this->getDateRange($startDate, $endDate);
            $traffic = [
                     'd'     => 0,   // Delivered
                     'udC'   => 0,   // Undelivered Charged
@@ -1686,6 +1702,7 @@ class ApiReport {
         $lastCol   = 'G';
         $userNames = is_array($userName) ? implode(', ', $userName) : $userName;
         $style     = $this->getSummaryColorStyle();
+        $date      = $this->clientTimeZone(date('Y-m-d H:i:s'),'l, d F Y \a\t H:i');
         $sum       = [
             'd'    => 0,
             'udC'  => 0,
@@ -1712,7 +1729,7 @@ class ApiReport {
                     ->setSubject('Billing Report');
         
         $sheet
-            ->setCellValue('A1',  'Last Update Date')       ->setCellValue('B1', date('l, d F Y \a\t H:i'))	->mergeCells('B1:'  . $lastCol.'1')
+            ->setCellValue('A1',  'Last Update Date')       ->setCellValue('B1', $date)                         ->mergeCells('B1:'  . $lastCol.'1')
             ->setCellValue('A2',  'User Name')              ->setCellValue('B2', $userNames)                    ->mergeCells('B2:'  . $lastCol.'2')
                 
             ->setCellValue('A4',  'Delivered')              ->setCellValue('B4', $sum['d'])                     ->mergeCells('B4:'  . $lastCol.'4')
@@ -1871,14 +1888,6 @@ class ApiReport {
                 $userReportGroup       = null;
                 $getByGroup            = false;
                 $userReportGroupDates  = [];
-                
-                // ================[ HARDCODE | TEST ONLY ]==============
-                // if(!in_array($userId
-                //      [
-                //          543      // yamahabdg
-                //          1013,    // GratikaSampoerna
-                //      ]) continue;
-                // ======================================================
                 
                 if(is_null($userId) || in_array($userId, $excludedUser)) continue;
                 
@@ -2497,4 +2506,64 @@ class ApiReport {
             $this->log->warn('Could not download report, file not found: '.$fileName);
         }
     }
+
+
+    /**
+     * Convert DateTime from server timezone to client timezone
+     *
+     * @param  String $value
+     * @return String
+     */
+    public function clientTimeZone($value, $format='Y-m-d H:i:s'){
+        
+        $value = $this->parseDatetimeInput($value);
+
+        // Create datetime based on input value (GMT)
+        $date = new \DateTime($value, new \DateTimeZone($this->timezoneServer));
+        
+        // Return datetime corrected for client's timezone (GMT+7)
+        return $date->setTimezone(new \DateTimeZone($this->timezoneClient))->format($format);
+    }
+
+
+    /**
+     * Convert DateTime from server timezone to client timezone
+     *
+     * @param  String $value
+     * @return String
+     */
+    public function serverTimeZone($value, $format='Y-m-d H:i:s'){
+
+        $value = $this->parseDatetimeInput($value, true);
+
+        $date = new \DateTime($value, new \DateTimeZone($this->timezoneClient));
+
+        return $date->setTimezone(new \DateTimeZone($this->timezoneServer))->format($format);
+    }
+
+
+    /**
+     * Parse the dateTime input value
+     * numeric input value as a timestamp value and will convert to default format time
+     * incorrect value will set to client timezone if parameter isServerTimeZone true
+     *
+     * @param mixed $value
+     * @param boolean $isServerTimeZone
+     * @return String
+     */
+    private function parseDatetimeInput($value, $isServerTimeZone = false){
+        // If input value is a unix timestamp
+        if (is_numeric($value)) {
+            $value = date('Y-m-d H:i:s', $value);
+        }
+
+        // If input value is not a correct datetime format
+        if(!strtotime($value)){
+            $currentTimestamp = $isServerTimeZone ? strtotime($this->timezoneClient.' hours') : strtotime('now');
+            $value = date('Y-m-d H:i:s', $currentTimestamp);
+        }
+        
+        return $value;
+    }
+    
 }
