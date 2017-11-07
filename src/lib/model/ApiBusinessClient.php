@@ -10,7 +10,7 @@ require_once '../lib/FirePHPCore/FirePHP.class.php';
  *
  * @author setia.budi
  * 
- * @author Fathir Wafda --> add insertBilling, updateBilling and getBillingDetail\
+ * @author Fathir Wafda --> add insertBilling, updateBilling and getBillingDetail
  * 
  * @author Ayu Musfita  --> delete insertBilling, updateBilling and getBillingDetail    tracker 22936
  */
