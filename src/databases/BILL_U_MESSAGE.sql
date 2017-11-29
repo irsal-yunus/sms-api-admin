@@ -100,7 +100,7 @@ INSERT INTO `DELIVERY_STATUS` (ERROR_CODE, DESCRIPTION, STATUS, IS_RECREDITED, R
             ('2051','EC_InvalidMscAddress','Undelivered','0',''),
             ('4096','EC_InvalidPduFormat','Undelivered','0',''),
             ('4100','EC_Cancelled','Undelivered','0',''),
-            ('4101','EC_ValidityUndelivered','Undelivered','0',''),
+            ('4101','EC_ValidityExpired','Undelivered','0',''),
             ('4104','EC_DESTINATION_TXT_FLOODING','Undelivered','0','')
 ON DUPLICATE KEY UPDATE
             ERROR_CODE = VALUES(ERROR_CODE),
