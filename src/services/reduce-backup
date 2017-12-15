@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+##### Pagaruyung remove log before 3 days ######
+##### Dwiyan Galuh W                      ######
+#
+
+DIR="/usr/local/script/client-arch/share/APP-ARCHIVE"
+H_satu=`date -d"-1 days" +%Y%m%d`
+H_dua=`date -d"-2 days" +%Y%m%d`
+TOTAL_HARI="$H_satu|$H_dua"
+HDD_SIZE=`df -h | grep /usr | awk -F" " '{print $4}' | tr -d "%"`
+
+if [ $HDD_SIZE -gt 70 ]
+then
+   cd $DIR
+   echo "Total Data Yang akan di Backup pada `date` : $TOTAL_HARI";
+   DATA=`ls  | egrep -v $TOTAL_HARI;`
+
+   for i in `echo $DATA`
+   do
+     echo "`date` data  $i di reduce";
+     rm -f $i
+   done
+
+   echo "######## data ########"
+   ls -ltrh ;
+else
+   echo "`date` Batas kapasitas  hardsik di /usr  masih wajar | dibawah 80%";
+fi

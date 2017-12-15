@@ -9,7 +9,7 @@
         });
         
         $ (document)
-            .on('change', '#list-user', function(){
+            .on('change', '#reportGroup-form #list-user', function(){
                if($("#list-user :selected").length == 0){
                    $('#list-user option').prop('disabled', false);
                    $('#list-user').select2();
@@ -55,7 +55,7 @@
             success: function (data) {
                 html        = '';
                 defaultData = [];
-                $('#selected-user option').each(
+                $('#list-user option').each(
                        function(index,el){
                            defaultData.push($(this).attr('value'));
                         }

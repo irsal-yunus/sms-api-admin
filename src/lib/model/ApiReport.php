@@ -106,10 +106,10 @@ class ApiReport {
     
     
     /**
-     * Character set for GSM 7Bit
-     * for check if the sms whether Latin or Unicode encoded
+     * Regular Expression to find a character except GSM 7Bit
+     * The messages will set to latin if it only have character are defined on regex
      */
-    const   GSM_7BIT_CHARS                  = '\\\@£\$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !"#¤%&\'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà^{}[~]|€';
+    const   GSM_7BIT_CHARS                  = '~[^A-Za-z0-9 \r\n¤@£$¥èéùìòÇØøÅå\x{0394}_\x{5C}\x{03A6}\x{0393}\x{039B}\x{03A9}\x{03A0}\x{03A8}\x{03A3}\x{0398}\x{039E}ÆæßÉ!\"#$%&\'\(\)*+,\-.\/:;<=>;?¡ÄÖÑÜ§¿äöñüà^{}\[\~\]\|\x{20AC}]~u';
     
     
     /**
@@ -154,8 +154,19 @@ class ApiReport {
             $deliveryStatus, 
             $operator;
 
+    /**
+     * server timezone
+     *
+     * @var type String
+     */
+    public  $timezoneServer = "+0";
     
-    
+    /**
+     * server timezone
+     *
+     * @var type String
+     */
+    public  $timezoneClient = "+7";
     
     /**
      * Api Report constructor
@@ -201,13 +212,13 @@ class ApiReport {
         $currentMonth       = (int)date('m');
         $currentYear        = (int)date('Y');
         $lastMonth          = (int)date('m', strtotime('last month'));
-        
-        $this->firstDateOfMonth    = date('Y-m-01 00:00:00', strtotime($this->year.'-'.$this->month.'-01'));
-        $this->lastDateOfMonth     = date('Y-m-t 23:59:59',  strtotime($this->year.'-'.$this->month.'-01'));
+
+        $this->firstDateOfMonth    = $this->serverTimeZone(date('Y-m-01 00:00:00', strtotime($this->year.'-'.$this->month.'-01')));
+        $this->lastDateOfMonth     = $this->serverTimeZone(date('Y-m-01 00:00:00',  strtotime('+1 month', strtotime($this->year.'-'.$this->month.'-01'))));
         
         if($this->month != $currentMonth) {
             if($this->month == $lastMonth &&  $currentDay < 3) {
-                $this->lastFinalStatusDate = date('Y-m-d 23:59:59', strtotime($today. ' -2 days'));
+                $this->lastFinalStatusDate = date('Y-m-d 00:00:00', strtotime(' -2 days'));
             }
             else {
                 $this->lastFinalStatusDate = $this->lastDateOfMonth;
@@ -215,7 +226,7 @@ class ApiReport {
         }
         else {
             if( $currentDay >= 3) {
-                $this->lastFinalStatusDate = date('Y-m-d 23:59:59', strtotime('-2 days')) ;
+                $this->lastFinalStatusDate = date('Y-m-d 00:00:00', strtotime('-2 days'));
             }
             else {
                 $this->lastFinalStatusDate = false;
@@ -236,6 +247,13 @@ class ApiReport {
             $this->log->info('Create Report directory "'.$this->reportDir.'"');
             if(!@mkdir($this->reportDir, 0777, TRUE)){
                 $this->log->error('Could not create Report directory "'.$this->reportDir.'", please check the permission.');
+                $this->log->info ('Cancel generate Report.');
+            }
+        }
+
+        if(!file_exists(BILLING_QUERY_HISTORY_DIR)){
+            if(!@mkdir(BILLING_QUERY_HISTORY_DIR, 0777, true)){
+                $this->log->error('Could not create History directory "'.BILLING_QUERY_HISTORY_DIR.'", please check the permission.');
                 $this->log->info ('Cancel generate Report.');
             }
         }
@@ -499,7 +517,7 @@ class ApiReport {
                         : '' ;
         
         return $this->query(
-                        ' SELECT   OPERATOR_UID, OP_COUNTRY_CODE, OP_ID '
+                        ' SELECT   OP_COUNTRY_CODE, OP_ID '
                        .' FROM     '.DB_First_Intermedia.'.OPERATOR '
                        .  $opClause
                    );
@@ -511,7 +529,7 @@ class ApiReport {
     /**
      * Get Operator Dial Prefix form First_Intermedia.OPERATOR_DIAL_PREFIX      <br />
      * 
-     * @return  Array   2D Array [['OP_ID', 'PREFIX', 'MIN_LENGTH', 'MAX_LENGTH']]
+     * @return  Array   2D Array [['OP_ID', 'RANGE_LOWER', 'RANGE_UPPER']]
      */
     public function getOperatorDialPrefix(Array $opId = []){
         $opClause = !empty($opId) 
@@ -519,12 +537,11 @@ class ApiReport {
                         : '' ;
         return $this->query(
                          ' SELECT   OP_ID,'
-                        .'          SUBSTRING(OP_DIAL_RANGE_LOWER, 1, LOCATE(\'00\', OP_DIAL_RANGE_LOWER) - 1) AS PREFIX, '
-                        .'          MIN( LENGTH(OP_DIAL_RANGE_LOWER)) AS MIN_LENGTH, '
-                        .'          MAX( LENGTH(OP_DIAL_RANGE_UPPER)) AS MAX_LENGTH '
+                         .'OP_DIAL_RANGE_LOWER as RANGE_LOWER,'
+                         .'OP_DIAL_RANGE_UPPER as RANGE_UPPER '
                         .' FROM     '.DB_First_Intermedia.'.OPERATOR_DIAL_PREFIX '
                         .  $opClause
-                        .' GROUP BY PREFIX '
+                        .' ORDER BY OP_ID '
                     );
     }    
     
@@ -735,14 +752,14 @@ class ApiReport {
                             ? ' IN ('.implode(',', $userId).')'
                             : ' = '.$userId;
         
-        $messages = $this->query(
-                        ' SELECT    MESSAGE_ID, DESTINATION,  MESSAGE_CONTENT, MESSAGE_STATUS, \'\' AS DESCRIPTION_CODE, SEND_DATETIME, SENDER, USER_ID'
-                       .' FROM      '.DB_SMS_API_V2.'.USER_MESSAGE_STATUS'
-                       .' WHERE     USER_ID_NUMBER '.$userIdClause
-                       .'           AND SEND_DATETIME >  \''.$startDateTime.'\' '
-                       .'           AND SEND_DATETIME <= \''.$endDateTime  .'\' '
-                       .' LIMIT     '.$startIndex.','.$dataSize
-                    );
+        $message  =  ' SELECT    MESSAGE_ID, DESTINATION,  MESSAGE_CONTENT, MESSAGE_STATUS, \'\' AS DESCRIPTION_CODE, SEND_DATETIME, SENDER, USER_ID'
+        .' FROM      '.DB_SMS_API_V2.'.USER_MESSAGE_STATUS'
+        .' WHERE     USER_ID_NUMBER '.$userIdClause
+        .'           AND SEND_DATETIME >=  \''.$startDateTime.'\' '
+        .'           AND SEND_DATETIME < \''.$endDateTime  .'\' '
+        .' LIMIT     '.$startIndex.','.$dataSize;
+        $messages = $this->query($message);
+        $this->log->debug("result ".$message);
         $this->getMessageAdditionalColumn($messages);
 
         return $messages;
@@ -778,6 +795,7 @@ class ApiReport {
                        .' WHERE     ('.implode(' OR ', $userClause).')'
                        .' LIMIT     '.$startIndex.','.$dataSize
                     );
+        $this->log->info('query getGroupMessageStatus '.json_encode($userClause));
         $this->getMessageAdditionalColumn($messages);
         
         return $messages;
@@ -807,13 +825,16 @@ class ApiReport {
      */
     private function getMessageCount($message) {
         $messageLength = mb_strlen($message);
-        return $this->isGsm7bit($message, $messageLength)
-                    ? $messageLength <= self::GSM_7BIT_SINGLE_SMS
+
+        if($this->isGsm7bit($message)){
+            return  $messageLength <= self::GSM_7BIT_SINGLE_SMS
                         ? 1
-                        : ceil( $messageLength / self::GSM_7BIT_MULTIPLE_SMS )
-                    : $messageLength <= self::UNICODE_SINGLE_SMS
+                        : ceil( $messageLength / self::GSM_7BIT_MULTIPLE_SMS );
+        }else{
+            return  $messageLength <= self::UNICODE_SINGLE_SMS
                         ? 1
                         : ceil( $messageLength / self::UNICODE_MULTIPLE_SMS );
+        }
     }
     
     
@@ -852,17 +873,10 @@ class ApiReport {
      * Check if the message was Gsm_7bit or Unicode encoded
      * 
      * @param   String  $message        Message content
-     * @param   Int     $messageLength  Count of Message characters
-     * @return  String                  SMS_TYPE_UNICODE or SMS_TYPE_GSM_7BIT
+     * @return  boolean                 true for Gsm7bit and false for unicode
      */
-    private function isGsm7bit($message, $messageLength) {
-        for($i = 0; $i < $messageLength; $i++) {
-            if( strpos(self::GSM_7BIT_CHARS, $message[$i]) == false 
-                && $message[$i]!='\\' ) {
-                return self::SMS_TYPE_UNICODE;
-            }
-        }
-        return self::SMS_TYPE_GSM_7BIT;
+    private function isGsm7bit($message) {
+        return preg_match(self::GSM_7BIT_CHARS, $message) === 0;
     }
     
     
@@ -874,18 +888,18 @@ class ApiReport {
      * @param   String  $destination    Destination number wich will be parsing
      * @param   Array   $operators      2D Array of Operator                                <br />
      *                                  could be get from getOperatorDialPrefix()           <br />
-     *                                  [['OP_ID', 'PREFIX', 'MIN_LENGTH', 'MAX_LENGTH']]   <br />
+     *                                  [['OP_ID', 'RANGE_LOWER', 'RANGE_UPPER']]           <br />
      * @return  String                  Operator Name or self::DEFAULT_OPERATOR
      */
     private function getDestinationOperator($destination, &$operators) {
         foreach($operators as &$operator) {
             if( $operator['OP_ID'] !== self::DEFAULT_OPERATOR
-                && !empty($operator['PREFIX'])
-                && preg_match(
-                    '/(?=^'.$operator['PREFIX'].')'
-                    .'(\d{'.$operator['MIN_LENGTH'].','.$operator['MAX_LENGTH'].'})/', 
-                    $destination
-                )) {
+                && !empty($operator['RANGE_LOWER'])
+                && !empty($operator['RANGE_UPPER'])
+                && $destination >= $operator['RANGE_LOWER']
+                && $destination <= $operator['RANGE_UPPER']
+            )
+            {
                 return $operator['OP_ID'];
             }
         }
@@ -937,6 +951,8 @@ class ApiReport {
             $message['PRICE']    = in_array($message['DESCRIPTION_CODE'], $chargedStatus) 
                                     ? ($price *  $message['MESSAGE_COUNT'])
                                     : 0;
+
+            $message['SEND_DATETIME'] = $this->clientTimeZone($message['SEND_DATETIME']);
         }
     }
     
@@ -953,11 +969,11 @@ class ApiReport {
      *                              ]]
      * @param   Array   $rule       2D array of Pricing  [['OP_ID', 'PER_SMS_PRICE']]
      * @param   Array   $operator   2D Array of Billing Rule                                    <br />
-     *                              [['OP_ID', 'PREFIX', 'MIN_LENGTH', 'MAX_LENGTH']]
+     *                              [['OP_ID', 'RANGE_LOWER', 'RANGE_UPPER']]
      */
     private function assignOperatorPrice(&$messages, &$rules, &$operators) {
         $chargedStatus = [self::SMS_STATUS_DELIVERED, self::SMS_STATUS_UNDELIVERED_CHARGED];
-        $price         =  current($rules)['PER_SMS_PRICE'];
+
         foreach($messages as &$message) {
 
             $message['OPERATOR'] = $this->getDestinationOperator($message['DESTINATION'], $operators);
@@ -966,17 +982,18 @@ class ApiReport {
              * Find the operator index on the pricing list
              * then take the index 
              */
-            $operatorIndex       =  array_search(
+            $operatorIndex      =  array_search(
                                         $message['OPERATOR'],
                                         array_column(
                                             $rules,
                                             'OP_ID'
                                         )
                                     );
-            
-            $message['PRICE']    = in_array($message['DESCRIPTION_CODE'], $chargedStatus) 
+            $price              = $rules[$operatorIndex]['PER_SMS_PRICE'];
+            $message['PRICE']   = in_array($message['DESCRIPTION_CODE'], $chargedStatus)
                                     ? ( $price *  $message['MESSAGE_COUNT'] )
                                     : 0;
+            $message['SEND_DATETIME'] = $this->clientTimeZone($message['SEND_DATETIME']);
         }
     }
         
@@ -1053,9 +1070,26 @@ class ApiReport {
                             'BILLING_PROFILE_ID'
                         )
                     );
-            $cache = $key !== false
-                        ? $cache[$key]
-                        : null;
+            if($key !== false){
+                $cache = $cache[$key];
+            }else{
+                $newCache = $this->getBilingProfileDetail($profileId);
+                if(!empty($newCache)){
+
+                    if($newCache['BILLING_TYPE'] == self::BILLING_TIERING_BASE) {
+                        $newCache['PRICING'] = $this->getTieringDetail($profileId);
+                    } else {
+                        $newCache['PRICING'] = $this->getOperatorBaseDetail($profileId);
+                        $newCache['PREFIX']  = $this->getOperatorDialPrefix(array_column($newCache['PRICING'], 'OP_ID'));
+                    }
+
+                    $cache[] = $newCache;
+                    $this->saveCache(self::CACHE_BILLING_PROFILE, $cache);
+                    $cache = $newCache;
+                }else{
+                    $cache = null;
+                }
+            }
         }
         
         return $cache;
@@ -1143,7 +1177,7 @@ class ApiReport {
     private function saveCache($cacheName, &$contents) {
         $fileName = $this->reportDir.'/cache/'.$cacheName;
         try {
-            if(!is_dir(dirname($fileName)) && !@mkdir(dirname($fileName)) ) {
+            if(!is_dir(dirname($fileName)) && !@mkdir(dirname($fileName), 0777, true) ) {
                 throw new Exception('Failed create cache, could not create directory "'. dirname($fileName).'"');
             }
             return file_put_contents($fileName, json_encode($contents));
@@ -1177,8 +1211,8 @@ class ApiReport {
         $awaitingReport        = $dirAwaiting.    '/'.$fileName.$this->periodSuffix.self::SUFFIX_AWAITING_REPORT.'.xlsx';
         $summaryAwaitingReport = $dirAwaiting.    '/'.$fileName.$this->periodSuffix.self::SUFFIX_SUMMARY_AWAITING_REPORT.'.xlsx';
         
-        is_dir($dirFinal)    ?: @mkdir($dirFinal);
-        is_dir($dirAwaiting) ?: @mkdir($dirAwaiting);
+        is_dir($dirFinal)    ?: @mkdir($dirFinal, 0777, true);
+        is_dir($dirAwaiting) ?: @mkdir($dirAwaiting, 0777, true);
 
         
         $this->finalReportSummary    = ['senderId' => [], 'operator' => [], 'userId' => []];
@@ -1361,7 +1395,9 @@ class ApiReport {
            ?: $summary[$group] = [];
         
         if(!isset($summary[$group][$member])) {
-           $period  = $this->getDateRange($this->firstDateOfMonth, $this->lastDateOfMonth);
+           $startDate = $this->clientTimeZone($this->firstDateOfMonth);
+           $endDate = date('Y-m-d H:i:s', strtotime('-1 second', strtotime($this->clientTimeZone($this->lastDateOfMonth))));
+           $period  = $this->getDateRange($startDate, $endDate);
            $traffic = [
                     'd'     => 0,   // Delivered
                     'udC'   => 0,   // Undelivered Charged
@@ -1665,6 +1701,7 @@ class ApiReport {
         $lastCol   = 'G';
         $userNames = is_array($userName) ? implode(', ', $userName) : $userName;
         $style     = $this->getSummaryColorStyle();
+        $date      = $this->clientTimeZone(date('Y-m-d H:i:s'),'l, d F Y \a\t H:i');
         $sum       = [
             'd'    => 0,
             'udC'  => 0,
@@ -1691,7 +1728,7 @@ class ApiReport {
                     ->setSubject('Billing Report');
         
         $sheet
-            ->setCellValue('A1',  'Last Update Date')       ->setCellValue('B1', date('l, d F Y \a\t H:i'))	->mergeCells('B1:'  . $lastCol.'1')
+            ->setCellValue('A1',  'Last Update Date')       ->setCellValue('B1', $date)                         ->mergeCells('B1:'  . $lastCol.'1')
             ->setCellValue('A2',  'User Name')              ->setCellValue('B2', $userNames)                    ->mergeCells('B2:'  . $lastCol.'2')
                 
             ->setCellValue('A4',  'Delivered')              ->setCellValue('B4', $sum['d'])                     ->mergeCells('B4:'  . $lastCol.'4')
@@ -1851,14 +1888,6 @@ class ApiReport {
                 $getByGroup            = false;
                 $userReportGroupDates  = [];
                 
-                // ================[ HARDCODE | TEST ONLY ]==============
-                // if(!in_array($userId
-                //      [
-                //          543      // yamahabdg
-                //          1013,    // GratikaSampoerna
-                //      ]) continue;
-                // ======================================================
-                
                 if(is_null($userId) || in_array($userId, $excludedUser)) continue;
                 
                 $this->log->info('Validate Billing Profile for User "'.$userName.'"');
@@ -1879,15 +1908,16 @@ class ApiReport {
                     continue;
                 }
                 
+                $this->log->debug('get user billing information');
+                $userBillingProfile    = $this->loadBillingProfileCache($userBillingProfileId);
+                
                 $this->log->debug('check user billing detail');
-                if(is_null($userBillingProfileId)) {
+                if(is_null($userBillingProfile)) {
                     $this->log->warn('User '.$userName.' was assigned to Billing Profile '.$userBillingProfileId.' but not found on any detail on '.DB_BILL_PRICELIST.'.BILLING_PROFILE');
                     $this->log->info('Skip generate report for user '.$userName);
                     continue;
                 }
                 
-                $this->log->debug('get user billing information');
-                $userBillingProfile    = $this->loadBillingProfileCache($userBillingProfileId);
                 /* =======================================
                  *  End Of Get User billing information
                  * ======================================= */
@@ -1927,11 +1957,10 @@ class ApiReport {
                 $this->log->debug('Checking new message for user '.$userName);
                 $hasNewMessage = !empty(
                                     $getByGroup
-                                    ? $this->getGroupMessageStatus($userReportGroupDates, $this->lastFinalStatusDate, 1, 1)
-                                    : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, 1, 1)
+                                    ? $this->getGroupMessageStatus($userReportGroupDates, $this->lastFinalStatusDate, 1, 0)
+                                    : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, 1, 0)
                                 );
-
-                
+               
                 if($hasNewMessage) {
                     echo "\033[1;32m".$this->year.'-'.$this->month."\tGenerate\t".$userBillingProfileId."\t".$userBillingProfile['BILLING_TYPE']." \t".$fileName.PHP_EOL;
                     
@@ -1949,7 +1978,7 @@ class ApiReport {
                             $messages = $getByGroup
                                             ? $this->getGroupMessageStatus($userReportGroupDates,      $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter)
                                             : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter);
-                            
+                           
                             $this->assignMessagePrice(self::BILLING_OPERATOR_BASE, $messages, $operatorPrice, $operatorPrefix);
                             $this->insertIntoReportFile($messages);
                             $this->getMessageSummary($messages);
@@ -2208,8 +2237,9 @@ class ApiReport {
      */
     public function insertToOperator($billingProfileID, $operatorID, $price){
         return $this->exec_query(
-                 ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE_OPERATOR VALUES '
-                .' (NULL, '.$billingProfileID.', "'.$operatorID.'", '.$price.') '
+                 ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE_OPERATOR '
+                .' (BILLING_PROFILE_OPERATOR_ID, BILLING_PROFILE_ID, OP_ID, PER_SMS_PRICE) '
+                .' VALUES (NULL, '.$billingProfileID.', "'.$operatorID.'", '.$price.') '
             );
     }
 
@@ -2227,8 +2257,9 @@ class ApiReport {
      */
     public function insertToTiering($billingProfileID, $smsCountFrom, $smsCountUpTo, $price){
         return $this->exec_query(
-                 ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE_TIERING VALUES '
-                .' (NULL, '.$billingProfileID.', "'.$smsCountFrom.'", "'.$smsCountUpTo.'", '.$price.') '
+                 ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE_TIERING '
+                .' (BILLING_PROFILE_TIERING_ID, BILLING_PROFILE_ID, SMS_COUNT_FROM, SMS_COUNT_UP_TO, PER_SMS_PRICE) '
+                .' VALUES (NULL, '.$billingProfileID.', "'.$smsCountFrom.'", "'.$smsCountUpTo.'", '.$price.') '
             );
     }
 
@@ -2245,8 +2276,9 @@ class ApiReport {
      */
     public function insertToBillingProfile($name, $billingType, $description){
         return $this->exec_query(
-                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE VALUES '
-                    .' (NULL, "'.$name.'", "'.$billingType.'", "'.$description.'", now(), now()) '
+                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE '
+                    .' (BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT) '
+                    .' VALUES (NULL, "'.$name.'", "'.$billingType.'", "'.$description.'", now(), now()) '
                 );
     }
 
@@ -2262,8 +2294,9 @@ class ApiReport {
      */
     public function insertToTieringGroup($name,  $description){
         return $this->exec_query(
-                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_TIERING_GROUP VALUES'
-                    .' (NULL, "'.$name.'", "'.$description.'", now(), now()) '
+                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_TIERING_GROUP '
+                    .' (BILLING_TIERING_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT) '
+                    .' VALUES (NULL, "'.$name.'", "'.$description.'", now(), now()) '
                 );
     }
 
@@ -2279,8 +2312,9 @@ class ApiReport {
      */
     public function insertToReportGroup($name,  $description){
         return $this->exec_query(
-                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_REPORT_GROUP VALUES'
-                    .' (NULL, "'.preg_replace('/ +/', '_', $name).'", "'.$description.'", now(), now()) '
+                     ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_REPORT_GROUP '
+                    .' (BILLING_REPORT_GROUP_ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT) '
+                    .' VALUES (NULL, "'.preg_replace('/ +/', '_', $name).'", "'.$description.'", now(), now()) '
                 );
     }
 
@@ -2471,4 +2505,64 @@ class ApiReport {
             $this->log->warn('Could not download report, file not found: '.$fileName);
         }
     }
+
+
+    /**
+     * Convert DateTime from server timezone to client timezone
+     *
+     * @param  String $value
+     * @return String
+     */
+    public function clientTimeZone($value, $format='Y-m-d H:i:s'){
+        
+        $value = $this->parseDatetimeInput($value);
+
+        // Create datetime based on input value (GMT)
+        $date = new \DateTime($value, new \DateTimeZone($this->timezoneServer));
+        
+        // Return datetime corrected for client's timezone (GMT+7)
+        return $date->setTimezone(new \DateTimeZone($this->timezoneClient))->format($format);
+    }
+
+
+    /**
+     * Convert DateTime from server timezone to client timezone
+     *
+     * @param  String $value
+     * @return String
+     */
+    public function serverTimeZone($value, $format='Y-m-d H:i:s'){
+
+        $value = $this->parseDatetimeInput($value, true);
+
+        $date = new \DateTime($value, new \DateTimeZone($this->timezoneClient));
+
+        return $date->setTimezone(new \DateTimeZone($this->timezoneServer))->format($format);
+    }
+
+
+    /**
+     * Parse the dateTime input value
+     * numeric input value as a timestamp value and will convert to default format time
+     * incorrect value will set to client timezone if parameter isServerTimeZone true
+     *
+     * @param mixed $value
+     * @param boolean $isServerTimeZone
+     * @return String
+     */
+    private function parseDatetimeInput($value, $isServerTimeZone = false){
+        // If input value is a unix timestamp
+        if (is_numeric($value)) {
+            $value = date('Y-m-d H:i:s', $value);
+        }
+
+        // If input value is not a correct datetime format
+        if(!strtotime($value)){
+            $currentTimestamp = $isServerTimeZone ? strtotime($this->timezoneClient.' hours') : strtotime('now');
+            $value = date('Y-m-d H:i:s', $currentTimestamp);
+        }
+        
+        return $value;
+    }
+    
 }
