@@ -1386,8 +1386,7 @@ class ApiReport {
                     $transaction['tsC']  += $count; 
                 break;
             case self::SMS_STATUS_UNDELIVERED: 
-            case self::SMS_STATUS_UNDEFINED  :
-                    $transaction['udC'] += $count; 
+                    $transaction['udUc'] += $count; 
                 break;
         }
         
