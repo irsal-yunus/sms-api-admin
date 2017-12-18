@@ -59,9 +59,7 @@ if (!empty($_FILES) && !empty($_REQUEST['user'])) {
                         }
                     }
                 }
-                echo '<pre>';
-                echo json_encode($msgContent);
-                die();
+
                 $script = SMSAPIADMIN_SERVICE_DIR.'generateMessageContentReport.php';
 
                 $argument = base64_encode(json_encode((object)compact('userAPI','msgContent')));

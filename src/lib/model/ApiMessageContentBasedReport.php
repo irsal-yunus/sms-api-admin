@@ -348,11 +348,13 @@ class ApiMessageContentBasedReport {
      * Download Report
      * 
      * @param String $reportFile    Path to Message Content package report
+     * @return Mixed
      */
     public function downloadReport($reportFile) {
         if ($this->isReportExist($reportFile)) {
 
             // Zip transfer 
+            ob_start();
             header('Pragma: public');
             header('Expires: 0');
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -365,9 +367,8 @@ class ApiMessageContentBasedReport {
             ob_end_flush();
             @readfile($reportFile);
         } else {
-            echo 'Report not found. it may have been deleted.';
             $this->log->warn('Could not download report, file not found: ' . $reportFile);
+            return false;
         }
     }
-
 }
