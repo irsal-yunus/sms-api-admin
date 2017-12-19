@@ -20,7 +20,8 @@ use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Common\Type;
 
-class ApiMessageContentBasedReport {
+class ApiMessageContentBasedReport
+{
 
     /**
      * SMS Status which displayed on Billing Report
@@ -81,7 +82,8 @@ class ApiMessageContentBasedReport {
      * @param String $userAPI   USer API
      * @param Array $msgContent Array that contains Message Content to search and also Department
      */
-    public function __construct($userAPI = null, $msgContent = []) {
+    public function __construct($userAPI = null, $msgContent = [])
+    {
         $this->log = Logger::getLogger(get_class($this));
         $this->year = sprintf('%02d', date('Y'));
         $this->month = sprintf('%02d', date('m'));
@@ -102,7 +104,8 @@ class ApiMessageContentBasedReport {
      * @param String $reportName    full path to specified report
      * @return Boolean
      */
-    public function isReportExist($reportName = null) {
+    public function isReportExist($reportName = null)
+    {
         return $reportName ? file_exists($reportName) : file_exists($this->billingReport);
     }
 
@@ -110,7 +113,8 @@ class ApiMessageContentBasedReport {
      * Main function to generate message content based Report
      * Will be called from generateMessageContentReport service
      */
-    public function generateReport() {
+    public function generateReport()
+    {
         /**
          * Initialize variable
          */
@@ -239,7 +243,8 @@ class ApiMessageContentBasedReport {
      * @param Array $fRow
      * @param String $rowKey
      */
-    public function setTrafficValue(&$arrResult, &$fRow, $rowKey) {
+    public function setTrafficValue(&$arrResult, &$fRow, $rowKey)
+    {
 
         switch ($fRow['DESCRIPTION_CODE']) {
             case self::SMS_STATUS_DELIVERED:
@@ -273,7 +278,8 @@ class ApiMessageContentBasedReport {
      * Create Message content Report File
      * Create Uncategorized Message Report File
      */
-    private function createReportFile() {
+    private function createReportFile()
+    {
         try {
             $this->reportWriter = WriterFactory::create(Type::XLSX);
             $this->uncategorizedReportWriter = WriterFactory::create(Type::XLSX);
@@ -297,7 +303,8 @@ class ApiMessageContentBasedReport {
      * 
      * @param String    $userAPI
      */
-    private function createReportPackage($finalReport) {
+    private function createReportPackage($finalReport)
+    {
         $finalReport = $this->msgContentReportDir . $this->userAPI . '*.xlsx';
 
         $this->finalPackage = $this->msgContentReportDir . $this->userAPI . '_' . self::FINAL_REPORT_NAME . $this->periodSuffix . '.zip';
@@ -311,14 +318,15 @@ class ApiMessageContentBasedReport {
      * @param  String $value
      * @return String
      */
-    public function clientTimeZone($value, $format = 'Y-m-d H:i:s') {
+    public function clientTimeZone($value, $format = 'Y-m-d H:i:s')
+    {
         // If input value is a unix timestamp
         if (is_numeric($value)) {
             $value = date('Y-m-d H:i:s', $value);
         }
 
         // If input value is not a correct datetime format
-        if(!strtotime($value)){
+        if (!strtotime($value)) {
             $currentTimestamp = strtotime('now');
             $value = date('Y-m-d H:i:s', $currentTimestamp);
         }
@@ -334,7 +342,8 @@ class ApiMessageContentBasedReport {
      * Function to update manifest file either to add new object or update attribute isDone
      * @param Boolean $isDone       Status of file either done or not
      */
-    public function updateManifest($isDone) {
+    public function updateManifest($isDone)
+    {
 
         $manifestContent = [
             'userAPI' => $this->userAPI,
@@ -372,7 +381,8 @@ class ApiMessageContentBasedReport {
      * Get list of report from Manifest File
      * @return Array
      */
-    public function getManifest() {
+    public function getManifest()
+    {
         return !file_exists($this->manifestFile) ? [] : json_decode(file_get_contents($this->manifestFile));
     }
 
@@ -382,7 +392,8 @@ class ApiMessageContentBasedReport {
      * @param String $reportFile    Path to Message Content package report
      * @return Mixed
      */
-    public function downloadReport($reportFile) {
+    public function downloadReport($reportFile)
+    {
         if ($this->isReportExist($reportFile)) {
 
             // Zip transfer 
