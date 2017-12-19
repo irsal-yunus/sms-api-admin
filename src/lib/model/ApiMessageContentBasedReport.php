@@ -20,7 +20,8 @@ use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Common\Type;
 
-class ApiMessageContentBasedReport {
+class ApiMessageContentBasedReport
+{
 
     /**
      * SMS Status which displayed on Billing Report
@@ -62,12 +63,27 @@ class ApiMessageContentBasedReport {
             $manifestFile;
 
     /**
+     * server timezone
+     *
+     * @var type String
+     */
+    public $timezoneServer = "+0";
+
+    /**
+     * server timezone
+     *
+     * @var type String
+     */
+    public $timezoneClient = "+7";
+
+    /**
      * ApiMessageContentBasedReport constructor
      * 
      * @param String $userAPI   USer API
      * @param Array $msgContent Array that contains Message Content to search and also Department
      */
-    public function __construct($userAPI = null, $msgContent = []) {
+    public function __construct($userAPI = null, $msgContent = [])
+    {
         $this->log = Logger::getLogger(get_class($this));
         $this->year = sprintf('%02d', date('Y'));
         $this->month = sprintf('%02d', date('m'));
@@ -88,7 +104,8 @@ class ApiMessageContentBasedReport {
      * @param String $reportName    full path to specified report
      * @return Boolean
      */
-    public function isReportExist($reportName = null) {
+    public function isReportExist($reportName = null)
+    {
         return $reportName ? file_exists($reportName) : file_exists($this->billingReport);
     }
 
@@ -96,7 +113,8 @@ class ApiMessageContentBasedReport {
      * Main function to generate message content based Report
      * Will be called from generateMessageContentReport service
      */
-    public function generateReport() {
+    public function generateReport()
+    {
         /**
          * Initialize variable
          */
@@ -147,11 +165,6 @@ class ApiMessageContentBasedReport {
                         $isMatch = false;
 
                         if ($reportRowIdx != 1 && !empty($reportRow)) {
-
-                            /**
-                             * Update manifest to add current file that being process
-                             */
-                            $this->updateManifest($this->userAPI, $this->reportName, false);
 
                             $fRow = array_combine(self::DETAILED_MESSAGE_FORMAT, $reportRow) ?: [];
 
@@ -212,9 +225,9 @@ class ApiMessageContentBasedReport {
                 /**
                  * Update manifest after file is already generated
                  */
-                $this->updateManifest($this->userAPI, $this->reportName, true);
+                $this->updateManifest(true);
 
-                $this->log->info("Finish to generate report at " . date('Y-m-d H:i:s'));
+                $this->log->info("Finish to generate report " . $this->reportName . " at " . date('Y-m-d H:i:s'));
             } catch (Exception $e) {
                 $this->log->error('Failed to read File');
             }
@@ -230,7 +243,8 @@ class ApiMessageContentBasedReport {
      * @param Array $fRow
      * @param String $rowKey
      */
-    public function setTrafficValue(&$arrResult, &$fRow, $rowKey) {
+    public function setTrafficValue(&$arrResult, &$fRow, $rowKey)
+    {
 
         switch ($fRow['DESCRIPTION_CODE']) {
             case self::SMS_STATUS_DELIVERED:
@@ -264,7 +278,8 @@ class ApiMessageContentBasedReport {
      * Create Message content Report File
      * Create Uncategorized Message Report File
      */
-    private function createReportFile() {
+    private function createReportFile()
+    {
         try {
             $this->reportWriter = WriterFactory::create(Type::XLSX);
             $this->uncategorizedReportWriter = WriterFactory::create(Type::XLSX);
@@ -288,7 +303,8 @@ class ApiMessageContentBasedReport {
      * 
      * @param String    $userAPI
      */
-    private function createReportPackage($finalReport) {
+    private function createReportPackage($finalReport)
+    {
         $finalReport = $this->msgContentReportDir . $this->userAPI . '*.xlsx';
 
         $this->finalPackage = $this->msgContentReportDir . $this->userAPI . '_' . self::FINAL_REPORT_NAME . $this->periodSuffix . '.zip';
@@ -297,18 +313,43 @@ class ApiMessageContentBasedReport {
     }
 
     /**
-     * 
-     * @param String $userApi       User API
-     * @param String $reportName    Path to file
+     * Convert DateTime from server timezone to client timezone
+     *
+     * @param  String $value
+     * @return String
+     */
+    public function clientTimeZone($value, $format = 'Y-m-d H:i:s')
+    {
+        // If input value is a unix timestamp
+        if (is_numeric($value)) {
+            $value = date('Y-m-d H:i:s', $value);
+        }
+
+        // If input value is not a correct datetime format
+        if (!strtotime($value)) {
+            $currentTimestamp = strtotime('now');
+            $value = date('Y-m-d H:i:s', $currentTimestamp);
+        }
+
+        // Create datetime based on input value (GMT)
+        $date = new \DateTime($value, new \DateTimeZone($this->timezoneServer));
+
+        // Return datetime corrected for client's timezone (GMT+7)
+        return $date->setTimezone(new \DateTimeZone($this->timezoneClient))->format($format);
+    }
+
+    /**
+     * Function to update manifest file either to add new object or update attribute isDone
      * @param Boolean $isDone       Status of file either done or not
      */
-    private function updateManifest($userApi, $reportName, $isDone) {
+    public function updateManifest($isDone)
+    {
 
         $manifestContent = [
-            'userAPI' => $userApi,
-            'reportName' => $reportName,
+            'userAPI' => $this->userAPI,
+            'reportName' => $this->reportName,
             'reportPackage' => $this->finalPackage,
-            'createdAt' => date('Y-m-d h:i:s'),
+            'createdAt' => $this->clientTimeZone(date('Y-m-d H:i:s')),
             'isDone' => $isDone
         ];
         $isFound = false;
@@ -316,7 +357,7 @@ class ApiMessageContentBasedReport {
         if (file_exists($this->manifestFile)) {
             $manifest = $this->getManifest();
             foreach ($manifest as $index => $detail) {
-                if ($detail->userAPI == $userApi && $detail->reportName == $reportName) {
+                if ($detail->userAPI == $this->userAPI && $detail->reportName == $this->reportName) {
                     $manifest[$index] = $manifestContent;
                     $isFound = true;
                     break;
@@ -340,7 +381,8 @@ class ApiMessageContentBasedReport {
      * Get list of report from Manifest File
      * @return Array
      */
-    public function getManifest() {
+    public function getManifest()
+    {
         return !file_exists($this->manifestFile) ? [] : json_decode(file_get_contents($this->manifestFile));
     }
 
@@ -348,11 +390,14 @@ class ApiMessageContentBasedReport {
      * Download Report
      * 
      * @param String $reportFile    Path to Message Content package report
+     * @return Mixed
      */
-    public function downloadReport($reportFile) {
+    public function downloadReport($reportFile)
+    {
         if ($this->isReportExist($reportFile)) {
 
             // Zip transfer 
+            ob_start();
             header('Pragma: public');
             header('Expires: 0');
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -365,8 +410,8 @@ class ApiMessageContentBasedReport {
             ob_end_flush();
             @readfile($reportFile);
         } else {
-            echo 'Report not found. it may have been deleted.';
             $this->log->warn('Could not download report, file not found: ' . $reportFile);
+            return false;
         }
     }
 

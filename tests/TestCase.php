@@ -12,11 +12,6 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 class TestCase extends BaseTestCase
 {
 
-    function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * Get private or protected method reflection
      * 

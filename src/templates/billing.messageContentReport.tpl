@@ -45,17 +45,16 @@ Copyright(c) 2010 1rstWAP. All rights reserved.
                             placeholder: "Select a user"
                         });
                         
-                        $('#downloadReport').click(function(){
+                        $('.btn-download').click(function(){
                             var linktoDownload = '/services/billling.downloadMessageContentBasedReport.php',
                                 report = $(this).attr('data');
-                            
+
                             $.ajax({
                                 url         : linktoDownload,
                                 type        : 'GET',
                                 data        : {report : report, check: true},
                                 dataType    : 'JSON',
                                 success     : function(response){
-                                             
                                              if(response == 200){
                                                  window.location = linktoDownload+"?report="+report;
                                              } else {
@@ -164,7 +163,7 @@ Copyright(c) 2010 1rstWAP. All rights reserved.
                                                                                 <td class="type-text">{$reportFiles[list]->reportName}</td>
                                                                                 <td class="type-action">
                                                                                         {if ($reportFiles[list]->isDone)}
-                                                                                            <a href="#" title="Download" class="form-button" data="{$reportFiles[list]->reportPackage}" id="downloadReport"><img src="skin/images/download.png" class="icon-image" alt="" /></a>
+                                                                                            <a href="#" title="Download" class="form-button btn-download" data="{$reportFiles[list]->reportPackage}" id="downloadReport"><img src="skin/images/download.png" class="icon-image" alt="" /></a>
                                                                                         {else}
                                                                                             <img src="skin/images/wheel.gif"  title="Report on progress" />
                                                                                         {/if}
