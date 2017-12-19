@@ -62,6 +62,20 @@ class ApiMessageContentBasedReport {
             $manifestFile;
 
     /**
+     * server timezone
+     *
+     * @var type String
+     */
+    public $timezoneServer = "+0";
+
+    /**
+     * server timezone
+     *
+     * @var type String
+     */
+    public $timezoneClient = "+7";
+
+    /**
      * ApiMessageContentBasedReport constructor
      * 
      * @param String $userAPI   USer API
@@ -148,11 +162,6 @@ class ApiMessageContentBasedReport {
 
                         if ($reportRowIdx != 1 && !empty($reportRow)) {
 
-                            /**
-                             * Update manifest to add current file that being process
-                             */
-                            $this->updateManifest($this->userAPI, $this->reportName, false);
-
                             $fRow = array_combine(self::DETAILED_MESSAGE_FORMAT, $reportRow) ?: [];
 
                             /**
@@ -212,9 +221,9 @@ class ApiMessageContentBasedReport {
                 /**
                  * Update manifest after file is already generated
                  */
-                $this->updateManifest($this->userAPI, $this->reportName, true);
+                $this->updateManifest(true);
 
-                $this->log->info("Finish to generate report at " . date('Y-m-d H:i:s'));
+                $this->log->info("Finish to generate report " . $this->reportName . " at " . date('Y-m-d H:i:s'));
             } catch (Exception $e) {
                 $this->log->error('Failed to read File');
             }
@@ -297,18 +306,41 @@ class ApiMessageContentBasedReport {
     }
 
     /**
-     * 
-     * @param String $userApi       User API
-     * @param String $reportName    Path to file
+     * Convert DateTime from server timezone to client timezone
+     *
+     * @param  String $value
+     * @return String
+     */
+    public function clientTimeZone($value, $format = 'Y-m-d H:i:s') {
+        // If input value is a unix timestamp
+        if (is_numeric($value)) {
+            $value = date('Y-m-d H:i:s', $value);
+        }
+
+        // If input value is not a correct datetime format
+        if(!strtotime($value)){
+            $currentTimestamp = strtotime('now');
+            $value = date('Y-m-d H:i:s', $currentTimestamp);
+        }
+
+        // Create datetime based on input value (GMT)
+        $date = new \DateTime($value, new \DateTimeZone($this->timezoneServer));
+
+        // Return datetime corrected for client's timezone (GMT+7)
+        return $date->setTimezone(new \DateTimeZone($this->timezoneClient))->format($format);
+    }
+
+    /**
+     * Function to update manifest file either to add new object or update attribute isDone
      * @param Boolean $isDone       Status of file either done or not
      */
-    private function updateManifest($userApi, $reportName, $isDone) {
+    public function updateManifest($isDone) {
 
         $manifestContent = [
-            'userAPI' => $userApi,
-            'reportName' => $reportName,
+            'userAPI' => $this->userAPI,
+            'reportName' => $this->reportName,
             'reportPackage' => $this->finalPackage,
-            'createdAt' => date('Y-m-d h:i:s'),
+            'createdAt' => $this->clientTimeZone(date('Y-m-d H:i:s')),
             'isDone' => $isDone
         ];
         $isFound = false;
@@ -316,7 +348,7 @@ class ApiMessageContentBasedReport {
         if (file_exists($this->manifestFile)) {
             $manifest = $this->getManifest();
             foreach ($manifest as $index => $detail) {
-                if ($detail->userAPI == $userApi && $detail->reportName == $reportName) {
+                if ($detail->userAPI == $this->userAPI && $detail->reportName == $this->reportName) {
                     $manifest[$index] = $manifestContent;
                     $isFound = true;
                     break;
@@ -371,4 +403,5 @@ class ApiMessageContentBasedReport {
             return false;
         }
     }
+
 }
