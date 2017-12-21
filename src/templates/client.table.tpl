@@ -2,10 +2,10 @@
 	<thead>
 		<tr>
 			<th style="width: 20%;">Company Name</th>
-			<th style="width: 15%;">Country</th>
+			<th style="width: 20%;">Country</th>
 			<th style="width: 20%;">Contact Name</th>
 			<th style="width: 15%;">Contact Phone</th>
-			<th style="width: 30%;">
+			<th style="width: 25%;">
 				<a href="#" class="form-button" onclick="$app.module('client').createNew();">
 					<img title="Register" src="skin/images/icon-add.png" class="form-button-image" alt="" />
 					<span class="form-button-text">Register</span>
@@ -30,7 +30,6 @@
 				<a href="#" title="Edit" class="form-button" onclick="$app.module('client').editClient({$clients[list].clientID});"><img src="skin/images/icon-edit.png" class="icon-image" alt="" /></a>
 				<a href="#" title="Delete" class="form-button" onclick="$app.module('client').removeClient({$clients[list].clientID});"><img src="skin/images/icon-remove.png" class="icon-image" alt="" /></a>
 				<a href="#" title="Manage Users" class="form-button" onclick="$app.module('client').manageUsers({$clients[list].clientID});"><img src="skin/images/icon-user.png" class="icon-image" alt="" /></a>
-                                <a href="#" title="Billing Options" class="form-button" onclick="$app.module('client').smsBilling({$clients[list].clientID});"><img src="skin/images/icon-client.png" class="icon-image" alt="" /></a>
 			</td>
 		</tr>
 		{/section}
