@@ -11,6 +11,8 @@ require_once '../lib/FirePHPCore/FirePHP.class.php';
  * @author setia.budi
  * 
  * @author Fathir Wafda --> add insertBilling, updateBilling and getBillingDetail
+ * 
+ * @author Ayu Musfita  --> delete insertBilling, updateBilling and getBillingDetail    tracker 22936
  */
 class ApiBusinessClient extends ApiBaseModel {
 
@@ -122,147 +124,6 @@ class ApiBusinessClient extends ApiBaseModel {
             $string = null;
         }
         return $string;
-    }
-
-    /**
-     * Insert Billing Data 
-     * @param type $clientData, $data
-     * @return type
-     */
-    public function insertBilling($clientData, $data) {
-        try {
-
-                    $firephp = FirePHP::getInstance(true);
-                    $firephp->log($data);
-            //$firephp->fb($clientData);
-            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
-            $query = 'insert into BILLING_OPTIONS (
-						CLIENT_ID, BILLED_SMS, BILLED_SMS_DESC,
-						UNKNOWN, PENDING, UNDELIVERED,
-						DELIVERED, DELIVERED_DESC, TOTAL_SMS,
-                                                TOTAL_CHARGE, PROVIDER, PROVIDER_DESC
-						)
-					values (
-						:clientID, :billsms, :subIdBillNo,
-						:unknown, :pending, :undelivered,
-						:showDelivered, :deliveredDesc, :totalSms,
-                                                :totalCharge, :showProvider, :provided
-						)';
-            $companyID = SmsApiAdmin::getCurrentUser()->getID();
-            $i = 0;
-            $provided = '';
-$firephp->fb($query);
-            $provided = $this->addSparation($data['provided']);
-            $billsms = $this->addSparation($data['billsms']);
-
-            if ($data['errorCode'] !== null) {
-                $billsms .= ';' . $data['errorCode'];
-            }
-            //$firephp->log($billsms);
-            $stmt = $db->prepare($query);
-            $stmt->bindValue(':clientID', $data['clientID'], PDO::PARAM_STR);
-            $stmt->bindValue(':billsms', $billsms, PDO::PARAM_STR);
-            $stmt->bindValue(':subIdBillNo', $data['subIdBillNo'], PDO::PARAM_STR);
-            $stmt->bindValue(':unknown', $data['unknown'], PDO::PARAM_STR);
-            $stmt->bindValue(':pending', $data['pending'], PDO::PARAM_STR);
-            $stmt->bindValue(':undelivered', $data['undelivered'], PDO::PARAM_STR);
-            $stmt->bindValue(':showDelivered', $data['showDelivered'], PDO::PARAM_STR);
-            $stmt->bindValue(':deliveredDesc', $data['deliveredDesc'], PDO::PARAM_STR);
-            $stmt->bindValue(':totalSms', $data['totalSms'], PDO::PARAM_STR);
-            $stmt->bindValue(':totalCharge', $data['totalCharge'], PDO::PARAM_STR);
-            $stmt->bindValue(':showProvider', $data['showProvider'], PDO::PARAM_STR);
-            $stmt->bindValue(':provided', $provided, PDO::PARAM_STR);
-
-            $stmt->execute();
-
-            $lastInsertId = $db->lastInsertId();
-$firephp->log($lastInsertId);
-            return $lastInsertId;
-        } catch (PDOException $e) {
-            $this->logger->error("$e");
-            throw new Exception("Query error!");
-        }
-    }
-
-    public function updateBilling($clientID, $updates) {
-        try {
-            $firephp = FirePHP::getInstance(true);
-//            $firephp->log($data);
-//            $firephp->fb($clientData);
-            
-            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
-
-            $provided = $this->addSparation($updates['provided']);
-            $billsms = $this->addSparation($updates['billsms']);
-
-            if ($updates['errorCode'] !== null) {
-                $billsms .= ';' . $updates['errorCode'];
-            }
-            $firephp->log($billsms);
-            
-            $fields = array(
-                'billsms' => array(':billsms', 'BILLED_SMS', $billsms, PDO::PARAM_STR),
-                'subIdBillNo' => array(':subIdBillNo', 'BILLED_SMS_DESC', PDO::PARAM_STR),
-                'unknown' => array(':unknown', 'UNKNOWN', PDO::PARAM_STR),
-                'pending' => array(':pending', 'PENDING', PDO::PARAM_STR),
-                'undelivered' => array(':undelivered', 'UNDELIVERED', PDO::PARAM_STR),
-                'showDelivered' => array(':showDelivered', 'DELIVERED', PDO::PARAM_STR),
-                'deliveredDesc' => array(':deliveredDesc', 'DELIVERED_DESC', PDO::PARAM_STR),
-                'totalSms' => array(':totalSms', 'TOTAL_SMS', PDO::PARAM_STR),
-                'showProvider' => array(':showProvider', 'PROVIDER', PDO::PARAM_STR),
-                'provided' => array(':provided', 'PROVIDER_DESC', $provided, PDO::PARAM_STR)
-            );
-   
-            $query = 'update BILLING_OPTIONS set ';
-            $assignment = array();
-            
-            foreach ($updates as $key => $value) {
-                if (isset($fields[$key])) {
-                    $definition = $fields[$key];
-                    $assignment[$key] = $definition[1] . '=' . $definition[0];
-                }
-            }
-            
-            foreach (array_diff_key($fields,$assignment) as $key => $value){
-                if (isset($fields[$key])) {
-                    $definition = $fields[$key];
-                    $assignment[$key] = $definition[1] . '=' . $definition[0];
-                }
-            }
-            
-            
-            if (!$assignment)
-                throw new Exception("No valid update field");
-            $stmt = $db->prepare($query . implode(',', $assignment) . ' where CLIENT_ID=:clientID');
-            foreach ($assignment as $key => $value) {
-                $definition = $fields[$key];
-                switch ($key) {
-                    case 'billsms':
-                        $stmt->bindValue(':billsms', $billsms, PDO::PARAM_STR);
-                        break;
-                    case 'provided':
-                        $stmt->bindValue(':provided', $provided, PDO::PARAM_STR);
-                        break;
-                    default :
-                        $stmt->bindValue($definition[0], $updates[$key], PDO::PARAM_STR);
-                }
-            }
-            
-            $stmt->bindValue(':clientID', $clientID, PDO::PARAM_INT);
-            $db->beginTransaction();
-            try {
-                $stmt->execute();
-                $db->commit();
-            } catch (PDOException $e) {
-                $this->logger->error("Insert client query failed. $e");
-                $db->rollBack();
-                throw new Exception("Failed registering new client");
-            }
-            return true;
-        } catch (Exception $e) {
-            $this->logger->error("$e");
-            return false;
-        }
     }
 
     public function update($clientID, $updates) {
@@ -384,39 +245,6 @@ $firephp->log($lastInsertId);
         }
     }
 
-    public function getBillingDetails($clientID) {
-        try {
-            $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
-            $query = 'select 
-					CLIENT_ID as clientID,
-					BILLED_SMS as billsms, 
-                                        BILLED_SMS_DESC as subIdBillNo,
-                                        UNKNOWN as unknown, 
-                                        PENDING as pending, 
-                                        UNDELIVERED as undelivered,
-                                        DELIVERED as showDelivered, 
-                                        DELIVERED_DESC as deliveredDesc, 
-                                        TOTAL_SMS as totalSms,
-                                        TOTAL_CHARGE as totalCharge, 
-                                        PROVIDER as showProvider, 
-                                        PROVIDER_DESC as provided
-				from BILLING_OPTIONS
-				 where CLIENT_ID=:clientID';
-            $stmt = $db->prepare($query);
-            $stmt->bindValue(':clientID', $clientID, PDO::PARAM_INT);
-            $stmt->execute();
-            $details = $stmt->fetch(PDO::FETCH_ASSOC);
-            unset($stmt);
-            return $details;
-        } catch (Exception $e) {
-            $this->logger->error("$e");
-            return false;
-        }
-    }
-
-//	public function  getDetails($clientID){
-//
-//	}
     public function checkExistence($clientID) {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
