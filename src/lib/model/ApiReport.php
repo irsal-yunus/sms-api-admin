@@ -43,7 +43,7 @@ class ApiReport {
     const   SMS_STATUS_DELIVERED            = 'DELIVERED';
     const   SMS_STATUS_UNDELIVERED_CHARGED  = 'UNDELIVERED (CHARGED)';
     const   SMS_STATUS_UNDELIVERED          = 'UNDELIVERED (UNCHARGED)';
-    const   SMS_STATUS_UNDEFINED            = 'UNDELIVERED (UNCHARGED)';
+    const   SMS_STATUS_UNDEFINED            = 'UNDELIVERED (CHARGED)';
     
     
     /**
@@ -1422,7 +1422,6 @@ class ApiReport {
                     $transaction['tsC']  += $count; 
                 break;
             case self::SMS_STATUS_UNDELIVERED: 
-            case self::SMS_STATUS_UNDEFINED  :
                     $transaction['udUc'] += $count; 
                 break;
         }
