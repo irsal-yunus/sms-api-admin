@@ -160,7 +160,7 @@
                     if(parseInt(from[i].value) > parseInt(to[i].value)){
                        
                         /* display the error notification for gap's value*/
-                        errorSpan = '<span class="help-block form-error">Tiering \'up to\' must be greater than Tiering From</span>';
+                        errorSpan = '<span class="help-block form-error">Tiering \'Up To\' must be greater than Tiering \'From\'</span>';
                         
                         $(errorSpan).insertAfter($(rowT).find('input:text.tiering-to'));
                         $(rowT)
