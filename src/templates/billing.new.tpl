@@ -42,12 +42,14 @@
                 }
             })
             .on('click', '.btn-tiering-remove', function(){
-                var length = $('#tiering-table').find('tbody tr').length;
-                if (length > 1 && $(this).parent('th').parent('tr') ){
-                    $(this).parent('th').parent('tr').remove();
+                var length = $('#tiering-table > tbody > tr').length;
+                var parent = $(this).parent('th').parent('tr');
+
+                if (length > 1 && parent.length > 0 && parent.is(':not(:first-child)')){
+                    parent.remove();
                     $('#tiering-table tr:last .tiering-to')
-                            .val('MAX')
-                            .attr('readonly', true);
+                        .val('MAX')
+                        .attr('readonly', 'readonly');
                 }
             })
             .on('change', 'input[name="isMax"]', function(){
@@ -227,7 +229,7 @@
                         + '</tr>';
         
         $(newRow).insertAfter($(element).closest('tr'));
-        
+
         rowIndexTiering++;
     }
   
