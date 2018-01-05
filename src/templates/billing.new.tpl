@@ -42,12 +42,14 @@
                 }
             })
             .on('click', '.btn-tiering-remove', function(){
-                var length = $('#tiering-table').find('tbody tr').length;
-                if (length > 1 && $(this).parent('th').parent('tr') ){
-                    $(this).parent('th').parent('tr').remove();
+                var length = $('#tiering-table > tbody > tr').length;
+                var parent = $(this).parent('th').parent('tr');
+
+                if (length > 1 && parent.length > 0 && parent.is(':not(:first-child)')){
+                    parent.remove();
                     $('#tiering-table tr:last .tiering-to')
-                            .val('MAX')
-                            .attr('readonly', true);
+                        .val('MAX')
+                        .attr('readonly', 'readonly');
                 }
             })
             .on('change', 'input[name="isMax"]', function(){
@@ -158,7 +160,7 @@
                     if(parseInt(from[i].value) > parseInt(to[i].value)){
                        
                         /* display the error notification for gap's value*/
-                        errorSpan = '<span class="help-block form-error">Tiering \'up to\' must be greater than Tiering From</span>';
+                        errorSpan = '<span class="help-block form-error">Tiering \'Up To\' must be greater than Tiering \'From\'</span>';
                         
                         $(errorSpan).insertAfter($(rowT).find('input:text.tiering-to'));
                         $(rowT)
@@ -227,7 +229,7 @@
                         + '</tr>';
         
         $(newRow).insertAfter($(element).closest('tr'));
-        
+
         rowIndexTiering++;
     }
   
