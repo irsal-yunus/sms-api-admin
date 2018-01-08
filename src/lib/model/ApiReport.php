@@ -1980,8 +1980,8 @@ class ApiReport {
                                             : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter);
                            
                             $this->assignMessagePrice(self::BILLING_OPERATOR_BASE, $messages, $operatorPrice, $operatorPrefix);
-                            $this->insertIntoReportFile($messages);
-                            $this->getMessageSummary($messages);
+                            $this->insertIntoReportFile($messages, 'final');
+                            $this->getMessageSummary($messages, 'final');
 
                             $counter      += REPORT_PER_BATCH_SIZE;
                             $lastSendDate  = end($messages)['SEND_DATETIME'];
@@ -2018,7 +2018,7 @@ class ApiReport {
                                 $this->getMessageSummary   ($messages, 'awaiting');
                                 $counter += REPORT_PER_BATCH_SIZE;
                             }
-                        } while(!empty($messages));
+                        } while(!empty($messages) && count($messages) == REPORT_PER_BATCH_SIZE);
                     }
                     else if(strtoupper($userBillingProfile['BILLING_TYPE']) == self::BILLING_TIERING_BASE) {
                         
@@ -2058,11 +2058,6 @@ class ApiReport {
                             $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $finalPrice,    $operatorPrefix);
                             $this->insertIntoReportFile($messages, 'final');
                             $this->getMessageSummary   ($messages, 'final');
-                            
-                            // TIERING BASE - Awaiting
-                            $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $awaitingPrice, $operatorPrefix);
-                            $this->insertIntoReportFile($messages, 'awaiting');
-                            $this->getMessageSummary   ($messages, 'awaiting');
                             
                             $counter      += REPORT_PER_BATCH_SIZE;
                             $lastSendDate  = end($messages)['SEND_DATETIME'];
