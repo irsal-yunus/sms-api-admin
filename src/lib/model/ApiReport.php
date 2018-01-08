@@ -2059,11 +2059,6 @@ class ApiReport {
                             $this->insertIntoReportFile($messages, 'final');
                             $this->getMessageSummary   ($messages, 'final');
                             
-                            // TIERING BASE - Awaiting
-                            $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $awaitingPrice, $operatorPrefix);
-                            $this->insertIntoReportFile($messages, 'awaiting');
-                            $this->getMessageSummary   ($messages, 'awaiting');
-                            
                             $counter      += REPORT_PER_BATCH_SIZE;
                             $lastSendDate  = end($messages)['SEND_DATETIME'];
                         } while(!empty($messages) && count($messages) == REPORT_PER_BATCH_SIZE);
