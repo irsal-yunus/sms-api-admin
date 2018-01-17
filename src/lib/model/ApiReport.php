@@ -2052,35 +2052,19 @@ class ApiReport {
                                             ? $this->getGroupMessageStatus($userReportGroupDates,      $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter)
                                             : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter);
                             
-                            // TIERING BASE - Final
                             $lastSendDate  = end($messages)['SEND_DATETIME'];
-                            $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $finalPrice,    $operatorPrefix);
+                            // TIERING BASE - Final
+                            $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $finalPrice, $operatorPrefix);
                             $this->insertIntoReportFile($messages, 'final');
                             $this->getMessageSummary   ($messages, 'final');
+
+                            // TIERING BASE - Awaiting
+                            $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $awaitingPrice, $operatorPrefix);
+                            $this->insertIntoReportFile($messages, 'awaiting');
+                            $this->getMessageSummary   ($messages, 'awaiting');
                             
                             $counter      += REPORT_PER_BATCH_SIZE;
                         } while(!empty($messages) && count($messages) == REPORT_PER_BATCH_SIZE);
-
-
-                        /**
-                         * TIERING BASE - Awaiting DR SMS
-                         */
-                        $counter = 0;
-                        do {
-                            $this->log->debug('Get '.$fileName.' messages from '.$counter .' to '.($counter + REPORT_PER_BATCH_SIZE));
-                            $messages = $getByGroup
-                                            ? $this->getGroupMessageStatus($userReportGroupDates,      $this->lastDateOfMonth, REPORT_PER_BATCH_SIZE, $counter)
-                                            : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastDateOfMonth, REPORT_PER_BATCH_SIZE, $counter);
-                            
-                            // TIERING BASE - Awaiting
-                            if(!empty($messages)) {
-                                $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $awaitingPrice, $operatorPrefix);
-                                $this->insertIntoReportFile($messages, 'awaiting');
-                                $this->getMessageSummary   ($messages, 'awaiting');
-                                $counter += REPORT_PER_BATCH_SIZE;
-                            }
-                        } while(!empty($messages) && count($messages) == REPORT_PER_BATCH_SIZE);
-
 
                         /**
                          * TIERING BASE - Update user last send date time
@@ -2094,6 +2078,25 @@ class ApiReport {
                         else {
                             $newUserLastSendDate[$userId] = $lastSendDate;
                         }
+
+                        /**
+                         * TIERING BASE - Awaiting DR SMS
+                         */
+                        $counter = 0;
+                        do {
+                            $this->log->debug('Get '.$fileName.' messages from '.$counter .' to '.($counter + REPORT_PER_BATCH_SIZE));
+                            $messages = $getByGroup
+                                            ? $this->getGroupMessageStatus($userReportGroupDates,      $this->lastDateOfMonth, REPORT_PER_BATCH_SIZE, $counter)
+                                            : $this->getUserMessageStatus ($userId, $lastSendDate, $this->lastDateOfMonth, REPORT_PER_BATCH_SIZE, $counter);
+                            
+                            // TIERING BASE - Awaiting
+                            $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $awaitingPrice, $operatorPrefix);
+                            $this->insertIntoReportFile($messages, 'awaiting');
+                            $this->getMessageSummary   ($messages, 'awaiting');
+                            $counter += REPORT_PER_BATCH_SIZE;
+                        } while(!empty($messages) && count($messages) == REPORT_PER_BATCH_SIZE);
+
+
                     }
                     
                     if(in_array(
