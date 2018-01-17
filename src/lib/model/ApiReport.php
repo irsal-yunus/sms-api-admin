@@ -206,19 +206,19 @@ class ApiReport {
      * 
      */
     private function configureBillingPeriod() {
-        $today              = date('Y-m-d 23:59:59');
-        $currentFirstDate   = (int)date('Y-m-01');
         $currentDay         = (int)date('d');
         $currentMonth       = (int)date('m');
-        $currentYear        = (int)date('Y');
         $lastMonth          = (int)date('m', strtotime('last month'));
-
-        $this->firstDateOfMonth    = $this->serverTimeZone(date('Y-m-01 00:00:00', strtotime($this->year.'-'.$this->month.'-01')));
-        $this->lastDateOfMonth     = $this->serverTimeZone(date('Y-m-01 00:00:00',  strtotime('+1 month', strtotime($this->year.'-'.$this->month.'-01'))));
+        $clientDate         = $this->clientTimeZone(strtotime('now'),'Y-m-d 00:00:00');
+        $lastTwoDays        = $this->serverTimeZone(strtotime($clientDate.' -2 days'));
+        $reportDate         = $this->year.'-'.$this->month.'-01 00:00:00';
         
+        $this->firstDateOfMonth    = $this->serverTimeZone(strtotime($reportDate.' -1 second'));
+        $this->lastDateOfMonth     = $this->serverTimeZone(date('Y-m-01 00:00:00', strtotime($reportDate.' +1 month')));
+
         if($this->month != $currentMonth) {
-            if($this->month == $lastMonth &&  $currentDay < 3) {
-                $this->lastFinalStatusDate = date('Y-m-d 00:00:00', strtotime(' -2 days'));
+            if($this->month == $lastMonth && $currentDay < 3) {
+                $this->lastFinalStatusDate = $lastTwoDays;
             }
             else {
                 $this->lastFinalStatusDate = $this->lastDateOfMonth;
@@ -226,13 +226,12 @@ class ApiReport {
         }
         else {
             if( $currentDay >= 3) {
-                $this->lastFinalStatusDate = date('Y-m-d 00:00:00', strtotime('-2 days'));
+                $this->lastFinalStatusDate = $lastTwoDays;
             }
             else {
                 $this->lastFinalStatusDate = false;
             }
         }
-        
     }
     
     
@@ -628,8 +627,8 @@ class ApiReport {
                          ' SELECT   COUNT(USER_ID_NUMBER) '
                         .' FROM     '.DB_SMS_API_V2.'.USER_MESSAGE_STATUS '
                         .' WHERE    USER_ID_NUMBER '.$usersClause
-                        .'          AND SEND_DATETIME >= \''.$this->firstDateOfMonth.'\''
-                        .'          AND SEND_DATETIME <= \''.$endDate.'\''
+                        .'          AND SEND_DATETIME > \''.$this->firstDateOfMonth.'\''
+                        .'          AND SEND_DATETIME < \''.$endDate.'\''
                         .'          AND MESSAGE_STATUS IN (\''.implode('\',\'', $this->chargedDeliveryStatus).'\') '
                         ,  self::QUERY_SINGLE_ROW_AND_COLUMN
                     ) ?: 0;
@@ -712,8 +711,8 @@ class ApiReport {
                                 ' SELECT   SEND_DATETIME '
                                .' FROM     '.DB_SMS_API_V2.'.USER_MESSAGE_STATUS '
                                .' WHERE    USER_ID_NUMBER = '.$userId
-                               .'          AND SEND_DATETIME >= \''.$this->firstDateOfMonth.'\''
-                               .'          AND SEND_DATETIME <= \''.$this->lastFinalStatusDate.'\''
+                               .'          AND SEND_DATETIME > \''.$this->firstDateOfMonth.'\''
+                               .'          AND SEND_DATETIME < \''.$this->lastFinalStatusDate.'\''
                                .' ORDER BY SEND_DATETIME DESC'
                                .' LIMIT    1'
                                , self::QUERY_SINGLE_ROW_AND_COLUMN
@@ -751,11 +750,11 @@ class ApiReport {
         $userIdClause = is_array($userId)
                             ? ' IN ('.implode(',', $userId).')'
                             : ' = '.$userId;
-        
+
         $message  =  ' SELECT    MESSAGE_ID, DESTINATION,  MESSAGE_CONTENT, MESSAGE_STATUS, \'\' AS DESCRIPTION_CODE, SEND_DATETIME, SENDER, USER_ID'
         .' FROM      '.DB_SMS_API_V2.'.USER_MESSAGE_STATUS'
         .' WHERE     USER_ID_NUMBER '.$userIdClause
-        .'           AND SEND_DATETIME >=  \''.$startDateTime.'\' '
+        .'           AND SEND_DATETIME >  \''.$startDateTime.'\' '
         .'           AND SEND_DATETIME < \''.$endDateTime  .'\' '
         .' LIMIT     '.$startIndex.','.$dataSize;
         $messages = $this->query($message);
@@ -786,7 +785,7 @@ class ApiReport {
         foreach($users as $userId => $startDateTime) {
             $userClause[] = '( USER_ID_NUMBER = '.$userId
                            .'  AND SEND_DATETIME > \''.$startDateTime.'\''
-                           .'  AND SEND_DATETIME <= \''.$endDateTime.'\')';
+                           .'  AND SEND_DATETIME < \''.$endDateTime.'\')';
         }
         
         $messages = $this->query(
@@ -1395,8 +1394,8 @@ class ApiReport {
            ?: $summary[$group] = [];
         
         if(!isset($summary[$group][$member])) {
-           $startDate = $this->clientTimeZone($this->firstDateOfMonth);
-           $endDate = date('Y-m-d H:i:s', strtotime('-1 second', strtotime($this->clientTimeZone($this->lastDateOfMonth))));
+           $startDate = $this->clientTimeZone(strtotime($this->firstDateOfMonth.' 1 second'));
+           $endDate = $this->clientTimeZone(strtotime($this->lastDateOfMonth.' -1 second'));
            $period  = $this->getDateRange($startDate, $endDate);
            $traffic = [
                     'd'     => 0,   // Delivered
@@ -1511,7 +1510,7 @@ class ApiReport {
         $style    = $this->getSummaryColorStyle();
         $colWidth = count($data) *6;
         $lastCol  = 'G';
-        
+        $iterator = 0;
         // Set Column Title level 1
         $sheet  ->setCellValue('A'.$startRow, 'Date') ->mergeCells('A'.$startRow.':A'.($startRow +2))
                 ->setCellValue('B'.$startRow, $type);
@@ -1979,12 +1978,11 @@ class ApiReport {
                                             ? $this->getGroupMessageStatus($userReportGroupDates,      $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter)
                                             : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter);
                            
-                            $this->assignMessagePrice(self::BILLING_OPERATOR_BASE, $messages, $operatorPrice, $operatorPrefix);
-                            $this->insertIntoReportFile($messages, 'final');
-                            $this->getMessageSummary($messages, 'final');
-
-                            $counter      += REPORT_PER_BATCH_SIZE;
                             $lastSendDate  = end($messages)['SEND_DATETIME'];
+                            $this->assignMessagePrice(self::BILLING_OPERATOR_BASE, $messages, $operatorPrice, $operatorPrefix);
+                            $this->insertIntoReportFile($messages);
+                            $this->getMessageSummary($messages);
+                            $counter      += REPORT_PER_BATCH_SIZE;
                         } while(!empty($messages) && count($messages) == REPORT_PER_BATCH_SIZE);
 
                         
@@ -2054,16 +2052,20 @@ class ApiReport {
                                             ? $this->getGroupMessageStatus($userReportGroupDates,      $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter)
                                             : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter);
                             
+                            $lastSendDate  = end($messages)['SEND_DATETIME'];
                             // TIERING BASE - Final
-                            $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $finalPrice,    $operatorPrefix);
+                            $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $finalPrice, $operatorPrefix);
                             $this->insertIntoReportFile($messages, 'final');
                             $this->getMessageSummary   ($messages, 'final');
+
+                            // TIERING BASE - Awaiting
+                            $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $awaitingPrice, $operatorPrefix);
+                            $this->insertIntoReportFile($messages, 'awaiting');
+                            $this->getMessageSummary   ($messages, 'awaiting');
                             
                             $counter      += REPORT_PER_BATCH_SIZE;
-                            $lastSendDate  = end($messages)['SEND_DATETIME'];
                         } while(!empty($messages) && count($messages) == REPORT_PER_BATCH_SIZE);
 
-                        
                         /**
                          * TIERING BASE - Update user last send date time
                          */
@@ -2077,7 +2079,6 @@ class ApiReport {
                             $newUserLastSendDate[$userId] = $lastSendDate;
                         }
 
-                        
                         /**
                          * TIERING BASE - Awaiting DR SMS
                          */
@@ -2086,16 +2087,17 @@ class ApiReport {
                             $this->log->debug('Get '.$fileName.' messages from '.$counter .' to '.($counter + REPORT_PER_BATCH_SIZE));
                             $messages = $getByGroup
                                             ? $this->getGroupMessageStatus($userReportGroupDates,      $this->lastDateOfMonth, REPORT_PER_BATCH_SIZE, $counter)
-                                            : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastDateOfMonth, REPORT_PER_BATCH_SIZE, $counter);
-                            
-                            // TIERING BASE - Awaiting
-                            if(!empty($messages)) {
+                                            : $this->getUserMessageStatus ($userId, $lastSendDate, $this->lastDateOfMonth, REPORT_PER_BATCH_SIZE, $counter);
+                            if(!empty($messages)){
+                                // TIERING BASE - Awaiting
                                 $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $awaitingPrice, $operatorPrefix);
                                 $this->insertIntoReportFile($messages, 'awaiting');
                                 $this->getMessageSummary   ($messages, 'awaiting');
                                 $counter += REPORT_PER_BATCH_SIZE;
                             }
                         } while(!empty($messages) && count($messages) == REPORT_PER_BATCH_SIZE);
+
+
                     }
                     
                     if(in_array(
