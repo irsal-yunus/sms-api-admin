@@ -2088,12 +2088,13 @@ class ApiReport {
                             $messages = $getByGroup
                                             ? $this->getGroupMessageStatus($userReportGroupDates,      $this->lastDateOfMonth, REPORT_PER_BATCH_SIZE, $counter)
                                             : $this->getUserMessageStatus ($userId, $lastSendDate, $this->lastDateOfMonth, REPORT_PER_BATCH_SIZE, $counter);
-                            
-                            // TIERING BASE - Awaiting
-                            $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $awaitingPrice, $operatorPrefix);
-                            $this->insertIntoReportFile($messages, 'awaiting');
-                            $this->getMessageSummary   ($messages, 'awaiting');
-                            $counter += REPORT_PER_BATCH_SIZE;
+                            if(!empty($messages)){
+                                // TIERING BASE - Awaiting
+                                $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $awaitingPrice, $operatorPrefix);
+                                $this->insertIntoReportFile($messages, 'awaiting');
+                                $this->getMessageSummary   ($messages, 'awaiting');
+                                $counter += REPORT_PER_BATCH_SIZE;
+                            }
                         } while(!empty($messages) && count($messages) == REPORT_PER_BATCH_SIZE);
 
 
