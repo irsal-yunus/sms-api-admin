@@ -7,7 +7,7 @@
  */
 
 require_once dirname(__DIR__).'/init.d/init.php';
-require_once SMSAPIADMIN_LIB_DIR.'model/ApiMessageContentBasedReport.php';
+require_once SMSAPIADMIN_LIB_DIR.'model/ApiMessageFilterReport.php';
 
 $log = Logger::getRootLogger();
 
@@ -22,10 +22,10 @@ isset($argv[1]) ?: exit();
  */
 $request = json_decode(base64_decode($argv[1]));
 try{
-    $apiModel = new ApiMessageContentBasedReport($request->userAPI, $request->msgContent);
+    $apiModel = new ApiMessageFilterReport($request->month, $request->year,$request->userAPI, $request->contentFilter);
     $apiModel->generateReport();
 } catch (Throwable $e){
-    $log->error("Failed to generate Report");
+    $log->error("Failed to generate Report" . $e);
 }
 
 
