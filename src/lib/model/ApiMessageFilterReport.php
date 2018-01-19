@@ -114,11 +114,10 @@ class ApiMessageFilterReport
     }
 
     /**
+     * Function that return traffic value on Report
      * 
      * @param String $content
      * @return Array
-     * 
-     * Function that return traffic value on Report
      */
     public function getDefaultTraffic($content)
     {
@@ -135,6 +134,8 @@ class ApiMessageFilterReport
     /**
      * Main function to generate message content based Report
      * Will be called from generateMessageContentReport service
+     * 
+     * @return void
      */
     public function generateReport()
     {
@@ -290,10 +291,10 @@ class ApiMessageFilterReport
     }
 
     /**
+     * Function to mapping message filter into Array Key Value $arrResult
      * 
      * @param Array $arrResult
-     * 
-     * Function to mapping message filter into Array Key Value $arrResult
+     * @return void
      */
     protected function prepareReportData(&$arrResult)
     {
@@ -312,11 +313,11 @@ class ApiMessageFilterReport
     }
 
     /**
-     * 
-     * @param Array $arrResult
-     * 
      * Function to write summarize result to Message Filter Report
      * Apply Cell Styling
+     * 
+     * @param Array $arrResult
+     * @return void
      */
     protected function writeReportFile($arrResult)
     {
@@ -431,6 +432,8 @@ class ApiMessageFilterReport
     /**
      * Create Message content Report File
      * Create Uncategorized Message Report File
+     * 
+     * @return void
      */
     protected function createReportFile()
     {
@@ -455,6 +458,7 @@ class ApiMessageFilterReport
      * Create Zip package
      * 
      * @param String    $userAPI
+     * @return void
      */
     private function createReportPackage()
     {
