@@ -72,7 +72,7 @@ class ApiMessageFilterReportTest extends TestCase
             !file_exists($this->finalPackage) ? : unlink($this->finalReport);
             !file_exists($this->finalPackage) ? : unlink($this->uncategorizedReport);
             
-            $this->deleteManifest();
+            //$this->deleteManifest();
         } catch (Exception $e) {
             echo $e;
         }
@@ -272,6 +272,7 @@ class ApiMessageFilterReportTest extends TestCase
      * Test case for function getManifest
      * Function will return content of manifest file 
      * and will return empty array if manifest file is empty
+     * After get manifest delete array that contains test_api user
      */
     public function testGetManifest()
     {
@@ -280,6 +281,8 @@ class ApiMessageFilterReportTest extends TestCase
 
         $result = $this->callMethod($this->apiModel, 'getManifest', []);
         $this->assertNotEmpty($result);
+        
+        $this->deleteManifest();
     }
 
     /**
