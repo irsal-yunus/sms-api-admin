@@ -31,7 +31,10 @@ class ApiMessageFilterReport
     const MESSAGE_CONTENT_FORMAT = ['CONTENT', 'DEPARTMENT'];
     const FINAL_REPORT_FORMAT = ['CATEGORY', 'DELIVERED', 'UNDELIVERED (CHARGED)', 'UNDELIVERED (UNCHARGED)', 'MESSAGES IN TOTAL', 'TOTAL CHARGED (IDR)'];
     const DIR_MESSAGE_CONTENT_REPORT = 'MESSAGE_CONTENT_REPORT';
-
+    const DEPT_TOTAL = 'DEPT_TOTAL';
+    const OTHERS = 'OTHERS';
+    const TOTAL = 'TOTAL';
+    
     /**
      *
      * Public properties
@@ -199,7 +202,7 @@ class ApiMessageFilterReport
                                     preg_match($contentRegex, $fRow['MESSAGE_CONTENT'], $matches);
                                     if ($matches) {
                                         $this->setTrafficValue($arrResult, $fRow, $dept, $idx);
-                                        $this->setTrafficValue($arrResult, $fRow, $dept, 'DEPT_TOTAL');
+                                        $this->setTrafficValue($arrResult, $fRow, $dept, self::DEPT_TOTAL);
 
                                         $isMatch = true;
 
@@ -218,7 +221,7 @@ class ApiMessageFilterReport
                              */
                             if (!$isMatch) {
                                 $this->uncategorizedReportWriter->addRow($reportRow);
-                                $this->setTrafficValue($arrResult, $fRow, 'OTHERS', 0);
+                                $this->setTrafficValue($arrResult, $fRow, self::OTHERS, 0);
                             }
                         }
                     }
@@ -301,11 +304,11 @@ class ApiMessageFilterReport
             foreach ($value as $idx => $content) {
                 $arrResult[$dept][$idx] = $this->getDefaultTraffic($content);
             }
-            $arrResult[$dept]['DEPT_TOTAL'] = $this->getDefaultTraffic($dept);
+            $arrResult[$dept][self::DEPT_TOTAL] = $this->getDefaultTraffic($dept);
         }
 
-        $arrResult['OTHERS'][0] = $this->getDefaultTraffic('others');
-        $arrResult['TOTAL'] = $this->getDefaultTraffic('total');
+        $arrResult[self::OTHERS][0] = $this->getDefaultTraffic('others');
+        $arrResult[self::TOTAL] = $this->getDefaultTraffic('total');
     }
 
     /**
@@ -331,15 +334,15 @@ class ApiMessageFilterReport
                 ->applyFromArray($style->black);
 
         foreach ($arrResult as $dept => $val) {
-            if ($dept == 'TOTAL' || $dept == 'OTHERS') {
-                $rows = $dept == 'TOTAL' ? array_values($val) : array_values($val[0]);
+            if ($dept == self::TOTAL || $dept == self::OTHERS) {
+                $rows = $dept == self::TOTAL ? array_values($val) : array_values($val[0]);
                 array_shift($rows);
                 array_unshift($rows, $dept);
                 $sheet->fromArray($rows, NULL, $startCell . $row, true);
 
                 $row++;
             } else {
-                $row_total = array_values($val['DEPT_TOTAL']);
+                $row_total = array_values($val[self::DEPT_TOTAL]);
                 array_shift($row_total);
                 array_unshift($row_total, $dept);
                 $sheet->fromArray($row_total, NULL, $startCell . $row, true)
@@ -350,7 +353,7 @@ class ApiMessageFilterReport
                  * Iterate each message content filter
                  */
                 foreach ($val as $idx => $val) {
-                    if ($idx !== 'DEPT_TOTAL') {
+                    if ($idx !== self::DEPT_TOTAL) {
                         $rows = array_values($val);
                         $content_count = strlen($rows[0]);
                         $rowHeight = $content_count / 50 >= 1 ? ($content_count / 50) * 20 : 20;
@@ -418,7 +421,7 @@ class ApiMessageFilterReport
 
         $arrResult[$dept][$rowKey]['ts'] += $fRow['MESSAGE_COUNT'];
         $arrResult[$dept][$rowKey]['cm'] += $fRow['PRICE'];
-        if ($rowKey !== 'DEPT_TOTAL') {
+        if ($rowKey !== self::DEPT_TOTAL) {
             $arrResult['TOTAL']['d'] += $fRow['MESSAGE_COUNT'];
             $arrResult['TOTAL']['ts'] += $fRow['MESSAGE_COUNT'];
             $arrResult['TOTAL']['cm'] += $fRow['PRICE'];
@@ -493,6 +496,7 @@ class ApiMessageFilterReport
     /**
      * Function to update manifest file either to add new object or update attribute isDone
      * @param Boolean $isDone       Status of file either done or not
+     * @return Mixed return the number of bytes that were written to the file, or FALSE on failure
      */
     public function updateManifest($isDone)
     {
