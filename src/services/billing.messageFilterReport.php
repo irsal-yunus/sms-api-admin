@@ -64,10 +64,8 @@ if(!empty($_FILES) && !empty($_POST['user'])){
                     }
                 }
             }
-            
-            $log->info($contentFilter);
+          
             $script =  'generateMessageFilterReport.php';
-
             $argument = base64_encode(json_encode((object) compact('month','year','userAPI', 'contentFilter')));
             $com = 'php ' . $script . ' "' . $argument . '" > /dev/null &';
             exec($com);

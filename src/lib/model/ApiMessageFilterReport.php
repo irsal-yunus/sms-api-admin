@@ -42,6 +42,7 @@ class ApiMessageFilterReport
             $uncategorizedReportName,
             $billingDir,
             $billingReport,
+            $billingReportCSV,
             $finalReport,
             $finalPackage,
             $uncategorizedReport,
@@ -92,6 +93,7 @@ class ApiMessageFilterReport
         $this->uncategorizedReportName = $this->createdAt . '_' . $this->userAPI . '_Uncategorized' . $this->periodSuffix;
         $this->billingDir = $this->reportDir . 'FINAL_STATUS/';
         $this->billingReport = $this->billingDir . $this->userAPI . $this->periodSuffix . '.xlsx';
+        $this->billingReportCSV = $this->billingDir . $this->userAPI . $this->periodSuffix . '.csv';
         $this->msgFilter = $msgFilter;
         $this->msgFilterReportDir = $this->reportDir . self::DIR_MESSAGE_CONTENT_REPORT . '/';
         $this->manifestFile = SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT . '.manifest';
@@ -108,6 +110,13 @@ class ApiMessageFilterReport
         return $reportName ? file_exists($reportName) : file_exists($this->billingReport);
     }
 
+    /**
+     * 
+     * @param String $content
+     * @return Array
+     * 
+     * Function that return traffic value on Report
+     */
     public function getDefaultTraffic($content)
     {
         return [
@@ -128,27 +137,48 @@ class ApiMessageFilterReport
     {
 
         if ($this->isReportExist()) {
-            try {
-                /**
-                 * Billing report reader
-                 */
-                $reportReader = ReaderFactory::create(Type::XLSX);
-                $reportReader->open($this->billingReport);
+            $this->log->info("Start to generate report " . $this->reportName . " at " . date('Y-m-d H:i:s'));
 
-                $arrResult = [];
-                $this->prepareReportData($arrResult);
+            /**
+             * Convert XLSX File to CSV
+             * CSV file is faster to load and read, but Billing report is XLSX file so need to convert
+             * Each sheet on Excel file will be convert into separate CSV file
+             */
+            $this->convertXLStoCSV();
 
-                $this->createReportFile();
+            $arrResult = [];
 
-                $this->log->info("Start to generate report " . $this->reportName . " at " . date('Y-m-d H:i:s'));
-                /**
-                 * Iterate Billing report data from Spreadsheet
-                 */
+            /**
+             * Prepare Message Filter Data
+             * Mapping to array to make it easier to iterate
+             */
+            $this->prepareReportData($arrResult);
+
+            /**
+             * Create Message Filter Report File
+             * and Uncategorized Report File
+             */
+            $this->createReportFile();
+
+            /**
+             * Get all billing report that already convert into CSV file
+             */
+            $csvFiles = $this->getCSVFiles();
+            /**
+             * Iterate Billing report data from Spreadsheet
+             * Save the data on Array result $arrResult
+             */
+            foreach ($csvFiles as $file) {
+                $reportReader = ReaderFactory::create(Type::CSV);
+                $reportReader->open($file);
+
                 foreach ($reportReader->getSheetIterator() as $reportIndex => $reportSheet) {
                     foreach ($reportSheet->getRowIterator() as $reportRowIdx => $reportRow) {
                         $isMatch = false;
                         if ($reportRowIdx != 1 && !empty($reportRow)) {
-                            //unset($reportRow[""]);
+                            $reportRow = array_filter($reportRow, function($value) {
+                                return $value !== '';
+                            });
                             $fRow = array_combine(self::DETAILED_MESSAGE_FORMAT, $reportRow) ?: [];
 
                             /**
@@ -176,6 +206,10 @@ class ApiMessageFilterReport
                                         break;
                                     }
                                 }
+
+                                if ($isMatch) {
+                                    break;
+                                }
                             }
 
                             /**
@@ -189,30 +223,76 @@ class ApiMessageFilterReport
                         }
                     }
                 }
-                $this->log->info("Finish to loop at " .date('Y-m-d H:i:s'));
-                $this->writeReportFile($arrResult);
-                $this->log->info("Finish to write at " .date('Y-m-d H:i:s'));
-                
-                /**
-                 * Create report Package
-                 */
-                $this->createReportPackage($this->userAPI);
-
-                /**
-                 * Update manifest after file is already generated
-                 */
-                $this->updateManifest(true);
-
-                $this->log->info("Finish to generate report " . $this->reportName . " at " . date('Y-m-d H:i:s'));
-            } catch (Exception $e) {
-                $this->log->error('Failed to generate message filter report' . $e);
             }
+
+            /**
+             * Delete Billing Report on CSV
+             */
+            foreach ($csvFiles as $file) {
+                if (file_exists($file)) {
+                    unlink($file);
+                }
+            }
+
+            /**
+             * Write Summarize result to Message Filter Report
+             */
+            $this->writeReportFile($arrResult);
+
+            /**
+             * Create report Package includes Message Filter Report and Uncategorized Message Report
+             */
+            $this->createReportPackage($this->userAPI);
+
+            /**
+             * Update manifest after file has generated successfully
+             */
+            $this->updateManifest(true);
+
+            $this->log->info("Finish to generate report " . $this->reportName . " at " . date('Y-m-d H:i:s'));
         } else {
             $this->log->error('File "' . $this->billingReport . '" is not exist!');
         }
     }
 
-    public function prepareReportData(&$arrResult)
+    /**
+     * Function to convert XLSX file to CSV file
+     * Execute Shell command to convert (required Gnumeric)
+     * 
+     * @return Mixed
+     */
+    protected function convertXLStoCSV()
+    {
+        if (file_exists($this->billingReport) && filesize($this->billingReport) > 0) {
+            return exec("ssconvert -S " . $this->billingReport . " " . $this->billingReportCSV);
+        }
+
+        return null;
+    }
+    
+    /**
+     * Get billing report that already convert to CSV file
+     * 
+     * @return Array CSV files
+     */
+
+    protected function getCSVFiles()
+    {
+        $billingCSVFiles = [];
+        foreach (glob($this->billingReportCSV . '.*') as $filename) {
+            $billingCSVFiles[] = $filename;
+        }
+
+        return $billingCSVFiles;
+    }
+
+    /**
+     * 
+     * @param Array $arrResult
+     * 
+     * Function to mapping message filter into Array Key Value $arrResult
+     */
+    protected function prepareReportData(&$arrResult)
     {
         /**
          * Create array key value that the key is array $arrFirstColumn and value are array $traffic
@@ -228,20 +308,25 @@ class ApiMessageFilterReport
         $arrResult['TOTAL'] = $this->getDefaultTraffic('total');
     }
 
-    public function writeReportFile($arrResult)
+    /**
+     * 
+     * @param Array $arrResult
+     * 
+     * Function to write summarize result to Message Filter Report
+     * Apply Cell Styling
+     */
+    protected function writeReportFile($arrResult)
     {
         /**
          * Iterate array result then add each value to message content report file
          */
-        $this->reportWriter->setActiveSheetIndex(0);
+        $sheet = $this->reportWriter->setActiveSheetIndex(0);
         $startCell = PHPExcel_Cell::stringFromColumnIndex(0);
         $lastCell = PHPExcel_Cell::stringFromColumnIndex(5);
         $row = 3;
         $style = $this->getReportStyle();
 
-        $this->reportWriter
-                ->getActiveSheet()
-                ->fromArray(self::FINAL_REPORT_FORMAT)
+        $sheet->fromArray(self::FINAL_REPORT_FORMAT)
                 ->getDefaultStyle()
                 ->applyFromArray($style->black);
 
@@ -250,17 +335,14 @@ class ApiMessageFilterReport
                 $rows = $dept == 'TOTAL' ? array_values($val) : array_values($val[0]);
                 array_shift($rows);
                 array_unshift($rows, $dept);
-                $this->reportWriter
-                        ->getActiveSheet()
-                        ->fromArray($rows, NULL, $startCell . $row, true);
+                $sheet->fromArray($rows, NULL, $startCell . $row, true);
+
                 $row++;
             } else {
                 $row_total = array_values($val['DEPT_TOTAL']);
                 array_shift($row_total);
                 array_unshift($row_total, $dept);
-                $this->reportWriter
-                        ->getActiveSheet()
-                        ->fromArray($row_total, NULL, $startCell . $row, true)
+                $sheet->fromArray($row_total, NULL, $startCell . $row, true)
                         ->getStyle($startCell . $row . ':' . $lastCell . $row)
                         ->applyFromArray($style->bold);
                 $row++;
@@ -273,15 +355,11 @@ class ApiMessageFilterReport
                         $content_count = strlen($rows[0]);
                         $rowHeight = $content_count / 50 >= 1 ? ($content_count / 50) * 20 : 20;
 
-                        $this->reportWriter
-                                ->getActiveSheet()
-                                ->fromArray($rows, NULL, $startCell . $row, true)
+                        $sheet->fromArray($rows, NULL, $startCell . $row, true)
                                 ->getStyle($startCell . $row)
                                 ->applyFromArray($style->right);
-                        
-                        $this->reportWriter
-                                ->getActiveSheet()
-                                ->getRowDimension($row)
+
+                        $sheet->getRowDimension($row)
                                 ->setRowHeight($rowHeight);
                         $row++;
                     }
@@ -292,17 +370,21 @@ class ApiMessageFilterReport
 
         foreach (range('A', 'F') as $columnID) {
             $width = $columnID == 'A' ? 40 : 25;
-            $this->reportWriter->getActiveSheet()->getColumnDimension($columnID)->setWidth($width);
+            $sheet->getColumnDimension($columnID)->setWidth($width);
         }
 
         //  save Final Report
-        $writer = PHPExcel_IOFactory::createWriter($this->reportWriter, 'Excel5');
+        $writer = PHPExcel_IOFactory::createWriter($this->reportWriter, 'Excel2007');
         $writer->save($this->finalReport);
 
         $this->uncategorizedReportWriter->close();
     }
 
-    private function getReportStyle()
+    /**
+     * Function that return default cell style
+     * @return stdClass
+     */
+    protected function getReportStyle()
     {
         return (object) [
                     'black' => ['font' => ['name' => 'Arial', 'size' => 8]],
@@ -325,34 +407,21 @@ class ApiMessageFilterReport
         switch ($fRow['DESCRIPTION_CODE']) {
             case self::SMS_STATUS_DELIVERED:
                 $arrResult[$dept][$rowKey]['d'] += $fRow['MESSAGE_COUNT'];
-                $arrResult[$dept][$rowKey]['ts'] += $fRow['MESSAGE_COUNT'];
-                $arrResult[$dept][$rowKey]['cm'] += $fRow['PRICE'];
-                if($rowKey !== 'DEPT_TOTAL'){
-                    $arrResult['TOTAL']['d'] += $fRow['MESSAGE_COUNT'];
-                    $arrResult['TOTAL']['ts'] += $fRow['MESSAGE_COUNT'];
-                    $arrResult['TOTAL']['cm'] += $fRow['PRICE'];
-                }
                 break;
             case self::SMS_STATUS_UNDELIVERED_CHARGED:
                 $arrResult[$dept][$rowKey]['udC'] += $fRow['MESSAGE_COUNT'];
-                $arrResult[$dept][$rowKey]['ts'] += $fRow['MESSAGE_COUNT'];
-                $arrResult[$dept][$rowKey]['cm'] += $fRow['PRICE'];
-                if($rowKey !== 'DEPT_TOTAL'){
-                    $arrResult['TOTAL']['udC'] += $fRow['MESSAGE_COUNT'];
-                    $arrResult['TOTAL']['ts'] += $fRow['MESSAGE_COUNT'];
-                    $arrResult['TOTAL']['cm'] += $fRow['PRICE'];
-                }
                 break;
             case self::SMS_STATUS_UNDELIVERED:
                 $arrResult[$dept][$rowKey]['udUc'] += $fRow['MESSAGE_COUNT'];
-                $arrResult[$dept][$rowKey]['ts'] += $fRow['MESSAGE_COUNT'];
-                $arrResult[$dept][$rowKey]['cm'] += $fRow['PRICE'];
-                if($rowKey !== 'DEPT_TOTAL'){
-                    $arrResult['TOTAL']['udUc'] += $fRow['MESSAGE_COUNT'];
-                    $arrResult['TOTAL']['ts'] += $fRow['MESSAGE_COUNT'];
-                    $arrResult['TOTAL']['cm'] += $fRow['PRICE'];
-                }
                 break;
+        }
+
+        $arrResult[$dept][$rowKey]['ts'] += $fRow['MESSAGE_COUNT'];
+        $arrResult[$dept][$rowKey]['cm'] += $fRow['PRICE'];
+        if ($rowKey !== 'DEPT_TOTAL') {
+            $arrResult['TOTAL']['d'] += $fRow['MESSAGE_COUNT'];
+            $arrResult['TOTAL']['ts'] += $fRow['MESSAGE_COUNT'];
+            $arrResult['TOTAL']['cm'] += $fRow['PRICE'];
         }
     }
 
@@ -360,22 +429,23 @@ class ApiMessageFilterReport
      * Create Message content Report File
      * Create Uncategorized Message Report File
      */
-    private function createReportFile()
+    protected function createReportFile()
     {
-        try {
-            $this->reportWriter = new PHPExcel();
-            $this->uncategorizedReportWriter = WriterFactory::create(Type::XLSX);
+        $this->reportWriter = new PHPExcel();
+        $this->reportWriter
+                ->getProperties()
+                ->setCreator("Firstwap")
+                ->setTitle($this->reportName);
 
-            $this->finalReport = $this->msgFilterReportDir . $this->reportName . '.xlsx';
-            $this->uncategorizedReport = $this->msgFilterReportDir . $this->uncategorizedReportName . '.xlsx';
+        $this->uncategorizedReportWriter = WriterFactory::create(Type::XLSX);
 
-            is_dir($this->msgFilterReportDir) ?: @mkdir($this->msgFilterReportDir, 0777, true);
+        $this->finalReport = $this->msgFilterReportDir . $this->reportName . '.xlsx';
+        $this->uncategorizedReport = $this->msgFilterReportDir . $this->uncategorizedReportName . '.xlsx';
 
-            $this->uncategorizedReportWriter->openToFile($this->uncategorizedReport);
-            $this->uncategorizedReportWriter->addRow(self::DETAILED_MESSAGE_FORMAT);
-        } catch (Throwable $e) {
-            $this->log->error("Failed to create Message Content Based Report");
-        }
+        is_dir($this->msgFilterReportDir) ?: @mkdir($this->msgFilterReportDir, 0777, true);
+
+        $this->uncategorizedReportWriter->openToFile($this->uncategorizedReport);
+        $this->uncategorizedReportWriter->addRow(self::DETAILED_MESSAGE_FORMAT);
     }
 
     /**
@@ -383,19 +453,20 @@ class ApiMessageFilterReport
      * 
      * @param String    $userAPI
      */
-    private function createReportPackage($finalReport)
+    private function createReportPackage()
     {
         $finalReport = $this->msgFilterReportDir . $this->createdAt . '_' . $this->userAPI . '*.xlsx';
 
         $this->finalPackage = $this->msgFilterReportDir . $this->reportName . '.zip';
 
-        exec('zip -j ' . $this->finalPackage . ' ' . $finalReport);
+        exec('zip -j -m ' . $this->finalPackage . ' ' . $finalReport);
     }
 
     /**
      * Convert DateTime from server timezone to client timezone
      *
-     * @param  String $value
+     * @param String $value
+     * @param String $format
      * @return String
      */
     public function clientTimeZone($value, $format = null)
@@ -451,11 +522,8 @@ class ApiMessageFilterReport
         } else {
             $manifest = [$manifestContent];
         }
-        try {
-            file_put_contents($this->manifestFile, json_encode($manifest));
-        } catch (Throwable $e) {
-            $this->log->error('Failed to append to .manifest file');
-        }
+
+        return file_put_contents($this->manifestFile, json_encode($manifest));
     }
 
     /**
@@ -464,7 +532,19 @@ class ApiMessageFilterReport
      */
     public function getManifest()
     {
-        return !file_exists($this->manifestFile) ? [] : json_decode(file_get_contents($this->manifestFile));
+        $manifest = !file_exists($this->manifestFile) ? [] : json_decode(file_get_contents($this->manifestFile));
+        usort($manifest, function($a, $b) {
+            $ad = new DateTime($a->createdAt);
+            $bd = new DateTime($b->createdAt);
+
+            if ($ad == $bd) {
+                return 0;
+            }
+
+            return $ad > $bd ? -1 : 1;
+        });
+
+        return $manifest;
     }
 
     /**

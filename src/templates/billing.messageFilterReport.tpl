@@ -121,7 +121,7 @@
                                      if(response == 200){
                                          window.location = linktoDownload+"?report="+report;
                                      } else {
-                                         alert('File doesn\'t exist!')
+                                         alert('File doesn\'t exist! It might be deleted by system.')
                                      }
                         }
 
@@ -169,18 +169,18 @@
                             <span class="ui-helper-clearfix"></span>
                             <div style="padding-top: 5px;">
                                 <label>Message Content File</label>
-                                <input type="file" name ="msgContentFile" id="msgContentFile" data-validation="required"></input>
+                                <input type="file" name ="msgContentFile" id="msgContentFile" data-validation="required">
+                                </input>
                             </div>
                             <span class="ui-helper-clearfix"></span>
                             <div  style="padding-top: 5px;">
                                 <label>Report For Month</label>
-                                    <select name="month" id="month">
-                                    </select>
-                                     
+                                <select name="month" id="month" data-validation="required" style="font-size: 8pt; width: 45px;">
+                                </select>
                             </div>
                             <span class="ui-helper-clearfix"></span>
-                            <div style="margin-top: 10px;">
-                                <button type="submit" class="form-button" style="margin: 5px;">Process</button>
+                            <div style="padding-top: 10px;" class="form-fieldset-submission">
+                                <button type="submit" class="ui-button btn-process">Process</button>
                             </div>
 
                             <span class="ui-helper-clearfix"></span>
