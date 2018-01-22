@@ -673,7 +673,7 @@ LOADING
     top: 35%;
 }
 .select2-dropdown{
-     margin-left: 5px;
+    margin-left: 5px;
 }
 
 .help-block.form-error{
@@ -718,4 +718,17 @@ LOADING
 .btn-tiering-add{
     padding-left: 5px;
     padding-top: 3px;
+}
+
+.btn-process {
+    border: 1px solid #c5dbec;
+    background: #dfeffc url(images/ui-bg_glass_85_dfeffc_1x400.png) 50% 50% repeat-x;
+    font-weight: bold;
+    color: #2e6e9e;
+    font-size: 1em;
+    margin: 5px;
+    width: 55px;
+    height: 21px;
+    border-radius: 3px;
+
 }
