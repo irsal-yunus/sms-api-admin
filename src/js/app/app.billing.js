@@ -280,6 +280,19 @@ mod.deleteReportGroup = function(reportGroupID){
     
 };
 
+mod.viewMessageFilterPage = function(){
+    try {
+        $app.content(
+                    'billing.messageFilterReport', 
+                    function(){
+                        title('SMS Content Department Filter');
+                    }
+        );
+    } catch(ex) {
+        $1.error("[mod:billing.messageFilterReport] Error.",ex);
+    }
+};
+
 try{
 	$app.registerModule(mod, MODULE_NAME);
 }catch (ex){

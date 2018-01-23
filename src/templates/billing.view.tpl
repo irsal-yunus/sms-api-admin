@@ -46,7 +46,9 @@
     }
 </script>
 {/literal}
-
+<div style="padding: 3px;">
+    <a href="#" onclick="$app.module('billing').viewMessageFilterPage();">SMS Content Department Filter (Adira)</a>
+</div>
 <form id="billing-view" class="admin-tabform" action="#" method="post" style="width: 100%;">
 	<div id="billing-view-tabs" class="panel-tabs">
 		<ul>
@@ -60,7 +62,7 @@
                                 <thead>
                                         <tr>
                                                 <th class="type-nav" colspan="5">
-                                                        <a href="#" class="form-button" onclick="$app.module('billing').newBillingProfile();">
+                                                        <a href="" class="form-button" onclick="$app.module('billing').newBillingProfile();">
                                                            <span class="form-button-text">New Billing Profile</span>
                                                         </a>
                                                 </th>
