@@ -3,7 +3,7 @@
 /*
  * Copyright(c) 2010 1rstWAP. All rights reserved.
  */
-require_once '../lib/FirePHPCore/FirePHP.class.php';
+require_once dirname(__DIR__).'/FirePHPCore/FirePHP.class.php';
 
 /**
  * Description of SmsApiAccount

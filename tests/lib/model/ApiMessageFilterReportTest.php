@@ -47,8 +47,14 @@ class ApiMessageFilterReportTest extends TestCase
          * Information about report path and report name
          */
         $this->reportDir = SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT . date('Y') . '/' . date('m') . '/';
-        $this->billingReport = $this->reportDir . 'FINAL_STATUS/' . $this->userAPI . $this->periodSuffix . '.xlsx';
-        $this->billingReportCSV = $this->reportDir . 'FINAL_STATUS/' . $this->userAPI . $this->periodSuffix . '.csv';
+        $finalReportDir  = $this->reportDir . 'FINAL_STATUS/';
+
+        if(!file_exists($finalReportDir)){
+            mkdir($finalReportDir);
+        }
+
+        $this->billingReport = $finalReportDir . $this->userAPI . $this->periodSuffix . '.xlsx';
+        $this->billingReportCSV = $finalReportDir . $this->userAPI . $this->periodSuffix . '.csv';
 
         $this->msgContentReportDir = $this->reportDir . 'MESSAGE_CONTENT_REPORT/';
         $this->createdAt = date('Y-m-d');

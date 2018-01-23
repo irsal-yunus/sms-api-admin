@@ -42,31 +42,27 @@ class ApiReportTest extends TestCase
     ];
 
     /**
-     * Setup the test environment.
-     *
-     * @return void
+     * This method is called before the first test of this test class is run.
      */
-    protected function setUp()
+    public static function setUpBeforeClass()
     {
-        parent::setUp();
-
         if (file_exists('src/archive/reports')) {
             shell_exec("mv src/archive/reports src/archive/reports-bk");
         }
     }
 
     /**
-     * Setup the test environment.
-     *
-     * @return void
+     * This method is called after the last test of this test class is run.
      */
-    protected function tearDown()
+    public static function tearDownAfterClass()
     {
         if (file_exists('src/archive/reports')) {
             shell_exec("rm -rf src/archive/reports");
         }
-        if (file_exists('src/archive/reports-bk'))
+
+        if (file_exists('src/archive/reports-bk')){
             shell_exec("mv src/archive/reports-bk src/archive/reports");
+        }
     }
 
     /**
