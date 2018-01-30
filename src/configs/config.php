@@ -51,4 +51,4 @@ define('SMSAPIADMIN_ARCHIEVE_CMD_CREATE',        SMSAPIADMIN_UTILS_DIR.'archive.
 define('SMSAPIADMIN_ARCHIEVE_CMD_EXTRACT',       'gzip -d {SRC-NAME} | tar -x');
 define('SMSAPIADMIN_ARCHIEVE_CSV_DELIMITER',     ',');
 define('SMSAPIADMIN_ARCHIEVE_CSV_ENCLOSURE',     '"');
-define('REPORT_PER_BATCH_SIZE',                  5000);
+define('REPORT_PER_BATCH_SIZE',                  100000);
