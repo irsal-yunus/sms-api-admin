@@ -782,6 +782,7 @@ class ApiReport {
                     . ' WHERE     USER_MESSAGE_STATUS.USER_ID_NUMBER '.$userIdClause
                     . '           AND USER_MESSAGE_STATUS.RECEIVE_DATETIME >  \''.$startDateTime.'\' '
                     . '           AND USER_MESSAGE_STATUS.RECEIVE_DATETIME < \''.$endDateTime  .'\' '
+                    . ' ORDER BY USER_MESSAGE_STATUS.MESSAGE_ID ASC '
                     . ' LIMIT     '.$startIndex.','.$dataSize;
         $messages = $this->query($message);
         $this->log->debug("result ".$message);
@@ -839,6 +840,7 @@ class ApiReport {
                             . 'USER_ID'
                     . ' FROM '. DB_SMS_API_V2 . '.USER_MESSAGE_STATUS) USER_MESSAGE_STATUS '
                        .' WHERE     ('.implode(' OR ', $userClause).')'
+                       .' ORDER BY USER_MESSAGE_STATUS.MESSAGE_ID ASC '
                        .' LIMIT     '.$startIndex.','.$dataSize
                     );
         $this->log->info('query getGroupMessageStatus '.json_encode($userClause));
@@ -1011,14 +1013,16 @@ class ApiReport {
     /**
      * Format SEND_DATETIME, RECEIVE_DATETIME, DESCRIPTION CODE, MESSAGE_COUNT, OPERATOR field
      *
+     * @param $message array containing details about one specific message, such as the content, send datetime, etc.
+     * @param $operators array containing operator data
      * @return void
      */
     private function formatMessageData(&$message, &$operators){
-        $message['SEND_DATETIME'] = $this->clientTimeZone($message['RECEIVE_DATETIME']);
+        $message['SEND_DATETIME']    = $this->clientTimeZone($message['SEND_DATETIME']);
         $message['RECEIVE_DATETIME'] = $this->clientTimeZone($message['RECEIVE_DATETIME']);
         $message['DESCRIPTION_CODE'] = $this->getMessageStatus($message);
-        $message['MESSAGE_COUNT'] = $this->getMessageCount($message['MESSAGE_CONTENT']);
-        $message['OPERATOR'] = $this->getDestinationOperator($message['DESTINATION'], $operators);
+        $message['MESSAGE_COUNT']    = $this->getMessageCount($message['MESSAGE_CONTENT']);
+        $message['OPERATOR']         = $this->getDestinationOperator($message['DESTINATION'], $operators);
     }
 
 
