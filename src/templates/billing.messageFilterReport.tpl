@@ -13,7 +13,7 @@
             function checkReport(){
                 $.ajax({
                     type    : "POST",
-                    url     : "/services/billing.messageFilterReport.php",
+                    url     : "services/billing.messageFilterReport.php",
                     data    : { action : 'getManifest' },
                     dataType: 'JSON',
                     success : function (response) {
@@ -68,7 +68,7 @@
                     $.ajax({
                         type        : "POST",
                         enctype     : 'multipart/form-data',
-                        url         : "/services/billing.messageFilterReport.php",
+                        url         : "services/billing.messageFilterReport.php",
                         data        : data,
                         processData : false,
                         contentType : false,
@@ -110,7 +110,7 @@
             
             $(document)
                 .on('click', '.btn-download', function(e){
-                    var linktoDownload = '/services/billling.downloadMessageFilterReport.php',
+                    var linktoDownload = 'services/billling.downloadMessageFilterReport.php',
                     report = $(this).attr('data');
                     $.ajax({
                         url         : linktoDownload,
