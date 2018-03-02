@@ -1299,7 +1299,7 @@ class ApiReport {
 
             foreach ($oldReportReader->getSheetIterator() as $sheetIndex => $sheet) {
                 if ($sheetIndex !== 1) {
-                    $this->finalReportReader   ->addNewSheetAndMakeItCurrent();
+                    $this->finalReportWriter   ->addNewSheetAndMakeItCurrent();
                     $this->awaitingReportWriter->addNewSheetAndMakeItCurrent();
                 }
                 
@@ -1310,8 +1310,8 @@ class ApiReport {
                         
                         if(!empty($fRow)) {
                             if(!is_null($newFixedPrice)) {
-                                $fRow['PRICE'] = $fRow['PRICE'] != 0 ? current($newFixedPrice['finalPrice'])   ['PER_SMS_PRICE'] : 0;
-                                $aRow['PRICE'] = $aRow['PRICE'] != 0 ? current($newFixedPrice['awaitingPrice'])['PER_SMS_PRICE'] : 0;
+                                $fRow['PRICE'] = $fRow['PRICE'] != 0 ? current($newFixedPrice['finalPrice'])   ['PER_SMS_PRICE'] * $fRow['MESSAGE_COUNT'] : 0;
+                                $aRow['PRICE'] = $aRow['PRICE'] != 0 ? current($newFixedPrice['awaitingPrice'])['PER_SMS_PRICE'] * $aRow['MESSAGE_COUNT'] : 0;
                                 $this->getMessageSummary($fRow, 'final');
                                 $this->getMessageSummary($aRow, 'awaiting');
                             }

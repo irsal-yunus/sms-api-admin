@@ -27,7 +27,7 @@ class ApiMessageFilterReport
     /**
      * File report Format
      */
-    const DETAILED_MESSAGE_FORMAT = ['MESSAGE_ID', 'DESTINATION', 'MESSAGE_CONTENT', 'ERROR_CODE', 'DESCRIPTION_CODE', 'SEND_DATETIME', 'SENDER', 'USER_ID', 'MESSAGE_COUNT', 'OPERATOR', 'PRICE'];
+    const DETAILED_MESSAGE_FORMAT = ['MESSAGE_ID', 'DESTINATION', 'MESSAGE_CONTENT', 'ERROR_CODE', 'DESCRIPTION_CODE', 'RECEIVE_DATETIME', 'SEND_DATETIME', 'SENDER', 'USER_ID', 'MESSAGE_COUNT', 'OPERATOR', 'PRICE'];
     const MESSAGE_CONTENT_FORMAT = ['CONTENT', 'DEPARTMENT'];
     const FINAL_REPORT_FORMAT = ['CATEGORY', 'DELIVERED', 'UNDELIVERED (CHARGED)', 'UNDELIVERED (UNCHARGED)', 'MESSAGES IN TOTAL', 'TOTAL CHARGED (IDR)'];
     const DIR_MESSAGE_CONTENT_REPORT = 'MESSAGE_CONTENT_REPORT';
@@ -180,9 +180,6 @@ class ApiMessageFilterReport
                     foreach ($reportSheet->getRowIterator() as $reportRowIdx => $reportRow) {
                         $isMatch = false;
                         if ($reportRowIdx != 1 && !empty($reportRow)) {
-                            $reportRow = array_filter($reportRow, function($value) {
-                                return $value !== '';
-                            });
                             $fRow = array_combine(self::DETAILED_MESSAGE_FORMAT, $reportRow) ?: [];
 
                             /**
@@ -237,7 +234,10 @@ class ApiMessageFilterReport
                     unlink($file);
                 }
             }
-
+            
+            if(is_dir($this->billingReportCSV)){
+                rmdir($this->billingReportCSV);
+            }
             /**
              * Write Summarize result to Message Filter Report
              */
@@ -268,7 +268,7 @@ class ApiMessageFilterReport
     protected function convertXLStoCSV()
     {
         if (file_exists($this->billingReport) && filesize($this->billingReport) > 0) {
-            return exec("ssconvert -S " . $this->billingReport . " " . $this->billingReportCSV);
+            return exec("xlsx2csv -a " . $this->billingReport . " " . $this->billingReportCSV);
         }
 
         return null;
@@ -283,7 +283,7 @@ class ApiMessageFilterReport
     protected function getCSVFiles()
     {
         $billingCSVFiles = [];
-        foreach (glob($this->billingReportCSV . '.*') as $filename) {
+        foreach (glob($this->billingReportCSV . '/'.'*.csv') as $filename) {
             $billingCSVFiles[] = $filename;
         }
 
