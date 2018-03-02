@@ -62,7 +62,7 @@
                                 <thead>
                                         <tr>
                                                 <th class="type-nav" colspan="5">
-                                                        <a href="" class="form-button" onclick="$app.module('billing').newBillingProfile();">
+                                                        <a href="#" class="form-button" onclick="$app.module('billing').newBillingProfile();">
                                                            <span class="form-button-text">New Billing Profile</span>
                                                         </a>
                                                 </th>
