@@ -411,15 +411,21 @@ class ApiMessageFilterReport
         switch ($fRow['DESCRIPTION_CODE']) {
             case self::SMS_STATUS_DELIVERED:
                 $arrResult[$dept][$rowKey]['d'] += $fRow['MESSAGE_COUNT'];
-                $rowKey == self::DEPT_TOTAL ? : $arrResult['TOTAL']['d'] += $fRow['MESSAGE_COUNT'];
+                if($rowKey !== self::DEPT_TOTAL){
+                    $arrResult['TOTAL']['d'] += $fRow['MESSAGE_COUNT'];
+                }
                 break;
             case self::SMS_STATUS_UNDELIVERED_CHARGED:
                 $arrResult[$dept][$rowKey]['udC'] += $fRow['MESSAGE_COUNT'];
-                $rowKey == self::DEPT_TOTAL ? : $arrResult['TOTAL']['udC'] += $fRow['MESSAGE_COUNT'];
+                if($rowKey !== self::DEPT_TOTAL){
+                    $arrResult['TOTAL']['udC'] += $fRow['MESSAGE_COUNT'];
+                }
                 break;
             case self::SMS_STATUS_UNDELIVERED:
                 $arrResult[$dept][$rowKey]['udUc'] += $fRow['MESSAGE_COUNT'];
-                $rowKey == self::DEPT_TOTAL ? : $arrResult['TOTAL']['udUc'] += $fRow['MESSAGE_COUNT'];
+                if($rowKey !== self::DEPT_TOTAL){
+                    $arrResult['TOTAL']['udUc'] += $fRow['MESSAGE_COUNT'];
+                }
                 break;
         }
 
