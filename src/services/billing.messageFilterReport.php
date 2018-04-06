@@ -50,7 +50,7 @@ if(!empty($_FILES) && !empty($_POST['user'])){
             
             foreach ($contentReader->getSheetIterator() as $contentIndex => $contentSheet) {
                 foreach ($contentSheet->getRowIterator() as $contentRowIdx => $contentRow) {
-                    if ($contentRowIdx != 1 && !in_array("", $contentRow)) {
+                    if ($contentRowIdx != 1) {
                         
                         if(array_key_exists($contentRow[1], $contentFilter)){
                             $values = $contentFilter[$contentRow[1]];
