@@ -9,9 +9,9 @@ require_once dirname(__DIR__).'/FirePHPCore/FirePHP.class.php';
  * Description of SmsApiAccount
  *
  * @author setia.budi
- * 
+ *
  * @author Fathir Wafda --> add insertBilling, updateBilling and getBillingDetail
- * 
+ *
  * @author Ayu Musfita  --> delete insertBilling, updateBilling and getBillingDetail    tracker 22936
  */
 class ApiBusinessClient extends ApiBaseModel {
@@ -80,21 +80,24 @@ class ApiBusinessClient extends ApiBaseModel {
             $query = 'insert into CLIENT (
 						COMPANY_NAME, COMPANY_URL, COUNTRY_CODE,
 						CONTACT_NAME, CONTACT_EMAIL, CONTACT_PHONE,
-						CREATED_BY, CREATED_DATE
+						CREATED_BY, CREATED_DATE, CUSTOMER_ID,
+                        CONTACT_ADDRESS
 						)
 					values (
 						:companyName, :companyUrl, :countryCode,
 						:contactName, :contactEmail, :contactPhone,
-						:adminID, now()
+						:adminID, now(), :customerId, :contactAddress
 						)';
             $adminID = SmsApiAdmin::getCurrentUser()->getID();
             $stmt = $db->prepare($query);
+            $stmt->bindValue(':customerId', $data['customerId'], PDO::PARAM_STR);
             $stmt->bindValue(':companyName', $data['companyName'], PDO::PARAM_STR);
             $stmt->bindValue(':companyUrl', $data['companyUrl'], PDO::PARAM_STR);
             $stmt->bindValue(':countryCode', $data['countryCode'], PDO::PARAM_STR);
             $stmt->bindValue(':contactName', $data['contactName'], PDO::PARAM_STR);
             $stmt->bindValue(':contactEmail', $data['contactEmail'], PDO::PARAM_STR);
             $stmt->bindValue(':contactPhone', $data['contactPhone'], PDO::PARAM_STR);
+            $stmt->bindValue(':contactAddress', $data['contactAddress'], PDO::PARAM_STR);
             $stmt->bindValue(':adminID', $adminID, PDO::PARAM_INT);
             $stmt->execute();
             $lastInsertId = $db->lastInsertId();
@@ -130,12 +133,14 @@ class ApiBusinessClient extends ApiBaseModel {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
             $fields = array(
+                'customerId' => array(':customerId', 'CUSTOMER_ID', PDO::PARAM_STR),
                 'companyName' => array(':companyName', 'COMPANY_NAME', PDO::PARAM_STR),
                 'companyUrl' => array(':companyUrl', 'COMPANY_URL', PDO::PARAM_STR),
                 'countryCode' => array(':countryCode', 'COUNTRY_CODE', PDO::PARAM_STR),
                 'contactName' => array(':contactName', 'CONTACT_NAME', PDO::PARAM_STR),
                 'contactEmail' => array(':contactEmail', 'CONTACT_EMAIL', PDO::PARAM_STR),
-                'contactPhone' => array(':contactPhone', 'CONTACT_PHONE', PDO::PARAM_STR)
+                'contactPhone' => array(':contactPhone', 'CONTACT_PHONE', PDO::PARAM_STR),
+                'contactAddress' => array(':contactAddress', 'CONTACT_ADDRESS', PDO::PARAM_STR),
             );
             $query = 'update CLIENT set UPDATED_BY=:adminID, UPDATED_DATE=now(),';
             $assignment = array();
@@ -213,15 +218,17 @@ class ApiBusinessClient extends ApiBaseModel {
     public function getDetails($clientID) {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
-            $query = 'select 
+            $query = 'select
 					c.CLIENT_ID as clientID,
-					c.COMPANY_NAME as companyName,
+                    c.COMPANY_NAME as companyName,
+					c.CUSTOMER_ID as customerId,
 					c.COMPANY_URL as companyUrl,
 					c.COUNTRY_CODE as countryCode,
 					cn.COUNTRY_NAME as countryName,
 					c.CONTACT_NAME as contactName,
 					c.CONTACT_EMAIL as contactEmail,
-					c.CONTACT_PHONE as contactPhone,
+                    c.CONTACT_PHONE as contactPhone,
+					c.CONTACT_ADDRESS as contactAddress,
 					c.CREATED_BY as createdBy,
 					a1.ADMIN_DISPLAYNAME as createdByName,
 					c.CREATED_DATE as createdTimestamp,

@@ -17,7 +17,7 @@ body,td,p,label,input,form,a,div, textarea{
     width: 90%;
     height: 100%;
     overflow: hidden;
-    margin: 0 auto;	
+    margin: 0 auto;
 }
 
 #pageHeader{
@@ -58,7 +58,6 @@ body,td,p,label,input,form,a,div, textarea{
     overflow: hidden;
     /*	background-color: #a8c3d7;*/
     background-color: #8dc5f0;
-    height: 2.4em;
 }
 
 #titlePanel{
@@ -178,7 +177,7 @@ body,td,p,label,input,form,a,div, textarea{
     list-style-type: none;
 }
 #menuPanel .menu-set {
-    display: block;	
+    display: block;
 }
 
 #menuPanel .menu-set > .menu-item{
@@ -390,7 +389,7 @@ dl.admin-definitions > dd{
 .spacer-h{
     display: block;
     width: 100%;
-    margin: 0; 
+    margin: 0;
     padding: 0;
     height: 10px;
 }
