@@ -28,25 +28,25 @@ class ApiBusinessClient extends ApiBaseModel {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
             $query = 'select
-					c.CLIENT_ID as clientID,
-					c.COMPANY_NAME as companyName,
-					c.COMPANY_URL as companyUrl,
-					c.COUNTRY_CODE as countryCode,
-					cn.COUNTRY_NAME as countryName,
-					c.CONTACT_NAME as contactName,
-					c.CONTACT_EMAIL as contactEmail,
-					c.CONTACT_PHONE as contactPhone,
-					c.CREATED_BY as createdBy,
-					a1.ADMIN_DISPLAYNAME as createdByName,
-					c.CREATED_DATE as createdTimestamp,
-					c.UPDATED_BY as updatedBy,
-					a2.ADMIN_DISPLAYNAME as updatedByName,
-					c.UPDATED_DATE as updatedTimestamp
-				from CLIENT as c
-					inner join ADMIN as a1 on c.CREATED_BY=a1.ADMIN_ID
-					left join ADMIN as a2 on c.UPDATED_BY=a2.ADMIN_ID
-					left join COUNTRY as cn on c.COUNTRY_CODE=cn.COUNTRY_CODE
-				order by c.COMPANY_NAME';
+                    c.CLIENT_ID as clientID,
+                    c.COMPANY_NAME as companyName,
+                    c.COMPANY_URL as companyUrl,
+                    c.COUNTRY_CODE as countryCode,
+                    cn.COUNTRY_NAME as countryName,
+                    c.CONTACT_NAME as contactName,
+                    c.CONTACT_EMAIL as contactEmail,
+                    c.CONTACT_PHONE as contactPhone,
+                    c.CREATED_BY as createdBy,
+                    a1.ADMIN_DISPLAYNAME as createdByName,
+                    c.CREATED_DATE as createdTimestamp,
+                    c.UPDATED_BY as updatedBy,
+                    a2.ADMIN_DISPLAYNAME as updatedByName,
+                    c.UPDATED_DATE as updatedTimestamp
+                from CLIENT as c
+                    inner join ADMIN as a1 on c.CREATED_BY=a1.ADMIN_ID
+                    left join ADMIN as a2 on c.UPDATED_BY=a2.ADMIN_ID
+                    left join COUNTRY as cn on c.COUNTRY_CODE=cn.COUNTRY_CODE
+                order by c.COMPANY_NAME';
             $getAll = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
             return $getAll;
         } catch (PDOException $e) {
@@ -78,16 +78,16 @@ class ApiBusinessClient extends ApiBaseModel {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
             $query = 'insert into CLIENT (
-						COMPANY_NAME, COMPANY_URL, COUNTRY_CODE,
-						CONTACT_NAME, CONTACT_EMAIL, CONTACT_PHONE,
-						CREATED_BY, CREATED_DATE, CUSTOMER_ID,
+                        COMPANY_NAME, COMPANY_URL, COUNTRY_CODE,
+                        CONTACT_NAME, CONTACT_EMAIL, CONTACT_PHONE,
+                        CREATED_BY, CREATED_DATE, CUSTOMER_ID,
                         CONTACT_ADDRESS
-						)
-					values (
-						:companyName, :companyUrl, :countryCode,
-						:contactName, :contactEmail, :contactPhone,
-						:adminID, now(), :customerId, :contactAddress
-						)';
+                        )
+                    values (
+                        :companyName, :companyUrl, :countryCode,
+                        :contactName, :contactEmail, :contactPhone,
+                        :adminID, now(), :customerId, :contactAddress
+                        )';
             $adminID = SmsApiAdmin::getCurrentUser()->getID();
             $stmt = $db->prepare($query);
             $stmt->bindValue(':customerId', $data['customerId'], PDO::PARAM_STR);
@@ -219,27 +219,27 @@ class ApiBusinessClient extends ApiBaseModel {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
             $query = 'select
-					c.CLIENT_ID as clientID,
+                    c.CLIENT_ID as clientID,
                     c.COMPANY_NAME as companyName,
-					c.CUSTOMER_ID as customerId,
-					c.COMPANY_URL as companyUrl,
-					c.COUNTRY_CODE as countryCode,
-					cn.COUNTRY_NAME as countryName,
-					c.CONTACT_NAME as contactName,
-					c.CONTACT_EMAIL as contactEmail,
+                    c.CUSTOMER_ID as customerId,
+                    c.COMPANY_URL as companyUrl,
+                    c.COUNTRY_CODE as countryCode,
+                    cn.COUNTRY_NAME as countryName,
+                    c.CONTACT_NAME as contactName,
+                    c.CONTACT_EMAIL as contactEmail,
                     c.CONTACT_PHONE as contactPhone,
-					c.CONTACT_ADDRESS as contactAddress,
-					c.CREATED_BY as createdBy,
-					a1.ADMIN_DISPLAYNAME as createdByName,
-					c.CREATED_DATE as createdTimestamp,
-					c.UPDATED_BY as updatedBy,
-					a2.ADMIN_DISPLAYNAME as updatedByName,
-					c.UPDATED_DATE as updatedTimestamp
-				from CLIENT as c
-					inner join ADMIN as a1 on c.CREATED_BY=a1.ADMIN_ID
-					left join ADMIN as a2 on c.UPDATED_BY=a2.ADMIN_ID
-					left join COUNTRY as cn on c.COUNTRY_CODE=cn.COUNTRY_CODE
-				 where CLIENT_ID=:clientID';
+                    c.CONTACT_ADDRESS as contactAddress,
+                    c.CREATED_BY as createdBy,
+                    a1.ADMIN_DISPLAYNAME as createdByName,
+                    c.CREATED_DATE as createdTimestamp,
+                    c.UPDATED_BY as updatedBy,
+                    a2.ADMIN_DISPLAYNAME as updatedByName,
+                    c.UPDATED_DATE as updatedTimestamp
+                from CLIENT as c
+                    inner join ADMIN as a1 on c.CREATED_BY=a1.ADMIN_ID
+                    left join ADMIN as a2 on c.UPDATED_BY=a2.ADMIN_ID
+                    left join COUNTRY as cn on c.COUNTRY_CODE=cn.COUNTRY_CODE
+                 where CLIENT_ID=:clientID';
             $stmt = $db->prepare($query);
             $stmt->bindValue(':clientID', $clientID, PDO::PARAM_INT);
             $stmt->execute();
