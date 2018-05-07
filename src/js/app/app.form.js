@@ -52,14 +52,14 @@ $app.ready(function ($app) {
          *			...
          *		}
          * }
-         * 
+         *
          * @param onSuccess Function to execute if the form result is success
          * @param serviceName Service name for requesting the form
          * @param serviceArgs Arguments for the service
          * @param activityTitle Title to be used in dialogue
          * @param dialogOptions The dialog options
          */
-        $app.form.openAutoDialog = function (serviceName, serviceArgs, activityTitle, dialogOptions, onSuccess) {
+        $app.form.openAutoDialog = function (serviceName, serviceArgs, activityTitle, dialogOptions, onSuccess, onLoad) {
             try {
                 if (dialogForm.dialog('isOpen'))
                     throw 'Must close current dialogue before opening new one';
@@ -95,7 +95,7 @@ $app.ready(function ($app) {
                         .html('')
                         .dialog('option', options)
                         .dialog('open');
-                $app.content(serviceName, serviceArgs, $.noop, dialogForm);
+                $app.content(serviceName, serviceArgs, onLoad || $.noop, dialogForm);
                 return this;
             } catch (ex) {
                 $1.error("[$app.openAutoDialog] Error.", ex);
@@ -118,13 +118,13 @@ $app.ready(function ($app) {
          *			...
          *		}
          * }
-         * 
+         *
          * @param onSuccess Function to execute if the form result is success
          * @param serviceName Service name for requesting the form
          * @param serviceArgs Arguments for the service
          * @param activityTitle Title to be used in dialogue
          * @param dialogOptions The dialog options
-         * 
+         *
          * @author Fathir Wafda
          */
         $app.form.openPrintDialog = function (serviceName, serviceArgs, activityTitle, dialogOptions, onSuccess) {
@@ -149,13 +149,13 @@ $app.ready(function ($app) {
                                     $1.warn("[$app.form.openPrintDialog@print] Invalid form action service:", serviceName);
                                     return;
                                 }
-                                
+
                                 $('body').prepend("<div class='loader-container'><div class='loader'><h3>Processing..</h3><img src='skin/images/wheel.gif'></div></div>");
-                                
+
                                 var loading = $('.loader-container'),
-                                    url = serviceName + '?' + $form.serialize(),                                
+                                    url = serviceName + '?' + $form.serialize(),
                                     checkUrl = url + "&check";
-                                    
+
                                 loading.show();
                                 $.get(checkUrl, function(response){
                                     if($.trim(response) === "File Doesn't Exist"){
@@ -167,7 +167,7 @@ $app.ready(function ($app) {
                                     }
                                     return false;
                                 });
-                                
+
                             } catch (ex) {
                                 $1.error("[$app.form.openPrintDialog@print] Error.", ex);
                             }
@@ -210,7 +210,7 @@ $app.ready(function ($app) {
                 $app.content(
                         serviceName,
                         serviceArgs,
-                        $.noop, 
+                        $.noop,
                         dialogForm);
                 return this;
             } catch (ex) {
@@ -243,13 +243,13 @@ $app.ready(function ($app) {
                                     $1.warn("[$app.form.openPrintDialog@print] Invalid form action service:", serviceName);
                                     return;
                                 }
-                                
+
                                 $('body').prepend("<div class='loader-container'><div class='loader'><h3>Processing..</h3><img src='skin/images/wheel.gif'></div></div>");
-                                
+
                                 var loading  = $('.loader-container'),
-                                    url      = serviceName + '?' + $form.serialize(),                                
+                                    url      = serviceName + '?' + $form.serialize(),
                                     checkUrl = url + "&check";
-                                    
+
                                 loading.show();
                                 $.get(checkUrl, function(response){
                                     if($.trim(response) === "Exist"){
@@ -260,9 +260,9 @@ $app.ready(function ($app) {
                                         alert($.trim(response));
                                     }
                                 });
-                                
+
                                 return false;
-                                
+
                             } catch (ex) {
                                 $1.error("[$app.form.openPrintDialog@print] Error.", ex);
                             }
@@ -451,7 +451,7 @@ $app.ready(function ($app) {
             }
         };
         /**
-         * Execute a service 
+         * Execute a service
          */
         $app.form.execService = function (serviceName, form, alertTitle, onSuccess) {
             try {
@@ -473,7 +473,7 @@ $app.ready(function ($app) {
                                 var success = $app.form.checkServiceReply(reply, $context, alertTitle)
                                 if (success) {
                                     if (showAlert)
-                                        $app.tell('Success!', alertTitle);
+                                        $app.tell(reply.summary || 'Success!', alertTitle);
                                     if (typeof onSuccess == 'function') {
                                         var normalisedReply = $.extend({
                                             success: true,
