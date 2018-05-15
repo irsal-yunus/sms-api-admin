@@ -2,7 +2,6 @@
 
 use Firstwap\SmsApiAdmin\Test\TestCase;
 
-require_once dirname(dirname(dirname(__DIR__))) . '/src/init.d/init.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/src/lib/model/ApiReport.php';
 
 /**
@@ -67,13 +66,13 @@ class ApiReportTest extends TestCase
 
     /**
      * Test getUserBillingGroup method
-     * 
+     *
      * @return void
      */
     public function testGetUserBillingGroupMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getUserBillingGroup(1);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
@@ -82,16 +81,16 @@ class ApiReportTest extends TestCase
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getBilingProfileDetail method
-     * 
+     *
      * @return void
      */
     public function testGetBilingProfileDetailMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getBilingProfileDetail(1);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
@@ -100,30 +99,30 @@ class ApiReportTest extends TestCase
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getOperatorBaseDetail method
-     * 
+     *
      * @return void
      */
     public function testGetOperatorBaseDetailMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getOperatorBaseDetail(1);
         $this->assertNotNull($result);
-        $this->assertTrue(is_array($result));        
+        $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getOperatorDetail method
-     * 
+     *
      * @return void
      */
     public function testGetOperatorDetailMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getOperatorDetail([1]);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
@@ -132,82 +131,82 @@ class ApiReportTest extends TestCase
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getUserDetail method
-     * 
+     *
      * @return void
      */
     public function testGetUserDetailMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getUserDetail();
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
-        
+
         $result = $report->getUserDetail(1);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
-        
+
         $result = $report->getUserDetail([1],1);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getGroupLastSendDate method
-     * 
+     *
      * @return void
      */
     public function testGetGroupLastSendDateMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getGroupLastSendDate([1]);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
-        
+
         $result = $report->getGroupLastSendDate();
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
-        
+
         $result = $report->getGroupLastSendDate([]);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getOperatorDialPrefix method
-     * 
+     *
      * @return void
      */
     public function testGetOperatorDialPrefixMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getOperatorDialPrefix([1]);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
-        
+
         $result = $report->getOperatorDialPrefix();
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
-        
+
         $result = $report->getOperatorDialPrefix([]);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getTieringDetail method
-     * 
+     *
      * @return void
      */
     public function testGetTieringDetailMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getTieringDetail(1);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
@@ -218,17 +217,17 @@ class ApiReportTest extends TestCase
 
     /**
      * Test getTieringGroupDetail method
-     * 
+     *
      * @return void
      */
     public function testGetTieringGroupDetailMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getTieringGroupDetail(1);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
-        
+
         $result = $report->getTieringGroupDetail();
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
@@ -236,63 +235,63 @@ class ApiReportTest extends TestCase
 
     /**
      * Test getTieringGroupUserList method
-     * 
+     *
      * @return void
      */
     public function testGetTieringGroupUserListMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getTieringGroupUserList(1);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
-        
+
         $result = $report->getTieringGroupUserList();
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getReportGroupDetail method
-     * 
+     *
      * @return void
      */
     public function testGetReportGroupDetailMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getReportGroupDetail(1);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
-        
+
         $result = $report->getReportGroupDetail();
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getReportGroupUserList method
-     * 
+     *
      * @return void
      */
     public function testGetReportGroupUserListMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getReportGroupUserList(1);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getUserMessageStatus method
-     * 
+     *
      * @return void
      */
     public function testGetUserMessageStatusMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getUserMessageStatus([1], $report->firstDateOfMonth, $report->lastDateOfMonth,1,0);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
@@ -301,16 +300,16 @@ class ApiReportTest extends TestCase
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getGroupMessageStatus method
-     * 
+     *
      * @return void
      */
     public function testGetGroupMessageStatusMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getGroupMessageStatus([1 => $report->firstDateOfMonth], $report->lastDateOfMonth,1,0);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
@@ -319,16 +318,16 @@ class ApiReportTest extends TestCase
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
-    
+
     /**
      * Test getTieringTraffic method
-     * 
+     *
      * @return void
      */
     public function testGetTieringTrafficMethod()
     {
         $report = new ApiReport("2018", "01", true);
-        
+
         $result = $report->getTieringTraffic([['USER_ID' => 1]]);
         $this->assertNotNull($result);
 
@@ -338,7 +337,7 @@ class ApiReportTest extends TestCase
 
     /**
      * Test assignMessagePrice method
-     * 
+     *
      * @return void
      */
     public function testAssignMessagePriceMethod()
@@ -421,7 +420,7 @@ class ApiReportTest extends TestCase
 
     /**
      * Test formatMessageData method
-     * 
+     *
      * @return void
      */
     public function testFormatMessageDataMethod()

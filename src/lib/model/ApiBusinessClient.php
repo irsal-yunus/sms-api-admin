@@ -56,6 +56,25 @@ class ApiBusinessClient extends ApiBaseModel {
         }
     }
 
+    /**
+     * Get Client data that don't have invoice profile
+     *
+     * @param String|int $includeClient
+     * @return  array
+     */
+    public function dontHaveInvoiceProfile($includeClient = null)
+    {
+        $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+        $query = "SELECT CLIENT_ID, COMPANY_NAME FROM CLIENT
+            WHERE CLIENT_ID NOT IN (SELECT INVOICE_PROFILE.CLIENT_ID FROM INVOICE_PROFILE)";
+
+        if (!empty($includeClient)) {
+            $query .= " OR CLIENT_ID = $includeClient";
+        }
+
+        return $db->query($query)->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
+
     public function getAllPaired() {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);

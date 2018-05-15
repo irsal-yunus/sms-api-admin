@@ -17,6 +17,9 @@
        "psr-4": {
             "Firstwap\\SmsApiAdmin\\": "src/",
             "Firstwap\\SmsApiAdmin\\Test\\":"tests/"
-       }
+       },
+       "files": [
+            "src/init.d/init.php"
+        ]
     }
 }
