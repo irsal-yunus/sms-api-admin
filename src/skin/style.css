@@ -11,6 +11,10 @@ body,td,p,label,input,form,a,div, textarea{
     font-size: 10px;
 }
 
+a.link, a.link:visited {
+    color: #000;
+}
+
 #container{
     display: block;
     clear: both;
@@ -730,4 +734,21 @@ LOADING
     height: 21px;
     border-radius: 3px;
 
+}
+
+.hidden {
+    display: none;
+}
+
+.text-left {
+    text-align: left !important;
+}
+.text-right {
+    text-align: right !important;
+}
+
+.input-helper {
+    line-height: 2;
+    padding: 0 2px;
+    font-style: italic;
 }

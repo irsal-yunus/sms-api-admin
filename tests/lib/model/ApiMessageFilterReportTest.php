@@ -1,14 +1,11 @@
 <?php
 
-use Firstwap\SmsApiAdmin\Test\TestCase;
-
 require_once dirname(dirname(dirname(__DIR__))) . '/src/init.d/init.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/src/lib/model/ApiMessageFilterReport.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/src/classes/spout-2.5.0/src/Spout/Autoloader/autoload.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/src/classes/PHPExcel.php';
 
-use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Common\Type;
+use Firstwap\SmsApiAdmin\Test\TestCase;
 
 /**
  * Description of ApiMessageContentBasedReportTest
@@ -19,17 +16,17 @@ class ApiMessageFilterReportTest extends TestCase
 {
 
     public $userAPI,
-            $messageContent,
-            $reportWriter,
-            $billingReportDir,
-            $billingReport,
-            $msgContentReportDir,
-            $uncategorizedReport,
-            $finalReport,
-            $finalPackage,
-            $manifestFile,
-            $periodSuffix,
-            $apiModel;
+    $messageContent,
+    $reportWriter,
+    $billingReportDir,
+    $billingReport,
+    $msgContentReportDir,
+    $uncategorizedReport,
+    $finalReport,
+    $finalPackage,
+    $manifestFile,
+    $periodSuffix,
+        $apiModel;
 
     /**
      * Set up the test environment
@@ -46,17 +43,17 @@ class ApiMessageFilterReportTest extends TestCase
         /**
          * Information about report path and report name
          */
-        $this->reportDir = SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT . date('Y') . '/' . date('m') . '/';
-        $finalReportDir  = $this->reportDir . 'FINAL_STATUS/';
+        $this->reportDir = SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT . date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR;
+        $finalReportDir = $this->reportDir . 'FINAL_STATUS' . DIRECTORY_SEPARATOR;
 
-        if(!file_exists($finalReportDir)){
+        if (!file_exists($finalReportDir)) {
             mkdir($finalReportDir);
         }
 
         $this->billingReport = $finalReportDir . $this->userAPI . $this->periodSuffix . '.xlsx';
         $this->billingReportCSV = $finalReportDir . $this->userAPI . $this->periodSuffix . '.csv';
 
-        $this->msgContentReportDir = $this->reportDir . 'MESSAGE_CONTENT_REPORT/';
+        $this->msgContentReportDir = $this->reportDir . 'MESSAGE_CONTENT_REPORT' . DIRECTORY_SEPARATOR;
         $this->createdAt = date('Y-m-d');
         $this->finalReport = $this->msgContentReportDir . $this->createdAt . '_' . $this->userAPI . $this->periodSuffix . '.xlsx';
         $this->uncategorizedReport = $this->msgContentReportDir . $this->createdAt . '_' . $this->userAPI . '_Uncategorized' . $this->periodSuffix . '.xlsx';
@@ -73,11 +70,11 @@ class ApiMessageFilterReportTest extends TestCase
 
         parent::tearDown();
         try {
-            !file_exists($this->finalPackage) ? : unlink($this->finalPackage);
-            !file_exists($this->finalPackage) ? : unlink($this->billingReport);
-            !file_exists($this->finalPackage) ? : unlink($this->finalReport);
-            !file_exists($this->finalPackage) ? : unlink($this->uncategorizedReport);
-            
+            !file_exists($this->finalPackage) ?: unlink($this->finalPackage);
+            !file_exists($this->finalPackage) ?: unlink($this->billingReport);
+            !file_exists($this->finalPackage) ?: unlink($this->finalReport);
+            !file_exists($this->finalPackage) ?: unlink($this->uncategorizedReport);
+
             //$this->deleteManifest();
         } catch (Exception $e) {
             echo $e;
@@ -141,7 +138,7 @@ class ApiMessageFilterReportTest extends TestCase
         $result = $this->callMethod($this->apiModel, 'isReportExist', [$billingReportFile]);
         $this->assertFalse($result);
     }
-    
+
     /**
      * Test case to get default traffic value for Billing Report
      * Assert true if return value has key content
@@ -154,7 +151,7 @@ class ApiMessageFilterReportTest extends TestCase
         $this->assertArrayHasKey('content', $result);
         $this->assertEquals($params[0], $result['content']);
     }
-    
+
     /**
      * Test case for function convertXLStoCSV
      * Function will convert Excel billing report to CSV file
@@ -165,28 +162,30 @@ class ApiMessageFilterReportTest extends TestCase
         $this->copyTempReportFile();
 
         $result = $this->callMethod($this->apiModel, 'convertXLStoCSV', []);
-        foreach (glob($this->billingReportCSV . '.*') as $filename) {
-            $this->assertFileExists($filename);
-        }
+        $this->assertFileExists($this->billingReportCSV);
     }
-    
+
     /**
-     * Test case for function convertXLStoCSV 
+     * Test case for function convertXLStoCSV
      * But with empty billing report
      * Assert if CSV file is not exist
      */
     public function testConvertXLStoCSVwithEmptyFile()
     {
-        if(file_exists($this->billingReport)){
+        if (file_exists($this->billingReport)) {
             unlink($this->billingReport);
         }
-        
+
+        if (file_exists($this->billingReportCSV)) {
+            exec('rm -rf ' . $this->billingReportCSV, $output);
+        }
+
         $result = $this->callMethod($this->apiModel, 'convertXLStoCSV', []);
         $this->assertFileNotExists($this->billingReportCSV);
         $this->assertNull($result);
-        
+
     }
-    
+
     /**
      * Test case for function getCSVFiles
      * Function will return array of file name
@@ -196,6 +195,7 @@ class ApiMessageFilterReportTest extends TestCase
     {
         $this->copyTempReportFile();
 
+        $result = $this->callMethod($this->apiModel, 'convertXLStoCSV', []);
         $result = $this->callMethod($this->apiModel, 'getCSVFiles', []);
         $this->assertNotEmpty($result);
     }
@@ -242,12 +242,13 @@ class ApiMessageFilterReportTest extends TestCase
         $manifestContent = json_decode(file_get_contents($this->manifestFile));
         $this->assertNotEmpty($manifestContent);
     }
-    
+
     /**
      * Test case for function update manifest with existing key (api user)
      * Assert if return value is not empty
      */
-    public function testUpdateManifestWithExistingKeyArray(){
+    public function testUpdateManifestWithExistingKeyArray()
+    {
         $params = [$this->userAPI, $this->finalReport, true];
         $this->callMethod($this->apiModel, 'updateManifest', $params);
         $this->assertFileExists($this->manifestFile);
@@ -255,17 +256,18 @@ class ApiMessageFilterReportTest extends TestCase
         $manifestContent = json_decode(file_get_contents($this->manifestFile));
         $this->assertNotEmpty($manifestContent);
     }
-    
+
     /**
      * Test case for function update manifest file without manifest file
      * Assert if manifest file is exist
      */
-    public function testUpdateManifestWithoutExistingFile(){
-        
-        if(file_exists($this->manifestFile)){
+    public function testUpdateManifestWithoutExistingFile()
+    {
+
+        if (file_exists($this->manifestFile)) {
             unlink($this->manifestFile);
         }
-        
+
         $params = [$this->userAPI, $this->finalReport, false];
         $this->callMethod($this->apiModel, 'updateManifest', $params);
         $this->assertFileExists($this->manifestFile);
@@ -273,10 +275,10 @@ class ApiMessageFilterReportTest extends TestCase
         $manifestContent = json_decode(file_get_contents($this->manifestFile));
         $this->assertNotEmpty($manifestContent);
     }
-    
+
     /**
      * Test case for function getManifest
-     * Function will return content of manifest file 
+     * Function will return content of manifest file
      * and will return empty array if manifest file is empty
      * After get manifest delete array that contains test_api user
      */
@@ -287,7 +289,7 @@ class ApiMessageFilterReportTest extends TestCase
 
         $result = $this->callMethod($this->apiModel, 'getManifest', []);
         $this->assertNotEmpty($result);
-        
+
         $this->deleteManifest();
     }
 
@@ -300,11 +302,11 @@ class ApiMessageFilterReportTest extends TestCase
     public function testPrepareReportData()
     {
         $arrResult = [];
-        $this->callMethod($this->apiModel, 'prepareReportData', [&$arrResult]);
+        $this->callMethod($this->apiModel, 'prepareReportData', [ & $arrResult]);
         $this->assertNotEmpty($arrResult);
         $this->assertArrayHasKey('TOTAL', $arrResult);
     }
-    
+
     /**
      * Test case for function getReportStyle
      * Function will return object that contains Cell styling
@@ -329,18 +331,18 @@ class ApiMessageFilterReportTest extends TestCase
             [
                 'DESCRIPTION_CODE' => 'DELIVERED',
                 'MESSAGE_COUNT' => 2,
-                'PRICE' => 400
+                'PRICE' => 400,
             ],
             [
                 'DESCRIPTION_CODE' => 'UNDELIVERED (CHARGED)',
                 'MESSAGE_COUNT' => 3,
-                'PRICE' => 600
+                'PRICE' => 600,
             ],
             [
                 'DESCRIPTION_CODE' => 'UNDELIVERED (UNCHARGED)',
                 'MESSAGE_COUNT' => 1,
-                'PRICE' => 200
-            ]
+                'PRICE' => 200,
+            ],
         ];
 
         $column = [
@@ -351,8 +353,8 @@ class ApiMessageFilterReportTest extends TestCase
                     'udC' => 0,
                     'udUc' => 0,
                     'ts' => 0,
-                    'cm' => 0
-                ]
+                    'cm' => 0,
+                ],
             ],
             'TOTAL' => [
                 'content' => 'Total',
@@ -360,24 +362,24 @@ class ApiMessageFilterReportTest extends TestCase
                 'udC' => 0,
                 'udUc' => 0,
                 'ts' => 0,
-                'cm' => 0
-            ]
+                'cm' => 0,
+            ],
         ];
-        
+
         $status = [
             'DELIVERED' => 'd',
             'UNDELIVERED (CHARGED)' => 'udC',
-            'UNDELIVERED (UNCHARGED)' => 'udUc'
+            'UNDELIVERED (UNCHARGED)' => 'udUc',
         ];
-        
+
         $msgContent = json_decode($this->messageContent);
         $i = 0;
-        
-        foreach($rows as $row){
+
+        foreach ($rows as $row) {
             foreach ($msgContent as $dept => $value) {
-                $msgCount  = 0;
+                $msgCount = 0;
                 foreach ($value as $idx => $content) {
-                    $params = [&$column, &$row, $dept, $idx];
+                    $params = [ & $column, &$row, $dept, $idx];
                     $msgCount += $row['MESSAGE_COUNT'];
                     $this->callMethod($this->apiModel, 'setTrafficValue', $params);
                     $this->assertEquals($row['MESSAGE_COUNT'], $column[$dept][$idx][$status[$row['DESCRIPTION_CODE']]]);
@@ -385,7 +387,7 @@ class ApiMessageFilterReportTest extends TestCase
             }
         }
     }
-    
+
     /**
      * Test case for function clientTimeZone
      * Test case is designed for several format of date
@@ -395,7 +397,7 @@ class ApiMessageFilterReportTest extends TestCase
         // parameter is correct format date
         $date = "2017-10-25";
         $this->assertEquals("2017-10-25 07:00:00", $this->callMethod($this->apiModel, 'clientTimeZone', [$date]));
-        
+
         //with custom format
         $date = "2017-10-25";
         $customFormat = 'Y-m-d H:i';
@@ -404,28 +406,27 @@ class ApiMessageFilterReportTest extends TestCase
         // Test timezone correctoin of 7 hours
         $date = "2017-10-26 08:00:00";
         $this->assertEquals("2017-10-26 15:00:00", $this->callMethod($this->apiModel, 'clientTimeZone', [$date]));
-        
+
         // Test if the timezone correction works when GMT is a day behind GMT+7
         $date = "2017-10-26 23:00:00";
         $this->assertEquals("2017-10-27 06:00:00", $this->callMethod($this->apiModel, 'clientTimeZone', [$date]));
-        
+
         // parameter is timestamp
         $date = "1508976000";
         $this->assertEquals("2017-10-26 07:00:00", $this->callMethod($this->apiModel, 'clientTimeZone', [$date]));
-        
+
         // Test if the current time is returned if the input parameter is an empty string
         $date = "";
         $this->assertEquals(date('Y-m-d H:i:s', strtotime("+7 hours")), $this->callMethod($this->apiModel, 'clientTimeZone', [$date]));
-        
+
         // Test if the current time is returned if the input parameter is null
         $date = null;
         $this->assertEquals(date('Y-m-d H:i:s', strtotime("+7 hours")), $this->callMethod($this->apiModel, 'clientTimeZone', [$date]));
-        
+
         // Test if the current time is returned if the input parameter is incorrect
         $date = "abc";
         $this->assertEquals(date('Y-m-d H:i:s', strtotime("+7 hours")), $this->callMethod($this->apiModel, 'clientTimeZone', [$date]));
     }
-
 
     /**
      * Test case for function generateReport
@@ -439,14 +440,15 @@ class ApiMessageFilterReportTest extends TestCase
         $result = $this->callMethod($this->apiModel, 'generateReport', []);
         $this->assertFileExists($this->finalPackage);
     }
-    
+
     /**
      * Test case for function generateReport
      * but with unexisting billing report file
      * Assert if Message Content Report is not exist
      */
-    public function testGenerateReportWithUnexistingBillingReport(){
-        if(file_exists($this->billingReport)){
+    public function testGenerateReportWithUnexistingBillingReport()
+    {
+        if (file_exists($this->billingReport)) {
             unlink($this->billingReport);
         }
         $result = $this->callMethod($this->apiModel, 'generateReport', []);
@@ -467,7 +469,7 @@ class ApiMessageFilterReportTest extends TestCase
         $this->callMethod($this->apiModel, 'downloadReport', [$this->finalPackage]);
 
         $this->assertContains(
-                'Content-Disposition: attachment; filename="' . basename($this->finalPackage) . '"', xdebug_get_headers()
+            'Content-Disposition: attachment; filename="' . basename($this->finalPackage) . '"', xdebug_get_headers()
         );
     }
 

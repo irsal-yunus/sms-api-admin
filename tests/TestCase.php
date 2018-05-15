@@ -14,7 +14,7 @@ class TestCase extends BaseTestCase
 
     /**
      * Get private or protected method reflection
-     * 
+     *
      * @param  mixed 	$object    		An Instance of class
      * @param  string 	$name      		Name of method
      * @return ReflectionClass

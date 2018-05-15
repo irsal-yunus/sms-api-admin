@@ -462,7 +462,7 @@ $(document).ready(function(){
     };
     $app.title = function(text){
         try {
-            panels.title.text(text);
+            panels.title.html(text);
         } catch (ex) {
             $1.error("[$app.title] Error.",ex);
         }
@@ -684,6 +684,7 @@ $(document).ready(function(){
             $app.loadJSComponent('app/app.credit.js');
             $app.loadJSComponent('app/app.client.js');
             $app.loadJSComponent('app/app.billing.js');
+            $app.loadJSComponent('app/app.invoice.js');
             var prematureApp;
             if(window.$app && window.$app.isPremature){//$app is still premature, initialise
                 prematureApp = window.$app;

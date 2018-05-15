@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright(c) 2010 1rstWAP. All rights reserved.
  */
 /**
@@ -105,7 +105,7 @@ final class SmsApiAdminLoginManager
 			throw new LoginException("Failed logout!");
 		}
 	}
-	
+
 	private function clearSession(){
 		SmsApiAdmin::destroySession();
 	}
@@ -115,7 +115,7 @@ final class SmsApiAdminLoginManager
 	 */
 	public function resume() {
 		try {
-			if(empty($_SESSION[self::$sessionUserLabel]) 
+			if(empty($_SESSION[self::$sessionUserLabel])
 				|| empty($_SESSION[self::$sessionTimestampLabel]))
 				return;//no session
 			if($this->isExpired()){
@@ -141,7 +141,7 @@ final class SmsApiAdminLoginManager
 	 * @return bool
 	 */
 	public function checkIsGuest() {
-		return 
+		return
 			   ($this->user == null)
 			|| empty($_SESSION[self::$sessionUserLabel])
 			|| $this->isExpired();
@@ -194,13 +194,13 @@ final class SmsApiAdminUser
 	 * @var array
 	 */
 	private $privileges=array();
-	
+
 	/**
 	 *
 	 * @var Logger
 	 */
 	private $logger = null;
-	
+
 	/**
 	 * Constructor
 	 * @param int $userID
@@ -226,7 +226,7 @@ final class SmsApiAdminUser
 			throw new Exception("User query error");
 		}
 	}
-	
+
 	/**
 	 * Get admin displayname
 	 * @return string
@@ -364,7 +364,7 @@ final class SmsApiAdmin {
 	 * @var array
 	 */
 	private static $db=array();
-	
+
 	const SERVICE_TYPE_JSON=1;
 	const SERVICE_TYPE_TEXT=2;
 	const SERVICE_TYPE_HTML=3;
@@ -392,7 +392,7 @@ final class SmsApiAdmin {
 			exit;
 		}
 	}
-	
+
 	/**
 	 * Get configuration
 	 * @param string $config The config name, NULL means all
@@ -424,14 +424,14 @@ final class SmsApiAdmin {
 		return isset($properties[$property])?
 			$properties[$property] : null;
 	}
-	
+
 	/**
 	 * Get a preconfigured database connection
 	 * @param string $conn Connection config name
 	 * @return PDO
 	 */
     public static function getDB($conn) {
-        
+
         if (isset(self::$db[$conn])) {
             $conn = $conn ? self::DB_SMSAPI : self::DB_COBRANDER;
 //               self::$db[$conn] = self::$db[$conn]? self::DB_SMSAPI : self::DB_COBRANDER;
@@ -453,7 +453,7 @@ final class SmsApiAdmin {
 	public static function getLoginManager(){
 		return self::$loginManager;
 	}
-	
+
 	/**
 	 * @return SmsApiAdminUser
 	 */
@@ -528,7 +528,7 @@ final class SmsApiAdmin {
 	 *              FALSE: only return status;
 	 *              <string>: redirect;
 	 *              other: diplay error message;
-	 * @return <type> 
+	 * @return <type>
 	 */
 	public static function filterAccess($privilege=false, $termination=true){
 		try {
@@ -543,7 +543,7 @@ final class SmsApiAdmin {
 				header('Location: '.  addslashes($termination));
 				exit;
 			}
-			
+
 			self::returnError('Unauthorised access!', self::$mode);
 			exit;
 		} catch (Throwable $e) {
@@ -576,7 +576,7 @@ final class SmsApiAdmin {
 	 * Exception heandelr
 	 * @param Exception $e
 	 */
-	public static function catchException(Exception $e) {
+	public static function catchException($e) {
 		try {
 			if($e instanceof ErrorException){
 				switch ($e->getSeverity()){
@@ -646,7 +646,7 @@ final class SmsApiAdmin {
 			$cleanUrl = urlencode($url);
 			header('Location: '.SMSAPIADMIN_BASE_URL.$cleanUrl);
 			exit;
-		}		
+		}
 	}
 
 }

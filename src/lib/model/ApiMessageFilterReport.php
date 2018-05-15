@@ -34,7 +34,7 @@ class ApiMessageFilterReport
     const DEPT_TOTAL = 'DEPT_TOTAL';
     const OTHERS = 'OTHERS';
     const TOTAL = 'TOTAL';
-    
+
     /**
      *
      * Public properties
@@ -77,7 +77,7 @@ class ApiMessageFilterReport
 
     /**
      * ApiMessageContentBasedReport constructor
-     * 
+     *
      * @param String $month     Report will generate for this month
      * @param String $year      Report will generate for this year
      * @param String $userAPI   User API
@@ -104,7 +104,7 @@ class ApiMessageFilterReport
 
     /**
      * Check if specified report is exist
-     * 
+     *
      * @param String $reportName    full path to specified report
      * @return Boolean
      */
@@ -115,7 +115,7 @@ class ApiMessageFilterReport
 
     /**
      * Function that return traffic value on Report
-     * 
+     *
      * @param String $content
      * @return Array
      */
@@ -134,7 +134,7 @@ class ApiMessageFilterReport
     /**
      * Main function to generate message content based Report
      * Will be called from generateMessageContentReport service
-     * 
+     *
      * @return void
      */
     public function generateReport()
@@ -186,7 +186,7 @@ class ApiMessageFilterReport
                              * One Message from Billing Report will be compared to each message content keyword
                              * Once they match, next message will be compared too
                              * All result will be stored on Array $arrResult
-                             * 
+                             *
                              */
                             foreach ($this->msgFilter as $dept => $value) {
                                 foreach ($value as $idx => $content) {
@@ -234,7 +234,7 @@ class ApiMessageFilterReport
                     unlink($file);
                 }
             }
-            
+
             if(is_dir($this->billingReportCSV)){
                 rmdir($this->billingReportCSV);
             }
@@ -262,21 +262,22 @@ class ApiMessageFilterReport
     /**
      * Function to convert XLSX file to CSV file
      * Execute Shell command to convert (required Gnumeric)
-     * 
+     *
      * @return Mixed
      */
     protected function convertXLStoCSV()
     {
         if (file_exists($this->billingReport) && filesize($this->billingReport) > 0) {
-            return exec("xlsx2csv -a " . $this->billingReport . " " . $this->billingReportCSV);
+            exec("xlsx2csv -a " . $this->billingReport . " " . $this->billingReportCSV, $output);
+            return $output;
         }
 
         return null;
     }
-    
+
     /**
      * Get billing report that already convert to CSV file
-     * 
+     *
      * @return Array CSV files
      */
 
@@ -292,7 +293,7 @@ class ApiMessageFilterReport
 
     /**
      * Function to mapping message filter into Array Key Value $arrResult
-     * 
+     *
      * @param Array $arrResult
      * @return void
      */
@@ -315,7 +316,7 @@ class ApiMessageFilterReport
     /**
      * Function to write summarize result to Message Filter Report
      * Apply Cell Styling
-     * 
+     *
      * @param Array $arrResult
      * @return void
      */
@@ -401,7 +402,7 @@ class ApiMessageFilterReport
 
     /**
      * Set value for each traffic status that got from message status
-     * 
+     *
      * @param Array $arrResult
      * @param Array $fRow
      * @param String $rowKey
@@ -440,7 +441,7 @@ class ApiMessageFilterReport
     /**
      * Create Message content Report File
      * Create Uncategorized Message Report File
-     * 
+     *
      * @return void
      */
     protected function createReportFile()
@@ -464,7 +465,7 @@ class ApiMessageFilterReport
 
     /**
      * Create Zip package
-     * 
+     *
      * @param String    $userAPI
      * @return void
      */
@@ -565,15 +566,15 @@ class ApiMessageFilterReport
 
     /**
      * Download Report
-     * 
+     *
      * @param String $reportFile    Path to Message Content package report
      * @return Mixed
      */
-    public function downloadReport($reportFile)
+    public function downloadReport($reportFile = null)
     {
         if ($this->isReportExist($reportFile)) {
 
-            // Zip transfer 
+            // Zip transfer
             ob_start();
             header('Pragma: public');
             header('Expires: 0');
