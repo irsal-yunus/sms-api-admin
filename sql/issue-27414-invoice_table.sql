@@ -12,7 +12,7 @@ CREATE TABLE `INVOICE_HISTORY` (
   `DUE_DATE` date DEFAULT NULL,
   `REF_NUMBER` varchar(50) DEFAULT NULL,
   `STATUS` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 = pending\n1 = paid',
-  `FILE_PATH` varchar(250) DEFAULT NULL,
+  `FILE_NAME` varchar(250) DEFAULT NULL,
   `CREATED_AT` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `UPDATED_AT` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`INVOICE_ID`),
@@ -42,9 +42,10 @@ CREATE TABLE `INVOICE_PRODUCT` (
   `PRODUCT_NAME` varchar(150) NOT NULL,
   `PERIOD` date DEFAULT NULL,
   `UNIT_PRICE` decimal(10,2) unsigned DEFAULT '0.00',
-  `QTY` int(10) unsigned DEFAULT '0',
+  `QTY` int(11) DEFAULT '0',
   `USE_REPORT` tinyint(4) NOT NULL DEFAULT '0',
   `REPORT_NAME` varchar(100) DEFAULT NULL,
+  `USER_API_REPORT` varchar(100) DEFAULT NULL,
   `OWNER_TYPE` varchar(10) NOT NULL COMMENT 'If OWNER_TYPE has a value "PROFILE" means the product has a relation with INVOICE_PROFILE table\nelse if OWNER_TYPE has a value "HISTORY" means the product has a relation with INVOICE_HISTORY table',
   `OWNER_ID` int(10) unsigned NOT NULL COMMENT 'This column is a foreign_key from table that describe in OWNER_TYPE column',
   PRIMARY KEY (`PRODUCT_ID`),
@@ -77,6 +78,7 @@ CREATE TABLE `INVOICE_SETTING` (
   `APPROVED_POSITION` varchar(45) DEFAULT NULL,
   `NOTE_MESSAGE` text,
   `INVOICE_NUMBER_PREFIX` varchar(45) NOT NULL,
+  `LAST_INVOICE_NUMBER` int(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`SETTING_ID`),
   UNIQUE KEY `SETTING_ID_UNIQUE` (`SETTING_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
