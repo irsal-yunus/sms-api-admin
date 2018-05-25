@@ -1,0 +1,356 @@
+.invoice-container {
+    position: relative;
+    width: 21cm;
+    height: 29.7cm;
+    margin: 0 auto;
+    color: #000;
+    background: #FFFFFF;
+    font-family: Arial, sans-serif;
+    font-size: 1.1em;
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+#title {
+    border-bottom: 1px solid #AAAAAA;
+    border-top: 1px solid #AAAAAA;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 5px 0;
+    margin: 5px 0;
+}
+
+#logo {
+    float: left;
+    margin-top: 8px;
+}
+
+#logo img {
+    height: 80px;
+}
+
+#company {
+    float: right;
+    text-align: right;
+}
+
+#details {
+    margin-bottom: 15px;
+}
+
+#client {
+    float: left;
+    max-width: 240px;
+}
+
+#client .to {
+    font-weight: bold;
+}
+
+h2.name {
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0;
+    margin-top: 5px;
+}
+
+#invoice {
+    float: right;
+    text-align: left;
+}
+
+#invoice table td {
+    padding: 1.5px 3px;
+}
+
+#invoice table tr {
+    vertical-align: top;
+}
+
+#invoice table tr:first-child {
+    font-weight: bold;
+    height: 15px;
+}
+
+#invoice table td:first-child {
+    width: 120px;
+}
+
+table.item {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 20px;
+}
+
+table.item thead tr th {
+    font-weight: bold;
+}
+
+table.item th {
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+}
+
+table.item th,
+table.item td {
+    padding: 5px;
+    text-align: center;
+    border-right: 1px solid #aaa;
+}
+
+
+table.item th {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+table.item td {
+    text-align: right;
+}
+
+table.item thead tr>*:first-child,
+table.item tbody tr>*:first-child {
+    border-left: 1px solid #aaa;
+}
+
+table.item tbody>tr:last-child td {
+    border-bottom: 1px solid #aaa;
+}
+
+table.item tr {
+    vertical-align: top;
+}
+
+table.item td h3 {
+    font-size: 1.2em;
+    font-weight: normal;
+    margin: 0 0 0.2em 0;
+}
+
+table.item .no {
+    font-size: 1.2em;
+    text-align: center;
+    width: 25px;
+}
+
+table.item .desc {
+    text-align: left;
+}
+
+table.item .unit {
+    width: 13%;
+}
+
+table.item .qty {
+    width: 60px;
+}
+
+table.item .total {
+    width: 107px;
+}
+
+table.item td.unit,
+table.item td.qty,
+table.item td.total {
+    font-size: 1.1em;
+}
+
+
+table.item tfoot td {
+    padding: 5px 20px;
+    padding-right: 5px;
+    background: #ffffff;
+    border-bottom: none;
+    font-size: 1.1em;
+    white-space: nowrap;
+    border-right: none;
+}
+
+table.item tfoot td:not(:first-child) {}
+
+
+/*
+table.item {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 20px;
+}
+
+table.item th, table.item td {
+    padding: 5px;
+    background: #EEEEEE;
+    text-align: center;
+    border-bottom: 1px solid #FFFFFF;
+}
+
+table.item th {
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+table.item td {
+    text-align: right;
+}
+
+table.item td h3 {
+    font-size: 1.2em;
+    font-weight: normal;
+    margin: 0 0 0.2em 0;
+}
+
+table.item .no {
+    font-size: 1.2em;
+    background: #DDDDDD;
+}
+
+table.item .desc {
+    text-align: left;
+}
+
+table.item .unit {
+}
+
+table.item .qty {
+    background: #DDDDDD;
+}
+
+table.item .total {
+    background: #DDDDDD;
+}
+
+table.item td.unit, table.item td.qty, table.item td.total {
+    font-size: 1em;
+}
+
+table.item tbody tr:last-child td {
+    border: none;
+}
+
+table.item tfoot tr:first-child td {
+    padding-top: 13px;
+}
+
+table.item tfoot td {
+    padding: 4px 20px;
+    padding-right: 5px;
+    background: #FFFFFF;
+    border-bottom: none;
+    font-size: 14px;
+    white-space: nowrap;
+    border-top: 1px solid #AAAAAA;
+}
+
+table.item tfoot tr:first-child td {
+    border-top: none;
+}
+
+table.item tfoot tr:last-child td {
+    /*font-size: 1.25em;*/
+
+
+}
+
+table.item tfoot tr td:first-child {
+    border: none;
+}
+
+table.item tfoot tr td:nth-child(2) {
+    font-weight: bold;
+}
+
+#notices {
+    padding-left: 6px;
+    /* border-left: 6px solid #0087C3; */
+    margin-bottom: 10px;
+}
+
+.word-total {
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    font-size: 1.2em;
+}
+
+.word-total i {
+    margin-left: 10px;
+    font-weight: 600;
+    font-style: italic;
+    font-size: 12px;
+    padding: 0px;
+}
+
+#payment {
+    margin-bottom: 20px;
+    display: inline-block;
+    max-width: 350px;
+}
+
+#payment table {
+    margin: 5px 0;
+}
+
+#payment table tr td {
+    padding: 2px 0;
+}
+
+#payment table tr td:nth-child(2) {
+    padding-right: 4px;
+}
+
+#payment table td:first-child {
+    width: 99px;
+}
+
+#payment table td:not(:last-child) {
+    vertical-align: top;
+}
+
+#authorized {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.signature-item {
+    display: inline-block;
+    width: 300px;
+    height: 70px;
+}
+
+.signature {
+    height: 70px;
+}
+
+.signature-name {
+    border-bottom: 1px solid #000;
+    font-weight: bold;
+    width: 70%;
+    margin: 0 auto;
+    height: 15px;
+    line-height: 1.5;
+}
+
+.signature-position {
+    height: 20px;
+    line-height: 1.5;
+}
+
+footer {
+    color: #777777;
+    width: 100%;
+    height: 30px;
+    position: absolute;
+    bottom: 0;
+    border-top: 1px solid #AAAAAA;
+    padding: 5px 0;
+    text-align: right;
+    clear: both;
+    display: block;
+}

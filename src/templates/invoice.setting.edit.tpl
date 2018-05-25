@@ -3,7 +3,15 @@
     <fieldset class="float-centre">
         <legend>Invoice Settings</legend>
         <label class="form-flag-required">Term Of Payment</label>
-        <input name="paymentPeriod" value="{$setting.paymentPeriod}" type="number" min="1" maxlength="3" title="Term of payment in days" /> <span class="input-helper">in day</span>
+        <div class="input-group">
+            <div class="input-group-input">
+                <input name="paymentPeriod" value="{$setting.paymentPeriod}" type="number" title="Term of payment in days" />
+            </div>
+            <div class="input-group-icon">days</div>
+        </div>
+        <span class="ui-helper-clearfix"></span>
+        <label>Last Invoice Number</label>
+        <input name="lastInvoiceNumber" value="{$setting.lastInvoiceNumber}" type="number" min="1" maxlength="10" />
         <span class="ui-helper-clearfix"></span>
         <label>Invoice Number Prefix</label>
         <input name="invoiceNumberPrefix" value="{$setting.invoiceNumberPrefix}" type="text" maxlength="45" />

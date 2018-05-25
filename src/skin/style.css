@@ -1,12 +1,14 @@
-*{
+* {
     margin: 0;
     padding: 0;
 }
-body{
+
+body {
     width: 100%;
     height: 100%;
 }
-body,td,p,label,input,form,a,div, textarea{
+
+body,td,p,label,input,form,a,div, textarea {
     font-family: "Lucida Grande", "Lucida Sans", Arial, sans-serif;
     font-size: 10px;
 }
@@ -15,7 +17,7 @@ a.link, a.link:visited {
     color: #000;
 }
 
-#container{
+#container {
     display: block;
     clear: both;
     width: 90%;
@@ -24,7 +26,11 @@ a.link, a.link:visited {
     margin: 0 auto;
 }
 
-#pageHeader{
+.content {
+    padding: 10px;
+}
+
+#pageHeader {
     display: block;
     clear: both;
     background-color: #80b1da;
@@ -37,11 +43,11 @@ a.link, a.link:visited {
     clear: both;
 }
 
-#siteTitle{
+#siteTitle {
     font-size: 3em;
 }
 
-#pageFooter{
+#pageFooter {
     display: block;
     clear: both;
     height: 24px;
@@ -55,7 +61,7 @@ a.link, a.link:visited {
     font-weight: bold;
 }
 
-#navPanel{
+#navPanel {
     display: block;
     clear: both;
     width: 100%;
@@ -64,7 +70,7 @@ a.link, a.link:visited {
     background-color: #8dc5f0;
 }
 
-#titlePanel{
+#titlePanel {
     height: 1.8em;
     line-height: 1.8em;
     background-color: aliceblue;
@@ -72,7 +78,8 @@ a.link, a.link:visited {
     padding: 0;
     margin: 0;
 }
-#contentPanel{
+
+#contentPanel {
     display: block;
     clear: both;
     width: 100%;
@@ -86,7 +93,7 @@ a.link, a.link:visited {
 /**********/
 /* PANELS */
 /**********/
-#navPanel > .panel{
+#navPanel > .panel {
     display: block;
     float: left;
     line-height: 2.4em;
@@ -94,34 +101,38 @@ a.link, a.link:visited {
     padding: 0;
     color: white;
 }
-#navPanel .panel-header{
+
+#navPanel .panel-header {
     display: none;
 }
 
-#navPanel > .panel > .panel-body,
-#navPanel > .panel > .panel-content{
+#navPanel > .panel > .panel-body, #navPanel > .panel > .panel-content {
     width: 100%;
     height: 100%;
     display: block;
     margin: 0;
     padding: 0;
 }
-#navPanel > #welcomeMessage{
+
+#navPanel > #welcomeMessage {
     float: left;
     text-indent: 1em;
 }
-#navPanel > #menuPanel{
+
+#navPanel > #menuPanel {
     float: right;
     margin-right: 1em;
 }
-#titlePanel{
+
+#titlePanel {
     text-indent: 1em;
 }
 
-#contentPanel > .panel{
+#contentPanel > .panel {
     /*	width: 95%;*/
 }
-#contentPanel .panel{
+
+#contentPanel .panel {
     width: 95%;
     display: block;
     clear: both;
@@ -130,8 +141,8 @@ a.link, a.link:visited {
     border: 1px solid #79B7E7;
     -moz-border-radius: 10px;
     border-radius: 10px;
-
 }
+
 #contentPanel .panel > .panel-header {
     background-color: #87B7D9;
     display: block;
@@ -148,21 +159,22 @@ a.link, a.link:visited {
     vertical-align: middle;
 }
 
-#contentPanel .panel > .panel-header > .icon-image{
+#contentPanel .panel > .panel-header > .icon-image {
     vertical-align: middle;
     margin-right: 6px;
     line-height: 24px;
 }
-#contentPanel .panel > .panel-header > .icon-image + span{
+
+#contentPanel .panel > .panel-header > .icon-image + span {
     height: 24px;
     line-height: 24px;
 }
 
-#contentPanel .panel > .panel-body{
+#contentPanel .panel > .panel-body {
     width: 100%;
 }
 
-#contentPanel .panel > .panel-body  > .panel-content{
+#contentPanel .panel > .panel-body > .panel-content {
     width: 98%;
     max-width: 98%;
     border: none;
@@ -176,26 +188,28 @@ a.link, a.link:visited {
 /********/
 /* MENU */
 /********/
-
-#menuPanel .menu-set{
+#menuPanel .menu-set {
     list-style-type: none;
 }
+
 #menuPanel .menu-set {
     display: block;
 }
 
-#menuPanel .menu-set > .menu-item{
+#menuPanel .menu-set > .menu-item {
     float: left;
     display: block;
     line-height: 2.4em;
     height: 2.4em;
     padding: 0;
 }
-#menuPanel .menu-set > .menu-item + .menu-item{
+
+#menuPanel .menu-set > .menu-item + .menu-item {
     margin-left: .1em;
     border-left: #1d5987 2px groove;
 }
-#menuPanel .menu-set > .menu-item > a{
+
+#menuPanel .menu-set > .menu-item > a {
     display: block;
     text-decoration: none;
     font-weight: bold;
@@ -205,156 +219,215 @@ a.link, a.link:visited {
     padding: 0;
     color: #363636;
 }
-#menuPanel .menu-set > .menu-item > a > .icon-image{
+
+#menuPanel .menu-set > .menu-item > a > .icon-image {
     margin-right: .5em;
     margin-top: .5em;
     height: 16px;
     width: 16px;
 }
 
-#menuPanel .menu-set > .menu-item:hover,
-#menuPanel .menu-set > .menu-item:hover > a{
+#menuPanel .menu-set > .menu-item:hover, #menuPanel .menu-set > .menu-item:hover > a {
     background-color: #c5dbec;
     color: #1d5987;
 }
-a.menu-item,
-a.menu-item:hover,
-a.menu-item:visited,
-a.menu-item:active{
+
+a.menu-item, a.menu-item:hover, a.menu-item:visited, a.menu-item:active {
     text-decoration: none;
 }
-a.menu-item:hover{
+
+a.menu-item:hover {
     background-color: #f5f8f9
 }
+
 /**********/
 /* TABLES */
 /**********/
-.type-counter{ text-align: right; padding-right: .5em;}
-.type-money{ text-align: right; padding-right: .5em;}
-.type-url{ text-align: left; text-indent: .5em;}
-.type-email{ text-align: center; }
-.type-text{ text-align: left; text-indent: .5em;}
-.type-ip{ text-align: center;}
-.type-action{ text-align: center; }
-.type-code{ text-align: center; }
-.type-status{ text-align: center; }
-.type-phone{ text-align: center; }
-.type-date{ text-align: center; }
-.type-control{ text-align: right; }
-.type-control > *:last-child{ margin-right: .5em;}
-.type-nav {text-align: left; text-indent: .5em;}
+.type-counter {
+    text-align: right;
+    padding-right: .5em;
+}
 
-th{
+.type-money {
+    text-align: right;
+    padding-right: .5em;
+}
+
+.type-url {
+    text-align: left;
+    text-indent: .5em;
+}
+
+.type-email {
+    text-align: center;
+}
+
+.type-text {
+    text-align: left;
+    text-indent: .5em;
+}
+
+.type-ip {
+    text-align: center;
+}
+
+.type-action {
+    text-align: center !important;
+}
+
+.type-code {
+    text-align: center;
+}
+
+.type-status {
+    text-align: center;
+}
+
+.type-phone {
+    text-align: center;
+}
+
+.type-date {
+    text-align: center;
+}
+
+.type-control {
+    text-align: right;
+}
+
+.type-control > *:last-child {
+    margin-right: .5em;
+}
+
+.type-nav {
+    text-align: left;
+    text-indent: .5em;
+}
+
+th {
     text-align: center;
     font-weight: bold;
     vertical-align: middle;
 }
-table.admin-table{
+
+table.admin-table {
     width: 90%;
     margin: 1em auto;
     border-spacing: 0px;
     border-collapse: collapse;
 }
 
-table.admin-table caption{
+table.admin-table caption {
     text-transform: capitalize;
     font-size: 1.5em;
     padding: .5em 0em;
 }
-table.admin-table > thead > tr >  th,
-table.admin-table > tfoot > tr >  th{
+
+table.admin-table > thead > tr > th, table.admin-table > tfoot > tr > th {
     background-color: #8dc5f0;
     color: #1b3346;
     height: 2em;
 }
-table.admin-table > thead > tr >  th{
-    border:  1px #4b7290 solid;
+
+table.admin-table > thead > tr > th {
+    border: 1px #4b7290 solid;
     padding: .4em 0em;
 }
 
-table.admin-table > tbody{
-    min-height:0em;
-    max-height:40em;
-    height:auto;
-    overflow-x:hidden;
-    overflow-y:auto;
+table.admin-table > tbody {
+    min-height: 0em;
+    max-height: 40em;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
-table.admin-table > tbody > tr > td{
+
+table.admin-table > tbody > tr > td {
     padding-top: .4em;
     padding-bottom: .4em;
-
 }
-table.admin-table > tbody > tr.zebra-odd > td{
+
+table.admin-table > tbody > tr.zebra-odd > td {
     background-color: #fff;
 }
 
-table.admin-table > tbody > tr.zebra-even > td{
+table.admin-table > tbody > tr.zebra-even > td {
     background-color: lemonchiffon;
 }
+
 table.admin-table > tbody > tr > td.type-action > .ui-icon {
     display: inline-block;
 }
-table.admin-table > tbody > tr.table-row-highlight{
+
+table.admin-table > tbody > tr.table-row-highlight {
     outline: #d6b8b8 .2em solid;
 }
-table.admin-table > tbody > tr.table-row-highlight > td{
+
+table.admin-table > tbody > tr.table-row-highlight > td {
     background-color: rgba(255,215,0,.6);
 }
 
-
-
-table.admin-simpletable{
+table.admin-simpletable {
     border-spacing: 0px;
     border-collapse: collapse;
     margin: 1em auto;
     width: 95%;
 }
-table.admin-simpletable caption{
+
+table.admin-simpletable caption {
     text-align: left;
     height: 3em;
 }
 
-table.admin-simpletable > thead{
+table.admin-simpletable > thead {
     border-top: 1px solid rgb(230,230,230) ;
 }
-table.admin-simpletable > thead,
-table.admin-simpletable > tbody{
+
+table.admin-simpletable > thead, table.admin-simpletable > tbody {
     border-bottom: .2em solid #aaaaaa;
     width: 100%;
 }
-table.admin-simpletable > tfoot,
-table.admin-simpletable > thead,
-table.admin-simpletable > tbody,
-table.admin-simpletable > thead > tr,
-table.admin-simpletable > tfoot > tr,
-table.admin-simpletable > tbody > tr{
+
+table.admin-simpletable > tfoot, table.admin-simpletable > thead, table.admin-simpletable > tbody, table.admin-simpletable > thead > tr, table.admin-simpletable > tfoot > tr, table.admin-simpletable > tbody > tr {
     width: 100%;
 }
-table.admin-simpletable > thead > tr > th,
-table.admin-simpletable > tbody > tr > td{
+
+table.admin-simpletable > thead > tr > th, table.admin-simpletable > tbody > tr > td {
     height: 2.2em;
-    padding: 0.2em 0em;
+    padding: 0.2em 0.2em;
 }
-table.admin-simpletable > thead > tr > th.zebra-odd{
 
+table.admin-simpletable > thead > tr > th.zebra-odd {
 }
-table.admin-simpletable > thead > tr > th.zebra-even{
+
+table.admin-simpletable > thead > tr > th.zebra-even {
     background-color: rgb(230,230,230);
 }
-table.admin-simpletable > tbody > tr.zebra-odd > td{
+
+table.admin-simpletable > tbody > tr.zebra-odd > td {
     background-color: rgb(230,230,230);
 }
 
+table.invoice-table {
+    margin: 0;
+    width: 100%;
+}
 
+table.invoice-table > tbody > tr > td {
+    padding: 2px 5px;
+}
 
+.action-container {
+    padding: 5px 0;
+}
 
 dl.admin-definitions {
     display: block;
     /*	margin-top: 1em;*/
     /*	margin-bottom: 1em;*/
 }
-dl.admin-definitions > dt,
-dl.admin-definitions > dd{
+
+dl.admin-definitions > dt, dl.admin-definitions > dd {
     display: block;
     float: left;
     padding: .25em 0em;
@@ -365,7 +438,8 @@ dl.admin-definitions > dd{
     text-indent: .5em;
     vertical-align: top;
 }
-dl.admin-definitions > dt{
+
+dl.admin-definitions > dt {
     clear: left;
     min-width: 10em;
     width: 30%;
@@ -375,7 +449,8 @@ dl.admin-definitions > dt{
     /*	color: #1D5987;*/
     color: #444;
 }
-dl.admin-definitions > dd{
+
+dl.admin-definitions > dd {
     clear: right;
     width: 70%;
     background-color: #f5f8f9;
@@ -384,47 +459,54 @@ dl.admin-definitions > dd{
 /********/
 /* MISC */
 /********/
-.spacer-v{
+.spacer-v {
     display: inline-block;
     width: 10px;
     margin: 0;
     padding: 0;
 }
-.spacer-h{
+
+.spacer-h {
     display: block;
     width: 100%;
     margin: 0;
     padding: 0;
     height: 10px;
 }
-.float-centre{
+
+.float-centre {
     float: none;
     clear: both;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
-.flexible-width{
+
+.flexible-width {
     min-width: 0;
 }
+
 /*********/
 /* FORMS */
 /*********/
-form {
-
+form.inline {
+    display: inline-block;
 }
-form fieldset{
+
+form fieldset {
     display: inline-block;
     float: left;
     border: #1d5987 dashed .1em;
     -moz-border-radius : 5px;
 }
-form fieldset > legend{
+
+form fieldset > legend {
     font-weight: bold;
     margin: 3px 5px;
     padding: 0 2px;
 }
-form fieldset.form-fieldset-submission{
+
+form fieldset.form-fieldset-submission {
     float: none;
     clear: both;
     text-align: right;
@@ -434,14 +516,16 @@ form fieldset.form-fieldset-submission{
     margin-right: auto;
 }
 
-form fieldset.form-fieldset-submission>*:first-child{
+form fieldset.form-fieldset-submission>*:first-child {
     margin-left: 1em;
 }
-form fieldset.form-fieldset-submission>*:last-child{
+
+form fieldset.form-fieldset-submission>*:last-child {
     margin-right: 1em;
 }
+
 /* XForm */
-form.admin-xform{
+form.admin-xform {
     display: block;
     width: 95%;
     margin: 0 auto;
@@ -449,13 +533,14 @@ form.admin-xform{
     clear: both;
     float: none;
 }
-form.admin-xform fieldset{
+
+form.admin-xform fieldset {
     margin: .5em auto;
     padding: 1.2em 0;
 }
 
 /* StdForm */
-form.admin-stdform{
+form.admin-stdform {
     display: block;
     width: 100%;
     border: none;
@@ -463,15 +548,16 @@ form.admin-stdform{
     clear: both;
     float: none;
 }
-form.admin-stdform fieldset{
+
+form.admin-stdform fieldset {
     /*	float: left;*/
     margin: .5em auto;
     padding: 1.2em 0;
-    width:90%;
+    width: 90%;
 }
 
 /*TabForm*/
-form.admin-tabform{
+form.admin-tabform {
     display: block;
     width: 100%;
     border: none;
@@ -480,12 +566,14 @@ form.admin-tabform{
     clear: both;
     float: none;
 }
-form.admin-tabform > .ui-tabs{
+
+form.admin-tabform > .ui-tabs {
     width: 95%;
     margin: 0 auto;
     padding: 0;
 }
-form.admin-tabform > .ui-tabs > .ui-tabs-panel > fieldset{
+
+form.admin-tabform > .ui-tabs > .ui-tabs-panel > fieldset {
     margin-top: 10px;
     width: 100%;
     display: block;
@@ -493,16 +581,17 @@ form.admin-tabform > .ui-tabs > .ui-tabs-panel > fieldset{
     padding: 10px 0;
     -moz-border-radius : 0px 0px 5px 5px;
 }
-form.admin-tabform > .ui-tabs > .ui-tabs-panel > fieldset:first-child{
+
+form.admin-tabform > .ui-tabs > .ui-tabs-panel > fieldset:first-child {
     margin-top: 0;
 }
 
 /*ReportTabForm*/
-form.report-tabform{
+form.report-tabform {
     /* position: fixed;
     top: 30%;*/
     display: block;
-    top:30%;
+    top: 30%;
     width: 100%;
     border: none;
     padding: 0;
@@ -510,12 +599,14 @@ form.report-tabform{
     clear: both;
     float: none;
 }
-form.report-tabform > .ui-tabs{
+
+form.report-tabform > .ui-tabs {
     width: 95%;
     margin: 0 auto;
     padding: 0;
 }
-form.report-tabform > .ui-tabs > .ui-tabs-panel > fieldset{
+
+form.report-tabform > .ui-tabs > .ui-tabs-panel > fieldset {
     margin-top: 10px;
     width: 100%;
     display: block;
@@ -523,73 +614,64 @@ form.report-tabform > .ui-tabs > .ui-tabs-panel > fieldset{
     padding: 10px 0;
     -moz-border-radius : 0px 0px 5px 5px;
 }
-form.report-tabform > .ui-tabs > .ui-tabs-panel > fieldset:first-child{
+
+form.report-tabform > .ui-tabs > .ui-tabs-panel > fieldset:first-child {
     margin-top: 0;
 }
 
-
-
-form fieldset label,
-form fieldset textarea,
-form fieldset select,
-form fieldset input{
+form fieldset label, form fieldset textarea, form fieldset select, form fieldset input {
     display: block;
     margin-left: .5em;
     margin-top: .2em;
     height: 1.5em;
     border: .1em #aaaaaa solid;
-    float:left;
+    float: left;
     padding: 0;
     background: #fff;
-    color:#333;
+    color: #333;
 }
 
-form fieldset select{
+form fieldset select {
     height: 1.7em;
 }
-form fieldset input[type=checkbox]{
+
+form fieldset input[type=checkbox] {
     vertical-align: top;
     height: auto;
     margin-top: .6em;
 }
-form fieldset input[type=radio]{
+
+form fieldset input[type=radio] {
     vertical-align: top;
     margin-top: .5em;
 }
-form fieldset select[disabled],
-form fieldset select[disabled] > option,
-form fieldset textarea[disabled],
-form fieldset input[disabled],
-form fieldset select[readonly],
-form fieldset select[readonly] > option,
-form fieldset textarea[readonly],
-form fieldset input[readonly]{
+
+form fieldset select[disabled], form fieldset select[disabled] > option, form fieldset textarea[disabled], form fieldset input[disabled], form fieldset select[readonly], form fieldset select[readonly] > option, form fieldset textarea[readonly], form fieldset input[readonly] {
     background: #ccc;
     color: #000;
 }
 
-form fieldset label{
+form fieldset label {
     border: none;
     min-width: 10em;
     line-height: 1.7em;
 }
 
-label.form-flag-invalid{
+label.form-flag-invalid {
     color: #cd0a0a;
     font-weight: bold;
 }
-textarea.form-flag-invalid,
-select.form-flag-invalid option,
-input.form-flag-invalid{
+
+textarea.form-flag-invalid, select.form-flag-invalid option, input.form-flag-invalid {
     background-color: mistyrose;
     outline: .1em lightpink solid;
 }
 
-label.form-flag-required{
+label.form-flag-required {
     font-weight: bold;
 }
 
-.form-button .form-button-image{
+.form-button .form-button-image {
     border: none;
     width: 16px;
     height: 16px;
@@ -598,35 +680,39 @@ label.form-flag-required{
     margin-bottom: 1px;
 }
 
-.form-button .form-button-text{
+.form-button .form-button-text {
     line-height: 16px;
     height: 16px;
     display: inline-block;
 }
 
-.form-button .form-button-image + .form-button-text{
+.form-button .form-button-image + .form-button-text {
     margin-left: .4em;
 }
+
 .form-button .ui-button-text {
     height: 16px;
     line-height: 16px;
     height: 16px;
     vertical-align: middle;
 }
+
 /*********/
 /* ICONS */
 /*********/
-.icon-image{
+.icon-image {
     border: none;
     outline: none;
     width: 16px;
     height: 16px;
 }
-.icon-image.icon-size-small{
+
+.icon-image.icon-size-small {
     width: 16px;
     height: 16px;
 }
-ul.ui-tabs-nav > li .icon-image + span{
+
+ul.ui-tabs-nav > li .icon-image + span {
     margin-left: .4em;
     vertical-align: .06em;
 }
@@ -645,80 +731,86 @@ LOADING
     display: block;
 }
 
-.loader{
+.loader {
     margin: 5% auto !important;
     color: white;
     text-align: center;
     font-size: 14px;
 }
 
-.select2-container{
+.select2-container {
     height: 5% !important;
 }
-.select2-container--default .select2-selection--multiple{
+
+.select2-container--default .select2-selection--multiple {
     margin-top: 5px;
     max-height: 200px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
-.select2-container--default .select2-selection{
+
+.select2-container--default .select2-selection {
     border-radius: 0;
     margin-left: 5px;
 }
-.select2-container--default .select2-selection--single{
+
+.select2-container--default .select2-selection--single {
     height: 19px;
     font-size: 8pt;
 }
-.select2-container--default .select2-selection--single .select2-selection__rendered{
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
     line-height: 19px;
 }
-.select2-container--default .select2-selection--single .select2-selection__arrow b{
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
     top: 35%;
 }
-.select2-dropdown{
+
+.select2-dropdown {
     margin-left: 5px;
 }
 
-.help-block.form-error{
+.help-block.form-error {
     color : red !important;
     margin-left: 5px !important;
     text-align: left;
     font-weight: bold !important;
 }
 
-#operator-table input{
+#operator-table input {
     float: none;
 }
 
-#tiering-table input{
+#tiering-table input {
     float: none;
     padding-left: 5px;
 }
 
-#operator-table th, #tiering-table th{
+#operator-table th, #tiering-table th {
     vertical-align: top !important;
 }
 
-.operator_list{
+.operator_list {
     width: 130px;
     vertical-align: middle;
-    margin-top:1px;
+    margin-top: 1px;
 }
 
-#text-description{
+#text-description {
     height: 5em;
     width: 19.5em;
 }
 
-#input-name{
+#input-name {
     width: 195px;
 }
 
-#list-user{
+#list-user {
     width: 200px;
 }
 
-.btn-tiering-add{
+.btn-tiering-add {
     padding-left: 5px;
     padding-top: 3px;
 }
@@ -733,7 +825,6 @@ LOADING
     width: 55px;
     height: 21px;
     border-radius: 3px;
-
 }
 
 .hidden {
@@ -743,6 +834,7 @@ LOADING
 .text-left {
     text-align: left !important;
 }
+
 .text-right {
     text-align: right !important;
 }
@@ -751,4 +843,44 @@ LOADING
     line-height: 2;
     padding: 0 2px;
     font-style: italic;
+}
+
+.input-group {
+    padding-left: 4px;
+    height: 19px;
+    display: flex;
+    max-width: 114px;
+    /* border-collapse: collapse; */
+    flex-flow: row nowrap;
+}
+
+.input-group-icon {
+    display: inline-block;
+    line-height: 18px;
+    background-color: #aaaa;
+    height: 1.7em;
+    margin-top: .2em;
+    padding: 0 4px;
+    flex-shrink: 0;
+}
+
+.input-group-input {display: flex;flex-basis: auto;flex-direction: row;}
+
+.input-group-input > input {
+    margin-left: 0;
+    /* padding-left: 3px; */
+    line-height: 2;
+    float: none;
+    display: flex;
+    clear: both;
+    height: 1.5em;
+    width: 100%;
+}
+
+#invoiceNumber {
+    width: 100%;
+}
+
+form fieldset input[type=checkbox].checkbox-normal {
+    margin-top: 3px;
 }

@@ -7,6 +7,8 @@
 <dl class="admin-definitions">
     <dt>Term Of Payment</dt>
     <dd>{$setting.paymentPeriod} days</dd>
+    <dt>Last Invoice Number</dt>
+    <dd>{$setting.lastInvoiceNumber}</dd>
     <dt>Invoice Number Prefix</dt>
     <dd>{$setting.invoiceNumberPrefix}</dd>
     <dt>Authorized Name</dt>

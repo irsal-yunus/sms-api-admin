@@ -2,8 +2,9 @@
     <table class="admin-simpletable">
         <thead>
             <tr>
+                <th class="zebra-odd">Customer ID</th>
                 <th class="zebra-odd">Company Name</th>
-                <th class="zebra-even">Bank Name</th>
+                <th class="zebra-even">Payment Detail</th>
                 <th class="zebra-odd">
                     <a href="#" onclick="$app.module('invoice').createProfile()" class="form-button" title="Add New Profile">
                         <img title="Register" src="skin/images/icon-add.png" class="form-button-image" alt="" />
@@ -13,17 +14,30 @@
             </tr>
         </thead>
         <tbody>
-            {section name=profile loop=$profiles}
+            {foreach $profiles as $profile}
             <tr class="{cycle values="zebra-odd,zebra-even"}">
-                <td class="type-phone">{$profiles[profile].companyName}</td>
-                <td class="type-url">{$profiles[profile].bankName}</td>
+                <td class="type-status">{$profile.customerId}</td>
+                <td class="type-status">{$profile.companyName}</td>
+                <td class="type-status">{$profile.bankName}</td>
                 <td class="type-action">
-                    <a href="#" onclick="$app.module('invoice').showProfile({$profiles[profile].profileId})" class="form-button" title="Edit Profile">
+                    <a href="#" onclick="$app.module('invoice').addInvoice({$profile.profileId})" class="form-button" title="Create Invoice">
+                        <img src="skin/images/icon-gear-add.png" class="icon-image icon-size-small" alt="" />
+                    </a>
+                    <a href="#" onclick="$app.module('invoice').showHistory({$profile.profileId})" class="form-button" title="Invoice History">
+                        <img src="skin/images/icon-list.png" class="icon-image icon-size-small" alt="" />
+                    </a>
+                    <a href="#" onclick="$app.module('invoice').showProfile({$profile.profileId})" class="form-button" title="Edit Profile">
                         <img src="skin/images/icon-edit.png" class="icon-image icon-size-small" alt="" />
                     </a>
                 </td>
             </tr>
-            {/section}
+            {foreachelse}
+            <tr>
+                <td colspan="5" align="center">
+                    No Profile
+                </td>
+            </tr>
+            {/foreach}
         </tbody>
     </table>
 </fieldset>

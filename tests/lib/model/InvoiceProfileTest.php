@@ -1,9 +1,9 @@
 <?php
 
-use Firstwap\SmsApiAdmin\Test\TestCase;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceBank;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProduct;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
+use Firstwap\SmsApiAdmin\Test\TestCase;
 
 class InvoiceProfileTest extends TestCase
 {
@@ -45,10 +45,11 @@ class InvoiceProfileTest extends TestCase
     protected function initialData()
     {
         $this->model->select("DELETE FROM {$this->model->tableName()}")->execute();
+        $client = $this->model->select('SELECT CLIENT_ID FROM USER limit 1')->fetchColumn();
         $data = [
             'profileId' => 1,
             'bankId' => 1,
-            'clientId' => 1,
+            'clientId' => $client ?: 1,
         ];
 
         $this->model->insert($data);
@@ -145,6 +146,12 @@ class InvoiceProfileTest extends TestCase
         $result = $this->model->find($result[0]->key());
         $this->assertNotEmpty($result);
         $this->assertInstanceOf(InvoiceProfile::class, $result);
+        $this->assertEquals($result->toJson(), json_encode($result));
+        $result->offsetUnset('profileId');
+        $result->offsetUnset('primaryKey');
+
+        $this->assertEmpty($result->profileId);
+        $this->assertEmpty($result->keyName());
     }
 
     /**
@@ -184,6 +191,14 @@ class InvoiceProfileTest extends TestCase
      */
     public function testUpdateProfileMethod()
     {
+
+        try {
+            $this->model->update([]);
+            $this->fail('Exception didn\'t raise when instance InvoiceProfile called update method when the primaryKey is empty ');
+        } catch (\Exception $e) {
+            $this->assertContains("Can't perform Update, No primaryKey value", $e->getMessage());
+        }
+
         $this->initialData();
         $bankId = $this->initialBank();
         $result = $this->model->all();
@@ -218,6 +233,47 @@ class InvoiceProfileTest extends TestCase
 
         $result = $this->model->getProduct('');
         $this->assertEmpty($result);
+
+        $executeMock = $this
+            ->getMockBuilder("stdClass")
+            ->setMethods(array("execute", "bindValue", "errorInfo"))
+            ->getMock();
+        $executeMock
+            ->expects($this->any())->method("execute")
+            ->willReturn(false);
+        $executeMock
+            ->expects($this->any())->method("errorInfo")
+            ->willReturn([1, 2, 3]);
+        $pdoMock = $this->getMockBuilder('PDO')
+            ->disableOriginalConstructor()
+            ->setMethods(array("prepare"))
+            ->getMock();
+        $pdoMock
+            ->expects($this->any())->method("prepare")
+            ->willReturn($executeMock);
+
+        $modelMock = $this
+            ->getMockBuilder(InvoiceProfile::class)
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $modelMock->db = $pdoMock;
+        $modelMock->setKey(1);
+
+        try {
+            $modelMock->update([]);
+            $this->fail("Exception not raised");
+        } catch (\Exception $e) {
+            $this->assertContains('Failed Update', $e->getMessage());
+        }
+
+        try {
+            $modelMock->insert([]);
+            $this->fail("Exception not raised");
+        } catch (\Exception $e) {
+            $this->assertContains('Failed Insert', $e->getMessage());
+        }
     }
 
     /**
@@ -252,6 +308,43 @@ class InvoiceProfileTest extends TestCase
         } catch (\Exception $e) {
             $this->assertContains('no primary key', strtolower($e->getMessage()));
         }
+
+        $executeMock = $this
+            ->getMockBuilder("stdClass")
+            ->setMethods(array("execute", "bindValue", "errorInfo"))
+            ->getMock();
+        $executeMock
+            ->expects($this->once())->method("execute")
+            ->willReturn(false);
+        $executeMock
+            ->expects($this->once())->method("errorInfo")
+            ->willReturn([1, 2, 3]);
+        $pdoMock = $this->getMockBuilder('PDO')
+            ->disableOriginalConstructor()
+            ->setMethods(array("prepare"))
+            ->getMock();
+        $pdoMock
+            ->expects($this->once())->method("prepare")
+            ->willReturn($executeMock);
+
+        $modelMock = $this
+            ->getMockBuilder(InvoiceProfile::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['find'])
+            ->getMock();
+        $modelMock
+            ->expects($this->once())->method("find")
+            ->willReturn(true);
+
+        $modelMock->db = $pdoMock;
+        $modelMock->setKey(1);
+
+        try {
+            $modelMock->delete();
+            $this->fail("Exception not raised");
+        } catch (\Exception $e) {
+            $this->assertContains('Failed Delete', $e->getMessage());
+        }
     }
 
     /**
@@ -278,5 +371,33 @@ class InvoiceProfileTest extends TestCase
         $this->assertTrue($profiles[0]->delete());
         $result = $this->model->isClientDuplicate($profiles[0]->clientId);
         $this->assertFalse($result);
+    }
+
+    /**
+     * Test if call loadApiUsers method
+     *
+     * @return  void
+     */
+    public function testLoadApiUsersMethod()
+    {
+        $this->initialData();
+        try {
+            $this->model->loadApiUsers();
+            $this->fail('Exception didn\'t raise when instance InvoiceProfile called loadApiUsers method with client ID is empty');
+        } catch (\Exception $e) {
+            $this->assertContains('Client ID is empty', $e->getMessage());
+        }
+
+        $result = $this->model->all();
+
+        $this->assertNotNull($result);
+        $this->assertNotEmpty($result);
+
+        $apiUsers = $result[0]->loadApiUsers();
+
+        $this->assertNotNull($apiUsers);
+        $this->assertNotEmpty($apiUsers);
+        $this->assertNotNull($result[0]->apiUsers);
+        $this->assertNotEmpty($result[0]->apiUsers);
     }
 }

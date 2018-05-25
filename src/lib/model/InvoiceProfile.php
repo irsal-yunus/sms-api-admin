@@ -34,10 +34,10 @@ class InvoiceProfile extends ModelContract
      */
     public function all()
     {
-        return $this->select("SELECT {$this->tableName}.*, CLIENT.COMPANY_NAME, INVOICE_BANK.BANK_NAME from {$this->tableName}
+        return $this->select("SELECT {$this->tableName}.*, CLIENT.CUSTOMER_ID, CLIENT.COMPANY_NAME, INVOICE_BANK.BANK_NAME from {$this->tableName}
              LEFT JOIN CLIENT on CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
              LEFT JOIN INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID
-             order by CLIENT.COMPANY_NAME ASC"
+             order by CLIENT.CUSTOMER_ID ASC"
         )->fetchAll();
     }
 
@@ -55,6 +55,24 @@ class InvoiceProfile extends ModelContract
              WHERE {$this->primaryKey} = {strval($keyValue)}";
 
         return $this->select($query)->fetch();
+    }
+
+    /**
+     * Get user API that client have
+     *
+     * @return  array
+     */
+    public function loadApiUsers()
+    {
+        if (empty($this->clientId)) {
+            throw new Exception("Client ID is empty");
+        }
+
+        $query = "SELECT * FROM USER
+            WHERE CLIENT_ID = {$this->clientId}
+            ORDER BY USER_NAME ASC";
+
+        return $this->apiUsers = $this->select($query)->fetchAll();
     }
 
     /**

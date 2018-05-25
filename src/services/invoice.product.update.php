@@ -23,6 +23,7 @@ try {
         "reportName" => FILTER_SANITIZE_STRING,
         "ownerType" => FILTER_SANITIZE_STRING,
         "ownerId" => FILTER_SANITIZE_NUMBER_INT,
+        "period" => FILTER_SANITIZE_STRING,
         "productId" => FILTER_SANITIZE_NUMBER_INT,
         "qty" => [
             'filter' => FILTER_CALLBACK,
@@ -33,6 +34,7 @@ try {
             'options' => 'convertCurrencyString',
         ],
         "useReport" => FILTER_SANITIZE_NUMBER_INT,
+        "manualInput" => FILTER_SANITIZE_NUMBER_INT,
     ];
 
     $updateData = filter_input_array(INPUT_POST, $definitions);
@@ -72,9 +74,20 @@ try {
             if (empty($updateData["reportName"])) {
                 $errorFields['reportName'] = 'Report Name should not be empty when using report !';
             } else {
-                $updateData['unitPrice'] = 0;
-                $updateData['qty'] = 0;
+                if (empty($updateData['manualInput'])) {
+                    $updateData['unitPrice'] = 0;
+                    $updateData['qty'] = 0;
+                } else {
+                    $updateData['useReport'] = 2;
+                    unset($updateData['manualInput']);
+                }
             }
+
+            if ($updateData['ownerType'] === InvoiceProduct::HISTORY_PRODUCT
+                && strtotime($updateData['period']) === false) {
+                $errorFields['period'] = 'Invalid period Type value!';
+            }
+
         } else {
             $updateData["reportName"] = null;
         }

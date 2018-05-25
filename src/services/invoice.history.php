@@ -1,11 +1,12 @@
 <?php
-
-use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
-
 /*
  * Copyright(c) 2018 1rstWAP. All rights reserved.
  */
 require_once '../../vendor/autoload.php';
+
+use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
+use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
+use Firstwap\SmsApiAdmin\lib\model\InvoiceSetting;
 
 $logger = Logger::getLogger("service");
 try {
@@ -18,23 +19,30 @@ try {
     }
 
     try {
-        $model = new InvoiceProfile();
+        $profileModel = new InvoiceProfile();
+        $settingModel = new InvoiceSetting();
+        $historyModel = new InvoiceHistory();
 
-        $profile = $model->withProduct($profileId);
+        $profile = $profileModel->find($profileId);
 
         if (empty($profile)) {
             SmsApiAdmin::returnError("Invoice Profile not found !");
         }
 
-        $apiUsers = $profile[0]->loadApiUsers();
+        $apiUsers = $profile->loadApiUsers();
 
         if (is_array($apiUsers)) {
             $apiUsers = implode(', ', array_column($apiUsers, 'userName'));
         }
 
-        $page->assign('profile', $profile[0]);
+        $invoices = $historyModel->whereProfile($profileId);
+        $setting = $settingModel->getSetting();
+
         $page->assign('apiUsers', $apiUsers);
-        $page->display('invoice.profile.show.tpl');
+        $page->assign('profile', $profile);
+        $page->assign('invoices', $invoices);
+        $page->assign('setting', $setting);
+        $page->display('invoice.history.tpl');
     } catch (Exception $e) {
         SmsApiAdmin::returnError($e->getMessage());
     }

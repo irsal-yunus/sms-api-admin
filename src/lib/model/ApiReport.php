@@ -416,9 +416,10 @@ class ApiReport {
     /**
      * Get billing report list
      *
+     * @param int $clientId
      * @return  array
      */
-    public function getBillingReport()
+    public function getBillingReport($clientId = null)
     {
         $query = "SELECT USER_NAME FROM USER
                     WHERE BILLING_REPORT_GROUP_ID IS NULL
@@ -426,17 +427,27 @@ class ApiReport {
                         SELECT BILLING_PROFILE.BILLING_PROFILE_ID FROM " . DB_BILL_PRICELIST . ".BILLING_PROFILE
                     )";
 
+        if (!is_null($clientId)) {
+            $query .= " AND CLIENT_ID = {$clientId}";
+        }
+
         return $this->db->query($query)->fetchAll(PDO::FETCH_COLUMN, 0);
     }
 
     /**
      * Get billing report group list
      *
+     * @param int $clientId
      * @return  array
      */
-    public function getBillingReportGroup()
+    public function getBillingReportGroup($clientId = null)
     {
         $query = "SELECT NAME FROM " . DB_BILL_PRICELIST . ".BILLING_REPORT_GROUP";
+
+        if (!is_null($clientId)) {
+            $query .= " WHERE BILLING_REPORT_GROUP.BILLING_REPORT_GROUP_ID IN
+                (SELECT USER.BILLING_REPORT_GROUP_ID FROM USER WHERE CLIENT_ID = {$clientId})";
+        }
 
         return $this->db->query($query)->fetchAll(PDO::FETCH_COLUMN, 0);
     }
