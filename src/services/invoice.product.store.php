@@ -23,6 +23,7 @@ try {
         "reportName" => FILTER_SANITIZE_STRING,
         "ownerType" => FILTER_SANITIZE_STRING,
         "ownerId" => FILTER_SANITIZE_NUMBER_INT,
+        "period" => FILTER_SANITIZE_STRING,
         "qty" => [
             'filter' => FILTER_CALLBACK,
             'options' => 'convertCurrencyString',
@@ -32,6 +33,7 @@ try {
             'options' => 'convertCurrencyString',
         ],
         "useReport" => FILTER_SANITIZE_NUMBER_INT,
+        "manualInput" => FILTER_SANITIZE_NUMBER_INT,
     ];
 
     $newData = filter_input_array(INPUT_POST, $definitions);
@@ -67,8 +69,18 @@ try {
             if (empty($newData["reportName"])) {
                 $errorFields['reportName'] = 'Report Name should not be empty when using report !';
             } else {
-                $newData['unitPrice'] = 0;
-                $newData['qty'] = 0;
+                if (empty($newData['manualInput'])) {
+                    $newData['unitPrice'] = 0;
+                    $newData['qty'] = 0;
+                } else {
+                    $newData['useReport'] = 2;
+                    unset($newData['manualInput']);
+                }
+            }
+
+            if ($newData['ownerType'] === InvoiceProduct::HISTORY_PRODUCT
+                && strtotime($newData['period']) === false) {
+                $errorFields['period'] = 'Invalid period Type value!';
             }
         }
     } else {
@@ -82,7 +94,7 @@ try {
         $service->deliver();
     } else {
         $model = new InvoiceProduct();
-        $model->insert($newData);
+        $model->insertProduct($newData);
         $service->setStatus(true);
         $service->summarise('Product successfully added');
         $service->deliver();

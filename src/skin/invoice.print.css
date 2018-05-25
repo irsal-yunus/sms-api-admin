@@ -1,0 +1,268 @@
+
+
+a {
+    color: #0087c3;
+    text-decoration: none;
+}
+
+html {
+    position: relative
+}
+
+body {
+    position: relative;
+    width: 21cm;
+    height: 29.7cm;
+    /* height: auto; */
+    margin: 0 auto;
+    color: #232323;
+    background: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-family: SourceSansPro;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+#logo {
+    float: left;
+    width: 30%;
+    margin-bottom: 5px;
+}
+
+#company {
+    float: right;
+    text-align: right;
+    max-width: 225px;
+    font-size: 10px;
+    display: inline-block;
+}
+
+#title {
+    border-bottom: 1px solid #aaaaaa;
+    border-top: 1px solid #aaaaaa;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 5px 0;
+    margin-bottom: 5px;
+}
+
+#details {
+    margin-bottom: 20px;
+}
+
+#client {
+    float: left;
+    width: 240px;
+}
+
+#client .to {
+    font-weight: bold;
+}
+
+h2.name {
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0;
+    margin-top: 10px;
+}
+
+#customerId td {
+    padding-bottom: 10px;
+}
+
+#invoice {
+    float: right;
+    text-align: left;
+    width: 270px;
+}
+
+#invoice table td {
+    padding: 1.5px 3px;
+}
+
+#invoice table tr {
+    vertical-align: top;
+}
+
+.clearfix:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+table.item {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 0px;
+    border: 1px solid #aaa;
+}
+
+table.item tbody tr td {
+    font-size: 11px;
+}
+
+table.item thead tr th {
+    font-weight: bold;
+}
+
+table.item th {
+    /* border-top: 1px solid #aaa; */
+    border-bottom: 1px solid #aaa;
+}
+
+table.item th, table.item td {
+    padding: 3px 5px;
+    text-align: center;
+    border-right: 1px solid #aaa;
+}
+
+table.item th {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+table.item td {
+    text-align: right;
+}
+
+table.item tr {
+    vertical-align: top;
+}
+
+table.item td h3 {
+    font-size: 1.2em;
+    font-weight: normal;
+    margin: 0 0 0.2em 0;
+}
+
+table.item .no {
+    text-align: center;
+    width: 25px;
+}
+
+table.item .desc {
+    text-align: left;
+}
+
+table.item .unit {
+    width: 16%;
+}
+
+table.item .qty {
+    width: 10%;
+}
+
+table.item .total {
+    width: 130px;
+}
+
+table.item td.unit, table.item td.qty, table.item td.total {
+    /* font-size: 1.1em; */
+}
+
+table.item tfoot td {
+    padding: 5px 20px;
+    padding-right: 5px;
+    background: #ffffff;
+    border-bottom: none;
+    font-size: 1.1em;
+    white-space: nowrap;
+}
+
+.border-top {
+    border-top: 1px solid #aaaaaa;
+}
+
+.tableTotal {
+    margin-right: 0;
+    margin-left: auto;
+    text-align: right;
+}
+
+.tableTotal td {
+    padding: 3px 0px;
+    font-size: 12px;
+}
+
+#notices {
+    padding-left: 6px;
+    font-size: 10px;
+    /*border-left: 6px solid #0087c3;*/
+    margin-top: 30px;
+}
+
+.word-total {
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 0px;
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+.word-total i {
+    margin-left: 10px;
+    font-style: italic;
+    font-size: 12px;
+    padding: 0px;
+}
+
+#payment {
+    margin-bottom: 20px;
+    width: 60%;
+    /* margin-top: 25px; */
+}
+
+#payment table {
+    margin: 5px 0;
+}
+
+#payment table tr td {
+    padding: 2px 0;
+}
+
+#payment table tr td {
+    padding-right: 4px;
+}
+
+#payment table td {
+    vertical-align: top;
+}
+
+#authorized {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.signature-item {
+    display: inline-block;
+    width: 300px;
+    height: 75px;
+}
+
+.signature {
+    height: 112px;
+}
+
+.signature-name {
+    border-bottom: 1px solid #000;
+    font-weight: bold;
+    width: 70%;
+    margin: 0 auto;
+    height: 16px;
+    line-height: 1.5;
+}
+
+.signature-position {
+    height: 20px;
+}
+
+footer {
+    position: absolute;
+    bottom: 30px;
+    page-break-inside: avoid;
+}

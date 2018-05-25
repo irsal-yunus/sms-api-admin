@@ -1,28 +1,38 @@
-<div class="panel-content text-right">
-    <a href="#" class="form-button" onclick="$app.module('invoice').editProfile({$profile.profileId});" title="Edit Profile">
-        <img src="skin/images/icon-edit.png" class="form-button-image" alt="" />
-        <span class="form-button-text">Edit</span>
-    </a>
-</div>
-<dl class="admin-definitions">
-    <dt>Customer ID</dt>
-    <dd>{$profile.customerId}</dd>
-    <dt>Client Name</dt>
-    <dd><a href="#" onclick="$app.module('client').viewClient({$profile.clientId});">{$profile.companyName}</a></dd>
-    <dt>Client Address</dt>
-    <dd>{$profile.contactAddress}</dd>
-    <dt>Bank Name</dt>
-    <dd>{$profile.bankName}</dd>
-    <dt>Account Name</dt>
-    <dd>{$profile.accountName}</dd>
-    <dt>Account Number</dt>
-    <dd>{$profile.accountNumber}</dd>
-    <dt>Bank address</dt>
-    <dd>{$profile.address}</dd>
-</dl>
-<fieldset>
-    <h3 class="type-action"> Invoice Products </h3>
-    <table class="admin-simpletable">
+<fieldset class="content">
+    <h2 class="type-action">Invoice Profile</h2>
+    <div class="action-container text-right">
+        <a href="#" onclick="$app.module('invoice').showHistory({$profile.profileId})" class="form-button" title="Invoice History">
+            <img src="skin/images/icon-list.png" class="icon-image icon-size-small" alt="" />
+        </a>
+        <a href="#" class="form-button" onclick="$app.module('invoice').editProfile({$profile.profileId});" title="Edit Profile">
+            <img src="skin/images/icon-edit.png" class="icon-image icon-size-small" alt="" />
+            <span class="form-button-text"></span>
+        </a>
+        <a href="#" onclick="$app.module('invoice').addInvoice({$profile.profileId})" class="form-button" title="Create Invoice">
+            <img src="skin/images/icon-gear-add.png" class="icon-image icon-size-small" alt="" />
+        </a>
+    </div>
+    <dl class="admin-definitions">
+        <dt>Customer ID</dt>
+        <dd>{$profile.customerId}</dd>
+        <dt>Client Name</dt>
+        <dd><a href="#" onclick="$app.module('client').viewClient({$profile.clientId});">{$profile.companyName}</a></dd>
+        <dt>Client Address</dt>
+        <dd>{$profile.contactAddress}</dd>
+        <dt>API Users</dt>
+        <dd>{$apiUsers}</dd>
+        <dt>Bank Name</dt>
+        <dd>{$profile.bankName}</dd>
+        <dt>Account Name</dt>
+        <dd>{$profile.accountName}</dd>
+        <dt>Account Number</dt>
+        <dd>{$profile.accountNumber}</dd>
+        <dt>Bank address</dt>
+        <dd>{$profile.address}</dd>
+    </dl>
+    <span class="ui-helper-clearfix"></span>
+    <h3 class="action-container type-action">Products for Invoice </h3>
+    <table class="admin-simpletable invoice-table">
         <thead>
             <tr>
                 <th class="zebra-odd">Product Name</th>

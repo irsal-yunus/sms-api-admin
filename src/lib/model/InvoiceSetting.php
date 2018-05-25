@@ -2,8 +2,8 @@
 
 namespace Firstwap\SmsApiAdmin\lib\model;
 
-use Firstwap\SmsApiAdmin\lib\model\ModelContract;
 use Exception;
+use Firstwap\SmsApiAdmin\lib\model\ModelContract;
 
 /**
  * Model for INVOICE_SETTING table
@@ -42,7 +42,7 @@ class InvoiceSetting extends ModelContract
     public function getSetting()
     {
         if (empty(self::$setting)) {
-            if (! $setting = $this->selectSetting()) {
+            if (!$setting = $this->selectSetting()) {
                 $setting = $this->initialSetting();
             }
 
@@ -53,13 +53,27 @@ class InvoiceSetting extends ModelContract
     }
 
     /**
+     * Clear setting cache
+     *
+     * @return void
+     */
+    public function clearCache()
+    {
+        self::$setting = null;
+    }
+
+    /**
      * Perform select setting
      *
      * @return InvoiceSetting|null
      */
-    protected function selectSetting()
+    public function selectSetting()
     {
-        return $this->select("SELECT * from $this->tableName order by $this->primaryKey desc limit 1")->fetch();
+        $query = "SELECT * FROM {$this->tableName}
+            ORDER BY {$this->primaryKey} DESC
+            LIMIT 1";
+
+        return self::$setting = $this->select($query)->fetch() ?: null;
     }
 
     /**
@@ -91,12 +105,13 @@ class InvoiceSetting extends ModelContract
     {
         $data = [
             'paymentPeriod' => '14',
-            'authorizedName' => '',
-            'authorizedPosition' => '',
+            'authorizedName' => 'Mona Eftarina',
+            'lastInvoiceNumber' => 0,
+            'authorizedPosition' => 'Finance & Accounting Manager',
             'approvedName' => '',
             'approvedPosition' => '',
-            'noteMessage' => '',
-            'invoiceNumberPrefix' => '1rstwap - #number#',
+            'noteMessage' => "Please quote the above invoice number reference on all payment orders and note that all associated charges for the financial transfer are at the payees expense.\n\nAny errors/discrepancies must be reported to PT. FIRST WAP INTERNATIONAL (financial@1rstwap.com) in writing withing 7 (seven) days, otherwise claims for changes will not be accepted",
+            'invoiceNumberPrefix' => '1rstwap - ',
         ];
 
         if ($this->insert($data)) {
@@ -104,5 +119,22 @@ class InvoiceSetting extends ModelContract
         }
 
         throw new Exception("Failed Initialize Setting");
+    }
+
+    /**
+     * Refresh Invoice Number
+     *
+     * @return void
+     */
+    public function refreshInvoiceNumber()
+    {
+        $query = "UPDATE `{$this->tableName}` SET
+                    `LAST_INVOICE_NUMBER` = IFNULL(
+                    (SELECT INVOICE_NUMBER
+                    FROM INVOICE_HISTORY
+                    ORDER BY INVOICE_NUMBER DESC
+                    LIMIT 1), 0)";
+
+        $this->db->prepare($query)->execute();
     }
 }

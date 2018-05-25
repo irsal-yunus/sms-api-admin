@@ -6,8 +6,8 @@ require_once '../../vendor/autoload.php';
 
 use Firstwap\SmsApiAdmin\lib\model\InvoiceBank;
 
-$logger = Logger::getRootLogger();
 SmsApiAdmin::filterAccess();
+$logger = Logger::getRootLogger();
 $service = new AppJsonService();
 
 try {

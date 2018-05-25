@@ -7,10 +7,26 @@
         var MODULE_NAME = 'invoice';
         if ($app.hasModule(MODULE_NAME)) return;
         var mod = {}; //implementation
+        var SERVICE_URL = 'services/';
         var TAB_INVOICE_PROFILE = 0;
         var TAB_INVOICE_SETTING = 1;
         var PROFILE_PRODUCT_TYPE = 'PROFILE';
         var HISTORY_PRODUCT_TYPE = 'HISTORY';
+        var mainTitle = 'Invoice Management';
+
+        /**
+         * Resolve service url
+         */
+        function resolveServiceUrl(serviceName) {
+            try {
+                if (typeof serviceName != 'string' || serviceName == '')
+                    throw "Invalid service name: " + serviceName;
+                return SERVICE_URL + serviceName + '.php';
+            } catch (ex) {
+                $1.error("[$app#resolveServiceUrl] Error.", ex);
+                return null;
+            }
+        }
 
         function checkValidRecordID(id) {
             if (!id || ((typeof id != 'string') && (typeof id != 'number'))) {
@@ -19,21 +35,62 @@
             }
         }
 
-        function addLink(onClick, text) {
-            return '<a href="#" class="link" onclick="' + onClick + '">' + text + '</a>';
+        function addLink(functionName, text) {
+            return '<a href="#" class="link" onclick="$app.module(\'invoice\').' + functionName + '">' + text + '</a>';
         }
 
-        function title(text) {
+        function title(titleData) {
             try {
-                var title = 'Invoice Management';
-                if ($.trim(text) != '') {
-                    title = addLink("$app.module(\'invoice\').showInvoice()", title);
-                    title += ' > ' + text;
+                var data = [];
+
+                if ($.trim(titleData) == '') {
+                    data.push(mainTitle);
+                } else {
+                    data.push({
+                        title: mainTitle,
+                        action: 'showInvoiceManagement()'
+                    });
+                    if ($.isArray(titleData)) {
+                        for (var i = 0; i < titleData.length; i++) {
+                            if (i === titleData.length - 1) {
+                                data.push(titleData[i].title);
+                            } else {
+                                data.push(titleData[i]);
+                            }
+                        }
+                    } else {
+                        data.push(titleData);
+                    }
                 }
-                $app.title(title);
+
+                var titleText = data.map(function(item) {
+                    if (typeof item === 'object') {
+                        return addLink(item.action, item.title);
+                    }
+                    return item;
+                }).join(' > ');
+
+                $app.title(titleText);
             } catch (ex) {
                 $1.error("[mod:invoice#title] Error.", ex);
             }
+        }
+
+        function initMasking() {
+            $('input[data-mask]').each(function(i, input) {
+                $(input).mask(input.dataset.mask, {
+                    reverse: true,
+                    translation: {
+                        '#': {
+                            pattern: /-|\d/,
+                            recursive: true
+                        }
+                    },
+                    onChange: function(value, e) {
+                        e.target.value = value.replace(/(?!^)-/g, '').replace(/^,/, '').replace(/^-,/, '-');
+                    }
+                })
+            });
         }
 
         function initFormProduct() {
@@ -49,6 +106,14 @@
             $('#useReport').on('change', function() {
                 var value = $(this).val();
                 toggleReport(parseInt(value, 10) === 1);
+            }).trigger('change');
+
+            $('#manualInput').on('change', function(event) {
+                var isChecked = event.currentTarget.checked;
+                var useReport = $('#useReport').val() == 1;
+                if (useReport) {
+                    $('.toggle-report').prop('disabled', isChecked === false);
+                }
             }).trigger('change');
 
             $('#productName').autocomplete({
@@ -71,13 +136,31 @@
             initMasking();
         }
 
-        function initMasking() {
-            $('input[data-mask]').each(function(i, input) {
-                $(input).mask(input.dataset.mask, {reverse: true} )
-            });
+        function initInvoiceForm() {
+            var dateFormat = 'YYYY-MM-DD';
+            var startDateValue = $('#startDate').val();
+            var dateNow = (startDateValue !== '' ? moment(startDateValue) : moment()).format(dateFormat);
+
+            $(".datepicker")
+                .datepicker({
+                    dateFormat: "yy-mm-dd"
+                });
+            $('#startDate')
+                .on('change', function(event) {
+                    $('#paymentPeriod').trigger('change');
+                })
+                .val(dateNow);
+            $('#paymentPeriod')
+                .on('change', function(event) {
+                    var period = event.currentTarget.value;
+                    var startDate = $('#startDate').val() || dateNow;
+                    var dueDate = moment(startDate, dateFormat).add(period, 'days').format(dateFormat);
+                    $('#dueDate').val(dueDate);
+                })
+                .trigger('change')
         }
 
-        mod.showInvoice = function() {
+        mod.showInvoiceManagement = function() {
             try {
                 $app.content('invoice.view', null, function() {
                     title();
@@ -96,6 +179,199 @@
                 });
             } catch (ex) {
                 $1.error("[mod:invoice.profile.show] Error.", ex);
+            }
+        };
+
+        mod.showHistory = function(profileId) {
+            try {
+                $app.content('invoice.history', {
+                    profileId: profileId
+                }, function() {
+                    title('Invoice History');
+                });
+            } catch (ex) {
+                $1.error("[mod:invoice.history] Error.", ex);
+            }
+        };
+
+        mod.showInvoice = function(invoiceId, profileId) {
+            try {
+                $app.content('invoice.history.show', {
+                    invoiceId: invoiceId
+                }, function() {
+                    var titleLength = $('#titlePanel').children().length;
+                    if (titleLength !== 2) {
+                        title([{
+                            title: 'Invoice History',
+                            action: 'showHistory(' + profileId + ')'
+                        }, {
+                            title: 'Invoice Detail'
+                        }]);
+                    }
+                });
+            } catch (ex) {
+                $1.error("[mod:invoice.history.show] Error.", ex);
+            }
+        };
+
+        mod.downloadInvoice = function(invoiceId, download) {
+            var url = resolveServiceUrl('invoice.print') + '?download=' + download + '&invoiceId=' + invoiceId;
+
+            if (download === 1) {
+                window.open(url);
+            } else {
+                window.open(url, 'Print Preview', 'width=1000, height=800, top=100, left=200, toolbar=1');
+            }
+        }
+
+        /**
+         * Show logout confirmation dialog
+         */
+        mod.lockInvoice = function(invoiceId) {
+            try {
+                var title = "Confirm Lock Invoice";
+                var msg = "Are you sure want to Lock this invoice ?<br>You can not make changes to the invoice again";
+
+                $app.confirm(msg, title,
+                    function() {
+                        $.post(resolveServiceUrl('invoice.history.lock'), {
+                            invoiceId: invoiceId
+                        }, function(reply) {
+                            try {
+                                var success = $app.form.checkServiceReply(reply, false, title);
+                                if (success) {
+                                    if (reply && reply.summary) {
+                                        $app.tell(reply.summary || 'Success!', title);
+                                    }
+
+                                    if (reply && reply.attachment && reply.attachment.invoice) {
+                                        mod.showHistory(reply.attachment.invoice.profileId);
+                                    }
+                                }
+                            } catch (ex) {
+                                $1.error("[$app.logout@post] Error.", ex);
+                            }
+                        })
+                    });
+            } catch (ex) {
+                $1.error("[$app.login] Error.", ex);
+            }
+        };
+        mod.addInvoice = function(profileId) {
+            try {
+                $app.form.openAutoDialog('invoice.history.create', {
+                    profileId: profileId
+                }, 'Add Invoice', {
+                    width: '30em',
+                    height: 230
+                }, function(reply) {
+                    if (reply && reply.attachment && reply.attachment.invoiceId) {
+                        mod.showInvoice(reply.attachment.invoiceId, profileId);
+                    }
+                }, initInvoiceForm);
+            } catch (ex) {
+                $1.error("[mod:invoice.profile.create] Error.", ex);
+            }
+        };
+
+
+        mod.editInvoice = function(invoiceId) {
+            try {
+                $app.form.openAutoDialog('invoice.history.edit', {
+                    invoiceId: invoiceId
+                }, 'Edit Invoice', {
+                    width: '30em',
+                    height: 250
+                }, function() {
+                    mod.showInvoice(invoiceId);
+                }, initInvoiceForm);
+            } catch (ex) {
+                $1.error("[mod:invoice.profile.edit] Error.", ex);
+            }
+        };
+
+        mod.addInvoiceProduct = function(invoiceId) {
+            try {
+                $app.form.openAutoDialog('invoice.product.create', {
+                    ownerId: invoiceId,
+                    ownerType: HISTORY_PRODUCT_TYPE
+                }, 'Add Invoice Product', {
+                    width: '30em',
+                    height: 250
+                }, function(reply) {
+                    mod.showInvoice(invoiceId);
+                }, initFormProduct);
+            } catch (ex) {
+                $1.error("[mod:invoice.product.create] Error.", ex);
+            }
+        };
+
+        mod.editInvoiceProduct = function(productId) {
+            try {
+                $app.form.openAutoDialog('invoice.product.edit', {
+                    productId: productId
+                }, 'Edit Invoice Product', {
+                    width: '30em',
+                    height: 250
+                }, function(reply) {
+                    if (reply && reply.attachment && reply.attachment.ownerId) {
+                        mod.showInvoice(reply.attachment.ownerId);
+                    }
+                }, initFormProduct);
+            } catch (ex) {
+                $1.error("[mod:invoice.profile.edit] Error.", ex);
+            }
+        };
+
+        mod.deleteInvoiceProduct = function(productId, invoiceId) {
+            try {
+                checkValidRecordID(productId);
+                var title = 'Remove Product';
+                $app.confirm('Remove this Product ?', title, function() {
+                    $app.call('invoice.product.delete', {
+                        productId: productId
+                    }, function(reply) {
+                        try {
+                            var success = $app.form.checkServiceReply(reply, false, title);
+                            if (success) {
+                                if (reply && reply.summary) {
+                                    $app.tell(reply.summary || 'Success!', title);
+                                }
+                                mod.showInvoice(invoiceId);
+                            }
+                        } catch (ex) {
+                            $1.error("[mod:invoice.profile.delete@ajaxsuccess] Error.", ex);
+                        }
+                    });
+                });
+            } catch (ex) {
+                $1.error("[mod:invoice.profile.delete] Error.", ex);
+            }
+        };
+
+        mod.deleteInvoice = function(profileId, invoiceId) {
+            try {
+                checkValidRecordID(invoiceId);
+                var title = 'Remove Invoice';
+                $app.confirm('Remove this Invoice ?', title, function() {
+                    $app.call('invoice.history.delete', {
+                        invoiceId: invoiceId
+                    }, function(reply) {
+                        try {
+                            var success = $app.form.checkServiceReply(reply, false, title);
+                            if (success) {
+                                if (reply && reply.summary) {
+                                    $app.tell(reply.summary || 'Success!', title);
+                                }
+                                mod.showHistory(profileId);
+                            }
+                        } catch (ex) {
+                            $1.error("[mod:invoice.history.delete@ajaxsuccess] Error.", ex);
+                        }
+                    });
+                });
+            } catch (ex) {
+                $1.error("[mod:invoice.history.delete] Error.", ex);
             }
         };
 
@@ -195,8 +471,8 @@
         mod.editSetting = function() {
             try {
                 $app.form.openAutoDialog('invoice.setting.edit', null, 'Edit Invoice Setting', {
-                    width: '40em',
-                    height: 320
+                    width: '35em',
+                    height: 400
                 }, function() {
                     $('#invoice-view-tabs').tabs('load', TAB_INVOICE_SETTING);
                 }, function() {
@@ -210,7 +486,7 @@
         mod.createBank = function() {
             try {
                 $app.form.openAutoDialog('invoice.bank.create', null, 'Create Bank Account', {
-                    width: '45em',
+                    width: '25em',
                     height: 240
                 }, function(reply) {
                     $('#invoice-view-tabs').tabs('load', TAB_INVOICE_SETTING);
@@ -227,7 +503,7 @@
                 $app.form.openAutoDialog('invoice.bank.edit', {
                     bankId: bankId
                 }, 'Edit Bank Account', {
-                    width: '40em',
+                    width: '25em',
                     height: 240
                 }, function() {
                     $('#invoice-view-tabs').tabs('load', TAB_INVOICE_SETTING);

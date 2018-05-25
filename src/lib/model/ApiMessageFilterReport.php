@@ -578,8 +578,7 @@ class ApiMessageFilterReport
             ob_start();
             header('Pragma: public');
             header('Expires: 0');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Cache-Control: public');
+            header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
             header('Content-Description: File Transfer');
             header('Content-type: application/octet-stream');
             header('Content-Disposition: attachment; filename="' . basename($reportFile) . '"');

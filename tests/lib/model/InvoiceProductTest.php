@@ -68,7 +68,7 @@ class InvoiceProductTest extends TestCase
         ];
 
         foreach ($data as $value) {
-            $this->model->insert($value);
+            $this->model->insertProduct($value);
         }
     }
 
@@ -163,12 +163,12 @@ class InvoiceProductTest extends TestCase
     public function testUpdateProductMethod()
     {
         $this->initialData();
-        $result = $this->model->all();
-        $this->assertNotEmpty($result);
-        $this->assertTrue(is_array($result));
-        $this->assertInstanceOf(InvoiceProduct::class, $result[0]);
+        $results = $this->model->all();
+        $this->assertNotEmpty($results);
+        $this->assertTrue(is_array($results));
+        $this->assertInstanceOf(InvoiceProduct::class, $results[0]);
 
-        $result = $this->model->find($result[0]->key());
+        $result = $this->model->find($results[0]->key());
         $this->assertNotEmpty($result);
         $this->assertInstanceOf(InvoiceProduct::class, $result);
 
@@ -213,6 +213,51 @@ class InvoiceProductTest extends TestCase
         } catch (\Exception $e) {
             $this->assertContains('Product Not Found', $e->getMessage());
         }
+
+        $updateData = [
+            'productName' => "SMS SAPI",
+            'period' => '2018-01-01',
+            'unitPrice' => "0",
+            'qty' => "0",
+            'useReport' => 1,
+            'reportName' => 'rachmat',
+            'ownerType' => 'HISTORY',
+            'ownerId' => 1,
+        ];
+        $result = $results[1];
+        $this->model->updateProduct($result->key(), $updateData);
+        $result = $this->model->find($result->key());
+        $this->assertNotEmpty($result);
+        $this->assertInstanceOf(InvoiceProduct::class, $result);
+
+        $productMock = $this
+            ->getMockBuilder(InvoiceProduct::class)
+            ->setMethods(['getExcelReader'])
+            ->getMock();
+        $productMock
+            ->expects($this->once())->method("getExcelReader")
+            ->willThrowException(new \Exception(''));
+        $productMock->updateProduct($result->key(), $updateData);
+        $result = $this->model->find($result->key());
+        $this->assertNotEmpty($result);
+        $this->assertInstanceOf(InvoiceProduct::class, $result);
+
+        $updateData = [
+            'productName' => "SMS SAPI",
+            'period' => null,
+            'unitPrice' => "0",
+            'qty' => "0",
+            'useReport' => 1,
+            'reportName' => 'rachmat',
+            'ownerType' => 'HISTORY',
+            'ownerId' => 1,
+        ];
+        $result = $results[1];
+        $this->model->updateProduct($result->key(), $updateData);
+        $result = $this->model->find($result->key());
+        $this->assertNotEmpty($result);
+        $this->assertInstanceOf(InvoiceProduct::class, $result);
+
     }
 
     /**
@@ -247,5 +292,53 @@ class InvoiceProductTest extends TestCase
         } catch (\Exception $e) {
             $this->assertContains('no primary key', strtolower($e->getMessage()));
         }
+    }
+
+    /**
+     * Check lastPeriod method
+     *
+     * @return  void
+     */
+    public function testLastPeriodMethod()
+    {
+        $this->initialData();
+        $products = $this->model->all();
+        $this->assertNotEmpty($products);
+        $product = $products[0];
+        $this->assertNotEmpty($product->period);
+        $this->assertNotEmpty($product->lastPeriod());
+    }
+
+    /**
+     * Check isProfile method
+     *
+     * @return  void
+     */
+    public function testIsProfileMethod()
+    {
+        $this->initialData();
+        $products = $this->model->all();
+        $this->assertNotEmpty($products[1]);
+        $product = $products[1];
+        $this->assertNotEmpty($product->ownerType);
+        $this->assertEquals(InvoiceProduct::PROFILE_PRODUCT, $product->ownerType);
+        $this->assertTrue($product->isProfile());
+    }
+
+    /**
+     * Check amount method
+     *
+     * @return  void
+     */
+    public function testAmountMethod()
+    {
+        $this->initialData();
+        $products = $this->model->all();
+        $this->assertNotEmpty($products[0]);
+        $product = $products[0];
+        $product->qty = 2;
+        $product->unitPrice = 100;
+        $this->assertNotEmpty($product->amount());
+        $this->assertEquals(2 * 100, $product->amount());
     }
 }

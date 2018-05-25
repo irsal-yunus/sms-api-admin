@@ -1,7 +1,8 @@
 <?php
 
-use Firstwap\SmsApiAdmin\lib\model\InvoiceSetting;
 use Firstwap\SmsApiAdmin\Test\TestCase;
+use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
+use Firstwap\SmsApiAdmin\lib\model\InvoiceSetting;
 
 class InvoiceSettingTest extends TestCase
 {
@@ -99,4 +100,61 @@ class InvoiceSettingTest extends TestCase
         $setting->rollBack();
     }
 
+    /**
+     * Test refreshInvoiceNumber method
+     *
+     * @return  void
+     */
+    public function testRefreshInvoiceNumberMethod()
+    {
+        $setting = new InvoiceSetting();
+        $setting->clearCache();
+        $setting->beginTransaction();
+        $setting->select('DELETE FROM ' . $setting->tableName())->execute();
+        $setting->select('DELETE FROM INVOICE_HISTORY')->execute();
+
+        /**
+         * Last invoice number should be 0
+         */
+        $setting->refreshInvoiceNumber();
+        $result = $setting->getSetting();
+        $this->assertNotEmpty($result);
+        $this->assertInstanceOf(InvoiceSetting::class, $result);
+        $this->assertEquals(0, $result->lastInvoiceNumber);
+
+        /**
+         * Last invoice number should be 1
+         */
+        $this->initialInvoiceData();
+        $setting->refreshInvoiceNumber();
+        $setting->clearCache();
+        $result = $setting->selectSetting();
+
+        $this->assertNotEmpty($result);
+        $this->assertInstanceOf(InvoiceSetting::class, $result);
+        $this->assertEquals(1, $result->lastInvoiceNumber);
+
+        $setting->rollBack();
+    }
+
+
+    /**
+     * Initial data invoice
+     *
+     * @return  void
+     */
+    protected function initialInvoiceData()
+    {
+        $model = new InvoiceHistory();
+        $model->select("DELETE FROM {$model->tableName()}")->execute();
+        $data = [
+            'invoiceId' => 1,
+            'profileId' => 1,
+            'invoiceNumber' => 1,
+            'startDate' => date('Y-m-d'),
+            'dueDate' => date('Y-m-d', strtotime('13 days')),
+        ];
+
+        $model->insert($data);
+    }
 }

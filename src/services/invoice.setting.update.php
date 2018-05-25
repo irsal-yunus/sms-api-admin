@@ -15,6 +15,7 @@ try {
     $definitions = [
         "settingId" => FILTER_SANITIZE_NUMBER_INT,
         "paymentPeriod" => FILTER_SANITIZE_NUMBER_INT,
+        "lastInvoiceNumber" => FILTER_SANITIZE_NUMBER_INT,
         "invoiceNumberPrefix" => FILTER_SANITIZE_STRING,
         "authorizedName" => FILTER_SANITIZE_STRING,
         "authorizedPosition" => FILTER_SANITIZE_STRING,

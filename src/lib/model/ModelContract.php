@@ -32,13 +32,25 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
     protected $attributes = [];
 
     /**
+     * The database transaction status
+     *
+     * @var array
+     */
+    protected $transactionStatus = false;
+
+    /**
      * Constructor for ApiInvoiceSetting class
      *
+     * @param array $attributes
      * @return void
      */
-    public function __construct()
+    public function __construct(array $attributes = [])
     {
-        $this->db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+        $this->db = $this->getPdo();
+
+        if (!empty($attributes)) {
+            $this->attributes = $attributes;
+        }
     }
 
     /**
@@ -64,6 +76,17 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
     public function key()
     {
         return $this->{$this->keyName()};
+    }
+
+    /**
+     * Set primary key value
+     *
+     * @param  mixed $value
+     * @return void
+     */
+    public function setKey($value)
+    {
+        $this->{$this->keyName()} = $value;
     }
 
     /**
@@ -104,7 +127,7 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
      * Perform Update action
      *
      * @param  array $data
-     * @return array
+     * @return bool
      */
     public function update(array $data)
     {
@@ -114,8 +137,10 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
 
         $values = array_intersect_key($data, $this->attributes);
 
-        // Remove primary key from values to prevent update primary key
-        unset($values[$this->keyName()]);
+        if (array_key_exists($this->keyName(), $values)) {
+            // Remove primary key from values to prevent update primary key
+            unset($values[$this->keyName()]);
+        }
 
         $bindParam = $this->getUpdateParam($values);
 
@@ -130,7 +155,19 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
             throw new Exception("Failed Update " . json_encode($stmt->errorInfo()[2]));
         }
 
+        $this->attributes = array_merge($this->attributes, $values);
+
         return $updated;
+    }
+
+    /**
+     * Get PDO instance
+     *
+     * @return  PDO
+     */
+    protected function getPdo()
+    {
+        return SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
     }
 
     /**
@@ -170,6 +207,23 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
         }
 
         return $this->db->lastInsertId();
+    }
+
+    /**
+     * Save model instance to database
+     *
+     * @param array $newAttributes Pass an array data to replace current attributes
+     * @param bool
+     */
+    public function save(array $newAttributes = [])
+    {
+        $this->attributes = array_merge($this->attributes, $newAttributes);
+
+        if (empty($this->key())) {
+            return $this->insert($this->attributes);
+        }
+
+        return $this->update($this->attributes);
     }
 
     /**
@@ -265,7 +319,9 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
      */
     public function beginTransaction()
     {
-        $this->db->beginTransaction();
+        if ($this->db->inTransaction() === false) {
+            $this->db->beginTransaction();
+        }
     }
 
     /**
@@ -275,7 +331,9 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
      */
     public function rollBack()
     {
-        $this->db->rollBack();
+        if ($this->db->inTransaction() === true) {
+            $this->db->rollBack();
+        }
     }
 
     /**
@@ -285,7 +343,9 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
      */
     public function commit()
     {
-        $this->db->commit();
+        if ($this->db->inTransaction() === true) {
+            $this->db->commit();
+        }
     }
 
     /**
@@ -375,7 +435,11 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        if (array_key_exists($offset, $this->attributes)) {
+            unset($this->attributes[$offset]);
+        } else {
+            unset($this->$offset);
+        }
     }
 
     /**
@@ -408,6 +472,10 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
      */
     public function __set($key, $value)
     {
+        if (property_exists($this, $key)) {
+            return $this->{$key} = $value;
+        }
+
         if ($key{0} === strtoupper($key{0})) {
             $key = $this->camelCase($key);
         }
