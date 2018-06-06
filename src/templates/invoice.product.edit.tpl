@@ -28,7 +28,7 @@
         <input type="checkbox" name="manualInput" id="manualInput" value="1" class="report-name hidden checkbox-normal" {if $product.useReport eq 2} checked {/if} />
         <span class="ui-helper-clearfix"></span>
         <label class="form-flag-required">Quantity</label>
-        <input name="qty" class="toggle-report" data-mask="###,###,###,###,###,###" value="{$product.qty}" type="text" maxlength="14" />
+        <input name="qty" class="toggle-report" data-mask="###,###,###,###,###,###" value="{number_format($product.qty)}" type="text" maxlength="14" />
         <span class="ui-helper-clearfix"></span>
         <label class="form-flag-required">Unit Price (IDR)</label>
         <input name="unitPrice" class="toggle-report" data-mask="000,000,000,000,000.00" value="{$product.unitPrice}" type="text" maxlength="14" />

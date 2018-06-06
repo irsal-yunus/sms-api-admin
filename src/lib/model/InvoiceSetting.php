@@ -14,11 +14,19 @@ use Firstwap\SmsApiAdmin\lib\model\ModelContract;
 class InvoiceSetting extends ModelContract
 {
     /**
+     * Database connection name that setup in
+     * configs/database.ini
+     *
+     * @var PDO
+     */
+    protected $connection = 'invoice';
+
+    /**
      * Table name for invoice setting
      *
      * @var string
      */
-    protected $tableName = 'INVOICE_SETTING';
+    protected $tableName = DB_INVOICE.'.INVOICE_SETTING';
 
     /**
      * Primary key for invoice setting
@@ -108,8 +116,6 @@ class InvoiceSetting extends ModelContract
             'authorizedName' => 'Mona Eftarina',
             'lastInvoiceNumber' => 0,
             'authorizedPosition' => 'Finance & Accounting Manager',
-            'approvedName' => '',
-            'approvedPosition' => '',
             'noteMessage' => "Please quote the above invoice number reference on all payment orders and note that all associated charges for the financial transfer are at the payees expense.\n\nAny errors/discrepancies must be reported to PT. FIRST WAP INTERNATIONAL (financial@1rstwap.com) in writing withing 7 (seven) days, otherwise claims for changes will not be accepted",
             'invoiceNumberPrefix' => '1rstwap - ',
         ];
@@ -128,10 +134,10 @@ class InvoiceSetting extends ModelContract
      */
     public function refreshInvoiceNumber()
     {
-        $query = "UPDATE `{$this->tableName}` SET
+        $query = "UPDATE {$this->tableName} SET
                     `LAST_INVOICE_NUMBER` = IFNULL(
                     (SELECT INVOICE_NUMBER
-                    FROM INVOICE_HISTORY
+                    FROM ".DB_INVOICE.".INVOICE_HISTORY
                     ORDER BY INVOICE_NUMBER DESC
                     LIMIT 1), 0)";
 

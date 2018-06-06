@@ -14,11 +14,19 @@ use \Exception;
 class InvoiceBank extends ModelContract
 {
     /**
+     * Database connection name that setup in
+     * configs/database.ini
+     *
+     * @var PDO
+     */
+    protected $connection = 'invoice';
+
+    /**
      * Table name of invoice profile
      *
      * @var string
      */
-    protected $tableName = 'INVOICE_BANK';
+    protected $tableName = DB_INVOICE.'.INVOICE_BANK';
 
     /**
      * Primary key of invoice profile
@@ -34,7 +42,7 @@ class InvoiceBank extends ModelContract
      */
     public function all()
     {
-        return $this->select("SELECT * from $this->tableName order by {$this->primaryKey} desc")->fetchAll();
+        return $this->select("SELECT * from {$this->tableName} order by {$this->primaryKey} desc")->fetchAll();
     }
 
     /**

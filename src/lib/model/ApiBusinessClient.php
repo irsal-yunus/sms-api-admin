@@ -66,7 +66,7 @@ class ApiBusinessClient extends ApiBaseModel {
     {
         $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
         $query = "SELECT CLIENT_ID, COMPANY_NAME FROM CLIENT
-            WHERE CLIENT_ID NOT IN (SELECT INVOICE_PROFILE.CLIENT_ID FROM INVOICE_PROFILE)";
+            WHERE CLIENT_ID NOT IN (SELECT INVOICE_PROFILE.CLIENT_ID FROM ".INVOICE_DB.".INVOICE_PROFILE)";
 
         if (!empty($includeClient)) {
             $query .= " OR CLIENT_ID = $includeClient";

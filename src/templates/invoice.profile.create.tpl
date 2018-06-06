@@ -11,5 +11,11 @@
             {html_options options=$banks}
         </select>
         <span class="ui-helper-clearfix"></span>
+        <label>Approved Name</label>
+        <input name="approvedName" value="{$setting.approvedName}" type="text" maxlength="45" />
+        <span class="ui-helper-clearfix"></span>
+        <label>Approved Position</label>
+        <input name="approvedPosition" value="{$setting.approvedPosition}" type="text" maxlength="45" />
+        <span class="ui-helper-clearfix"></span>
     </fieldset>
 </form>

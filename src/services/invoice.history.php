@@ -32,7 +32,7 @@ try {
         $apiUsers = $profile->loadApiUsers();
 
         if (is_array($apiUsers)) {
-            $apiUsers = implode(', ', array_column($apiUsers, 'userName'));
+            $apiUsers = array_column($apiUsers, 'userName','userId');
         }
 
         $invoices = $historyModel->whereProfile($profileId);

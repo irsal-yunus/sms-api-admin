@@ -77,8 +77,12 @@
         }
 
         function initMasking() {
+            var replaceMent = function(val) {
+                return val.replace(/(?!^)-/g, '').replace(/^,/, '').replace(/^-,/, '-');
+            }
+
             $('input[data-mask]').each(function(i, input) {
-                $(input).mask(input.dataset.mask, {
+                var mask = $(input).mask(input.dataset.mask, {
                     reverse: true,
                     translation: {
                         '#': {
@@ -87,9 +91,11 @@
                         }
                     },
                     onChange: function(value, e) {
-                        e.target.value = value.replace(/(?!^)-/g, '').replace(/^,/, '').replace(/^-,/, '-');
+                        e.target.value = replaceMent(value);
                     }
-                })
+                });
+
+                mask.val(replaceMent(mask.val()))
             });
         }
 
@@ -175,7 +181,7 @@
                 $app.content('invoice.profile.show', {
                     profileId: profileId
                 }, function() {
-                    title('Detail Profile');
+                    title('Profile Details');
                 });
             } catch (ex) {
                 $1.error("[mod:invoice.profile.show] Error.", ex);
@@ -390,8 +396,29 @@
             }
         };
 
+        mod.showDownloadAll = function() {
+            try {
+                $app.form.openAutoDialog('invoice.downloadAll.form', null, 'Download All Invoice', {
+                    width: '30em',
+                    height: 150,
+                    btnText: 'Download',
+                    btnAction: function() {
+                        var $form = $('form:first', this);
+                        $form.attr('target', '_blank').submit();
+                        $app.form.closeDialog();
+                    },
+                }, function(reply) {
+                    if (reply && reply.attachment && reply.attachment.profileId) {
+                        mod.showProfile(reply.attachment.profileId);
+                    }
+                });
+            } catch (ex) {
+                $1.error("[mod:invoice.profile.create] Error.", ex);
+            }
+        };
 
-        mod.editProfile = function(profileId) {
+
+        mod.editProfile = function(profileId, changePage) {
             try {
                 $app.form.openAutoDialog('invoice.profile.edit', {
                     profileId: profileId
@@ -399,7 +426,9 @@
                     width: '30em',
                     height: 200
                 }, function() {
-                    mod.showProfile(profileId);
+                    if (changePage !== false) {
+                        mod.showProfile(profileId);
+                    }
                 });
             } catch (ex) {
                 $1.error("[mod:invoice.profile.edit] Error.", ex);

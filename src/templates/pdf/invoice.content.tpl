@@ -155,7 +155,22 @@
             </table>
         </div>
         <div id="authorized" class="clearfix">
-            <div class="signature-item" style="float: left; margin-left: 60px;">
+            {if $profile.approvedName}
+            <div class="signature-item" style="float: right; margin-right: 60px;">
+                <div class="title">
+                    Approved by,
+                </div>
+                <div class="signature">
+                </div>
+                <div class="signature-name">
+                    {$profile.approvedName} &nbsp;
+                </div>
+                <div class="signature-position">
+                    {$profile.approvedPosition} &nbsp;
+                </div>
+            </div>
+            {/if}
+            <div class="signature-item" style="float: right; {if $setting.approvedName} margin-right: 60px;{/if}">
                 <div class="title">
                     Authorized Signature,
                 </div>
@@ -166,19 +181,6 @@
                 </div>
                 <div class="signature-position">
                     {$setting.authorizedPosition} &nbsp;
-                </div>
-            </div>
-            <div class="signature-item">
-                <div class="title">
-                    Approved by,
-                </div>
-                <div class="signature">
-                </div>
-                <div class="signature-name">
-                    {$setting.approvedName} &nbsp;
-                </div>
-                <div class="signature-position">
-                    {$setting.approvedPosition} &nbsp;
                 </div>
             </div>
         </div>
