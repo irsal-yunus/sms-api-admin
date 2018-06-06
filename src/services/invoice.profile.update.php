@@ -13,14 +13,20 @@ $service = new AppJsonService();
 try {
 
     $errorFields = [];
-    $profileId = filter_input(INPUT_POST, 'profileId', FILTER_VALIDATE_INT);
-    $bankId = filter_input(INPUT_POST, 'bankId', FILTER_VALIDATE_INT);
+    $definitions = [
+        "profileId" => FILTER_SANITIZE_NUMBER_INT,
+        "bankId" => FILTER_SANITIZE_NUMBER_INT,
+        "approvedName" => FILTER_SANITIZE_STRING,
+        "approvedPosition" => FILTER_SANITIZE_STRING,
+    ];
 
-    if (empty($profileId)) {
-        SmsApiAdmin::returnError("Invalid Invoice Profile ID ($profileId) !");
+    $updates = filter_input_array(INPUT_POST, $definitions);
+
+    if (empty($updates['profileId'])) {
+        SmsApiAdmin::returnError("Invalid Invoice Profile ID ({$updates['profileId']}) !");
     }
 
-    if (empty($bankId)) {
+    if (empty($updates['bankId'])) {
         $errorFields['bankId'] = 'Payment Detail should not be empty!';
     }
 
@@ -31,7 +37,7 @@ try {
         $service->deliver();
     } else {
         $model = new InvoiceProfile();
-        $model->updateProfile($profileId, ['bankId' => $bankId]);
+        $model->updateProfile($updates['profileId'], $updates);
         $service->setStatus(true);
         $service->summarise('Invoice Profile successfully updated');
         $service->deliver();

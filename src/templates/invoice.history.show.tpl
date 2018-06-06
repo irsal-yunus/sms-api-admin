@@ -169,7 +169,7 @@
                 </tr>
             </table>
         </div>
-        <div id="authorized" class="clearfix">
+        <div id="authorized" class="clearfix {if not $profile.approvedName}text-right{/if}">
             <div class="signature-item">
                 <div class="title">
                     Authorized Signature,
@@ -183,6 +183,7 @@
                     {$setting.authorizedPosition} &nbsp;
                 </div>
             </div>
+            {if $profile.approvedName}
             <div class="signature-item">
                 <div class="title">
                     Approved by,
@@ -190,12 +191,13 @@
                 <div class="signature">
                 </div>
                 <div class="signature-name">
-                    {$setting.approvedName} &nbsp;
+                    {$profile.approvedName} &nbsp;
                 </div>
                 <div class="signature-position">
-                    {$setting.approvedPosition} &nbsp;
+                    {$profile.approvedPosition} &nbsp;
                 </div>
             </div>
+            {/if}
         </div>
         <div id="notices">
             <b>Notes:</b>

@@ -31,7 +31,7 @@ class InvoiceHistory extends ModelContract
      *
      * @var string
      */
-    protected $tableName = 'INVOICE_HISTORY';
+    protected $tableName = DB_INVOICE.'.INVOICE_HISTORY';
 
     /**
      * Primary key of invoice history
@@ -86,6 +86,26 @@ class InvoiceHistory extends ModelContract
             WHERE PROFILE_ID = {$profileId}
             ORDER BY STATUS ASC, INVOICE_NUMBER DESC";
 
+        return $this->select($query)->fetchAll();
+    }
+
+    /**
+     * Get invoice history base on period
+     *
+     * @param int $timestamp
+     * @return  array
+     */
+    public function whereStartDate($timestamp)
+    {
+        if (!strtotime("@$timestamp")) {
+            return;
+        }
+
+        $date = date('m-Y', $timestamp);
+
+        $query = "SELECT * FROM {$this->tableName}
+            WHERE DATE_FORMAT(START_DATE, '%m-%Y') = '{$date}'
+            ORDER BY START_DATE DESC";
         return $this->select($query)->fetchAll();
     }
 
@@ -266,7 +286,7 @@ class InvoiceHistory extends ModelContract
      */
     public function total()
     {
-        return round($this->subTotal() - $this->vat(), 2);
+        return round($this->subTotal() + $this->vat(), 2);
     }
 
     /**
@@ -317,7 +337,7 @@ class InvoiceHistory extends ModelContract
     {
         $date = new DateTime($paymentDate);
         $monthYear = $date->format('Y-m');
-        $query = "SELECT COUNT(*) FROM `INVOICE_HISTORY`
+        $query = "SELECT COUNT(*) FROM {$this->tableName}
             WHERE DATE_FORMAT(START_DATE, \"%Y-%m\") = \"{$monthYear}\"
             AND PROFILE_ID = $profileId";
 

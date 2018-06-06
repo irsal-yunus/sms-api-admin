@@ -3,9 +3,8 @@
 namespace Firstwap\SmsApiAdmin\lib\model;
 
 use Firstwap\SmsApiAdmin\lib\model\ModelContract;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use \Exception;
-
-require_once dirname(dirname(__DIR__)) . '/classes/PHPExcel.php';
 
 /**
  * Model for INVOICE_PRODUCT table
@@ -26,7 +25,7 @@ class InvoiceProduct extends ModelContract
      *
      * @var string
      */
-    protected $tableName = 'INVOICE_PRODUCT';
+    protected $tableName = DB_INVOICE . '.INVOICE_PRODUCT';
 
     /**
      * Primary key of invoice profile
@@ -183,10 +182,7 @@ class InvoiceProduct extends ModelContract
 
         $userApi = null;
         $qty = $unitPrice = 0;
-        $month = date('m', $period);
-        $year = date('Y', $period);
-        $reportDir = SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT . $year . '/' . $month . '/FINAL_STATUS/';
-        $reportPath = $reportDir . $this->reportName . '_' . date('M_Y', $period) . '_Summary.xlsx';
+        $reportPath = $this->summaryPath($period, $this->reportName);
 
         if (file_exists($reportPath)) {
             list($qty, $unitPrice, $userApi) = $this->getSummaryValue($reportPath);
@@ -195,6 +191,22 @@ class InvoiceProduct extends ModelContract
         $this->qty = $qty;
         $this->unitPrice = $unitPrice;
         $this->userApiReport = $userApi;
+    }
+
+    /**
+     * Get summary path
+     *
+     * @param int $period         Timestamps value from period
+     * @param String $reportName  Name of Summary report
+     * @return  String
+     */
+    protected function summaryPath($period, $reportName)
+    {
+        $month = date('m', $period);
+        $year = date('Y', $period);
+        $reportDir = SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT . $year . '/' . $month . '/FINAL_STATUS/';
+
+        return $reportDir . $reportName . '_' . date('M_Y', $period) . '_Summary.xlsx';
     }
 
     /**
@@ -233,7 +245,7 @@ class InvoiceProduct extends ModelContract
      */
     protected function getExcelReader()
     {
-        $reader = new \PHPExcel_Reader_Excel2007();
+        $reader = new Xlsx();
         $reader->setReadDataOnly(true);
 
         return $reader;

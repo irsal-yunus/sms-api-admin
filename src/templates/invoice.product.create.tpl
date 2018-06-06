@@ -13,12 +13,12 @@
         </select>
         <span class="ui-helper-clearfix"></span>
         {/if}
-        <label class="">User Report ?</label>
+        <label class="">Use Billing Report ?</label>
         <select name="useReport" id="useReport" size="1" class="flexible-width">
             {html_options options=['No','Yes']}
         </select>
         <span class="ui-helper-clearfix"></span>
-        <label class="report-name">User/Group Name</label>
+        <label class="report-name">Report Name</label>
         <select name="reportName" id="reportName" class="hidden report-name">
             {html_options options=$reports}
         </select>

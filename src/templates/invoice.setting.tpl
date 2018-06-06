@@ -15,10 +15,14 @@
     <dd>{$setting.authorizedName}</dd>
     <dt>Authorized Position</dt>
     <dd>{$setting.authorizedPosition}</dd>
+    {*
+    <!--
     <dt>Approved Name</dt>
     <dd>{$setting.approvedName}</dd>
     <dt>Approved Position</dt>
     <dd>{$setting.approvedPosition}</dd>
+    -->
+    *}
     <dt>Note Message</dt>
     <dd>{$setting.noteMessage}</dd>
 </dl>

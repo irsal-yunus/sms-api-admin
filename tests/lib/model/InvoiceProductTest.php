@@ -216,11 +216,11 @@ class InvoiceProductTest extends TestCase
 
         $updateData = [
             'productName' => "SMS SAPI",
-            'period' => '2018-01-01',
+            'period' => '2018-04-01',
             'unitPrice' => "0",
             'qty' => "0",
             'useReport' => 1,
-            'reportName' => 'rachmat',
+            'reportName' => 'unittest',
             'ownerType' => 'HISTORY',
             'ownerId' => 1,
         ];
@@ -232,11 +232,26 @@ class InvoiceProductTest extends TestCase
 
         $productMock = $this
             ->getMockBuilder(InvoiceProduct::class)
-            ->setMethods(['getExcelReader'])
+            ->setMethods(['getExcelReader', 'summaryPath'])
             ->getMock();
         $productMock
             ->expects($this->once())->method("getExcelReader")
             ->willThrowException(new \Exception(''));
+        $productMock
+            ->expects($this->once())->method("summaryPath")
+            ->willReturn(dirname(SMSAPIADMIN_BASE_DIR)."/tests/resources/unittest_Apr_2018_Summary.xlsx");
+        $productMock->updateProduct($result->key(), $updateData);
+        $result = $this->model->find($result->key());
+        $this->assertNotEmpty($result);
+        $this->assertInstanceOf(InvoiceProduct::class, $result);
+
+        $productMock = $this
+            ->getMockBuilder(InvoiceProduct::class)
+            ->setMethods(['summaryPath'])
+            ->getMock();
+        $productMock
+            ->expects($this->once())->method("summaryPath")
+            ->willReturn(dirname(SMSAPIADMIN_BASE_DIR)."/tests/resources/unittest_Apr_2018_Summary.xlsx");
         $productMock->updateProduct($result->key(), $updateData);
         $result = $this->model->find($result->key());
         $this->assertNotEmpty($result);

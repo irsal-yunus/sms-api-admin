@@ -201,6 +201,28 @@ class InvoiceHistoryTest extends TestCase
     }
 
     /**
+     * Test whereStartDate method
+     *
+     * @return  void
+     */
+    public function testWhereStartDateMethod()
+    {
+        $this->initialData();
+        $result = $this->model->all();
+        $this->assertNotEmpty($result);
+        $this->assertTrue(is_array($result));
+        $this->assertInstanceOf(InvoiceHistory::class, $result[0]);
+
+        $result = $this->model->whereStartDate(strtotime('now'));
+        $this->assertNotEmpty($result);
+        $this->assertInstanceOf(InvoiceHistory::class, $result[0]);
+        $this->assertTrue($result[0]->save());
+
+        $result = $this->model->whereStartDate(false);
+        $this->assertEmpty($result);
+    }
+
+    /**
      * Test withProduct method
      *
      * @return  void

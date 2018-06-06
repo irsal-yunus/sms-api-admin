@@ -25,6 +25,14 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
     protected $db = null;
 
     /**
+     * Database connection name that setup in
+     * configs/database.ini
+     *
+     * @var PDO
+     */
+    protected $connection = 'default';
+
+    /**
      * The model's attributes.
      *
      * @var array
@@ -167,7 +175,7 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
      */
     protected function getPdo()
     {
-        return SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+        return SmsApiAdmin::getDB($this->connection);
     }
 
     /**

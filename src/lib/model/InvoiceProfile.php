@@ -14,11 +14,19 @@ use \Exception;
 class InvoiceProfile extends ModelContract
 {
     /**
+     * Database connection name that setup in
+     * configs/database.ini
+     *
+     * @var PDO
+     */
+    protected $connection = 'invoice';
+
+    /**
      * Table name of invoice profile
      *
      * @var string
      */
-    protected $tableName = 'INVOICE_PROFILE';
+    protected $tableName = DB_INVOICE.'.INVOICE_PROFILE';
 
     /**
      * Primary key of invoice profile
@@ -34,9 +42,10 @@ class InvoiceProfile extends ModelContract
      */
     public function all()
     {
+
         return $this->select("SELECT {$this->tableName}.*, CLIENT.CUSTOMER_ID, CLIENT.COMPANY_NAME, INVOICE_BANK.BANK_NAME from {$this->tableName}
-             LEFT JOIN CLIENT on CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
-             LEFT JOIN INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID
+             LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
+             LEFT JOIN ".DB_INVOICE.".INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID
              order by CLIENT.CUSTOMER_ID ASC"
         )->fetchAll();
     }
@@ -50,8 +59,8 @@ class InvoiceProfile extends ModelContract
     public function find($keyValue)
     {
         $query = "SELECT {$this->tableName}.*, CLIENT.*, INVOICE_BANK.* from {$this->tableName}
-             LEFT JOIN CLIENT on CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
-             LEFT JOIN INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID
+             LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
+             LEFT JOIN ".DB_INVOICE.".INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID
              WHERE {$this->primaryKey} = {strval($keyValue)}";
 
         return $this->select($query)->fetch();
@@ -68,7 +77,7 @@ class InvoiceProfile extends ModelContract
             throw new Exception("Client ID is empty");
         }
 
-        $query = "SELECT * FROM USER
+        $query = "SELECT * FROM ".DB_SMS_API_V2.".USER
             WHERE CLIENT_ID = {$this->clientId}
             ORDER BY USER_NAME ASC";
 

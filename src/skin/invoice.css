@@ -276,14 +276,16 @@ table.item tfoot tr td:nth-child(2) {
     border-bottom: 1px solid #aaa;
     margin-bottom: 20px;
     padding: 10px 0;
-    font-size: 1.2em;
+}
+.word-total > p {
+    font-size: 12px;
 }
 
 .word-total i {
     margin-left: 10px;
     font-weight: 600;
     font-style: italic;
-    font-size: 12px;
+    font-size: 10px;
     padding: 0px;
 }
 
@@ -322,6 +324,7 @@ table.item tfoot tr td:nth-child(2) {
     display: inline-block;
     width: 300px;
     height: 70px;
+    text-align: center;
 }
 
 .signature {

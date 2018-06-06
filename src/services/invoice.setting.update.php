@@ -19,8 +19,6 @@ try {
         "invoiceNumberPrefix" => FILTER_SANITIZE_STRING,
         "authorizedName" => FILTER_SANITIZE_STRING,
         "authorizedPosition" => FILTER_SANITIZE_STRING,
-        "approvedName" => FILTER_SANITIZE_STRING,
-        "approvedPosition" => FILTER_SANITIZE_STRING,
         "noteMessage" => FILTER_SANITIZE_STRING,
     ];
     $updates = filter_input_array(INPUT_POST, $definitions);
