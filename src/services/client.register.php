@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright(c) 2010 1rstWAP. All rights reserved.
  */
 
@@ -11,12 +11,14 @@ $service = new AppJsonService();
 try {
 	$errorFields = array();
 	$definitions = array(
+		'customerId'=>FILTER_SANITIZE_STRING,
 		'companyName'=>FILTER_SANITIZE_STRING,
 		'companyUrl'=>FILTER_SANITIZE_STRING,
 		'countryCode'=>FILTER_SANITIZE_STRING,
 		'contactName'=>FILTER_SANITIZE_STRING,
 		'contactEmail'=>FILTER_SANITIZE_STRING,
-		'contactPhone'=>FILTER_SANITIZE_STRING
+		'contactPhone'=>FILTER_SANITIZE_STRING,
+		'contactAddress'=>FILTER_SANITIZE_STRING
 	);
 	$clientData = filter_input_array(INPUT_POST, $definitions);
 	foreach($clientData as $key=>$value)
@@ -27,6 +29,8 @@ try {
 		$service->summarise('No data fields');
 		$service->deliver();
 	}
+	if($clientData['customerId']=='')
+		$errorFields['customerId']='Customer ID should not be empty!';
 	if($clientData['companyName']=='')
 		$errorFields['companyName']='Company name should not be empty!';
 	if($clientData['contactName']=='')
@@ -35,18 +39,19 @@ try {
 		$errorFields['contactEmail']='Invalid email address!';
 	if(($clientData['companyUrl']!='') && !filter_var($clientData['companyUrl'], FILTER_VALIDATE_URL))
 		$errorFields['companyUrl']='Invalid company URL!';
-	
-	if($errorFields){
+
+	if ($errorFields) {
 		$service->setStatus(false);
 		$service->summarise('Input fields error');
 		$service->attachRaw($errorFields);
 		$service->deliver();
+	} else {
+		$clientModel = new ApiBusinessClient();
+		$clientID = $clientModel->register($clientData);
+		$service->setStatus(true);
+		$service->attach('clientID', $clientID);
+		$service->deliver();
 	}
-	$clientModel = new ApiBusinessClient();
-	$clientID = $clientModel->register($clientData);
-	$service->setStatus(true);
-	$service->attach('clientID', $clientID);
-	$service->deliver();
 } catch (Exception $e) {
 	Logger::getRootLogger()->error("$e");
 	SmsApiAdmin::returnError($e->getMessage());

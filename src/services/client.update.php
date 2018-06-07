@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright(c) 2010 1rstWAP. All rights reserved.
  */
 
@@ -19,12 +19,14 @@ try {
 	}
 	$errorFields = array();
 	$definitions = array(
+		'customerId'=>FILTER_SANITIZE_STRING,
 		'companyName'=>FILTER_SANITIZE_STRING,
 		'companyUrl'=>FILTER_SANITIZE_STRING,
 		'countryCode'=>FILTER_SANITIZE_STRING,
 		'contactName'=>FILTER_SANITIZE_STRING,
 		'contactEmail'=>FILTER_SANITIZE_STRING,
-		'contactPhone'=>FILTER_SANITIZE_STRING
+		'contactPhone'=>FILTER_SANITIZE_STRING,
+		'contactAddress'=>FILTER_SANITIZE_STRING,
 	);
 	$updates = filter_input_array(INPUT_POST, $definitions);
 	foreach($updates as $key=>$value)
@@ -35,6 +37,8 @@ try {
 		$service->summarise('No update fields');
 		$service->deliver();
 	}
+	if($updates['customerId']=='')
+		$errorFields['customerId']='Customer ID should not be empty!';
 	if($updates['companyName']=='')
 		$errorFields['companyName']='Company name should not be empty!';
 	if($updates['contactName']=='')
@@ -43,12 +47,12 @@ try {
 		$errorFields['contactEmail']='Invalid email address!';
 	if(($updates['companyUrl']!='') && !filter_var($updates['companyUrl'], FILTER_VALIDATE_URL))
 		$errorFields['companyUrl']='Invalid company URL!';
-	if($errorFields){
+	if ($errorFields) {
 		$service->setStatus(false);
 		$service->summarise('Input fields error');
 		$service->attachRaw($errorFields);
 		$service->deliver();
-	}else{
+	} else {
 		$clientModel = new ApiBusinessClient();
 		$clientModel->update($clientID, $updates);
 		$service->setStatus(true);

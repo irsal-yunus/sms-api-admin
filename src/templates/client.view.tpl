@@ -5,12 +5,14 @@
 			<div class="panel-content">
 				<fieldset class="float-centre">
 					<dl class="admin-definitions">
+						<dt>Customer ID</dt><dd>{$client.customerId}</dd>
 						<dt>Company Name</dt><dd>{$client.companyName}</dd>
 						<dt>Company URL</dt><dd><a href="{$client.companyUrl}">{$client.companyUrl}</a></dd>
 						<dt>Country</dt><dd>{$client.countryName}</dd>
 						<dt>Contact Name</dt><dd>{$client.contactName}</dd>
 						<dt>Contact Email</dt><dd><a href="mailto:{$clientcontactEmail}">{$client.contactEmail}</a></dd>
 						<dt>Contact Phone</dt><dd>{$client.contactPhone}</dd>
+						<dt>Contact Address</dt><dd>{$client.contactAddress}</dd>
 						<dt>Created By</dt><dd>{$client.createdByName}</dd>
 						<dt>Created On</dt><dd>{$client.createdTimestamp}</dd>
 						<dt>Updated By</dt><dd>{$client.updatedByName}</dd>
