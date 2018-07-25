@@ -1,10 +1,10 @@
 {literal}
     <script type="text/javascript">
         $(document).ready(function() {
-            
+
             var checkReportInterval = setInterval(checkReport, 3000);
             checkReport();
-            
+
             for(var i = 0; i < 3; i++ ){
                 var month = moment().subtract(i, 'months');
                 $('#month').append('<option value="'+month.format('MM-YYYY')+'">'+month.format('MMM')+'</option>');
@@ -24,7 +24,7 @@
                                         +'<td class="type-text">'+value.createdAt+'</td>'
                                         +'<td class="type-text">'+value.reportName+'</td>'
                                         +'<td class="type-action">';
-                                        
+
                             if(value.isDone){
                                 html += '<a href="#" title="Download" class="form-button btn-download" data="'+value.reportPackage+'" id="downloadReport">'
                                         +'<img src="skin/images/download.png" class="icon-image" alt="" /></a>';
@@ -40,9 +40,8 @@
                     error: function (e) {
                         console.log("ERROR : ", e);
                     }
-                    
                 });
-                
+
             }
             $.validate({
                 errorMessagePosition : 'inline',
@@ -53,61 +52,104 @@
             $("#list-user").select2({
                 placeholder: "Select a user"
             });
-            
+
+            /*
+             this function to check the file extension after user input the file
+             */
+             var verificationFile = false;
+             $("#msgContentFile").change(function(e){
+                e.preventDefault();
+                var fileName  =  $(this).val();
+                var extension = fileName.substring(fileName.lastIndexOf('.')+1, fileName.length) || fileName;
+                if (extension!=="odt"
+                    && extension!=="xls"
+                    && extension!=="xlsx"
+                    && extension!=="csv"
+                    && extension!==""
+                ) {
+                    $('#typeValidationMessages').text("extension file is not suppported");
+                    verificationFile = false;
+                 }
+                else{
+                    $('#typeValidationMessages').text("");
+                    verificationFile = true;
+                }
+            });
+
+             /*
+               sumit function
+              */
             $('#msgContent-form').submit(function(e){
                     e.preventDefault();
-                    var user = $('#list-user').val(),
+                    /*it will check the extension file , after user click the submit button
+                     * if the file is odt,xls,or csv ,then it will continue the process
+                     * if the file extension is not odt,xls,xlsx or csv, then it will show up the validation message
+                     */
+                    if (verificationFile) {
+                        var user = $('#list-user').val(),
                         file = $('#msgContentFile')[0].files[0],
                         report_month = $('#month').val();
 
-                    var data = new FormData();
-                    data.append("file", file);
-                    data.append("date", report_month);
-                    data.append("user", user);
-                    
-                    $.ajax({
-                        type        : "POST",
-                        enctype     : 'multipart/form-data',
-                        url         : "services/billing.messageFilterReport.php",
-                        data        : data,
-                        processData : false,
-                        contentType : false,
-                        cache       : false,
-                        timeout     : 600000,
-                        success     : function (response) {
-                            var html = "";
-                            $('#dialog').html('');
-                            switch(response){
-                                case '200':
-                                    html += "<p>Your report is being generated</p>";
-                                    break;
-                                case '404':
-                                    html += "<p style='font-size:10px;color:red'>Billing report for user "+user+" doesn't exist</p>";
-                                    break;
-                                default:
-                                    html += "<p style='font-size:10px;color:red'>Internal error occured. Please try again!</p>";
-                            }
-                            html += "</div>";
-                            $('#dialog').append(html);
+                        var data = new FormData();
+                        data.append("file", file);
+                        data.append("date", report_month);
+                        data.append("user", user);
 
-                            $( "#dialog" ).dialog({
-                                height: 100,
-                                modal: true,
-                                open: function(event, ui){
-                                 setTimeout("$('#dialog').dialog('close')",1000);
+                        $.ajax({
+                            type        : "POST",
+                            enctype     : 'multipart/form-data',
+                            url         : "services/billing.messageFilterReport.php",
+                            data        : data,
+                            processData : false,
+                            contentType : false,
+                            cache       : false,
+                            timeout     : 600000,
+                            success     : function (response) {
+                                var html = "";
+                                $('#dialog').html('');
+                                switch(response){
+                                    //the report is processed
+                                    case '200':
+                                        html += "<p>Your report is being generated</p>";
+                                        break;
+
+                                    //the report for the user is doesnt exist
+                                    case '404':
+                                        html += "<p style='font-size:10px;color:red'>Billing report for user "+user+" doesn't exist</p>";
+                                        break;
+
+                                    //the default case if json doesnt return back 200 or 404 code .
+                                    default:
+                                        html += "<p style='font-size:10px;color:red'>Internal error occured. Please try again!</p>";
                                 }
-                            });
-                            
-                            $('#msgContent-form')[0].reset();
-                            $("#list-user").val('').trigger("change"); 
-                        },
-                        error: function (e) {
-                            console.log("ERROR : ", e);
-
-                        }
-                    });
+                                html += "</div>";
+                                $('#dialog').append(html);
+                                //for showing up dialog notifictaion
+                                $( "#dialog" ).dialog({
+                                    height: 100,
+                                    modal: true,
+                                    open: function(event, ui){
+                                     setTimeout("$('#dialog').dialog('close')",5000);
+                                    }
+                                });
+                                $('#msgContent-form')[0].reset();
+                                $("#list-user").val('').trigger("change");
+                            },
+                            error: function (e) {
+                                console.log("ERROR : ", e);
+                            }
+                        });
+                    }
+                else{
+                    //show error validation messages
+                   $('#typeValidationMessages').text("extension file is not suppported");
+                   return false;
+                }
             });
-            
+
+            /*
+              this function for download the rport
+             */
             $(document)
                 .on('click', '.btn-download', function(e){
                     var linktoDownload = 'services/billling.downloadMessageFilterReport.php',
@@ -126,12 +168,15 @@
                         }
 
                     });
-                
+
                 }
             );
-            
+
         });
-        
+
+        /*
+         this function is for load the user detail
+         */
         function loadUserDetail(){
             $.ajax({
                 url: 'services/billing.getUserDetail.php',
@@ -147,7 +192,6 @@
                     });
                     $('#list-user').append(html);
                 },
-
             });
         }
     </script>
@@ -169,7 +213,9 @@
                             <span class="ui-helper-clearfix"></span>
                             <div style="padding-top: 5px;">
                                 <label>Message Content File</label>
-                                <input type="file" name ="msgContentFile" id="msgContentFile" data-validation="required">
+                                <input required type="file" name ="msgContentFile" id="msgContentFile"
+                                accept=".csv, .xls, .xlsx, .odt">
+                                <p id="typeValidationMessages" style="color:red; font-size: 90%"></p>
                                 </input>
                             </div>
                             <span class="ui-helper-clearfix"></span>
@@ -187,7 +233,6 @@
 
                         </fieldset>
                     </form>
-                    
                     <form class="admin-xform" method="post">
                         <fieldset class="float-centre" style="padding-bottom: 10px;padding-top: 10px;">
                             <!-- Message Content Based Report Table -->
@@ -197,7 +242,7 @@
                                             <th style="width: 20%;">User API</th>
                                             <th style="width: 20%;">Created At</th>
                                             <th style="width: 15%;">Report name</th>
-                                            <th style="width: 20%;">Action</th>                                                                             
+                                            <th style="width: 20%;">Action</th>
                                         </tr>
                                 </thead>
                                 <tfoot>
