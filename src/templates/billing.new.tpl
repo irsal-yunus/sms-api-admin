@@ -226,7 +226,7 @@
     });
 
     function initMaskingPrice() {
-        $('.input-price').mask('000,000,000,000,000.00', {reverse: true});
+        $('.input-price').mask('000,000.00', {reverse: true});
     }
 
     function initMaskingQuantity() {
@@ -264,7 +264,7 @@
                             + '<th>'
                             +   '<select class="operator_list" name="operatorID['+rowId+'][operator]"  data-validation="required" data-initvalue="'+data.OP_ID+'"></select>'
                             + '</th>'
-                            + '<th><input type="text" name="operatorID['+rowId+'][price]" class="input-price" value="'+data.PER_SMS_PRICE+'"><th>'
+                            + '<th><input type="text" name="operatorID['+rowId+'][price]" class="input-price" value="'+parseFloat(data.PER_SMS_PRICE).toFixed(2)+'"><th>'
                             + '<td> <span style="font-size: 10px; color:red;">'+note+'</span></td>'
                         + '</tr>';
         $('#operator-table tbody').append(newRow);
@@ -427,7 +427,7 @@
                                                                                 </th>
                                                                                 <th><input type='text' class='tiering-from input-qty' name='tiering[{$key}][from]' value='{$item['SMS_COUNT_FROM']}' data-validation='required' {if $key == 0} readonly {/if}></th>
                                                                                 <th><input type='text' class='tiering-to input-qty' name ='tiering[{$key}][to]' id='tiering_upto' value='{$item['SMS_COUNT_UP_TO']}' data-validation='required' {if $item['SMS_COUNT_UP_TO'] == 'MAX'} readonly {/if}></th>
-                                                                                <th><input type='text' class='tiering-price input-price' name ='tiering[{$key}][price]' value='{$item['PER_SMS_PRICE']}' data-validation='required'></th>
+                                                                                <th><input type='text' class='tiering-price input-price' name ='tiering[{$key}][price]' value='{number_format(floatval($item['PER_SMS_PRICE']), 2, '.', '')}' data-validation='required'></th>
                                                                                 <th>
                                                                                     <img src='skin/images/icon-add.png' class='form-button-image btn-tiering-add' alt='Add New Field' width='13px' style='cursor:pointer;' />
                                                                                 </th>
