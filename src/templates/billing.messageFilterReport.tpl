@@ -59,16 +59,21 @@
              var verificationFile = false;
              $("#msgContentFile").change(function(e){
                 e.preventDefault();
-                var fileName  = document.getElementById("msgContentFile").value;
+                var fileName  =  $(this).val();
                 var extension = fileName.substring(fileName.lastIndexOf('.')+1, fileName.length) || fileName;
-                 if (extension!=="odt"&&extension!=="xls"&&extension!=="xlsx"&&extension!=="csv") {
-                     $('#typeValidationMessages').text("extension file is not suppported");
-                     verificationFile = false;
+                if (extension!=="odt"
+                    && extension!=="xls"
+                    && extension!=="xlsx"
+                    && extension!=="csv"
+                    && extension!==""
+                ) {
+                    $('#typeValidationMessages').text("extension file is not suppported");
+                    verificationFile = false;
                  }
-                 else{
-                     $('#typeValidationMessages').text("");
-                     verificationFile = true;
-                 }
+                else{
+                    $('#typeValidationMessages').text("");
+                    verificationFile = true;
+                }
             });
 
              /*
@@ -124,7 +129,7 @@
                                     height: 100,
                                     modal: true,
                                     open: function(event, ui){
-                                     setTimeout("$('#dialog').dialog('close')",1000);
+                                     setTimeout("$('#dialog').dialog('close')",5000);
                                     }
                                 });
                                 $('#msgContent-form')[0].reset();
@@ -209,7 +214,7 @@
                             <div style="padding-top: 5px;">
                                 <label>Message Content File</label>
                                 <input required type="file" name ="msgContentFile" id="msgContentFile"
-                                accept=".csv, .odt, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                accept=".csv, .xls, .xlsx, .odt">
                                 <p id="typeValidationMessages" style="color:red; font-size: 90%"></p>
                                 </input>
                             </div>
