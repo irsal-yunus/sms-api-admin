@@ -77,7 +77,8 @@ class InvoiceProduct extends ModelContract
     {
         $this->attributes = $data;
 
-        if ($this->isHistory() && $this->useReport === 1) {
+        if ($this->isHistory() && intval($this->useReport) === 1)
+        {
             $this->setQtyAndUnitPriceFromReport();
         }
 
@@ -227,15 +228,28 @@ class InvoiceProduct extends ModelContract
             $price = $sheet->getCell(SUMMARY_TOTAL_PRICE_CELL)->getValue();
             $userApi = $sheet->getCell(SUMMARY_USER_API_CELL)->getValue();
 
-            if ($qty = intval($sms)) {
-                $unitPrice = round(floatval($price) / $qty);
+            if (($qty = $this->toFloat($sms)) > 0)
+            {
+                $unitPrice = round($this->toFloat($price) / $qty, 2);
             }
+
         } catch (\Exception $e) {
 
             \Logger::getLogger("service")->error($e->getTraceAsString());
         }
 
         return [$qty, $unitPrice, $userApi];
+    }
+
+    /**
+     * Convert string of price to float
+     *
+     * @param String $price  Price value that come from billing report, ex: 1,234.99
+     * @return float         Result is a float value, ex: 1234.99
+     */
+    protected function toFloat($price)
+    {
+        return floatval(str_replace(",", "", $price));
     }
 
     /**
