@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Invoice</title>
-    <link rel="stylesheet" href="{$smarty.const.SMSAPIADMIN_BASE_URL}/skin/invoice.print.css" media="all" />
+    <link rel="stylesheet" href="{$smarty.const.SMSAPIADMIN_BASE_DIR}skin/invoice.print.css" media="all" />
 </head>
 <body>
     <main>
