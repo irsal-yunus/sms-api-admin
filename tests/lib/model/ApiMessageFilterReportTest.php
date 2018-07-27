@@ -2,8 +2,6 @@
 
 require_once dirname(dirname(dirname(__DIR__))) . '/src/init.d/init.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/src/lib/model/ApiMessageFilterReport.php';
-require_once dirname(dirname(dirname(__DIR__))) . '/src/classes/spout-2.5.0/src/Spout/Autoloader/autoload.php';
-require_once dirname(dirname(dirname(__DIR__))) . '/src/classes/PHPExcel.php';
 
 use Firstwap\SmsApiAdmin\Test\TestCase;
 

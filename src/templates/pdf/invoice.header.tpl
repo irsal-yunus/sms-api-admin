@@ -1,6 +1,6 @@
 <header class="clearfix">
     <div id="logo" style="">
-        <img height="78" width="250" src="{$smarty.const.SMSAPIADMIN_BASE_URL}/skin/images/firstwap.png">
+        <img height="78" width="250" src="{$smarty.const.SMSAPIADMIN_BASE_DIR}skin/images/firstwap.png">
     </div>
     <div id="company">
         <h2 class="name">PT. FIRST WAP INTERNATIONAL</h2>
