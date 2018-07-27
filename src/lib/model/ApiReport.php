@@ -10,7 +10,7 @@
  */
 
 require_once dirname(dirname(__DIR__)).'/configs/config.php';
-require_once dirname(dirname(__DIR__)).'/classes/spout-2.5.0/src/Spout/Autoloader/autoload.php';
+require_once dirname(dirname(__DIR__)).'/classes/spout-2.7.3/src/Spout/Autoloader/autoload.php';
 require_once dirname(dirname(__DIR__)).'/classes/PHPExcel.php';
 
 use Box\Spout\Writer\WriterFactory;
@@ -119,7 +119,6 @@ class ApiReport {
     public $db,
             $reportDir,
             $finalReportWriter,
-            $finalReportReader,
             $awaitingReportWriter,
             $finalReportSummary,
             $awaitingReportSummary,
@@ -1013,7 +1012,7 @@ class ApiReport {
                 $this->formatMessageData($message, $operators);
             }
             $message['PRICE']    = $message['DESCRIPTION_CODE'] !== self::SMS_STATUS_UNDELIVERED
-                                    ? ($price *  $message['MESSAGE_COUNT'])
+                                    ? $this->formatPrice($price *  $message['MESSAGE_COUNT'])
                                     : 0;
         }
     }
@@ -1040,12 +1039,38 @@ class ApiReport {
 
             if($message['DESCRIPTION_CODE'] !== self::SMS_STATUS_UNDELIVERED){
                 $price              = $mappedRules[$message['OPERATOR']];
-                $message['PRICE']   = $price *  $message['MESSAGE_COUNT'];
+                $message['PRICE']   = $this->formatPrice($price *  $message['MESSAGE_COUNT']);
             } else {
                 $message['PRICE'] = 0;
             }
         }
     }
+
+
+    /**
+     * Format the price value to currency format
+     * example : 8,816,395.50
+     *
+     * @param float $price      The price in decimal/float data type
+     * @return  String          Formatted price
+     */
+    protected function formatPrice($price)
+    {
+        return number_format(floatval($price), 2);
+    }
+
+
+    /**
+     * Convert currency format to float
+     *
+     * @param  String $price  currency format value that come from billing report, ex: 1,234.99
+     * @return float          the return value is a float format, ex: 1234.99
+     */
+    protected function toFloat($price)
+    {
+        return floatval(str_replace(",", "", $price));
+    }
+
 
 
     /**
@@ -1282,9 +1307,17 @@ class ApiReport {
 
         $this->finalReportSummary    = ['senderId' => [], 'operator' => [], 'userId' => []];
         $this->awaitingReportSummary = ['senderId' => [], 'operator' => [], 'userId' => []];
-        //$this->finalReportReader->close();
         $this->finalReportWriter     = WriterFactory::create(Type::XLSX);
         $this->awaitingReportWriter  = WriterFactory::create(Type::XLSX);
+
+        $defaultStyle = (new StyleBuilder())
+                ->setFontName('Arial')
+                ->setFontSize(8)
+                ->setShouldWrapText(true)
+                ->build();
+
+        $this->finalReportWriter    ->setDefaultRowStyle($defaultStyle);
+        $this->awaitingReportWriter ->setDefaultRowStyle($defaultStyle);
 
         if(file_exists($finalReport) && filesize($finalReport) > 0) {
             $this->log->info('Copy data from existing '.$fileName.' report');
@@ -1402,7 +1435,7 @@ class ApiReport {
             $sendDate = date('Y-m-d', strtotime($message['RECEIVE_DATETIME']));
             $userName = $message['USER_ID'];
             $status   = $message['DESCRIPTION_CODE'];
-            $price    = $message['PRICE'];
+            $price    = $this->toFloat($message['PRICE']);
             $operator = $message['OPERATOR'];
             $smsCount = $message['MESSAGE_COUNT'];
 
@@ -1419,7 +1452,6 @@ class ApiReport {
             }
         }
     }
-
 
 
 
@@ -1624,27 +1656,34 @@ class ApiReport {
 
             // Insert Summary per day transaction specific group item
             $iterator = $startRow +2;
+
+            // Set cell alignment to right
+            $sheet
+                ->getStyle($col['d'] . ($startRow + 3) .':'.$col['tp'].($iterator + count($traffics) + 1))
+                ->getAlignment()
+                ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
             foreach($traffics as $date => $traffic) {
                 $sheet
                     ->setCellValue('A' .       ++$iterator, $date)
-                    ->setCellValue($col['d']   . $iterator, $traffic['d'])
-                    ->setCellValue($col['udC'] . $iterator, $traffic['udC'])
-                    ->setCellValue($col['udUc']. $iterator, $traffic['udUc'])
-                    ->setCellValue($col['ts']  . $iterator, $traffic['ts'])
-                    ->setCellValue($col['tsC'] . $iterator, $traffic['tsC'])
-                    ->setCellValue($col['tp']  . $iterator, $traffic['tp']);
+                    ->setCellValue($col['d']   . $iterator, number_format($traffic['d']))
+                    ->setCellValue($col['udC'] . $iterator, number_format($traffic['udC']))
+                    ->setCellValue($col['udUc']. $iterator, number_format($traffic['udUc']))
+                    ->setCellValue($col['ts']  . $iterator, number_format($traffic['ts']))
+                    ->setCellValue($col['tsC'] . $iterator, number_format($traffic['tsC']))
+                    ->setCellValue($col['tp']  . $iterator, $this->formatPrice($traffic['tp']));
             }
 
 
             // Write Total of perday transaction
             $sheet
                 ->setCellValue('A' .       ++$iterator, 'TOTAL')
-                ->setCellValue($col['d']   . $iterator, array_sum(array_column($traffics,'d')))
-                ->setCellValue($col['udC'] . $iterator, array_sum(array_column($traffics,'udC')))
-                ->setCellValue($col['udUc']. $iterator, array_sum(array_column($traffics,'udUc')))
-                ->setCellValue($col['ts']  . $iterator, array_sum(array_column($traffics,'ts')))
-                ->setCellValue($col['tsC'] . $iterator, array_sum(array_column($traffics,'tsC')))
-                ->setCellValue($col['tp']  . $iterator, array_sum(array_column($traffics,'tp')));
+                ->setCellValue($col['d']   . $iterator, number_format(array_sum(array_column($traffics,'d'))))
+                ->setCellValue($col['udC'] . $iterator, number_format(array_sum(array_column($traffics,'udC'))))
+                ->setCellValue($col['udUc']. $iterator, number_format(array_sum(array_column($traffics,'udUc'))))
+                ->setCellValue($col['ts']  . $iterator, number_format(array_sum(array_column($traffics,'ts'))))
+                ->setCellValue($col['tsC'] . $iterator, number_format(array_sum(array_column($traffics,'tsC'))))
+                ->setCellValue($col['tp']  . $iterator, $this->formatPrice(array_sum(array_column($traffics,'tp'))));
         }
 
         // Merge Column which contain "group" label
@@ -1799,22 +1838,26 @@ class ApiReport {
             ->setCellValue('A1',  'Last Update Date')       ->setCellValue('B1', $date)                         ->mergeCells('B1:'  . $lastCol.'1')
             ->setCellValue('A2',  'User Name')              ->setCellValue('B2', $userNames)                    ->mergeCells('B2:'  . $lastCol.'2')
 
-            ->setCellValue('A4',  'Delivered')              ->setCellValue('B4', $sum['d'])                     ->mergeCells('B4:'  . $lastCol.'4')
-            ->setCellValue('A5',  'Undelivered (charged)')  ->setCellValue('B5', $sum['udC'])                   ->mergeCells('B5:'  . $lastCol.'5')
-            ->setCellValue('A6',  'Undelivered (uncharged)')->setCellValue('B6', $sum['udUc'])                  ->mergeCells('B6:'  . $lastCol.'6')
-            ->setCellValue('A7',  'Total SMS')              ->setCellValue('B7', $sum['ts'])                    ->mergeCells('B7:'  . $lastCol.'7')
-            ->setCellValue('A8',  'Total SMS Charged')      ->setCellValue('B8', $sum['tsC'])                   ->mergeCells('B8:'  . $lastCol.'8')
-            ->setCellValue('A9',  'Total Price')            ->setCellValue('B9', $sum['tp'])                    ->mergeCells('B9:'  . $lastCol.'9')
+            ->setCellValue('A4',  'Delivered')              ->setCellValue('B4', number_format($sum['d']))      ->mergeCells('B4:'  . $lastCol.'4')
+            ->setCellValue('A5',  'Undelivered (charged)')  ->setCellValue('B5', number_format($sum['udC']))    ->mergeCells('B5:'  . $lastCol.'5')
+            ->setCellValue('A6',  'Undelivered (uncharged)')->setCellValue('B6', number_format($sum['udUc']))   ->mergeCells('B6:'  . $lastCol.'6')
+            ->setCellValue('A7',  'Total SMS')              ->setCellValue('B7', number_format($sum['ts']))     ->mergeCells('B7:'  . $lastCol.'7')
+            ->setCellValue('A8',  'Total SMS Charged')      ->setCellValue('B8', number_format($sum['tsC']))    ->mergeCells('B8:'  . $lastCol.'8')
+            ->setCellValue('A9',  'Total Price')            ->setCellValue('B9', $this->formatPrice($sum['tp']))->mergeCells('B9:'  . $lastCol.'9')
 
              // Legend
-            ->setCellValue('A11', 'Legend')                                                                     ->mergeCells('A11:' . $lastCol.'11')
-            ->setCellValue('A12', 'D')                      ->setCellValue('B12', 'Delivered')			->mergeCells('B12:' . $lastCol.'12')
-            ->setCellValue('A13', 'UD_C')                   ->setCellValue('B13', 'Undelivered (Charged)')	->mergeCells('B13:' . $lastCol.'13')
-            ->setCellValue('A14', 'UD_UC')                  ->setCellValue('B14', 'Undelivered (Uncharged)')	->mergeCells('B14:' . $lastCol.'14')
-            ->setCellValue('A15', 'TS')                     ->setCellValue('B15', 'Total SMS')			->mergeCells('B15:' . $lastCol.'15')
-            ->setCellValue('A16', 'TS_C')                   ->setCellValue('B16', 'Total SMS Charged')		->mergeCells('B16:' . $lastCol.'16')
-            ->setCellValue('A17', 'TP')                     ->setCellValue('B17', 'Total Price')		->mergeCells('B17:' . $lastCol.'17');
+            ->setCellValue('A11', 'Legend')                 ->mergeCells('A11:' . $lastCol.'11')
+            ->setCellValue('A12', 'D')                      ->setCellValue('B12', 'Delivered')                  ->mergeCells('B12:' . $lastCol.'12')
+            ->setCellValue('A13', 'UD_C')                   ->setCellValue('B13', 'Undelivered (Charged)')      ->mergeCells('B13:' . $lastCol.'13')
+            ->setCellValue('A14', 'UD_UC')                  ->setCellValue('B14', 'Undelivered (Uncharged)')    ->mergeCells('B14:' . $lastCol.'14')
+            ->setCellValue('A15', 'TS')                     ->setCellValue('B15', 'Total SMS')                  ->mergeCells('B15:' . $lastCol.'15')
+            ->setCellValue('A16', 'TS_C')                   ->setCellValue('B16', 'Total SMS Charged')          ->mergeCells('B16:' . $lastCol.'16')
+            ->setCellValue('A17', 'TP')                     ->setCellValue('B17', 'Total Price')                ->mergeCells('B17:' . $lastCol.'17')
 
+            // Set cell alignment to right
+            ->getStyle('B4:B9')
+            ->getAlignment()
+            ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
         // Set legend color
         $sheet->getStyle('A11') ->applyFromArray($style->center);
@@ -2591,7 +2634,7 @@ class ApiReport {
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
             header('Cache-Control: public');
             header('Content-Description: File Transfer');
-            header('Content-type: application/octet-stream');
+            header('Content-type: application/zip');
             header('Content-Disposition: attachment; filename="'.basename($fileName).'"');
             header('Content-Transfer-Encoding: binary');
             header('Content-Length: '.filesize($fileName));

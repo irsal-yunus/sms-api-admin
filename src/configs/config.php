@@ -38,7 +38,7 @@ define('DB_SMS_API_V2',         'SMS_API_V2');
 define('DB_BILL_U_MESSAGE',     'BILL_U_MESSAGE');
 define('DB_BILL_PRICELIST',     'BILL_PRICELIST');
 define('DB_First_Intermedia',   'First_Intermedia');
-define('DB_INVOICE',            'INVOICE_DB');
+define('DB_INVOICE',            'SMS_API_V2');
 
 
 /**

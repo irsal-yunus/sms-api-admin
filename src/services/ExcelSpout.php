@@ -4,13 +4,13 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
- * 
+ *
  * @author Fathir Wafda
  * @author Basri Yasin
  */
 
 
-require_once __DIR__.'/../classes/spout-2.5.0/src/Spout/Autoloader/autoload.php';
+require_once __DIR__.'/../classes/spout-2.7.3/src/Spout/Autoloader/autoload.php';
 require_once __DIR__.'/../configs/config.php';
 require_once __DIR__.'/../init.d/init.php';
 
@@ -21,10 +21,10 @@ use Box\Spout\Common\Type;
 use Box\Spout\Writer\Style\StyleBuilder;
 
 class ExcelSpout extends ApiBaseModel {
-    
+
     public  $logger;
     public $currentUser, $currentMonth, $currentYear;
-    
+
     public function __construct() {
         parent::__construct();
         $this->logger = Logger::getRootLogger();
@@ -33,27 +33,27 @@ class ExcelSpout extends ApiBaseModel {
     /*
      * @param string $dir
      * @param string $
-     * 
+     *
      */
     public function prepareDirectory($dir){
         $dirOk  = true;
-        if (!@is_dir($dir)) {            
-            $this->logger->info("Creating report directory $dir");                
+        if (!@is_dir($dir)) {
+            $this->logger->info("Creating report directory $dir");
             if(!@mkdir($dir, 0777, TRUE)){
                 $this->logger->error("Could not create report directory '$dir'");
-                $dirOk = false;                    
+                $dirOk = false;
             }
         }
-        
+
         return $dirOk;
     }
 
     public function prepareFile($dir, $file){
         $fileOk = true;
-        if(is_writable($dir)){            
+        if(is_writable($dir)){
             if(file_exists($file)){
 //                if(!is_writable($file)){
-//                    $fileOk = false;                
+//                    $fileOk = false;
 //                    $this->logger->warn("File '$file' is not writeable.");
 //                }
                 if(!is_readable($file)){
@@ -71,20 +71,20 @@ class ExcelSpout extends ApiBaseModel {
         }
         return $fileOk;
     }
-    
+
      /**
-     * 
+     *
      * @param string $userName
      * @param array  $lsReport
      */
     public function getDataScheduled($userName, $lsReport, $month=false, $year=false) {
-        
+
         $this->currentUser  = $userName;
         $this->currentMonth = $month !== false ? $month : date('m');
         $this->currentYear  = $year  !== false ? $year  : date('Y');
         //$directory = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . date('Y') . '-' . date('m') . '/';
         $directory = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . $this->currentYear . '-' . $this->currentMonth . '/';
-        
+
         try {
             if($this->prepareDirectory($directory)){
                 if(is_writable(SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT)){
@@ -95,7 +95,7 @@ class ExcelSpout extends ApiBaseModel {
                                 $this->updateReportFile($lsReport, $userName, $month, $year);
                         } else {
                             $this->generateReportFile($lsReport, $fileName);
-                        }                
+                        }
                     }
                 }
                 else{
@@ -107,14 +107,14 @@ class ExcelSpout extends ApiBaseModel {
         }
     }
     /**
-     * 
+     *
      * @param type $lsReport
      * @param type $newFilePath
      */
     public function updateReportFile($lsReport, $userName, $month = false, $year = false, $sms_dr = false) {
         $month = $month !== false ? $month : date('m');
         $year  = $year  !== false ? $year  : date('Y');
-        
+
         $directory = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . $year. '-' . $month. '/';
         $existingFilePath = $directory . $userName . '.xlsx';
 
@@ -175,10 +175,10 @@ class ExcelSpout extends ApiBaseModel {
 
                         // ... and copy each row into the new spreadsheet
                         if($i > 13){
-                            $writer->addRow($row);                    
+                            $writer->addRow($row);
                         }
                         else{
-                            $writer->addRowWithStyle($row, $style);                    
+                            $writer->addRowWithStyle($row, $style);
                         }
                     }
 
@@ -191,7 +191,7 @@ class ExcelSpout extends ApiBaseModel {
                             unset($rows['UNDELIVERED_UNCHARGED']);
                             $writer->addRow($rows);
                         }
-                    } 
+                    }
                 }
                 $writer->close();
                 $reader->close();
@@ -216,7 +216,7 @@ class ExcelSpout extends ApiBaseModel {
     }
 
     /**
-     * 
+     *
      * @param type $lsReport
      * @param type $newFilePath
      */
@@ -226,7 +226,7 @@ class ExcelSpout extends ApiBaseModel {
                 ->build();
 
         $today = date("j F Y (H:i)");
-        
+
         $totalCount       = array_sum(array_column($lsReport, 'MESSAGE_COUNT'));
         $deliveredCount   = array_sum(array_column($lsReport, 'DELIVERED'));
         $unchargedCount   = array_sum(array_column($lsReport, 'UNDELIVERED_UNCHARGED'));
@@ -255,19 +255,19 @@ class ExcelSpout extends ApiBaseModel {
             // Table Header
             $writer
                 ->addRowWithStyle([
-                    'MESSAGE ID', 
-                    'DESTINATION', 
-                    'MESSAGE CONTENT', 
-                    'ERROR CODE', 
+                    'MESSAGE ID',
+                    'DESTINATION',
+                    'MESSAGE CONTENT',
+                    'ERROR CODE',
                     'DESCRIPTION CODE',
-                    'SEND DATETIME', 
-                    'SENDER', 
-                    'USER ID', 
-                    'MESSAGE COUNT', 
+                    'SEND DATETIME',
+                    'SENDER',
+                    'USER ID',
+                    'MESSAGE COUNT',
                     'OPERATOR',
                     'PRICE'
                 ], $style);
-            
+
             foreach ($lsReport as $rows) {
                 $rows["MESSAGE_COUNT"]  = (int)$rows["MESSAGE_COUNT"];
                 $rows["PRICE"]          = (int)$rows["PRICE"];
@@ -286,26 +286,26 @@ class ExcelSpout extends ApiBaseModel {
     }
 
     /**
-     * 
+     *
      */
     public function downloadDataSpout($userName, $month, $year, $lsReport) {
         $this->logger->info('Create Report with Include_SMS_awaiting_DR for user '.$userName);
         $this->updateReportFile($lsReport, $userName, $month, $year, true);
     }
-    
+
     public function checkFile($userName, $month, $year){
         $directory = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . "{$year}-{$month}/";
         $nameFile = $userName . '.xlsx';
         $existingFilePath = $directory . $nameFile;
-        
+
         if(file_exists($existingFilePath)){
            return $this->getLastDateFromReport($userName, $month, $year);
         }else{
            return false;
         }
     }
-    
-    
+
+
     public function getLastDateFromReport($userName, $month, $year){
         $lastDate  = "$year-$month-01";// 00:00:00";
         $directory = SMSAPIADMIN_ARCHIEVE_EXCEL_SPOUT . "$year-$month";
@@ -324,7 +324,7 @@ class ExcelSpout extends ApiBaseModel {
                             if(isset($row[5])){
                                 if($row[5] != 'SEND DATETIME' && !empty($row[5])) {
                                     $lastDate = $row[5];
-                                }                
+                                }
                             }
                         }
                     }
