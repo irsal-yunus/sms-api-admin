@@ -127,12 +127,6 @@ class ApiReport {
             $lastDateOfMonth,
             $lastFinalStatusDate,
 
-            $today,
-            $currentFirstDate,
-            $currentYear,
-            $currentMonth,
-            $currentDay,
-
             $unchargedDeliveryStatus,
             $periodSuffix
             ;
@@ -193,7 +187,6 @@ class ApiReport {
 
 
     /**
-     *
      * Configure billing period
      * -------------------------------------
      * calculate
@@ -201,18 +194,16 @@ class ApiReport {
      * and last date of the month
      * and last send date
      *
+     * @return void
      */
-    private function configureBillingPeriod() {
-        $currentDay         = (int)date('d');
-        $currentMonth       = (int)date('m');
-        $lastMonth          = (int)date('m', strtotime('last month'));
-        $clientDate         = $this->clientTimeZone(strtotime('now'),'Y-m-d 00:00:00');
-        $serverDate         = $this->serverTimeZone($clientDate);
+    private function configureBillingPeriod()
+    {
+        $currentMonth       = (int) date('m');
         $reportDate         = $this->year.'-'.$this->month.'-01 00:00:00';
 
         $this->firstDateOfMonth    = $this->serverTimeZone(strtotime($reportDate.' -1 second'));
         $this->lastDateOfMonth     = $this->serverTimeZone(date('Y-m-01 00:00:00', strtotime($reportDate.' +1 month')));
-        $this->lastFinalStatusDate = $this->month == $currentMonth ? $serverDate : $this->lastDateOfMonth;
+        $this->lastFinalStatusDate = $this->lastDateOfMonth;
     }
 
 
@@ -1488,14 +1479,15 @@ class ApiReport {
 
 
 
-
     /**
      * Close and save both Final and Awaiting report Writer handler
+     *
+     * @return void
      */
-    private function saveReportFile() {
+    private function saveReportFile()
+    {
         $this->finalReportWriter->close();
     }
-
 
 
 
