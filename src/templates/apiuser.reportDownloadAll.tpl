@@ -7,7 +7,7 @@
               not including SMS sent in the last 3 days.
             </p>
           <span class="ui-helper-clearfix"></span>
-        
+
           <label class="form-flag-required">
                  Select the billing period:
                  <select name="period" style="float:none;display: inline; width:100px;">
@@ -20,10 +20,6 @@
                     {/foreach}
                 </select>
             </label>
-            <span class="ui-helper-clearfix"></span><br>
-            <div>
-                <input style="float: none;display: inline;margin:0; margin-left: 5px" type="checkbox" name="sms_dr" /> Include SMS awaiting DR
-            </div>
             <span class="ui-helper-clearfix"></span><br>
 
             </div>
