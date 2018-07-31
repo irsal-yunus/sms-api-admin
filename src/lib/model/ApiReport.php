@@ -202,7 +202,7 @@ class ApiReport {
         $reportDate         = $this->year.'-'.$this->month.'-01 00:00:00';
 
         $this->firstDateOfMonth    = $this->serverTimeZone(strtotime($reportDate.' -1 second'));
-        $this->lastDateOfMonth     = $this->serverTimeZone(date('Y-m-01 00:00:00', strtotime($reportDate.' +1 month')));
+        $this->lastDateOfMonth     = $this->serverTimeZone(date('Y-m-01 00:00:00', strtotime($reportDate.' first day of next month')));
         $this->lastFinalStatusDate = $this->lastDateOfMonth;
     }
 
