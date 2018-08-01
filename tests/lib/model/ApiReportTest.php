@@ -376,6 +376,9 @@ class ApiReportTest extends TestCase
             ]
         ];
 
+        $method = $this->getMethod(ApiReport::class, 'createReportFile');
+        $method->invoke($report, ['aaaaaa', $isNewFile]);
+
         $this->callMethod($report, 'assignMessagePrice', [ApiReport::BILLING_OPERATOR_BASE, &$message, &$price, &$operators]);
         $this->assertArrayHasKey('OPERATOR', current($message));
         $this->assertArrayHasKey('MESSAGE_COUNT', current($message));

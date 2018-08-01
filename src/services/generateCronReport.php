@@ -2,8 +2,8 @@
 <?php
 
 /**
- * @author Basri.Y      
- * 
+ * @author Basri.Y
+ *
  * Copyright(c) 2017 1rstWAP. All rights reserved.
  * -----------------------------------------------
  * #18802   2017-06-07  Basri.Y     [SMS Billing Report] Improve Performance & Tiering
@@ -18,21 +18,21 @@ $log = Logger::getRootLogger();
 try {
 
     $log ->info("Start generating billing report");
-    
+
     // Generate Last month report
     (new ApiReport(
-            date('Y',strtotime('-1 months')), 
-            date('m',strtotime('-1 months')),
+            date('Y', strtotime('first day of last month')),
+            date('m', strtotime('first day of last month')),
             true
         ))->generate();
-    
+
     // Generate current month report
     (new ApiReport(
-            date('Y',strtotime('now')), 
+            date('Y',strtotime('now')),
             date('m',strtotime('now')),
             true
         ))->generate();
-    
+
 } catch (Throwable $e) {
     $log->error('generateCronReport Error: '.$e->getMessage());
     $log->error('generateCronReport Error: '.$e->getTraceAsString());
