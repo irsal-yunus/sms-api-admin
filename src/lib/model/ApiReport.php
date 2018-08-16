@@ -412,6 +412,18 @@ class ApiReport {
             );
     }
 
+    public function getUserByTieringProfile($tieringIDs) {
+        $array_id = implode(",", $tieringIDs);
+        return $this->query(
+                 ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID '
+                .' FROM     '.DB_SMS_API_V2.'.USER '
+                .' WHERE    BILLING_PROFILE_ID'
+                .' IN '     . "(" .$array_id.")"
+                .' ORDER BY BILLING_PROFILE_ID'
+                , is_null($userId) ?: self::QUERY_SINGLE_ROW
+            );
+    }
+
 
     /**
      * Get billing report list
@@ -465,7 +477,7 @@ class ApiReport {
         $billingProfileId = $user['BILLING_PROFILE_ID'];
 
         return !empty($billingProfileId) ? $this->query(
-                        ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID'
+                        ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID,NAME'
                         . ' FROM     ' . DB_SMS_API_V2 . '.USER '
                         . ' WHERE BILLING_PROFILE_ID = ' . $billingProfileId
                         . ' ORDER BY USER_ID'
@@ -501,9 +513,6 @@ class ApiReport {
         return $status;
     }
 
-
-
-
     /**
      * Get Detail of Billing Profile detail                                     <br />
      * would not return the rule of billing report                              <br />
@@ -523,7 +532,31 @@ class ApiReport {
                     );
     }
 
+     /**
+     * Get Detail of Billing Profile detail only by TIERING type
+     * @return  Array   Array ['BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT']
+     */
+    public function getBillingProfileTieringOnly() {
+        return $this->query(
+                         ' SELECT   BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT'
+                        .' FROM     '.DB_BILL_PRICELIST.'.BILLING_PROFILE'
+                        .' WHERE    BILLING_TYPE = '. ' "TIERING" '
+                    );
+    }
 
+     /**
+     * Get Detail of user detail only by TIERING type
+     * @return  Array   Array ['USER_NAME,USER_ID, NAME, BILLING_PROFILE_ID']
+     */
+    public function getUserTiering(){
+         return $this->query(
+                         ' SELECT   USER_NAME,USER_ID, NAME,  b.BILLING_PROFILE_ID '
+                        .' FROM     '.DB_BILL_PRICELIST.'.BILLING_PROFILE'.' b'
+                        .' JOIN     '.DB_SMS_API_V2.'.USER'.' u'
+                        .' ON       '. 'b.BILLING_PROFILE_ID = '.'u.BILLING_PROFILE_ID'
+                        .' WHERE    BILLING_TYPE = '. ' "TIERING" '
+                    );
+    }
 
 
     /**
@@ -633,7 +666,7 @@ class ApiReport {
      */
     public function getTieringGroupUserList($tieringGroupId) {
         return !empty($tieringGroupId) ? $this->query(
-                         ' SELECT   USER_ID, USER_NAME'
+                         ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID'
                         .' FROM     '.DB_SMS_API_V2.'.USER'
                         .' WHERE    BILLING_TIERING_GROUP_ID = '.$tieringGroupId
                     )

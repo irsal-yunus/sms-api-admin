@@ -1,43 +1,52 @@
+<script>
+    var billingData        = {$billingList|@json_encode nofilter};
+    var userTiering        = {$userTiering|@json_encode nofilter};
+    var usersEdit          = {(isset($user))?(json_encode($user)):'[]'};
+</script>
+
 {literal}
 <script language="JavaScript">
     var rowIndex = 1;
     $( document ).ready(function(){
-        loadUserDetail();
-        
+        if (usersEdit.length > 0) {
+            $('#select-billing').val(usersEdit[0].BILLING_PROFILE_ID);
+        }
+        // loadUserDetail();
+
         $.validate({
             errorMessagePosition : 'inline',
         });
-        
-        $ (document)
-            .on('change', '#tieringGroup-form #list-user', function(){
-               if($("#list-user :selected").length == 0){
-                   $('#list-user option').prop('disabled', false);
-                   $('#list-user').select2();
-               }else if($("#list-user :selected").length == 1){
-                    $('#list-user option').prop('disabled', 'disabled');
-                    $('#list-user option').attr('title', 'This user is not on the same billing profile as current selected user');
-                    $.ajax({
-                         url        : 'services/billing.getUserBillingGroup.php',
-                         type       : 'POST',
-                         data       : {userID : $("#list-user :selected").val() },
-                         dataType   : 'JSON',
-                         success    : function (data) {
-                            $.each(data, function(k,v){
-                                    $('#list-user option[value="'+v.USER_ID+'"]').removeAttr('title');
-                                    $('#list-user option[value="'+v.USER_ID+'"]').prop('disabled', false);
-                            });
-                            $('#list-user').select2();
-                         },
 
-                     });
-                   
-               }
-            });
-        
+        // $ (document)
+        //     .on('change', '#tieringGroup-form #list-user', function(){
+        //        if($("#list-user :selected").length == 0){
+        //            $('#list-user option').prop('disabled', false);
+        //            $('#list-user').select2();
+        //        }else if($("#list-user :selected").length == 1){
+        //             $('#list-user option').prop('disabled', 'disabled');
+        //             $('#list-user option').attr('title', 'This user is not on the same billing profile as current selected user');
+        //             $.ajax({
+        //                  url        : 'services/billing.getUserBillingGroup.php',
+        //                  type       : 'POST',
+        //                  data       : {userID : $("#list-user :selected").val() },
+        //                  dataType   : 'JSON',
+        //                  success    : function (data) {
+        //                     $.each(data, function(k,v){
+        //                             $('#list-user option[value="'+v.USER_ID+'"]').removeAttr('title');
+        //                             $('#list-user option[value="'+v.USER_ID+'"]').prop('disabled', false);
+        //                     });
+        //                     $('#list-user').select2();
+        //                  },
+
+        //              });
+
+        //        }
+        //     });
+
         $("#list-user").select2({
             placeholder: "Select a user"
         });
-        
+
         $('#btn-submit').on('click', function(e){
             e.preventDefault();
             $('#tieringGroup-form').submit();
@@ -48,8 +57,27 @@
             data = $(this).serializeArray();
             $app.module('billing').storeTieringGroup(data);
         });
+
+        $('#select-billing').on('change', function(e){
+            e.preventDefault();
+            var selectedBillingID  = $(this).val();
+            var usersById = userTiering[selectedBillingID];
+            $("#list-user").html('').select2().select2({
+                placeholder: "Select a user",
+                data: usersById,
+            });
+        });
+
+        //To filter user
+        function find_in_object(my_object, my_criteria){
+              return my_object.filter(function(obj) {
+                return Object.keys(my_criteria).every(function(c) {
+                  return obj[c] == my_criteria[c];
+                });
+              });
+        }
     });
-    
+
     function loadUserDetail(){
         $.ajax({
             url: 'services/billing.getUserDetail.php',
@@ -69,10 +97,10 @@
                 });
                 $('#list-user').append(html);
             },
-            
+
         });
     }
-    
+
 </script>
 {/literal}
 
@@ -93,6 +121,16 @@
                                         <div>
                                             <label>Name</label>
                                             <input type="text" id="input-name" name="name" value='{if isset($tieringDetail['NAME'])}{$tieringDetail['NAME']}{/if}' data-validation="required">
+                                        </div>
+                                        <span class="ui-helper-clearfix"></span>
+                                         <div>
+                                            <label>Biling Profile</label>
+                                            <select class="flexible-width" id="select-billing" data-validation="required" style="margin-left:5px;">
+                                                <option value="">-- Select Tiering --</option>
+                                                {section name=list loop=$billingList}
+                                                    <option value="{$billingList[list].BILLING_PROFILE_ID}">{$billingList[list].NAME}</option>
+                                                {/section}
+                                            </select>
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
                                         <div>
@@ -126,4 +164,5 @@
                             </div>
                         </div>
                     </div>
+
 </form>
