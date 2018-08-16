@@ -11,37 +11,10 @@
         if (usersEdit.length > 0) {
             $('#select-billing').val(usersEdit[0].BILLING_PROFILE_ID);
         }
-        // loadUserDetail();
 
         $.validate({
             errorMessagePosition : 'inline',
         });
-
-        // $ (document)
-        //     .on('change', '#tieringGroup-form #list-user', function(){
-        //        if($("#list-user :selected").length == 0){
-        //            $('#list-user option').prop('disabled', false);
-        //            $('#list-user').select2();
-        //        }else if($("#list-user :selected").length == 1){
-        //             $('#list-user option').prop('disabled', 'disabled');
-        //             $('#list-user option').attr('title', 'This user is not on the same billing profile as current selected user');
-        //             $.ajax({
-        //                  url        : 'services/billing.getUserBillingGroup.php',
-        //                  type       : 'POST',
-        //                  data       : {userID : $("#list-user :selected").val() },
-        //                  dataType   : 'JSON',
-        //                  success    : function (data) {
-        //                     $.each(data, function(k,v){
-        //                             $('#list-user option[value="'+v.USER_ID+'"]').removeAttr('title');
-        //                             $('#list-user option[value="'+v.USER_ID+'"]').prop('disabled', false);
-        //                     });
-        //                     $('#list-user').select2();
-        //                  },
-
-        //              });
-
-        //        }
-        //     });
 
         $("#list-user").select2({
             placeholder: "Select a user"
