@@ -6,7 +6,7 @@
 /**
  * Application Url Configuration
  */
-define('SMSAPIADMIN_BASE_URL',      'http://10.32.6.5:82/');
+define('SMSAPIADMIN_BASE_URL',      'http://10.32.6.61/sms-api-admin/src/');
 define('SMSAPIADMIN_SERVICE_URL',   SMSAPIADMIN_BASE_URL.'services/');
 
 
@@ -30,11 +30,11 @@ define('SMSAPIADMIN_INVOICE_DIR',               SMSAPIADMIN_BASE_DIR.'archive/in
  * Database Configuration
  */
 
- define('REF_DB_HOST',           '10.32.6.5');
+ define('REF_DB_HOST',           '10.32.6.61');
  define('REF_DB_USER',           'qateam');
  define('REF_DB_PASSWORD',       'qateam');
 
-define('DB_SMS_API_V2',         'SMS_API_V21');
+define('DB_SMS_API_V2',         'SMS_API_V2');
 define('DB_BILL_U_MESSAGE',     'BILL_U_MESSAGE');
 define('DB_BILL_PRICELIST',     'BILL_PRICELIST');
 define('DB_First_Intermedia',   'First_Intermedia');
