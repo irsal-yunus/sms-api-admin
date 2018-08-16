@@ -30,7 +30,7 @@ define('SMSAPIADMIN_INVOICE_DIR',               SMSAPIADMIN_BASE_DIR.'archive/in
  * Database Configuration
  */
 
- define('REF_DB_HOST',           '10.32.6.61');
+ define('REF_DB_HOST',           '10.32.6.71');
  define('REF_DB_USER',           'qateam');
  define('REF_DB_PASSWORD',       'qateam');
 
