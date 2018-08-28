@@ -465,7 +465,7 @@ class ApiReport {
         $billingProfileId = $user['BILLING_PROFILE_ID'];
 
         return !empty($billingProfileId) ? $this->query(
-                        ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID,NAME'
+                        ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID'
                         . ' FROM     ' . DB_SMS_API_V2 . '.USER '
                         . ' WHERE BILLING_PROFILE_ID = ' . $billingProfileId
                         . ' ORDER BY USER_ID'

@@ -72,28 +72,6 @@
 
     });
 
-    function loadUserDetail(){
-        $.ajax({
-            url: 'services/billing.getUserDetail.php',
-            type: 'POST',
-            dataType: 'JSON',
-            success: function (data) {
-                html        = '';
-                defaultData = [];
-                $('#list-user option').each(
-                       function(index,el){
-                           defaultData.push($(this).attr('value'));
-                        }
-                );
-                $.each(data, function(k,v){
-                    if($.inArray(v.USER_ID, defaultData ) == -1)
-                        html += '<option value="'+v.USER_ID+'">'+v.USER_NAME+'</option>';
-                });
-                $('#list-user').append(html);
-            },
-
-        });
-    }
 
 </script>
 {/literal}

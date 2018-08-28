@@ -33,6 +33,18 @@ try {
                         'whereClause'   => ' USER_ID IN ('.implode(", ",$user).')',
                     ];
                     $apiReport->updateUser($updateUserClause);
+
+                   /**
+                    *delete the current BILLING_TIERING_GROUP_ID that belongs to the user
+                    *when the user move to another Billing profile
+                    */
+                    $updateUserClause = [
+                        'column'        => 'BILLING_TIERING_GROUP_ID',
+                        'value'         => 'NULL',
+                        'whereClause'   => 'BILLING_PROFILE_ID = '.$billingProfileID.'',
+                    ];
+                    $apiReport->updateUser($updateUserClause);
+
                 }
 
                 if(strtolower($_POST['price_based']) == 'operator'){
