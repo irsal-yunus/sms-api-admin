@@ -36,7 +36,7 @@ try {
 
                    /**
                     *delete the current BILLING_TIERING_GROUP_ID that belongs to the user
-                    *when the user move to another Billing profile
+                    *when the user move to another Billing profile (create a new billing)
                     */
                     $updateUserClause = [
                         'column'        => 'BILLING_TIERING_GROUP_ID',
@@ -80,6 +80,24 @@ try {
                                             );
                 if(isset($_POST['user']) && !empty($_POST['user'])){
                     $user = isset($_POST['user']) && !is_null($_POST['user']) ? $_POST['user'] : [];
+
+                    /*
+                    *Check if the additional users have different billing profile
+                    *then delete its BILLING_TIERING_GROUP_ID
+                    */
+                    $users= $apiReport->getUserByCertainUser($user);
+                    foreach($users as $userbyBilling){
+                        if ($userbyBilling['BILLING_PROFILE_ID']!==$billingProfileID) {
+                           $thisUserID = $userbyBilling['USER_ID'];
+                           $updateUserClause = [
+                                'column'        => 'BILLING_TIERING_GROUP_ID',
+                                'value'         => 'NULL',
+                                'whereClause'   => 'USER_ID = '.$thisUserID.'',
+                            ];
+                            $apiReport->updateUser($updateUserClause);
+                        }
+                    }
+
                     /*
                     get tiering ID that have the same current billing profile ID
                     */
@@ -100,6 +118,7 @@ try {
                         'whereClause'   => ' BILLING_PROFILE_ID = '.$billingProfileID.'',
                     ];
                     $apiReport->updateUser($updateUserClause);
+
 
                     /*
                     then fill the available users with current BILLING_PROFILE_ID

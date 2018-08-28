@@ -473,6 +473,21 @@ class ApiReport {
     }
 
     /**
+     * Function to get all user by certain user id's
+     *
+     * @param Array $user
+     * @return Array
+     */
+    public function getUserByCertainUser($user)
+    {
+          return $this->query(
+                         ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID,BILLING_TIERING_GROUP_ID'
+                        . ' FROM     ' . DB_SMS_API_V2 . '.USER '
+                        .' WHERE      USER_ID IN ('.implode(", ",$user).')'
+                    );
+    }
+
+    /**
      * Get Delivery status from BILL_U_MESSAGE.DELIVERY_STATUS
      *
      * @return  Array   2D Array [['ERROR_CODE', 'STATUS', 'IS_RECREDITED']]
