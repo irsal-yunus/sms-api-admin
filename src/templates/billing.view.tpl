@@ -179,5 +179,4 @@
 		</div><!-- END Report Group tab-->
 
 	</div><!-- END Tabs Container -->
-    {$tieringID}
 </form>
