@@ -5,7 +5,7 @@
         $('#add_user').click(function(){
             selectedUser    = $('#list-user').val();
             var html        = "";
-            
+
             if(selectedUser){
                 $.each(selectedUser,function(key,val){
                     $("#list-user option[value='"+val+"']").remove();
@@ -14,11 +14,11 @@
                 $('#selected-user').append(html);
             }
         });
-        
+
         $('#remove_user').click(function(){
             selectedUser    = $('#selected-user').val();
             var html        = "";
-            
+
             if(selectedUser){
                 $.each(selectedUser,function(key,val){
                     $("#selected-user option[value='"+val+"']").remove();
@@ -28,7 +28,7 @@
             }
         });
     });
-    
+
     function loadUserDetail(){
         $.ajax({
             url: 'services/billing.getUserDetail.php',
@@ -41,7 +41,7 @@
                 });
                 $('#list-user').append(html);
             },
-            
+
         });
     }
 </script>
@@ -49,13 +49,14 @@
 <div style="padding: 3px;">
     <a href="#" onclick="$app.module('billing').viewMessageFilterPage();">SMS Content Department Filter (Adira)</a>
 </div>
+
 <form id="billing-view" class="admin-tabform" action="#" method="post" style="width: 100%;">
 	<div id="billing-view-tabs" class="panel-tabs">
 		<ul>
 			<li class="{if $tab == "billing"}ui-tabs-selected{/if}"><a href="#billing-profile-tab"><img src="skin/images/icon-history.png" class="icon-image icon-size-small" alt="" /><span>Billing Profile</span></a></li>
 			<li class="{if $tab == "tiering"}ui-tabs-selected{/if}"><a href="#tiering-group-tab"><img src="skin/images/icon-history.png" class="icon-image icon-size-small" alt="" /><span>Tiering Group</span></a></li>
                         <li class="{if $tab == "report"}ui-tabs-selected{/if}"><a href="#report-group-tab"><img src="skin/images/icon-history.png" class="icon-image icon-size-small" alt="" /><span>Report Group</span></a></li>
-                        
+
 		</ul>
 		<div id="billing-profile-tab">
                         <table id="billing-profile-table" class="admin-table">
@@ -92,11 +93,11 @@
                                                 <a href="#" title="Delete" class="form-button" onclick="$app.module('billing').deleteBillingProfile('{$billingList[list].BILLING_PROFILE_ID}','{$billingList[list].BILLING_TYPE}')"><img src="skin/images/icon-remove.png" class="icon-image" alt="" /></a>
                                         </td>
                                     </tr>
-                                    {/section}  
+                                    {/section}
                                 </tbody>
                         </table>
 		</div><!-- END Billing profile tab-->
-		
+
                 <div id="tiering-group-tab">
                     <table id="tiering-group-table" class="admin-table">
                             <thead>
@@ -132,11 +133,11 @@
                                             <a href="#" title="Delete" class="form-button" onclick="$app.module('billing').deleteTieringGroup({$tieringGroupList[list].BILLING_TIERING_GROUP_ID})"><img src="skin/images/icon-remove.png" class="icon-image" alt="" /></a>
                                     </td>
                                 </tr>
-                                {/section}  
+                                {/section}
                             </tbody>
                     </table>
 		</div><!-- END Tiering Group tab-->
-                
+
                 <div id="report-group-tab">
                     <table id="report-group-table" class="admin-table">
                             <thead>
@@ -172,10 +173,10 @@
                                             <a href="#" title="Delete" class="form-button" onclick="$app.module('billing').deleteReportGroup({$reportGroupList[list].BILLING_REPORT_GROUP_ID})"><img src="skin/images/icon-remove.png" class="icon-image" alt="" /></a>
                                     </td>
                                 </tr>
-                                {/section}  
+                                {/section}
                             </tbody>
-                    </table>   
+                    </table>
 		</div><!-- END Report Group tab-->
-                
+
 	</div><!-- END Tabs Container -->
 </form>

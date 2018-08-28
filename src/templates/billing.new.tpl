@@ -167,8 +167,6 @@
                                 .find('input:text.tiering-to')
                                 .parent('th')
                                 .addClass('has-error');
-                        initMaskingQuantity();
-
                         return;
                     }
 
@@ -192,8 +190,6 @@
                                 .addClass('has-error');
 
                         /* mask all input in tiering tables*/
-                        initMaskingQuantity();
-
                         return;
                     }
 
@@ -203,8 +199,6 @@
                     if(parseInt(to[i].value) > parseInt(from[i+1].value)) {
                         errorSpan = '<span class="help-block form-error">From value must be above the previous range!</span>';
                         $(errorSpan).insertAfter($(rowParent.eq(i+1)).next().find('input:text.tiering-from'));
-                        initMaskingQuantity();
-
                         return;
                     }
                 }
@@ -372,6 +366,10 @@
                                                     </div>
                                                 </select>
                                                 <span style="font-size:10px;color:red;margin-left:110px;display:block;">* Select users whose implement this billing profile</span>
+
+                                                {if isset($mode) && $mode == 'edit' &&  isset($tieringSettings)}
+                                                  <span style="font-size:10px;color:red;margin-left:110px;display:block;">** If you delete users from this billing profile, any tiering group the users belongs are removed too</span>
+                                                {/if}
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
                                         <label>Settings</label>
