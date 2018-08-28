@@ -2,7 +2,7 @@
 
 /**
  * Copyright(c) 2010 1rstWAP. All rights reserved.
- * 
+ *
  * @author Basri Yasin
  * -----------------------------------------------------------------------------------
  * #18802   2017-06-07  Basri.Y     [SMS Billing Report] Improve Performance & Tiering
@@ -17,16 +17,26 @@ try {
     SmsApiAdmin::filterAccess();
     $page = SmsApiAdmin::getTemplate();
     try {
-        
+
         if (isset($_REQUEST['userID'])) {
             $userID = $_REQUEST['userID'];
         } else {
             throw new InvalidArgumentException('Missing userID from arguments');
         }
-        
+
         $model = new ApiUser();
         if (!$model->checkExistence($userID)) throw new Exception('User not found');
-        
+
+        $dates = [];
+        $last = strtotime('2018-12-01');
+        $start = strtotime('2018-01-01');
+
+        while ($start <= $last) {
+            $dates[date('m', $last)] = date('F', $last);
+            $last = strtotime('-1 month', $last);
+        }
+
+        $page->assign('dates', $dates);
         $page->assign('userID', $userID);
         $page->assign('details', $model->getDetailsByID($userID));
         $page->display('apiuser.report.tpl');

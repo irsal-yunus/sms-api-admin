@@ -7,7 +7,7 @@
  */
 require_once dirname(dirname(__DIR__)) . '/init.d/init.php';
 require_once dirname(dirname(__DIR__)) . '/configs/config.php';
-require_once dirname(dirname(__DIR__)) . '/classes/spout-2.5.0/src/Spout/Autoloader/autoload.php';
+require_once dirname(dirname(__DIR__)) . '/classes/spout-2.7.3/src/Spout/Autoloader/autoload.php';
 require_once dirname(dirname(__DIR__)) . '/classes/PHPExcel.php';
 
 use Box\Spout\Writer\WriterFactory;

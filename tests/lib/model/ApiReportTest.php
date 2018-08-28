@@ -376,6 +376,9 @@ class ApiReportTest extends TestCase
             ]
         ];
 
+        $method = $this->getMethod(ApiReport::class, 'createReportFile');
+        $method->invoke($report, ['aaaaaa', $isNewFile]);
+
         $this->callMethod($report, 'assignMessagePrice', [ApiReport::BILLING_OPERATOR_BASE, &$message, &$price, &$operators]);
         $this->assertArrayHasKey('OPERATOR', current($message));
         $this->assertArrayHasKey('MESSAGE_COUNT', current($message));
@@ -581,4 +584,48 @@ class ApiReportTest extends TestCase
         $this->assertEquals(date('Y-m-d H:i:s'), $report->serverTimeZone($date));
     }
 
+
+    /**
+     * Test formatPrice method
+     *
+     * @return  void
+     */
+    public function testFormatPriceMethod()
+    {
+        $report = new ApiReport("2018", "10", true);
+
+        // Test if the value is float value and will return 100,000.00
+        $value = 100000;
+        $value = $this->callMethod($report, 'formatPrice', [$value]);
+        $this->assertEquals('100,000.00', $value);
+
+        $value = 100;
+        $value = $this->callMethod($report, 'formatPrice', [$value]);
+        $this->assertEquals('100.00', $value);
+
+        // Test if the value is not float value
+        $value = "abc";
+        $value = $this->callMethod($report, 'formatPrice', [$value]);
+        $this->assertEquals(0.00, $value);
+    }
+
+    /**
+     * Test toFloat method
+     *
+     * @return  void
+     */
+    public function testToFloatMethod()
+    {
+        $report = new ApiReport("2018", "10", true);
+
+        // Test if the value is not number value and will return 0
+        $value = "abc";
+        $value = $this->callMethod($report, 'toFloat', [$value]);
+        $this->assertEquals(0, $value);
+
+        // Test if the value is currency string and will return as float value
+        $value = "1,400.56";
+        $value = $this->callMethod($report, 'toFloat', [$value]);
+        $this->assertEquals(1400.56, $value);
+    }
 }

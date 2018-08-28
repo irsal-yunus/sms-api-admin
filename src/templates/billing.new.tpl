@@ -21,7 +21,7 @@
          *
          * Set masking number for tiering fied from, up to and price
          */
-        $("#tiering-table :input:not([readonly])").mask('000.000.000.000.000', {reverse: true});
+        initMaskingQuantity();
 
         /*check type*/
         var typeValue = $('#select-type').data('val');
@@ -144,7 +144,7 @@
                 e.preventDefault();
 
                 /* unmask all input in tiering tables to get the clean value without separator */
-                $("#tiering-table :input:not([readonly])").unmask();
+                $(".input-qty :input:not([readonly])").unmask();
                 $('#tiering-table .form-error').remove();
 
                 var from = $('.tiering-from').serializeArray(),
@@ -167,8 +167,6 @@
                                 .find('input:text.tiering-to')
                                 .parent('th')
                                 .addClass('has-error');
-                        $("#tiering-table :input:not([readonly])").mask('000.000.000.000.000', {reverse: true});
-
                         return;
                     }
 
@@ -192,8 +190,6 @@
                                 .addClass('has-error');
 
                         /* mask all input in tiering tables*/
-                        $("#tiering-table :input:not([readonly])").mask('000.000.000.000.000', {reverse: true});
-
                         return;
                     }
 
@@ -203,16 +199,33 @@
                     if(parseInt(to[i].value) > parseInt(from[i+1].value)) {
                         errorSpan = '<span class="help-block form-error">From value must be above the previous range!</span>';
                         $(errorSpan).insertAfter($(rowParent.eq(i+1)).next().find('input:text.tiering-from'));
-                        $("#tiering-table :input:not([readonly])").mask('000.000.000.000.000', {reverse: true});
-
                         return;
                     }
                 }
+
                 var data = $(this).serializeArray();
+
+                // Convert string to float for price input
+                $('.input-price').each(function(index, el) {
+                    for (var i = 0; i < data.length; i++) {
+                        if(data[i].name === $(this).attr("name")) {
+                            data[i].value = parseFloat((data[i].value || '0').replace(/,/g,'')).toFixed(2);
+                        }
+                    }
+                });
+
                 $app.module('billing').storeBillingProfile(data);
             });
 
     });
+
+    function initMaskingPrice() {
+        $('.input-price').mask('000,000.00', {reverse: true});
+    }
+
+    function initMaskingQuantity() {
+        $(".input-qty:not([readonly])").mask('000.000.000.000.000', {reverse: true});
+    }
 
     function addTieringRow(element){
         rowId       = rowIndexTiering;
@@ -220,9 +233,9 @@
                             + '<th>'
                                     +'<img src="skin/images/icon-remove.png" class="form-button-image btn-tiering-remove" alt="Remove" width="13px" style="cursor:pointer;" />'
                             + '</th>'
-                            + '<th><input type="text" class="tiering-from" name="tiering['+rowId+'][from]" data-validation="required"></th>'
-                            + '<th><input type="text" class="tiering-to" name ="tiering['+rowId+'][to]" value="" id="tiering_upto" data-validation="required"></th>'
-                            + '<th><input type="text" class="tiering-price" name ="tiering['+rowId+'][price]" data-validation="required"></th>'
+                            + '<th><input type="text" class="tiering-from input-qty" name="tiering['+rowId+'][from]" data-validation="required"></th>'
+                            + '<th><input type="text" class="tiering-to input-qty" name ="tiering['+rowId+'][to]" value="" id="tiering_upto" data-validation="required"></th>'
+                            + '<th><input type="text" class="tiering-price input-price" name ="tiering['+rowId+'][price]" data-validation="required"></th>'
                             + '<th>'
                                 +'<img src="skin/images/icon-add.png" class="form-button-image btn-tiering-add" alt="Add New Field" width="13px" style="cursor:pointer;" />'
                                 +'</th>'
@@ -231,6 +244,7 @@
         $(newRow).insertAfter($(element).closest('tr'));
 
         rowIndexTiering++;
+        initMaskingPrice();
     }
 
     function addOperatorRow(data){
@@ -244,7 +258,7 @@
                             + '<th>'
                             +   '<select class="operator_list" name="operatorID['+rowId+'][operator]"  data-validation="required" data-initvalue="'+data.OP_ID+'"></select>'
                             + '</th>'
-                            + '<th><input type="text" name="operatorID['+rowId+'][price]" data-validation="number" value="'+data.PER_SMS_PRICE+'"><th>'
+                            + '<th><input type="text" name="operatorID['+rowId+'][price]" class="input-price" value="'+parseFloat(data.PER_SMS_PRICE).toFixed(2)+'"><th>'
                             + '<td> <span style="font-size: 10px; color:red;">'+note+'</span></td>'
                         + '</tr>';
         $('#operator-table tbody').append(newRow);
@@ -254,7 +268,7 @@
         }).val(data.OP_ID).trigger('change');
         $('.scroll-container').scrollTop($('#operator-table').height());
         rowIndexOperator++;
-
+        initMaskingPrice();
     }
 
     function loadOperator(){
@@ -396,9 +410,9 @@
                                                                                 <th>
                                                                                     <img src='skin/images/icon-remove.png' class='form-button-image btn-tiering-remove' alt='Remove' width='13px' style='cursor:pointer;' />
                                                                                 </th>
-                                                                                <th><input type='text' class='tiering-from' name='tiering[0][from]' value='0' data-validation='required' readonly></th>
-                                                                                <th><input type='text' class='tiering-to' name ='tiering[0][to]' id='tiering_upto' value ='MAX' data-validation='required' readonly></th>
-                                                                                <th><input type='text' class='tiering-price' name ='tiering[0][price]' value='' data-validation='required'></th>
+                                                                                <th><input type='text' class='tiering-from input-qty' name='tiering[0][from]' value='0' data-validation='required' readonly></th>
+                                                                                <th><input type='text' class='tiering-to input-qty' name ='tiering[0][to]' id='tiering_upto' value ='MAX' data-validation='required' readonly></th>
+                                                                                <th><input type='text' class='tiering-price input-price' name ='tiering[0][price]' value='' data-validation='required'></th>
                                                                                 <th>
                                                                                     <img src='skin/images/icon-add.png' class='form-button-image btn-tiering-add' alt='Add New Field' width='13px' style='cursor:pointer;' />
                                                                                 </th>
@@ -409,9 +423,9 @@
                                                                                 <th>
                                                                                     <img src='skin/images/icon-remove.png' class='form-button-image btn-tiering-remove' alt='Remove' width='13px' style='cursor:pointer;' />
                                                                                 </th>
-                                                                                <th><input type='text' class='tiering-from' name='tiering[{$key}][from]' value='{$item['SMS_COUNT_FROM']}' data-validation='required' {if $key == 0} readonly {/if}></th>
-                                                                                <th><input type='text' class='tiering-to' name ='tiering[{$key}][to]' id='tiering_upto' value='{$item['SMS_COUNT_UP_TO']}' data-validation='required' {if $item['SMS_COUNT_UP_TO'] == 'MAX'} readonly {/if}></th>
-                                                                                <th><input type='text' class='tiering-price' name ='tiering[{$key}][price]' value='{$item['PER_SMS_PRICE']}' data-validation='required'></th>
+                                                                                <th><input type='text' class='tiering-from input-qty' name='tiering[{$key}][from]' value='{$item['SMS_COUNT_FROM']}' data-validation='required' {if $key == 0} readonly {/if}></th>
+                                                                                <th><input type='text' class='tiering-to input-qty' name ='tiering[{$key}][to]' id='tiering_upto' value='{$item['SMS_COUNT_UP_TO']}' data-validation='required' {if $item['SMS_COUNT_UP_TO'] == 'MAX'} readonly {/if}></th>
+                                                                                <th><input type='text' class='tiering-price input-price' name ='tiering[{$key}][price]' value='{number_format(floatval($item['PER_SMS_PRICE']), 2, '.', '')}' data-validation='required'></th>
                                                                                 <th>
                                                                                     <img src='skin/images/icon-add.png' class='form-button-image btn-tiering-add' alt='Add New Field' width='13px' style='cursor:pointer;' />
                                                                                 </th>

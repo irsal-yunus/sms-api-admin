@@ -4,7 +4,7 @@
         <label class="form-flag-required">Customer ID</label>
         <input name="customerId" value="" type="text" maxlength="30" /><span class="ui-helper-clearfix"></span>
         <label class="form-flag-required">Company Name</label>
-        <input name="companyName" value="" type="text" maxlength="32" /><span class="ui-helper-clearfix"></span>
+        <input name="companyName" value="" type="text" maxlength="100" /><span class="ui-helper-clearfix"></span>
         <label>Company URL</label>
         <input name="companyUrl" value="" type="text" maxlength="50" /><span class="ui-helper-clearfix"></span>
         <label class="form-flag-required">Country</label>
