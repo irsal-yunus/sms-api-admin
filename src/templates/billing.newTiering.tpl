@@ -9,7 +9,10 @@
     var rowIndex = 1;
     $( document ).ready(function(){
 
-        // loadUserDetail();
+
+        if (usersEdit.length > 0) {
+            $('#select-billing').val(usersEdit[0].BILLING_PROFILE_ID);
+        }
 
         $.validate({
             errorMessagePosition : 'inline',
