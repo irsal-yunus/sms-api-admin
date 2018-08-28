@@ -402,7 +402,7 @@ class ApiReport {
                             ? (!is_null($userId) ? ' AND ' : '' ). ' BILLING_PROFILE_ID = '.$billingProfile.' '
                             : '';
         return $this->query(
-                 ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID '
+                 ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID'
                 .' FROM     '.DB_SMS_API_V2.'.USER '
                 .  $whereClause
                 .  $userClause
@@ -473,6 +473,21 @@ class ApiReport {
     }
 
     /**
+     * Function to get all user by certain user id's
+     *
+     * @param Array $user
+     * @return Array
+     */
+    public function getUserByCertainUser($user)
+    {
+          return $this->query(
+                         ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID,BILLING_TIERING_GROUP_ID'
+                        . ' FROM     ' . DB_SMS_API_V2 . '.USER '
+                        .' WHERE      USER_ID IN ('.implode(", ",$user).')'
+                    );
+    }
+
+    /**
      * Get Delivery status from BILL_U_MESSAGE.DELIVERY_STATUS
      *
      * @return  Array   2D Array [['ERROR_CODE', 'STATUS', 'IS_RECREDITED']]
@@ -501,9 +516,6 @@ class ApiReport {
         return $status;
     }
 
-
-
-
     /**
      * Get Detail of Billing Profile detail                                     <br />
      * would not return the rule of billing report                              <br />
@@ -523,7 +535,31 @@ class ApiReport {
                     );
     }
 
+     /**
+     * Get Detail of Billing Profile detail only by TIERING type
+     * @return  Array   Array ['BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT']
+     */
+    public function getBillingProfileTieringOnly() {
+        return $this->query(
+                         ' SELECT   BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT'
+                        .' FROM     '.DB_BILL_PRICELIST.'.BILLING_PROFILE'
+                        .' WHERE    BILLING_TYPE = '. ' "TIERING" '
+                    );
+    }
 
+     /**
+     * Get Detail of user detail only by TIERING type
+     * @return  Array   Array ['USER_NAME,USER_ID, NAME, BILLING_PROFILE_ID']
+     */
+    public function getUserTiering(){
+         return $this->query(
+                         ' SELECT   USER_NAME,USER_ID, NAME,  b.BILLING_PROFILE_ID '
+                        .' FROM     '.DB_BILL_PRICELIST.'.BILLING_PROFILE'.' b'
+                        .' JOIN     '.DB_SMS_API_V2.'.USER'.' u'
+                        .' ON       '. 'b.BILLING_PROFILE_ID = '.'u.BILLING_PROFILE_ID'
+                        .' WHERE    BILLING_TYPE = '. ' "TIERING" '
+                    );
+    }
 
 
     /**
@@ -633,7 +669,7 @@ class ApiReport {
      */
     public function getTieringGroupUserList($tieringGroupId) {
         return !empty($tieringGroupId) ? $this->query(
-                         ' SELECT   USER_ID, USER_NAME'
+                         ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_TIERING_GROUP_ID'
                         .' FROM     '.DB_SMS_API_V2.'.USER'
                         .' WHERE    BILLING_TIERING_GROUP_ID = '.$tieringGroupId
                     )
@@ -2259,8 +2295,6 @@ class ApiReport {
     }
 
 
-
-
     /**
      * Generate file name for user report                                           <br />
      * the file name would countain current period who set on constructor section
@@ -2301,9 +2335,6 @@ class ApiReport {
         return preg_replace('/ +/','_', $dir.'/'.$fileName.'.zip');
     }
 
-
-
-
     /**
      * Function to update table USER based on specified COLUMN to update
      *
@@ -2323,7 +2354,18 @@ class ApiReport {
     }
 
 
-
+    /**
+    * Function to get user data based on BILLING_PROFILE_ID
+    * @param int $billingID
+    * @return  array
+    */
+    public function getUserByBilling($billingID){
+         return $this->query(
+                         ' SELECT   USER_ID,USER_NAME,BILLING_TIERING_GROUP_ID '
+                        .' FROM     '.DB_SMS_API_V2.'.USER'
+                        .' WHERE    BILLING_PROFILE_ID = '.$billingID.''
+                    );
+    }
 
     /**
      * Function to insert new operator setting into Table BILLING_PROFILE_OPERATOR
@@ -2340,9 +2382,6 @@ class ApiReport {
                 .' VALUES (NULL, '.$billingProfileID.', "'.$operatorID.'", '.$price.') '
             );
     }
-
-
-
 
     /**
      * Function to insert new tiering setting into Table BILLING_PROFILE_TIERING
@@ -2362,8 +2401,6 @@ class ApiReport {
     }
 
 
-
-
     /**
      * Function to insert new Billing Profile into Table BILLING_PROFILE
      *
@@ -2379,9 +2416,6 @@ class ApiReport {
                     .' VALUES (NULL, "'.$name.'", "'.$billingType.'", "'.$description.'", now(), now()) '
                 );
     }
-
-
-
 
     /**
      * Function to insert new Tiering Group into Table BILLING_TIERING_GROUP
@@ -2435,8 +2469,6 @@ class ApiReport {
                     .' WHERE BILLING_PROFILE_ID = '.$id.''
                 );
     }
-
-
 
 
     /**
