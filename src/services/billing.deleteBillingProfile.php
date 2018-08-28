@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright(c) 2010 1rstWAP. All rights reserved.
  */
 
@@ -10,7 +10,7 @@ $page = SmsApiAdmin::getTemplate();
 
 try {
     $apiReport = new ApiReport();
-    
+
     //Validate if billingProfileID is set
     if(isset($_POST['billingProfileID']) ){
         $billingProfileID = $_POST['billingProfileID'];
@@ -19,13 +19,23 @@ try {
         }else{
             $apiReport->deleteBillingProfileTiering($billingProfileID);
         }
+
+        //set all BILLING_TIERING_GROUP_ID and BILLING_PROFILE_ID to NULL
         $apiReport->deleteBillingProfile($billingProfileID);
+        $updateUserClause = [
+            'column'        => 'BILLING_TIERING_GROUP_ID',
+            'value'         => 'NULL',
+            'whereClause'   => 'BILLING_PROFILE_ID = '.$billingProfileID.'',
+        ];
+        $apiReport->updateUser($updateUserClause);
+
         $updateUserClause = [
             'column'        => 'BILLING_PROFILE_ID',
             'value'         => 'NULL',
-            'whereClause'   => ' BILLING_PROFILE_ID = '.$billingProfileID.'',
+            'whereClause'   => 'BILLING_PROFILE_ID = '.$billingProfileID.'',
         ];
         $apiReport->updateUser($updateUserClause);
+
         header("location: ./billing.view.php");
     }
 } catch (Exception $e) {

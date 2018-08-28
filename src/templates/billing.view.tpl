@@ -49,6 +49,7 @@
 <div style="padding: 3px;">
     <a href="#" onclick="$app.module('billing').viewMessageFilterPage();">SMS Content Department Filter (Adira)</a>
 </div>
+
 <form id="billing-view" class="admin-tabform" action="#" method="post" style="width: 100%;">
 	<div id="billing-view-tabs" class="panel-tabs">
 		<ul>
@@ -178,4 +179,5 @@
 		</div><!-- END Report Group tab-->
 
 	</div><!-- END Tabs Container -->
+    {$tieringID}
 </form>
