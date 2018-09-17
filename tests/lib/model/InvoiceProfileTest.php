@@ -382,6 +382,7 @@ class InvoiceProfileTest extends TestCase
     {
         $this->initialData();
         try {
+            $this->model->clientId = null;
             $this->model->loadApiUsers();
             $this->fail('Exception didn\'t raise when instance InvoiceProfile called loadApiUsers method with client ID is empty');
         } catch (\Exception $e) {

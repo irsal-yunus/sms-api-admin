@@ -42,7 +42,7 @@ try {
         exit();
     }
 
-    $baseName = date('Y-m', $newData['period']);
+    $baseName = date('F_Y', $newData['period']);
 
     foreach ($invoices as $invoice) {
         if (!$invoice->fileExists() && !$invoice->isLock()) {
@@ -50,7 +50,7 @@ try {
         }
 
         if ($invoice->fileExists()) {
-            $zip->addFile($invoice->filePath(), "{$baseName}/{$invoice->fileName}");
+            $zip->addFile($invoice->filePath(), "INVOICE/{$invoice->fileName}");
         }
     }
 
@@ -63,7 +63,7 @@ try {
     header('Cache-Control: public');
     header('Content-Description: File Transfer');
     header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="Invoice-' . $baseName . '.zip"');
+    header('Content-Disposition: attachment; filename="INVOICE_' . $baseName . '.zip"');
     header('Content-Transfer-Encoding: binary');
     header('Content-Length: ' . filesize($zipTemp));
     ob_end_flush();

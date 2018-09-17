@@ -5,12 +5,13 @@
             <span class="form-button-text">Download All</span>
         </a>
     </div>
-    <table class="admin-simpletable">
+    <table class="admin-simpletable invoice-table">
         <thead>
             <tr>
                 <th class="zebra-odd">Customer ID</th>
                 <th class="zebra-odd">Company Name</th>
                 <th class="zebra-even">Payment Detail</th>
+                <th class="zebra-even">Auto Generate</th>
                 <th class="zebra-odd">
                     <a href="#" onclick="$app.module('invoice').createProfile()" class="form-button" title="Add New Profile">
                         <img title="Register" src="skin/images/icon-add.png" class="form-button-image" alt="" />
@@ -25,6 +26,7 @@
                 <td class="type-status">{$profile.customerId}</td>
                 <td class="type-status">{$profile.companyName}</td>
                 <td class="type-status">{$profile.bankName}</td>
+                <td class="type-status">{($profile.autoGenerate)?'Yes':'No'}</td>
                 <td class="type-action">
                     <a href="#" onclick="$app.module('invoice').addInvoice({$profile.profileId})" class="form-button" title="Create Invoice">
                         <img src="skin/images/icon-add-file.png" class="icon-image icon-size-small" alt="" />

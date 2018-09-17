@@ -6,11 +6,16 @@
     "authors": [],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.0.0",
+        "rsync": ">=2.6.0",
+        "ext-intl": "*",
+        "ext-PDO": "*",
+        "ext-pdo_mysql": "*",
         "mpdf/mpdf": "^7.1",
         "phpoffice/phpspreadsheet": "^1.2"
     },
     "require-dev": {
+        "ext-xdebug": "*",
         "phpunit/phpunit":"6.5.*",
         "mockery/mockery":"1.1.*",
         "php-mock/php-mock": "^2.0",

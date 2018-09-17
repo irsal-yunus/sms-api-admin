@@ -6,7 +6,7 @@
 /**
  * Application Url Configuration
  */
-define('SMSAPIADMIN_BASE_URL',      'http://10.32.6.61/sms-api-admin/src/');
+define('SMSAPIADMIN_BASE_URL',      'http://localhost/sms-api-admin/src/');
 define('SMSAPIADMIN_SERVICE_URL',   SMSAPIADMIN_BASE_URL.'services/');
 
 
@@ -30,7 +30,7 @@ define('SMSAPIADMIN_INVOICE_DIR',               SMSAPIADMIN_BASE_DIR.'archive/in
  * Database Configuration
  */
 
- define('REF_DB_HOST',           '10.32.6.71');
+ define('REF_DB_HOST',           '10.32.6.9');
  define('REF_DB_USER',           'qateam');
  define('REF_DB_PASSWORD',       'qateam');
 
@@ -38,7 +38,7 @@ define('DB_SMS_API_V2',         'SMS_API_V2');
 define('DB_BILL_U_MESSAGE',     'BILL_U_MESSAGE');
 define('DB_BILL_PRICELIST',     'BILL_PRICELIST');
 define('DB_First_Intermedia',   'First_Intermedia');
-define('DB_INVOICE',            'SMS_API_V2');
+define('DB_INVOICE',             DB_SMS_API_V2);
 
 
 /**
@@ -58,6 +58,14 @@ define('REPORT_PER_BATCH_SIZE',                  100000);
 /**
  * Invoice Setting
  */
-define('SUMMARY_USER_API_CELL', 'B2');
-define('SUMMARY_TOTAL_SMS_CHARGED_CELL', 'B8');
-define('SUMMARY_TOTAL_PRICE_CELL', 'B9');
+define('SUMMARY_USER_API_CELL',             'B2');
+define('SUMMARY_TOTAL_SMS_CHARGED_CELL',    'B8');
+define('SUMMARY_TOTAL_PRICE_CELL',          'B9');
+
+/**
+ * SSH Configuration to shared folder host
+ */
+define('INVOICE_SHARED_FOLDER_IP',          '10.32.6.61');
+define('INVOICE_SHARED_FOLDER_USER',        'dev');
+define('INVOICE_SHARED_FOLDER_PATH',        '/home/dev/invoices');
+define('INVOICE_SSH_PRIVATE_KEY',           '$HOME/.ssh/less_password');

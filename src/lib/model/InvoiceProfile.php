@@ -14,14 +14,6 @@ use \Exception;
 class InvoiceProfile extends ModelContract
 {
     /**
-     * Database connection name that setup in
-     * configs/database.ini
-     *
-     * @var PDO
-     */
-    protected $connection = 'invoice';
-
-    /**
      * Table name of invoice profile
      *
      * @var string
@@ -35,19 +27,15 @@ class InvoiceProfile extends ModelContract
      */
     protected $primaryKey = 'PROFILE_ID';
 
+
     /**
-     * Get all Profile value
+     * Get all Profile data
      *
      * @return array
      */
     public function all()
     {
-
-        return $this->select("SELECT {$this->tableName}.*, CLIENT.CUSTOMER_ID, CLIENT.COMPANY_NAME, INVOICE_BANK.BANK_NAME from {$this->tableName}
-             LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
-             LEFT JOIN ".DB_INVOICE.".INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID
-             order by CLIENT.CUSTOMER_ID ASC"
-        )->fetchAll();
+        return $this->select("{$this->defaultQuery()} ORDER BY CLIENT.COMPANY_NAME ASC")->fetchAll();
     }
 
     /**
@@ -58,12 +46,41 @@ class InvoiceProfile extends ModelContract
      */
     public function find($keyValue)
     {
-        $query = "SELECT {$this->tableName}.*, CLIENT.*, INVOICE_BANK.* from {$this->tableName}
-             LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
-             LEFT JOIN ".DB_INVOICE.".INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID
-             WHERE {$this->primaryKey} = {strval($keyValue)}";
+        $query = "{$this->defaultQuery()} WHERE {$this->primaryKey} = {strval($keyValue)} LIMIT 1";
 
         return $this->select($query)->fetch();
+    }
+
+    /**
+     * Get profile data for auto generate invoice
+     * only profile that doesn't have invoice for current month
+     * profile data also has the products data
+     *
+     * @return array
+     */
+    public function getProfileForAutoGenerate()
+    {
+        $firstDate = date('Y-m-d', strtotime('first day of this month'));
+        $query = "{$this->defaultQuery()} WHERE AUTO_GENERATE = 1
+            AND {$this->tableName}.{$this->primaryKey} NOT IN
+                (SELECT INVOICE_HISTORY.{$this->primaryKey} FROM INVOICE_HISTORY WHERE START_DATE >= '$firstDate')
+            ORDER BY CLIENT.COMPANY_NAME ASC";
+
+        $profiles = $this->select($query)->fetchAll();
+
+        return $this->loadProduct($profiles);
+    }
+
+    /**
+     * Get default queries for select action
+     *
+     * @return string
+     */
+    protected function defaultQuery()
+    {
+        return "SELECT {$this->tableName}.*, CLIENT.*, INVOICE_BANK.* from {$this->tableName}
+            LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
+            LEFT JOIN ".DB_INVOICE.".INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID";
     }
 
     /**
@@ -101,9 +118,7 @@ class InvoiceProfile extends ModelContract
             $data = [$model];
         }
 
-        $this->loadProduct($data);
-
-        return $data;
+        return $this->loadProduct($data);
     }
 
     /**
@@ -119,8 +134,10 @@ class InvoiceProfile extends ModelContract
         $products = $this->groupBy($products, 'ownerId');
 
         foreach ($data as &$item) {
-            $item['products'] = $products[$item->key()] ?? null;
+            $item['products'] = $products[$item->key()] ?? [];
         }
+
+        return $data;
     }
 
     /**
@@ -161,7 +178,7 @@ class InvoiceProfile extends ModelContract
             throw new Exception("Profile Not Found");
         }
 
-        $data['updateAt'] = date('Y-m-d H:i:s');
+        $data['updatedAt'] = date('Y-m-d H:i:s');
 
         $model->update($data);
     }

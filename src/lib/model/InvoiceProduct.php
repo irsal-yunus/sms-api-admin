@@ -135,14 +135,14 @@ class InvoiceProduct extends ModelContract
      * Transfer to history product
      *
      * @param array $data
-     * @param int $ownerId
+     * @param int $historyId
      * @return bool
      */
-    public function profile2History(array $data, $ownerId)
+    public function profile2History($data, $historyId)
     {
         $this->period = $this->getPeriodDate($data['startDate']);
         $this->ownerType = self::HISTORY_PRODUCT;
-        $this->ownerId = $ownerId;
+        $this->ownerId = $historyId;
 
         if ($this->useReport) {
             $this->setQtyAndUnitPriceFromReport();

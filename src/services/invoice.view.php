@@ -1,6 +1,6 @@
 <?php
 
-use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
+use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
 
 /*
  * Copyright(c) 2018 1rstWAP. All rights reserved.
@@ -12,6 +12,10 @@ try {
     SmsApiAdmin::filterAccess();
     $page = SmsApiAdmin::getTemplate();
     try {
+        $historyModel = new InvoiceHistory();
+        $pending = $historyModel->pendingCount();
+
+        $page->assign('pending', $pending);
         $page->display('invoice.view.tpl');
     } catch (Exception $e) {
         SmsApiAdmin::returnError($e->getMessage());
