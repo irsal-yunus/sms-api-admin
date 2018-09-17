@@ -196,23 +196,6 @@ class InvoiceGenerator
         return $folderPath;
     }
 
-    // public function syncInvoiceFiles()
-    // {
-    //     // rsync -azP -e "ssh -i $HOME/.ssh/id_rsa" /var/www/html/admin/src/archive/invoices/ dev@10.32.6.61:/home/dev/sync/
-    //     $command        = "rsync -azP -e \"ssh -i ".INVOICE_SSH_PRIVATE_KEY."\" ";
-    //     $sourcePath     = SMSAPIADMIN_INVOICE_DIR;
-    //     $destination    = INVOICE_SHARED_FOLDER_USER."@".INVOICE_SHARED_FOLDER_IP.":".INVOICE_SHARED_FOLDER_PATH;
-    //     $syncFinal      = $command." --delete --include=\"*_FINAL.pdf\" ".$sourcePath." ".$destination;
-    //     $syncPreview    = $command." --include=\"*_PREVIEW.pdf\" ".$sourcePath." ".$destination;
-    //     // echo $syncFinal."\n";
-    //     // echo $syncPreview."\n";
-    //     $this->logger->info('syncInvoiceFiles : '. $syncFinal);
-    //     $this->logger->info('syncInvoiceFiles : '. $syncPreview);
-    //     exec($syncFinal.";".$syncPreview, $output);
-
-    //     $this->logger->info('syncInvoiceFiles : '. \json_encode($output));
-    // }
-
     /**
      * Initial InvoiceHistory instance
      *
