@@ -166,10 +166,13 @@
                 .trigger('change')
         }
 
-        mod.showInvoiceManagement = function() {
+        mod.showInvoiceManagement = function(callback) {
             try {
                 $app.content('invoice.view', null, function() {
                     title();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
                 });
             } catch (ex) {
                 $1.error("[mod:invoice.view] Error.", ex);
@@ -187,6 +190,21 @@
                 $1.error("[mod:invoice.profile.show] Error.", ex);
             }
         };
+
+        function showInvoiceTable(type) {
+            return $('#invoice-view-tabs')
+                .tabs('url', 0, resolveServiceUrl('invoice.table') + "?type="+(type||''));
+        }
+
+        mod.showInvoiceTable = function(type, reload) {
+            if (reload) {
+                mod.showInvoiceManagement(function(){
+                    showInvoiceTable(type).tabs('select', 0);
+                });
+            } else {
+                showInvoiceTable(type).tabs('load', 0);
+            }
+        }
 
         mod.showHistory = function(profileId) {
             try {
@@ -233,7 +251,7 @@
         /**
          * Show logout confirmation dialog
          */
-        mod.lockInvoice = function(invoiceId) {
+        mod.lockInvoice = function(invoiceId, invoiceTable) {
             try {
                 var title = "Confirm Lock Invoice";
                 var msg = "Are you sure want to Lock this invoice ?<br>You can not make changes to the invoice again";
@@ -250,7 +268,9 @@
                                         $app.tell(reply.summary || 'Success!', title);
                                     }
 
-                                    if (reply && reply.attachment && reply.attachment.invoice) {
+                                    if (invoiceTable) {
+                                        mod.showInvoiceTable(null, true);
+                                    } else if (reply && reply.attachment && reply.attachment.invoice) {
                                         mod.showHistory(reply.attachment.invoice.profileId);
                                     }
                                 }
@@ -263,16 +283,17 @@
                 $1.error("[$app.login] Error.", ex);
             }
         };
+
         mod.addInvoice = function(profileId) {
             try {
                 $app.form.openAutoDialog('invoice.history.create', {
                     profileId: profileId
                 }, 'Add Invoice', {
-                    width: '30em',
-                    height: 230
+                    width: '40em',
+                    height: 300
                 }, function(reply) {
                     if (reply && reply.attachment && reply.attachment.invoiceId) {
-                        mod.showInvoice(reply.attachment.invoiceId, profileId);
+                        mod.showInvoice(reply.attachment.invoiceId, reply.attachment.profileId);
                     }
                 }, initInvoiceForm);
             } catch (ex) {
@@ -369,7 +390,12 @@
                                 if (reply && reply.summary) {
                                     $app.tell(reply.summary || 'Success!', title);
                                 }
-                                mod.showHistory(profileId);
+
+                                if (profileId) {
+                                    mod.showHistory(profileId);
+                                } else {
+                                    mod.showInvoiceTable(null, true);
+                                }
                             }
                         } catch (ex) {
                             $1.error("[mod:invoice.history.delete@ajaxsuccess] Error.", ex);
@@ -384,8 +410,8 @@
         mod.createProfile = function() {
             try {
                 $app.form.openAutoDialog('invoice.profile.create', null, 'Add Invoice Profile', {
-                    width: '30em',
-                    height: 200
+                    width: '35em',
+                    height: 250
                 }, function(reply) {
                     if (reply && reply.attachment && reply.attachment.profileId) {
                         mod.showProfile(reply.attachment.profileId);
@@ -423,8 +449,8 @@
                 $app.form.openAutoDialog('invoice.profile.edit', {
                     profileId: profileId
                 }, 'Edit Invoice Profile', {
-                    width: '30em',
-                    height: 200
+                    width: '35em',
+                    height: 250
                 }, function() {
                     if (changePage !== false) {
                         mod.showProfile(profileId);

@@ -11,6 +11,13 @@
             {html_options options=$banks}
         </select>
         <span class="ui-helper-clearfix"></span>
+        <label>Is Auto Generate?</label>
+        <input name="autoGenerate" value="1" type="radio" checked="checked" />
+        <label class="flexible-width">Yes</label>
+        <input name="autoGenerate" value="0" type="radio" />
+        <label class="flexible-width">No</label>
+        <span class="ui-helper-clearfix"></span>
+        <span class="ui-helper-clearfix"></span>
         <label>Approved Name</label>
         <input name="approvedName" value="" type="text" maxlength="45" />
         <span class="ui-helper-clearfix"></span>

@@ -1385,7 +1385,7 @@ class ApiReport {
      * @param Array     $message   A message data
      * @return void
      */
-    private function getMessageSummary(&$messages)
+    private function getMessageSummary(&$message)
     {
         if (!empty($message))
         {

@@ -111,7 +111,7 @@ class InvoiceSettingTest extends TestCase
         $setting->clearCache();
         $setting->beginTransaction();
         $setting->select('DELETE FROM ' . $setting->tableName())->execute();
-        $setting->select('DELETE FROM '.INVOICE_DB.'.INVOICE_HISTORY')->execute();
+        $setting->select('DELETE FROM '.DB_INVOICE.'.INVOICE_HISTORY')->execute();
 
         /**
          * Last invoice number should be 0

@@ -15,6 +15,7 @@ try {
     $definitions = [
         "clientId" => FILTER_SANITIZE_NUMBER_INT,
         "bankId" => FILTER_SANITIZE_NUMBER_INT,
+        "autoGenerate" => FILTER_SANITIZE_NUMBER_INT,
         "approvedName" => FILTER_SANITIZE_STRING,
         "approvedPosition" => FILTER_SANITIZE_STRING,
     ];

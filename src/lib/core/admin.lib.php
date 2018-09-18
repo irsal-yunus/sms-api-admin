@@ -84,6 +84,7 @@ final class SmsApiAdminLoginManager
 			$_SESSION[self::$sessionTimestampLabel] = time();
 		} catch (PDOException $e) {
 			$this->logger->error("$e", $this);
+			$this->logger->error($e->getTrace(), $this);
 			throw new Exception("Query error");
 		} catch (LoginException $e) {
 			throw $e;

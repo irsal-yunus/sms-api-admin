@@ -14,14 +14,6 @@ use Firstwap\SmsApiAdmin\lib\model\ModelContract;
 class InvoiceSetting extends ModelContract
 {
     /**
-     * Database connection name that setup in
-     * configs/database.ini
-     *
-     * @var PDO
-     */
-    protected $connection = 'invoice';
-
-    /**
      * Table name for invoice setting
      *
      * @var string
@@ -38,7 +30,7 @@ class InvoiceSetting extends ModelContract
     /**
      * Setting value
      *
-     * @var stdClass
+     * @var InvoiceSetting
      */
     protected static $setting = null;
 
@@ -142,5 +134,7 @@ class InvoiceSetting extends ModelContract
                     LIMIT 1), 0)";
 
         $this->db->prepare($query)->execute();
+
+        return $this->selectSetting();
     }
 }

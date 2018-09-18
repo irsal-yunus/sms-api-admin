@@ -1,7 +1,15 @@
 <form action="invoice.history.store" class="admin-xform">
     <fieldset class="float-centre">
         <legend>Invoice</legend>
+        {if !isset($profileId)}
+        <label class="form-flag-required">Invoice Profile</label>
+        <select name="profileId" size="1" class="flexible-width">
+            {html_options options=$profiles}
+        </select>
+        <span class="ui-helper-clearfix"></span>
+        {else}
         <input type="hidden" name="profileId" value="{$profileId}" />
+        {/if}
         <label class="form-flag-required">Invoice Number</label>
         <div class="input-group">
             <div class="input-group-icon">{$setting.invoiceNumberPrefix}</div>

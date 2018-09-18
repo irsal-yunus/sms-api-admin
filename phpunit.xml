@@ -18,6 +18,7 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src/lib/model</directory>
+            <directory suffix=".php">./src/lib/Modules</directory>
         </whitelist>
     </filter>
 </phpunit>

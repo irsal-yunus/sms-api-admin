@@ -27,8 +27,7 @@ try {
         SmsApiAdmin::returnError("Invoice Not Found !");
     }
 
-    $invoice->createInvoiceFile();
-    $invoice->update(['status' => InvoiceHistory::INVOICE_LOCK]);
+    $invoice->lockInvoice();
 
     $service->attach('invoice', $invoice);
     $service->summarise('Invoice successfully locked');

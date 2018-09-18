@@ -4,6 +4,7 @@
  */
 require_once '../../vendor/autoload.php';
 
+use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceSetting;
 
 $logger = Logger::getLogger("service");
@@ -14,15 +15,17 @@ try {
     $profileId = filter_input(INPUT_POST, 'profileId', FILTER_VALIDATE_INT);
 
     if (empty($profileId)) {
-        SmsApiAdmin::returnError("Invalid Profile ID ($profileId) !");
+        $profilesModel = new InvoiceProfile();
+        $profiles = $profilesModel->all();
+        $page->assign('profiles', array_column($profiles, 'companyName', 'profileId'));
+    } else {
+        $page->assign('profileId', $profileId);
     }
 
     try {
         $settingModel = new InvoiceSetting();
-
         $setting = $settingModel->getSetting();
 
-        $page->assign('profileId', $profileId);
         $page->assign('setting', $setting);
         $page->display('invoice.history.create.tpl');
     } catch (Exception $e) {

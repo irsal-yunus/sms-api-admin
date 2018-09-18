@@ -122,7 +122,7 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
      * Perform Select Query
      *
      * @param  mixed $keyValue
-     * @return mixed
+     * @return self
      */
     public function find($keyValue)
     {
@@ -199,7 +199,7 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
      * Perform insert action
      *
      * @param  array $data
-     * @return array
+     * @return integer
      */
     public function insert(array $data)
     {
@@ -214,7 +214,10 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
             throw new Exception("Failed Insert " . json_encode($stmt->errorInfo()[2]));
         }
 
-        return $this->db->lastInsertId();
+        $this->attributes = $data;
+        $this->setKey($this->db->lastInsertId());
+
+        return $this->key();
     }
 
     /**
@@ -249,13 +252,11 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
             return $arr;
         }
 
-        if (!array_key_exists($columnName, current($data)->attributes())) {
-            throw new Exception("Column name doesn't exists");
-        }
-
-        foreach ($data as $key => $item) {
-            if ($value = $item[$columnName]) {
-                $arr[$value][$key] = $item;
+        if (array_key_exists($columnName, current($data)->attributes())) {
+            foreach ($data as $key => $item) {
+                if ($value = $item[$columnName]) {
+                    $arr[$value][$key] = $item;
+                }
             }
         }
 

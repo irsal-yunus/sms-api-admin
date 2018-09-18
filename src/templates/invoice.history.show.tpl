@@ -7,9 +7,6 @@
         <a href="#" onclick="$app.module('invoice').downloadInvoice({$invoice.invoiceId}, 0)" class="form-button" title="Preview Invoice">
             <img src="skin/images/icon-preview.png" class="icon-image icon-size-small" alt="" />
         </a>
-        <a href="#" onclick="$app.module('invoice').downloadInvoice({$invoice.invoiceId}, 1)" class="form-button" title="Download Invoice">
-            <img src="skin/images/icon-download.png" class="icon-image icon-size-small" alt="" />
-        </a>
         <a href="#" onclick="$app.module('invoice').lockInvoice({$invoice.invoiceId}, {$profile.profileId})" class="form-button" title="Lock Invoice">
             <img src="skin/images/icon-lock.png" class="icon-image icon-size-small" alt="" />
         </a>
