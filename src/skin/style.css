@@ -884,3 +884,25 @@ LOADING
 form fieldset input[type=checkbox].checkbox-normal {
     margin-top: 3px;
 }
+
+.badge {
+  position: relative;
+  font-size: 1.1em;
+  background: #e73b3b;
+  padding: 2px 4px;
+  color: white;
+  border-radius: 50%;
+  display: inline;
+  margin: 2px;
+}
+
+.ui-button.btn-active {
+    background: #f5f8f9;
+    color: #e17009;
+    font-weight: bold;
+    border: 1px solid #79b7e7;
+}
+
+.float-right {
+    float: right;
+}

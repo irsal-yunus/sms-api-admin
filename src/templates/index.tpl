@@ -8,9 +8,9 @@ Copyright(c) 2010 1rstWAP. All rights reserved.
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title>{$siteTitle}</title>
         <link href="js/select2/css/select2.css" type="text/css" rel="stylesheet" />
-        <link href="skin/style.css" type="text/css" rel="stylesheet" />
         <link href="js/datatable/jquery.dataTables.css" type="text/css" rel="stylesheet"/>
         <link href="skin/jquery.ui/jquery-ui.css" type="text/css" rel="stylesheet" />
+        <link href="skin/style.css" type="text/css" rel="stylesheet" />
         <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
         <script type="text/javascript" src="js/ui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/ui/i18n/jquery.ui.datepicker-en-GB.min.js"></script>

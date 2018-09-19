@@ -12,6 +12,13 @@
             {html_options options=$banks selected=$profile.bankId}
         </select>
         <span class="ui-helper-clearfix"></span>
+        <label>Is Auto Generate?</label>
+        <input name="autoGenerate" value="1" type="radio" {if $profile.autoGenerate}checked="checked"{/if}/>
+        <label class="flexible-width">Yes</label>
+        <input name="autoGenerate" value="0" type="radio" {if $profile.autoGenerate==0}checked="checked"{/if}/>
+        <label class="flexible-width">No</label>
+        <span class="ui-helper-clearfix"></span>
+        <span class="ui-helper-clearfix"></span>
         <label>Approved Name</label>
         <input name="approvedName" value="{$profile.approvedName}" type="text" maxlength="45" />
         <span class="ui-helper-clearfix"></span>

@@ -46,10 +46,6 @@ try {
     } else if (strtotime($newData['startDate']) === false) {
         $errorFields['startDate'] = 'Invalid Invoice Date Format!';
     }
-    // else if ($invoiceModel->isInvoiceAlreadyExists($newData['startDate'], $newData['profileId'])) {
-    //     $date = date('F Y', strtotime("{$newData['startDate']}"));
-    //     $errorFields['startDate'] = "Invoice ".$date." for this company already exists !";
-    // }
 
     if (empty($newData['paymentPeriod'])) {
         $errorFields['paymentPeriod'] = 'Term of Payment should not be empty!';
@@ -75,8 +71,11 @@ try {
     try {
         $invoiceId = $invoiceModel->createHistory($newData);
         $settingModel->refreshInvoiceNumber();
+        $invoice = $invoiceModel->find($invoiceId);
+        $invoice->createInvoiceFile();
 
         $service->attach('invoiceId', $invoiceId);
+        $service->attach('profileId', $newData['profileId']);
         $service->summarise('Invoice successfully added');
         $service->setStatus(true);
         $service->deliver();

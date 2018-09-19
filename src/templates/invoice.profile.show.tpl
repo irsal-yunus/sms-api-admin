@@ -34,6 +34,8 @@
         <dd>{$profile.accountName}</dd>
         <dt>Account Number</dt>
         <dd>{$profile.accountNumber}</dd>
+        <dt>Auto Generate</dt>
+        <dd>{($profile.autoGenerate)?"Yes":"No"}</dd>
         <dt>Approved Name</dt>
         <dd>{$profile.approvedName|default:'-'}</dd>
         <dt>Approved Position</dt>

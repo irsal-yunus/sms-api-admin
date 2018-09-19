@@ -2,6 +2,7 @@
 
 namespace Firstwap\SmsApiAdmin\lib\model;
 
+use Firstwap\SmsApiAdmin\lib\Modules\InvoiceGenerator;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProduct;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
 use Firstwap\SmsApiAdmin\lib\model\ModelContract;
@@ -27,11 +28,19 @@ class InvoiceHistory extends ModelContract
     const INVOICE_LOCK = 1;
 
     /**
+     * Constance Invoice Type
+     * ORIGINAL, COPY, REVISED
+     */
+    const ORIGINAL  = "ORIGINAL";
+    const COPY      = "COPY";
+    const REVISED   = "REVISED";
+
+    /**
      * Table name of invoice history
      *
      * @var string
      */
-    protected $tableName = DB_INVOICE.'.INVOICE_HISTORY';
+    protected $tableName = DB_INVOICE . '.INVOICE_HISTORY';
 
     /**
      * Primary key of invoice history
@@ -47,7 +56,49 @@ class InvoiceHistory extends ModelContract
      */
     public function all()
     {
-        return $this->select("SELECT * from $this->tableName order by {$this->primaryKey} desc")->fetchAll();
+        return $this->select("SELECT * from $this->tableName ORDER BY STATUS ASC, INVOICE_NUMBER DESC")->fetchAll();
+    }
+
+    /**
+     * Get all Unlocked invoice
+     *
+     * @param String $status
+     * @return array
+     */
+    public function whereStatus($status = null)
+    {
+        $query = "SELECT * FROM {$this->tableName} "
+            . " LEFT JOIN " . DB_INVOICE . ".INVOICE_PROFILE ON {$this->tableName}.PROFILE_ID = INVOICE_PROFILE.PROFILE_ID "
+            . " LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = INVOICE_PROFILE.CLIENT_ID ";
+
+        if (strtolower($status) === 'locked' || $status === self::INVOICE_LOCK)
+        {
+            $query .= " WHERE STATUS = " . self::INVOICE_LOCK;
+        }
+        else if (strtolower($status) === 'unlocked' || $status === self::INVOICE_UNLOCK)
+        {
+            $query .= " WHERE STATUS = " . self::INVOICE_UNLOCK;
+        }
+
+        $query .= " ORDER BY STATUS ASC, INVOICE_NUMBER DESC";
+
+        return $this
+            ->select($query)
+            ->fetchAll();
+    }
+
+    /**
+     * Get pending count invoice history
+     *
+     * @return  int
+     */
+    public function pendingCount()
+    {
+        $query = "SELECT count(*) AS total FROM {$this->tableName} WHERE STATUS = " . self::INVOICE_UNLOCK . " LIMIT 1";
+
+        return $this
+            ->select($query)
+            ->fetchColumn();
     }
 
     /**
@@ -200,7 +251,7 @@ class InvoiceHistory extends ModelContract
             throw new Exception("History Not Found");
         }
 
-        $data['updateAt'] = date('Y-m-d H:i:s');
+        $data['updatedAt'] = date('Y-m-d H:i:s');
 
         return $model->update($data);
     }
@@ -208,7 +259,8 @@ class InvoiceHistory extends ModelContract
     /**
      * Create History
      *
-     * @param array $data
+     * @param array $data   Format $data should have attributes :
+     *                      ['profileId', 'invoiceNumber', 'startDate', 'dueDate', 'refNumber', 'invoiceType']
      * @return  int
      */
     public function createHistory(array $data)
@@ -219,6 +271,18 @@ class InvoiceHistory extends ModelContract
         $this->commit();
 
         return $invoiceId;
+    }
+
+    /**
+     * Change invoice status from unlocked to locked
+     *
+     * @return void
+     */
+    public function lockInvoice()
+    {
+        $this->deleteInvoiceFile();
+        $this->update(['status' => InvoiceHistory::INVOICE_LOCK]);
+        $this->createInvoiceFile();
     }
 
     /**
@@ -349,20 +413,6 @@ class InvoiceHistory extends ModelContract
     }
 
     /**
-     * Invoice file name
-     *
-     * @return  String
-     */
-    public function generateFileName($profile, $setting)
-    {
-        $date = new DateTime($this->startDate);
-        $date = $date->format('F-Y');
-        $fileName = $profile->customerId . '_' . $setting->invoiceNumberPrefix . $this->invoiceNumber . '_' . $profile->companyName . '_' . $date;
-
-        return preg_replace('/\s+/', '_', $fileName) . ".pdf";
-    }
-
-    /**
      * Get invoice file path
      *
      * @return string
@@ -370,18 +420,6 @@ class InvoiceHistory extends ModelContract
     public function filePath()
     {
         return SMSAPIADMIN_INVOICE_DIR . $this->fileName;
-    }
-
-    /**
-     * Create invoice folder
-     *
-     * @return string
-     */
-    public function createFolder()
-    {
-        if (!file_exists(SMSAPIADMIN_INVOICE_DIR)) {
-            mkdir(SMSAPIADMIN_INVOICE_DIR, 0777, true);
-        }
     }
 
     /**
@@ -402,7 +440,16 @@ class InvoiceHistory extends ModelContract
     public function deleteInvoiceFile()
     {
         if ($this->fileExists()) {
-            unlink($this->filePath());
+            if (unlink($this->filePath())) {
+                \Logger::getLogger("service")->info("Success Delete File: ".$this->filePath());
+                return true;
+            } else {
+                \Logger::getLogger("service")->error("Failed Delete File: ".$this->filePath());
+                return false;
+            }
+        } else {
+            \Logger::getLogger("service")->warn("File Not Found: ".$this->filePath());
+            return false;
         }
     }
 
@@ -419,7 +466,7 @@ class InvoiceHistory extends ModelContract
     /**
      * Get invoice setting
      *
-     * @return  InvoiceSetting|null
+     * @return  InvoiceSetting
      */
     public function getSetting()
     {
@@ -433,34 +480,21 @@ class InvoiceHistory extends ModelContract
      */
     public function createInvoiceFile()
     {
-        $this->loadProduct();
-        $profile = $this->getProfile();
-        $setting = $this->getSetting();
-        $page = \SmsApiAdmin::getTemplate();
+        $profile    = $this->getProfile();
+        $setting    = $this->getSetting();
+        $fileName   = $this->generator()->createPdfFile($this, $profile, $setting);
 
-        $page->assign('profile', $profile);
-        $page->assign('setting', $setting);
-        $page->assign('invoice', $this);
-        $page->setTemplateDir(SMSAPIADMIN_TEMPLATE_DIR . "/pdf");
-
-        $mpdf = new Mpdf([
-            'margin_left' => 10,
-            'margin_right' => 10,
-            'margin_top' => 45,
-            'margin_bottom' => 0,
-        ]);
-
-        $header = $page->fetch('invoice.header.tpl');
-        $content = $page->fetch('invoice.content.tpl');
-
-        $mpdf->SetHTMLHeader($header);
-        $mpdf->WriteHTML($content);
-
-        $this->createFolder();
-        $fileName = $this->generateFileName($profile, $setting);
-
-        $mpdf->Output(SMSAPIADMIN_INVOICE_DIR . $fileName, Destination::FILE);
         return $this->update(compact('fileName'));
+    }
+
+    /**
+     * Generator Invoice instance
+     *
+     * @return InvoiceGenerator
+     */
+    protected function generator()
+    {
+        return new InvoiceGenerator;
     }
 
     /**
@@ -472,8 +506,8 @@ class InvoiceHistory extends ModelContract
     {
 
         if ($this->fileExists()) {
-            $filePath = $this->filePath();
             ob_start();
+            $filePath = $this->filePath();
             header('Pragma: public');
             header('Expires: 0');
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -483,7 +517,7 @@ class InvoiceHistory extends ModelContract
             header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
             header('Content-Transfer-Encoding: binary');
             header('Content-Length: ' . filesize($filePath));
-            ob_end_flush();
+            ob_end_clean();
             @readfile($filePath);
         } else {
             http_response_code(404);
@@ -499,6 +533,7 @@ class InvoiceHistory extends ModelContract
     public function previewFile()
     {
         if ($this->fileExists()) {
+            ob_start();
             $filePath = $this->filePath();
             header('Content-Type: application/pdf');
             header('Content-disposition: inline; filename="' . basename($filePath) . '"');
@@ -506,6 +541,7 @@ class InvoiceHistory extends ModelContract
             header('Pragma: public');
             header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
             header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            ob_end_clean();
             @readfile($filePath);
         } else {
             http_response_code(404);

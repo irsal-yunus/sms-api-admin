@@ -49,6 +49,7 @@ class InvoiceHistoryTest extends TestCase
             'invoiceId' => 1,
             'profileId' => 1,
             'invoiceNumber' => 1,
+            'status' => 0,
             'startDate' => date('Y-m-d'),
             'dueDate' => date('Y-m-d', strtotime('13 days')),
         ];
@@ -145,6 +146,21 @@ class InvoiceHistoryTest extends TestCase
     }
 
     /**
+     * Test pendingCount method
+     *
+     * @return  void
+     */
+    public function testPendingCountMethod()
+    {
+        $this->initialData();
+
+        $result = $this->model->pendingCount();
+
+        $this->assertNotEmpty($result);
+        $this->assertEquals(1, $result);
+    }
+
+    /**
      * Test find method
      *
      * @return  void
@@ -180,6 +196,31 @@ class InvoiceHistoryTest extends TestCase
         $products = $result[0]->loadProduct();
         $this->assertNotEmpty($products);
         $this->assertNotEmpty($result[0]->products);
+    }
+
+    /**
+     * Test whereStatus method
+     *
+     * @runInSeparateProcess
+     * @return  void
+     */
+    public function testWhereStatusMethod()
+    {
+        $this->initialData();
+        $unlocked = $this->model->whereStatus('unlocked');
+        $this->assertNotEmpty($unlocked);
+        $unlocked = $this->model->whereStatus(0);
+        $this->assertNotEmpty($unlocked);
+        $locked = $this->model->whereStatus('locked');
+        $this->assertEmpty($locked);
+        $locked = $this->model->whereStatus(1);
+        $this->assertEmpty($locked);
+
+        current($unlocked)->lockInvoice();
+        $locked = $this->model->whereStatus('locked');
+        $this->assertNotEmpty($locked);
+        $locked = $this->model->whereStatus(1);
+        $this->assertNotEmpty($locked);
     }
 
     /**
@@ -383,6 +424,36 @@ class InvoiceHistoryTest extends TestCase
         } catch (\Exception $e) {
             $this->assertContains('failed delete invoice', strtolower($e->getMessage()));
         }
+
+        $model  = $this->getMockBuilder(InvoiceHistory::class)
+            ->setMethods(['fileExists' ,'filePath'])
+            ->getMock();
+        $model
+            ->method('fileExists')
+            ->willReturn(true);
+
+        $shouldFalse = $model->deleteInvoiceFile();
+        $this->assertFalse($shouldFalse);
+    }
+
+    /**
+     * Test lock invoice method
+     *
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testLockInvoiceMethod()
+    {
+        $this->initialData();
+        $result = $this->model->all();
+        $this->assertNotEmpty($result);
+        $this->assertTrue(is_array($result));
+        $this->assertInstanceOf(InvoiceHistory::class, $result[0]);
+        $history = $result[0];
+        $history->lockInvoice();
+
+        $this->assertEquals($history->status, InvoiceHistory::INVOICE_LOCK);
+        $this->assertTrue($history->deleteWithProduct());
     }
 
     /**
@@ -521,7 +592,7 @@ class InvoiceHistoryTest extends TestCase
 
     /**
      * Test createInvoiceFile method
-     *
+     * @runInSeparateProcess
      * @return void
      */
     public function testCreateInvoiceFileMethod()
@@ -542,12 +613,13 @@ class InvoiceHistoryTest extends TestCase
         $this->assertTrue($result);
         $this->assertNotEmpty($results[0]->fileName);
         $this->assertTrue($results[0]->fileExists());
+        ob_start();
         $results[0]->previewFile();
         $results[0]->downloadFile();
         $results[0]->deleteWithProduct();
         $results[0]->previewFile();
         $results[0]->downloadFile();
-
+        ob_end_clean();
         $this->assertFalse($results[0]->fileExists());
 
         exec('rm -rf ' . $invoiceDir);
