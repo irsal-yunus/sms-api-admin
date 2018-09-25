@@ -906,3 +906,7 @@ form fieldset input[type=checkbox].checkbox-normal {
 .float-right {
     float: right;
 }
+
+.leftPanel{
+    width: 92.8%;
+}

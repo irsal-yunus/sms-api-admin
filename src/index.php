@@ -6,7 +6,16 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 
 $page = SmsApiAdmin::getTemplate();
 $login = SmsApiAdmin::getLoginManager();
-$page->assign('siteTitle', SmsApiAdmin::getConfigValue('app', 'siteTitle'));
+
+/*get version number*/
+$version = dirname(__DIR__);
+$version = explode('/',$version);
+$version = explode('-', $version[count($version)-1]);
+$version = count($version) > 1  ? $version[count($version)-1] : 'dev';
+
+$page->assign('siteTitle', SmsApiAdmin::getConfigValue('app', 'siteTitle')  );
+$page->assign('versionNumber', $version);
+
 if($login->checkIsGuest()){
 	$isLogin = false;
 	$welcomeName = 'Guest';
