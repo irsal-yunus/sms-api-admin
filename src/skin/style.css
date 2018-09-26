@@ -52,7 +52,7 @@ a.link, a.link:visited {
     clear: both;
     height: 24px;
     width: 100%;
-    text-align: center;
+    text-align: right;
     vertical-align: middle;
     font-size: xx-small;
     line-height: 24px;
@@ -77,6 +77,7 @@ a.link, a.link:visited {
     width: 100%;
     padding: 0;
     margin: 0;
+    display: inline-block;
 }
 
 #contentPanel {
@@ -907,6 +908,10 @@ form fieldset input[type=checkbox].checkbox-normal {
     float: right;
 }
 
-.leftPanel{
-    width: 92.8%;
+.version-number {
+    display: inline-block;
+    float: left;
+    margin-top: -24px;
+    margin-right: 10px;
+    position: relative;
 }
