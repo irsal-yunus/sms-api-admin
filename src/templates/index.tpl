@@ -50,7 +50,10 @@ Copyright(c) 2010 1rstWAP. All rights reserved.
                 <div id="welcomeMessage" class="panel"></div>
                 <div id="menuPanel" class="panel"></div>
             </div>
+
             <div id="titlePanel" class="panel"></div>
+            <div class="version-number">Version : {$versionNumber}</div>
+
             <div id="contentPanel">
             {if !$isLogin}
                 {include "login.form.tpl"}
