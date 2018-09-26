@@ -43,31 +43,24 @@ Copyright(c) 2010 1rstWAP. All rights reserved.
     </head>
     <body>
         <div id="container">
-            <div id="pageHeader" class="siteTitle">
+            <div id="pageHeader">
                 <div id="siteTitle">{$siteTitle}</div>
             </div>
             <div id="navPanel">
                 <div id="welcomeMessage" class="panel"></div>
                 <div id="menuPanel" class="panel"></div>
             </div>
-            {if $isLogin}
-                <table style="background-color: aliceblue;">
-                    <tr>
-                        <td class="leftPanel"><p id="titlePanel"></p></td>
-                        <td > <p> Version : {$versionNumber} &nbsp;</p></td>
-                    </tr>
-                </table>
-            {/if}
-            <!--
-            <div id="titlePanel" class="panel"></div>
-            -->
+
+            <div id="titlePanel" class="panel"></div>            
+
             <div id="contentPanel">
             {if !$isLogin}
                 {include "login.form.tpl"}
             {/if}
             </div>
             <div id="pageFooter">
-                <div id="siteCopyright">&copy; 2010 1rstWAP. All rights reserved.</div>
+                <div id="siteCopyright" style="margin:right: 10px">&copy; 2010 1rstWAP. All rights reserved.</div>
+		<div class="version-number">Version : {$versionNumber}</div>
             </div>
         </div>
     </body>
