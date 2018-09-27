@@ -52,7 +52,7 @@ a.link, a.link:visited {
     clear: both;
     height: 24px;
     width: 100%;
-    text-align: center;
+    text-align: right;
     vertical-align: middle;
     font-size: xx-small;
     line-height: 24px;
@@ -910,8 +910,9 @@ form fieldset input[type=checkbox].checkbox-normal {
 
 .version-number {
     display: inline-block;
-    float: right;
-    margin-top: -13px;
+    float: left;
+    margin-top: -24px;
     margin-right: 10px;
     position: relative;
 }
+
