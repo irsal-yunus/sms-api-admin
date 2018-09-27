@@ -50,17 +50,15 @@ Copyright(c) 2010 1rstWAP. All rights reserved.
                 <div id="welcomeMessage" class="panel"></div>
                 <div id="menuPanel" class="panel"></div>
             </div>
-
-            <div id="titlePanel" class="panel"></div>
-            <div class="version-number">Version : {$versionNumber}</div>
-
+            <div id="titlePanel" class="panel"></div> 
             <div id="contentPanel">
             {if !$isLogin}
                 {include "login.form.tpl"}
             {/if}
             </div>
             <div id="pageFooter">
-                <div id="siteCopyright">&copy; 2010 1rstWAP. All rights reserved.</div>
+                <div id="siteCopyright" style="margin:right: 10px">&copy; 2010 1rstWAP. All rights reserved.</div>
+		        <div class="version-number">Version : {$versionNumber}</div>
             </div>
         </div>
     </body>
