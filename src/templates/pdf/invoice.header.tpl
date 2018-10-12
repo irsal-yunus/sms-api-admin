@@ -13,4 +13,9 @@
 </header>
 <div id="title">
     INVOICE
+    {if $invoice.invoiceType !== $invoice::ORIGINAL}
+    <p class="invoice-type">
+        ({ucfirst(strtolower($invoice.invoiceType))})
+    </p>
+    {/if}
 </div>

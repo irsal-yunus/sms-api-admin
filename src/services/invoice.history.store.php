@@ -71,8 +71,6 @@ try {
     try {
         $invoiceId = $invoiceModel->createHistory($newData);
         $settingModel->refreshInvoiceNumber();
-        $invoice = $invoiceModel->find($invoiceId);
-        $invoice->createInvoiceFile();
 
         $service->attach('invoiceId', $invoiceId);
         $service->attach('profileId', $newData['profileId']);

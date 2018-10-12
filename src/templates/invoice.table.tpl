@@ -1,19 +1,19 @@
 <fieldset class="content">
     <div class="action-container text-left" style="padding: 10px">
-        <a href="#" class="form-button {(empty($type))?'btn-active':''}" title="Back To Invoice Management" onclick="$app.module('invoice').showInvoiceTable('');" >
+        <a href="#" class="form-button {(empty($type))?'btn-active':''}" title="Show All Invoices" onclick="$app.module('invoice').showInvoiceTable('');" >
             <img src="skin/images/icon-view.png" class="form-button-image" alt="" />
             <span class="form-button-text">All</span>
         </a>
-        <a href="#" class="form-button {($type === 'unlocked')?'btn-active':''}" title="Only Show Unlocked Invoice" onclick="$app.module('invoice').showInvoiceTable('unlocked');" >
-            <img src="skin/images/icon-lock.png" class="form-button-image" alt="" />
+        <a href="#" class="form-button {($type === 'unlocked')?'btn-active':''}" title="Only Show Unlocked Invoices" onclick="$app.module('invoice').showInvoiceTable('unlocked');" >
+            <img src="skin/images/icon-unlock.png" class="form-button-image" alt="" />
             <span class="form-button-text">Show Unlocked
                 {if $pending > 0}
                     <span class="badge alert">{$pending}</span>
                 {/if}
             </span>
         </a>
-        <a href="#" class="form-button {($type === 'locked')?'btn-active':''}" title="Only Show Locked Invoice" onclick="$app.module('invoice').showInvoiceTable('locked');" >
-            <img src="skin/images/icon-unlock.png" class="form-button-image" alt="" />
+        <a href="#" class="form-button {($type === 'locked')?'btn-active':''}" title="Only Show Locked Invoices" onclick="$app.module('invoice').showInvoiceTable('locked');" >
+            <img src="skin/images/icon-lock.png" class="form-button-image" alt="" />
             <span class="form-button-text">Show Locked</span>
         </a>
         <a href="#" class="form-button float-right" title="Download Invoice" onclick="$app.module('invoice').showDownloadAll();" >

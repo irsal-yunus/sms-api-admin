@@ -439,7 +439,6 @@ class InvoiceHistoryTest extends TestCase
     /**
      * Test lock invoice method
      *
-     * @runInSeparateProcess
      * @return void
      */
     public function testLockInvoiceMethod()
@@ -454,6 +453,74 @@ class InvoiceHistoryTest extends TestCase
 
         $this->assertEquals($history->status, InvoiceHistory::INVOICE_LOCK);
         $this->assertTrue($history->deleteWithProduct());
+    }
+
+    /**
+     * Test copy invoice method
+     *
+     * @return void
+     */
+    public function testCopyInvoiceMethod()
+    {
+        $modelMock = $this
+            ->getMockBuilder(InvoiceHistory::class)
+            ->setMethods(['commit'])
+            ->getMock();
+
+        $this->initialData();
+        $this->initialProduct();
+        $result = $this->model->all();
+        $this->assertNotEmpty($result);
+        $this->assertTrue(is_array($result));
+        $this->assertInstanceOf(InvoiceHistory::class, $result[0]);
+        $history = $result[0];
+        $history->lockInvoice();
+
+        foreach ($history->attributes() as $key => $value)
+        {
+            $modelMock->$key = $value;
+        }
+
+        $modelMock->copyInvoice();
+        $this->assertEquals($modelMock->status, InvoiceHistory::INVOICE_LOCK);
+        $this->assertEquals($modelMock->invoiceType, InvoiceHistory::COPIED);
+        $this->assertTrue($modelMock->deleteWithProduct());
+    }
+
+    /**
+     * Test revise invoice method
+     *
+     * @return void
+     */
+    public function testReviseInvoiceMethod()
+    {
+        $modelMock = $this
+            ->getMockBuilder(InvoiceHistory::class)
+            ->setMethods(['commit'])
+            ->getMock();
+
+        $this->initialData();
+        $this->initialProduct();
+        $result = $this->model->all();
+        $this->assertNotEmpty($result);
+        $this->assertTrue(is_array($result));
+        $this->assertInstanceOf(InvoiceHistory::class, $result[0]);
+        $history = $result[0];
+        $history->lockInvoice();
+
+        foreach ($history->attributes() as $key => $value)
+        {
+            $modelMock->$key = $value;
+        }
+
+        $modelMock->reviseInvoice();
+        $this->assertEquals($modelMock->status, InvoiceHistory::INVOICE_UNLOCK);
+        $this->assertEquals($modelMock->invoiceType, InvoiceHistory::REVISED);
+
+        $modelMock->reviseInvoice();
+        $this->assertEquals($modelMock->status, InvoiceHistory::INVOICE_UNLOCK);
+        $this->assertEquals($modelMock->invoiceType, InvoiceHistory::REVISED);
+        $this->assertTrue($modelMock->deleteWithProduct());
     }
 
     /**
@@ -565,6 +632,7 @@ class InvoiceHistoryTest extends TestCase
      */
     public function testIsInvoiceNumberDuplicateMethod()
     {
+        $this->model->select("DELETE FROM {$this->model->tableName()}")->execute();
         $result = $this->model->isInvoiceNumberDuplicate(1);
         $this->assertFalse($result);
         $this->initialData();
@@ -581,6 +649,7 @@ class InvoiceHistoryTest extends TestCase
      */
     public function testIsInvoiceAlreadyExistsMethod()
     {
+        $this->model->select("DELETE FROM {$this->model->tableName()}")->execute();
         $result = $this->model->isInvoiceAlreadyExists(date('Y-m-d'), '1');
         $this->assertFalse($result);
         $this->initialData();
@@ -591,8 +660,28 @@ class InvoiceHistoryTest extends TestCase
     }
 
     /**
+     * Test isExpired method
+     *
+     * @return void
+     */
+    public function testIsExpiredMethod()
+    {
+       $invoice = new InvoiceHistory;
+
+       $invoice->startDate = date('Y-m-d', strtotime('-10 days'));
+       $invoice->dueDate = date('Y-m-d', strtotime('-1 days'));
+
+       $this->assertTrue($invoice->isExpired());
+
+       $invoice->startDate = date('Y-m-d', strtotime('-10 days'));
+       $invoice->dueDate = date('Y-m-d', strtotime('+4 days'));
+
+       $this->assertFalse($invoice->isExpired());
+    }
+
+    /**
      * Test createInvoiceFile method
-     * @runInSeparateProcess
+     *
      * @return void
      */
     public function testCreateInvoiceFileMethod()

@@ -374,7 +374,7 @@ class ApiReport {
                             ? (!is_null($userId) ? ' AND ' : '' ). ' BILLING_PROFILE_ID = '.$billingProfile.' '
                             : '';
         return $this->query(
-                 ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID'
+                 ' SELECT   USER_ID, USER_NAME, BILLING_PROFILE_ID, BILLING_REPORT_GROUP_ID, BILLING_TIERING_GROUP_ID'
                 .' FROM     '.DB_SMS_API_V2.'.USER '
                 .  $whereClause
                 .  $userClause
