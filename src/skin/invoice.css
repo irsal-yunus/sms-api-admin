@@ -25,6 +25,12 @@
     margin: 5px 0;
 }
 
+#title .invoice-type {
+    margin: 0;
+    font-size: 12px;
+    padding: 0;
+}
+
 #logo {
     float: left;
     margin-top: 8px;

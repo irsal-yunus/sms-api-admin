@@ -22,15 +22,12 @@ try {
         $page->assign('profileId', $profileId);
     }
 
-    try {
-        $settingModel = new InvoiceSetting();
-        $setting = $settingModel->getSetting();
+    $settingModel = new InvoiceSetting();
+    $setting = $settingModel->getSetting();
 
-        $page->assign('setting', $setting);
-        $page->display('invoice.history.create.tpl');
-    } catch (Exception $e) {
-        SmsApiAdmin::returnError($e->getMessage());
-    }
+    $page->assign('setting', $setting);
+    $page->display('invoice.history.create.tpl');
 } catch (Exception $e) {
     $logger->error("$e");
+    SmsApiAdmin::returnError($e->getMessage());
 }

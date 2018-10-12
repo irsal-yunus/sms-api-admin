@@ -50,6 +50,12 @@ body {
     margin-bottom: 5px;
 }
 
+#title .invoice-type {
+    margin: 0;
+    font-size: 12px;
+    padding: 0;
+}
+
 #details {
     margin-bottom: 20px;
 }

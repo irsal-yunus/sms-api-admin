@@ -7,7 +7,7 @@
         <a href="#" onclick="$app.module('invoice').downloadInvoice({$invoice.invoiceId}, 0)" class="form-button" title="Preview Invoice">
             <img src="skin/images/icon-preview.png" class="icon-image icon-size-small" alt="" />
         </a>
-        <a href="#" onclick="$app.module('invoice').lockInvoice({$invoice.invoiceId}, {$profile.profileId})" class="form-button" title="Lock Invoice">
+        <a href="#" onclick="$app.module('invoice').lockInvoice({$invoice.invoiceId}, false)" class="form-button" title="Lock Invoice">
             <img src="skin/images/icon-lock.png" class="icon-image icon-size-small" alt="" />
         </a>
         <a href="#" onclick="$app.module('invoice').deleteInvoice({$profile.profileId}, {$invoice.invoiceId})" class="form-button" title="Remove Invoice">
@@ -16,6 +16,11 @@
     </div>
     <div id="title">
         INVOICE
+        {if $invoice.invoiceType !== $invoice::ORIGINAL}
+        <p class="invoice-type">
+            ({ucfirst(strtolower($invoice.invoiceType))})
+        </p>
+        {/if}
     </div>
     <main>
         <div id="details" class="clearfix">

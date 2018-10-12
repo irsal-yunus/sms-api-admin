@@ -32,7 +32,7 @@ class InvoiceHistory extends ModelContract
      * ORIGINAL, COPY, REVISED
      */
     const ORIGINAL  = "ORIGINAL";
-    const COPY      = "COPY";
+    const COPIED    = "COPIED";
     const REVISED   = "REVISED";
 
     /**
@@ -56,7 +56,7 @@ class InvoiceHistory extends ModelContract
      */
     public function all()
     {
-        return $this->select("SELECT * from $this->tableName ORDER BY STATUS ASC, INVOICE_NUMBER DESC")->fetchAll();
+        return $this->select("SELECT * from $this->tableName ORDER BY STATUS ASC, INVOICE_NUMBER DESC, {$this->tableName}.INVOICE_ID DESC")->fetchAll();
     }
 
     /**
@@ -80,7 +80,7 @@ class InvoiceHistory extends ModelContract
             $query .= " WHERE STATUS = " . self::INVOICE_UNLOCK;
         }
 
-        $query .= " ORDER BY STATUS ASC, INVOICE_NUMBER DESC";
+        $query .= " ORDER BY STATUS ASC, INVOICE_NUMBER DESC, {$this->tableName}.INVOICE_ID DESC";
 
         return $this
             ->select($query)
@@ -135,7 +135,7 @@ class InvoiceHistory extends ModelContract
     {
         $query = "SELECT * FROM {$this->tableName}
             WHERE PROFILE_ID = {$profileId}
-            ORDER BY STATUS ASC, INVOICE_NUMBER DESC";
+            ORDER BY STATUS ASC, INVOICE_NUMBER DESC, {$this->tableName}.INVOICE_ID DESC";
 
         return $this->select($query)->fetchAll();
     }
@@ -270,6 +270,44 @@ class InvoiceHistory extends ModelContract
         $this->insertProductFromProfile($data, $invoiceId);
         $this->commit();
 
+        $invoice = $this->find($invoiceId);
+        $invoice->createInvoiceFile();
+
+        return $invoiceId;
+    }
+
+    /**
+     * Duplicate invoice from existing one
+     *
+     * @param array $data  An Array of updated attribute values
+     * @return int
+     */
+    public function duplicateInvoice(array $data = [])
+    {
+        $attributes = array_merge($this->attributes, $data);
+        $products   = $this->loadProduct();
+
+        unset($attributes[$this->keyName()]);
+        unset($attributes['createdAt']);
+        unset($attributes['products']);
+
+        $this->beginTransaction();
+
+        $invoiceId = $this->insert($attributes);
+
+        if (!empty($products))
+        {
+            foreach ($products as &$product)
+            {
+                $product->setKey(null);
+                $product->save(['ownerId' => $invoiceId]);
+            }
+        }
+
+        $this->commit();
+
+        $this->createInvoiceFile();
+
         return $invoiceId;
     }
 
@@ -281,8 +319,97 @@ class InvoiceHistory extends ModelContract
     public function lockInvoice()
     {
         $this->deleteInvoiceFile();
-        $this->update(['status' => InvoiceHistory::INVOICE_LOCK]);
+
+        $this->update([
+            'status' => self::INVOICE_LOCK,
+            'lockedAt' => date('Y-m-d H:i:s'),
+        ]);
+
         $this->createInvoiceFile();
+    }
+
+    /**
+     * Create new copied invoice from existing invoice
+     *
+     * @return int
+     */
+    public function copyInvoice()
+    {
+        $lastUsage  = $this->lastInvoiceUsage(self::COPIED);
+        $attributes = $this->attributes();
+
+        $attributes['invoiceUsage'] = $lastUsage + 1;
+        $attributes['invoiceType']  = self::COPIED;
+        $attributes['lockedAt']     = date('Y-m-d H:i:s');
+
+        return $this->duplicateInvoice($attributes);
+    }
+
+    /**
+     * Change invoice status from unlocked to locked
+     *
+     * @return int
+     */
+    public function reviseInvoice()
+    {
+        if ($existingRevised = $this->hasExistingInvoiceRevise()) {
+            $this->attributes = $existingRevised->attributes();
+            return $this->key();
+        }
+
+        $lastUsage                  = $this->lastInvoiceUsage(self::REVISED);
+        $attributes                 = $this->attributes();
+        $attributes['lockedAt']     = null;
+        $attributes['invoiceUsage'] = $lastUsage + 1;
+        $attributes['invoiceType']  = self::REVISED;
+        $attributes['status']       = self::INVOICE_UNLOCK;
+
+        return $this->duplicateInvoice($attributes);
+    }
+
+
+    /**
+     * Check invoice that has unlocked status for revised invoice
+     * User can not revise invoice when there is another invoice
+     * with same invoice number has revise type and the status is unlocked
+     *
+     * @return self|null
+     */
+    public function hasExistingInvoiceRevise()
+    {
+        $unlockedStatus = self::INVOICE_UNLOCK;
+        $revisedType    = self::REVISED;
+
+        $query          = "SELECT * FROM {$this->tableName}
+            WHERE
+                INVOICE_NUMBER   = {$this->invoiceNumber}
+                AND PROFILE_ID   = {$this->profileId}
+                AND STATUS       = {$unlockedStatus}
+                AND INVOICE_TYPE = '{$revisedType}'
+        ";
+
+        return $this->select($query)->fetch();
+    }
+
+    /**
+     * Get last Invoice usage value
+     *
+     * @param string $invoiceType
+     * @return  int
+     */
+    public function lastInvoiceUsage($invoiceType = null)
+    {
+        $query = "SELECT COUNT(1) as TOTAL FROM {$this->tableName} WHERE
+            INVOICE_NUMBER  = {$this->invoiceNumber} AND
+            PROFILE_ID  = {$this->profileId}
+        ";
+
+        if (!empty($invoiceType))
+        {
+            $query .= " AND INVOICE_TYPE = '".strtoupper($invoiceType)."'";
+        }
+
+        return (int) $this->select($query)->fetchColumn();
     }
 
     /**
@@ -550,12 +677,26 @@ class InvoiceHistory extends ModelContract
     }
 
     /**
-     * Check invoice is paid
+     * Check invoice is locked or not
      *
      * @return bool
      */
     public function isLock()
     {
         return self::INVOICE_LOCK === intval($this->status);
+    }
+
+
+    /**
+     * Check invoice is already expired
+     *
+     * @return bool
+     */
+    public function isExpired()
+    {
+        $dueDate     = strtotime($this->dueDate ?? 'today midnight');
+        $currentDate = strtotime('today midnight');
+
+        return $dueDate < $currentDate;
     }
 }

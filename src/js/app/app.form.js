@@ -435,7 +435,10 @@ $app.ready(function($app) {
                 }
 
                 var message;
-                if (reply.summary == '') {
+                if (typeof reply === 'string') {
+                    message = reply;
+                }
+                else if (reply.summary == '') {
                     message = 'Error!';
                 } else {
                     message = reply.summary;
@@ -499,7 +502,7 @@ $app.ready(function($app) {
                         complete: function() {
                             $context.hourglass('hide');
                         },
-                        error: function() {
+                        error: function(ex) {
                             if (showAlert)
                                 $app.tell('Service request error: ', alertTitle); //@debug
                             $1.error("[$app.form.execService@ajaxerror] Error.", ex, arguments);

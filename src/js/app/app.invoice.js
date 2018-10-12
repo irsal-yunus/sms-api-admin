@@ -249,7 +249,7 @@
         }
 
         /**
-         * Show logout confirmation dialog
+         * Show lock confirmation dialog
          */
         mod.lockInvoice = function(invoiceId, invoiceTable) {
             try {
@@ -265,13 +265,85 @@
                                 var success = $app.form.checkServiceReply(reply, false, title);
                                 if (success) {
                                     if (reply && reply.summary) {
-                                        $app.tell(reply.summary || 'Success!', title);
+                                        $app.tell(reply.summary, title);
                                     }
 
                                     if (invoiceTable) {
                                         mod.showInvoiceTable(null, true);
                                     } else if (reply && reply.attachment && reply.attachment.invoice) {
                                         mod.showHistory(reply.attachment.invoice.profileId);
+                                    }
+                                }
+                            } catch (ex) {
+                                $1.error("[$app.logout@post] Error.", ex);
+                            }
+                        })
+                    });
+            } catch (ex) {
+                $1.error("[$app.login] Error.", ex);
+            }
+        };
+
+
+        mod.copyInvoice = function(invoiceId, invoiceTable) {
+            try {
+                var title = "Copied Invoice";
+                var msg = "Are you sure want to copied this invoice ?<br>You can not make changes to the invoice again";
+
+                $app.confirm(msg, title,
+                    function() {
+                        $.post(resolveServiceUrl('invoice.history.lock'), {
+                            invoiceId: invoiceId,
+                            type: 'copy',
+                        }, function(reply) {
+                            try {
+                                var success = $app.form.checkServiceReply(reply, false, title);
+                                if (success) {
+                                    if (reply && reply.summary) {
+                                        $app.tell(reply.summary, title);
+                                    }
+
+                                    if (invoiceTable) {
+                                        $('.btn-active').click();
+                                    } else if (reply && reply.attachment && reply.attachment.invoice) {
+                                        mod.showHistory(reply.attachment.invoice.profileId);
+                                    }
+                                } else {
+
+                                }
+
+                            } catch (ex) {
+                                $1.error("[$app.logout@post] Error.", ex);
+                            }
+                        })
+                    });
+            } catch (ex) {
+                $1.error("[$app.login] Error.", ex);
+            }
+        };
+
+        mod.reviseInvoice = function(invoiceId) {
+            try {
+                var title = "Revise Invoice";
+                var msg = "Are you sure want to revise this invoice ?";
+
+                $app.confirm(msg, title,
+                    function() {
+                        $.post(resolveServiceUrl('invoice.history.lock'), {
+                            invoiceId: invoiceId,
+                            type: 'revise',
+                        }, function(reply) {
+                            try {
+                                var success = $app.form.checkServiceReply(reply, false, title);
+
+                                if (success && reply) {
+                                    if (reply.summary) {
+                                        $app.tell(reply.summary, title);
+                                    }
+
+                                    if (reply.attachment && reply.attachment.invoice) {
+                                        var invoice = reply.attachment.invoice;
+                                        mod.showInvoice(invoice.invoiceId, invoice.profileId);
                                     }
                                 }
                             } catch (ex) {
