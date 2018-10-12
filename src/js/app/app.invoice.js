@@ -265,7 +265,7 @@
                                 var success = $app.form.checkServiceReply(reply, false, title);
                                 if (success) {
                                     if (reply && reply.summary) {
-                                        $app.tell(reply.summary);
+                                        $app.tell(reply.summary, title);
                                     }
 
                                     if (invoiceTable) {
