@@ -123,15 +123,15 @@
             }).trigger('change');
 
             $('#isPeriod').on('change',function(event){
-                var value = $('#isPeriod option:selected').text();
-                if (value==="No") {
+                var value = +$(this).val();
+                if (value === 0) {
                     $('#label-period').text('Date');
                     $('#useReport').hide();
                     $('#label-useReport').hide();
                     $('#period').hide();
                     $('#date').show();
                 }
-                if (value==="Yes"){
+                if (value === 1){
                     $('#label-period').text('Period');
                     $('#useReport').show();
                     $('#label-useReport').show();

@@ -12,7 +12,7 @@
         </select>
         <span class="ui-helper-clearfix"></span>
         {if $owner['ownerType'] eq 'HISTORY'}
-        <label class="form-flag-required" id="label-period"></label>
+        <label class="form-flag-required" id="label-period">Period</label>
         <select name="period" id="period" size="1" class="flexible-width">
             {html_options options=$dateRange}
         </select>
