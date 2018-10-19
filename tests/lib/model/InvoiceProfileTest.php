@@ -63,6 +63,7 @@ class InvoiceProfileTest extends TestCase
     protected function initialBank()
     {
         $data = [
+            'bankId' => 1,
             'bankName' => "BCA",
             'address' => "address",
             'accountName' => "accountName",
@@ -119,10 +120,10 @@ class InvoiceProfileTest extends TestCase
      */
     public function testAllMethod()
     {
+        $this->initialBank();
         $this->initialData();
 
         $result = $this->model->all();
-
         $this->assertNotEmpty($result);
         $this->assertTrue(is_array($result));
         $this->assertInstanceOf(InvoiceProfile::class, $result[0]);

@@ -273,6 +273,9 @@ class InvoiceProductTest extends TestCase
         $this->assertNotEmpty($result);
         $this->assertInstanceOf(InvoiceProduct::class, $result);
 
+        //Update Data when isPeriod is false
+
+
     }
 
     /**
