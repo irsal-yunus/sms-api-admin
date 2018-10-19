@@ -35,15 +35,13 @@ try {
         if ($product->ownerType === InvoiceProduct::HISTORY_PRODUCT) {
             $dateRange = [];
             $begin = new DateTime("now");
-            $end = new DateTime("-10 months");
-
+            $end   = new DateTime("-10 months");
             for ($i = $begin; $i >= $end; $i->modify('-1 month')) {
                 $dateRange[$i->format('Y-m-t')] = $i->format("F Y");
             }
-
             $page->assign('selectedRange', date('Y-m-t', strtotime($product->period)));
             $page->assign('dateRange', $dateRange);
-
+            $page->assign('realDate',$product->period);
             $history = new InvoiceHistory();
             if (!$history = $history->find($product->ownerId)) {
                 SmsApiAdmin::returnError("Invoice not found");

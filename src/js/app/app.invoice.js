@@ -122,6 +122,24 @@
                 }
             }).trigger('change');
 
+            $('#isPeriod').on('change',function(event){
+                var value = $('#isPeriod option:selected').text();
+                if (value==="No") {
+                    $('#label-period').text('Date');
+                    $('#useReport').hide();
+                    $('#label-useReport').hide();
+                    $('#period').hide();
+                    $('#date').show();
+                }
+                if (value==="Yes"){
+                    $('#label-period').text('Period');
+                    $('#useReport').show();
+                    $('#label-useReport').show();
+                    $('#date').hide();
+                    $('#period').show();
+                }
+            }).trigger('change');
+
             $('#productName').autocomplete({
                 source: [
                     'SMS API Gateway',

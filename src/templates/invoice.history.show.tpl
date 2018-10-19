@@ -81,7 +81,11 @@
                         {$i+1}
                     </td>
                     <td class="desc">
-                        {$product.productName} period {$product->period|date_format:"1 - %e %B %Y"}
+                        {if $product.isPeriod eq '1'}
+                            {$product.productName} period {$product->period|date_format:"1 - %e %B %Y"}
+                        {else}
+                            {$product.productName} on {$product->period|date_format:"jS F, Y"}
+                        {/if}
                         {if $product.userApiReport}
                             ({$product.userApiReport})
                         {/if}

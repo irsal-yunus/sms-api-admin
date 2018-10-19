@@ -6,14 +6,20 @@
         <label class="form-flag-required">Product Name</label>
         <input name="productName" id="productName" value="" type="text" maxlength="150" />
         <span class="ui-helper-clearfix"></span>
-        {if $owner['ownerType'] eq 'HISTORY'}
-        <label class="form-flag-required">Period</label>
-        <select name="period" size="1" class="flexible-width">
-            {html_options options=$dateRange selected=$selectedRange}
+        <label class="">Use Period?</label>
+        <select name="isPeriod" id="isPeriod" size="1" class="flexible-width">
+            {html_options options=['No','Yes'] selected=1}
         </select>
         <span class="ui-helper-clearfix"></span>
+        {if $owner['ownerType'] eq 'HISTORY'}
+        <label class="form-flag-required" id="label-period"></label>
+        <select name="period" id="period" size="1" class="flexible-width">
+            {html_options options=$dateRange}
+        </select>
+        <input type="date" id="date" name="date">
+        <span class="ui-helper-clearfix"></span>
         {/if}
-        <label class="">Use Billing Report ?</label>
+        <label class="" id="label-useReport">Use Billing Report ?</label>
         <select name="useReport" id="useReport" size="1" class="flexible-width">
             {html_options options=['No','Yes']}
         </select>
