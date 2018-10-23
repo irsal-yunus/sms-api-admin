@@ -153,12 +153,13 @@
                     rowT,
                     errorSpan;
 
-                for(var i = 0; i < from.length-1; i++){
+                for (var i = 0; i < from.length-1; i++)
+                {
                     /* Check if there is a gap in tiering range before submit the form */
                     rowT = rowParent.eq(i+1);
 
-                    if(parseInt(from[i].value) > parseInt(to[i].value)){
-
+                    if (getDigit(from[i].value) > getDigit(to[i].value))
+                    {
                         /* display the error notification for gap's value*/
                         errorSpan = '<span class="help-block form-error">Tiering \'Up To\' must be greater than Tiering \'From\'</span>';
 
@@ -170,14 +171,16 @@
                         return;
                     }
 
-                    var diff = from[i+1].value - to[i].value;
-                    if(diff > 1){
+                    var diff = getDigit(from[i+1].value) - getDigit(to[i].value);
+
+                    if (diff > 1)
+                    {
                         /* add additional empty row for gap range*/
                         addTieringRow(rowT);
 
                         /* gap's range value*/
-                        var rangeX = parseInt(to[i].value) + 1;
-                        var rangeY = parseInt(from[i+1].value) - 1;
+                        var rangeX = getDigit(to[i].value) + 1;
+                        var rangeY = getDigit(from[i+1].value) - 1;
 
                         /* display the error notification for gap's value*/
                         errorSpan = '<span class="help-block form-error">Range definition missing for value range '+rangeX+'-'+rangeY+'</span>';
@@ -196,22 +199,24 @@
                     /**
                      * check if range is less than range before
                      */
-                    if(parseInt(to[i].value) > parseInt(from[i+1].value)) {
+                    if (getDigit(to[i].value) > getDigit(from[i+1].value))
+                    {
                         errorSpan = '<span class="help-block form-error">From value must be above the previous range!</span>';
                         $(errorSpan).insertAfter($(rowParent.eq(i+1)).next().find('input:text.tiering-from'));
                         return;
                     }
                 }
 
-                var data = $(this).serializeArray();
-
-                // Convert string to float for price input
-                $('.input-price').each(function(index, el) {
-                    for (var i = 0; i < data.length; i++) {
-                        if(data[i].name === $(this).attr("name")) {
-                            data[i].value = parseFloat((data[i].value || '0').replace(/,/g,'')).toFixed(2);
-                        }
+                var data = $(this).serializeArray().map(function(item) {
+                    if (
+                        item.name
+                        && item.name.match(/\[price\]|\[from\]|\[to\]/) !== null
+                        && item.value !== "MAX"
+                    ) {
+                        item.value = getDigit(item.value);
                     }
+
+                    return item;
                 });
 
                 $app.module('billing').storeBillingProfile(data);
@@ -224,7 +229,13 @@
     }
 
     function initMaskingQuantity() {
-        $(".input-qty:not([readonly])").mask('000.000.000.000.000', {reverse: true});
+        $(".input-qty:not([readonly])").mask('000,000,000,000,000', {reverse: true});
+    }
+
+    function getDigit(value) {
+        var digit = String(value).replace(/[^0-9\.]/g,'');
+
+        return parseFloat(digit) || 0;
     }
 
     function addTieringRow(element){
