@@ -254,7 +254,7 @@
         mod.lockInvoice = function(invoiceId, invoiceTable) {
             try {
                 var title = "Confirm Lock Invoice";
-                var msg = "Are you sure want to Lock this invoice ?<br>You can not make changes to the invoice again";
+                var msg = "Are you sure you want to Lock this invoice ?<br>You can not make changes to the invoice again";
 
                 $app.confirm(msg, title,
                     function() {
@@ -288,7 +288,7 @@
         mod.copyInvoice = function(invoiceId, invoiceTable) {
             try {
                 var title = "Copied Invoice";
-                var msg = "Are you sure want to copied this invoice ?<br>You can not make changes to the invoice again";
+                var msg = "Are you sure you want to create a copy of this invoice ?";
 
                 $app.confirm(msg, title,
                     function() {
