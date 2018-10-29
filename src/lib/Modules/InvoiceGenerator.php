@@ -145,12 +145,12 @@ class InvoiceGenerator
         $mpdf = new Mpdf([
             'margin_left' => 10,
             'margin_right' => 10,
-            'margin_top' => 45,
+            'margin_top' => $invoice->invoiceType === $invoice::ORIGINAL ? 45 : 50,
             'margin_bottom' => 0,
         ]);
 
-        $header = $page->fetch('invoice.header.tpl');
-        $content = $page->fetch('invoice.content.tpl');
+        $header     = $page->fetch('invoice.header.tpl');
+        $content    = $page->fetch('invoice.content.tpl');
 
         $mpdf->SetHTMLHeader($header);
         $mpdf->WriteHTML($content);
