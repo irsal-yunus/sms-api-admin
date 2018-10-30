@@ -7,14 +7,20 @@
         <label class="form-flag-required">Product Name</label>
         <input name="productName" id="productName" value="{$product.productName}" type="text" maxlength="150" />
         <span class="ui-helper-clearfix"></span>
-        {if $product.ownerType eq 'HISTORY'}
-        <label class="form-flag-required">Period</label>
-        <select name="period" size="1" class="flexible-width">
-            {html_options options=$dateRange selected=$selectedRange}
+        <label class="">Use Period?</label>
+        <select name="isPeriod" id="isPeriod" size="1" class="flexible-width">
+            {html_options options=['No','Yes'] selected=intval(in_array($product.isPeriod, [1,2]))}
         </select>
         <span class="ui-helper-clearfix"></span>
+        {if $product.ownerType eq 'HISTORY'}
+        <label class="form-flag-required" id="label-period"></label>
+        <select name="period" id="period" size="1" class="flexible-width">
+            {html_options options=$dateRange selected=$selectedRange}
+        </select>
+        <input type="date" id="date" name="date" value="{$realDate}">
+        <span class="ui-helper-clearfix"></span>
         {/if}
-        <label class="">User Report ?</label>
+        <label class="" id="label-useReport">User Report ?</label>
         <select name="useReport" id="useReport" size="1" class="flexible-width">
             {html_options options=['No','Yes'] selected=intval(in_array($product.useReport, [1,2]))}
         </select>

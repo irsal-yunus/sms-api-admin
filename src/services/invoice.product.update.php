@@ -20,24 +20,31 @@ try {
 
     $definitions = [
         "productName" => FILTER_SANITIZE_STRING,
-        "reportName" => FILTER_SANITIZE_STRING,
-        "ownerType" => FILTER_SANITIZE_STRING,
-        "ownerId" => FILTER_SANITIZE_NUMBER_INT,
-        "period" => FILTER_SANITIZE_STRING,
-        "productId" => FILTER_SANITIZE_NUMBER_INT,
+        "reportName"  => FILTER_SANITIZE_STRING,
+        "ownerType"   => FILTER_SANITIZE_STRING,
+        "ownerId"     => FILTER_SANITIZE_NUMBER_INT,
+        "period"      => FILTER_SANITIZE_STRING,
+        "isPeriod"    => FILTER_SANITIZE_NUMBER_INT,
+        "productId"   => FILTER_SANITIZE_NUMBER_INT,
         "qty" => [
-            'filter' => FILTER_CALLBACK,
+            'filter'  => FILTER_CALLBACK,
             'options' => 'convertCurrencyString',
         ],
-        "unitPrice" => [
-            'filter' => FILTER_CALLBACK,
+        "unitPrice"   => [
+            'filter'  => FILTER_CALLBACK,
             'options' => 'convertCurrencyString',
         ],
-        "useReport" => FILTER_SANITIZE_NUMBER_INT,
+        "useReport"   => FILTER_SANITIZE_NUMBER_INT,
         "manualInput" => FILTER_SANITIZE_NUMBER_INT,
     ];
 
     $updateData = filter_input_array(INPUT_POST, $definitions);
+
+    if ($updateData['isPeriod'] == 0) {
+        $date                 = ["date"=> FILTER_SANITIZE_STRING];
+        $realDate             = filter_input_array(INPUT_POST,$date);
+        $updateData['period'] = $realDate['date'];
+    }
 
     foreach ($updateData as $key => $value) {
         if ($value === null) {
