@@ -29,6 +29,7 @@ class ApiBusinessClient extends ApiBaseModel {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
             $query = 'select
                     c.CLIENT_ID as clientID,
+                    c.ARCHIVED_DATE as archivedDate,
                     c.COMPANY_NAME as companyName,
                     c.COMPANY_URL as companyUrl,
                     c.COUNTRY_CODE as countryCode,
@@ -54,6 +55,39 @@ class ApiBusinessClient extends ApiBaseModel {
             throw new Exception("Query error");
             throw $e;
         }
+    }
+
+    /**
+     * Get non archived client only
+     *
+     * @return  array
+     */
+    public function getOnlyUnarchivedClient(){
+        $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+        $query = 'select
+                c.CLIENT_ID as clientID,
+                c.ARCHIVED_DATE as archivedDate,
+                c.COMPANY_NAME as companyName,
+                c.COMPANY_URL as companyUrl,
+                c.COUNTRY_CODE as countryCode,
+                cn.COUNTRY_NAME as countryName,
+                c.CONTACT_NAME as contactName,
+                c.CONTACT_EMAIL as contactEmail,
+                c.CONTACT_PHONE as contactPhone,
+                c.CREATED_BY as createdBy,
+                a1.ADMIN_DISPLAYNAME as createdByName,
+                c.CREATED_DATE as createdTimestamp,
+                c.UPDATED_BY as updatedBy,
+                a2.ADMIN_DISPLAYNAME as updatedByName,
+                c.UPDATED_DATE as updatedTimestamp
+            from CLIENT as c
+                inner join ADMIN as a1 on c.CREATED_BY=a1.ADMIN_ID
+                left join ADMIN as a2 on c.UPDATED_BY=a2.ADMIN_ID
+                left join COUNTRY as cn on c.COUNTRY_CODE=cn.COUNTRY_CODE
+            where c.ARCHIVED_DATE is null
+            order by c.COMPANY_NAME';
+        $getAll = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        return $getAll;
     }
 
     /**
@@ -148,6 +182,42 @@ class ApiBusinessClient extends ApiBaseModel {
         return $string;
     }
 
+    /**
+     * set the client data to archived or non archived,
+     *
+     * the client that has belongs to archived client is inactive.
+     * @param  $clientID (int)
+     * @return void
+     */
+    public function archived($clientID){
+        $db     = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+        $client = $this->getDetails($clientID);
+        if ($client['archivedDate']===NULL) {
+            $query     = 'update CLIENT set  ARCHIVED_DATE=now() WHERE CLIENT_ID=:clientID';
+            $this->setInactiveUser($clientID);
+        }
+        else{
+            $query = 'update CLIENT set  ARCHIVED_DATE=NULL WHERE CLIENT_ID=:clientID';
+        }
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':clientID', $clientID, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    /**
+     * set user that has belongs to archived client to inactive.
+     *
+     * @param $clientID (int)
+     * @return void
+     */
+    public function setInactiveUser($clientID){
+        $db     = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+        $query  = 'update USER set ACTIVE=0 ,INACTIVE_REASON="Client is archived" where CLIENT_ID=:clientID';
+        $stmt   = $db->prepare($query);
+        $stmt->bindValue(':clientID', $clientID, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
     public function update($clientID, $updates) {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
@@ -239,6 +309,7 @@ class ApiBusinessClient extends ApiBaseModel {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
             $query = 'select
                     c.CLIENT_ID as clientID,
+                    c.ARCHIVED_DATE as archivedDate,
                     c.COMPANY_NAME as companyName,
                     c.CUSTOMER_ID as customerId,
                     c.COMPANY_URL as companyUrl,
