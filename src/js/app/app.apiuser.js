@@ -206,7 +206,7 @@
                         var success = $app.form.checkServiceReply(reply, false, 'Disable User Account');
                         if (success) {
                             if ((typeof list == 'object') || (list === true)) {
-                               if (optionsJson.onlySpecifiedClient) {
+                               if (optionsJson&&optionsJson.onlySpecifiedClient) {
                                     mod.showUserList(optionsJson);
                                 }
                                 else{
@@ -239,7 +239,7 @@
                         var success = $app.form.checkServiceReply(reply, false, 'Enable User Account');
                         if (success) {
                             if ((typeof list == 'object') || (list === true)) {
-                                if (optionsJson.onlySpecifiedClient) {
+                                if (optionsJson&&optionsJson.onlySpecifiedClient) {
                                     mod.showUserList(optionsJson);
                                 }
                                 else{
@@ -267,9 +267,6 @@
         mod.showUserList = function(options,isArchived) {
             try {
                 var args;
-                if ((typeof options != 'object') || $.isEmptyObject(options)) {
-                    args = null;
-                }
                 if (isArchived===1){
                     var data = {
                             clientID           : options.clientID,

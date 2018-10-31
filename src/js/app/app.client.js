@@ -57,9 +57,7 @@
                 };
                 if (typeof options == 'object')
                     args = $.extend({}, options, args);
-
-                if(isArchived===1) $app.module('apiuser').showUserList(args,1);
-                else               $app.module('apiuser').showUserList(args);
+                $app.module('apiuser').showUserList(args, isArchived);
             } catch (ex) {
                 $1.error("[mod:client.manageUsers] Error.", ex);
             }
