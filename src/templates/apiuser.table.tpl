@@ -5,26 +5,30 @@
 	{/if}
 	<thead>
 		<tr>
+			{if isset($options.onlyActiveUser) && $options.onlyActiveUser}
 			<th class="type-nav" colspan="5">
-				{if isset($options.onlyActiveUser) && $options.onlyActiveUser}
 				<a href="#" class="form-button" onclick="var arg = $.extend({}, {htmlentities($optionsJson)}, { onlyActiveUser:false}); $app.module('apiuser').showUserList(arg);">
 					<span class="form-button-text">Include Inactive User</span>
 				</a>
-				{else}
+			{else}
+			<th class="type-nav" colspan="6">
 				<a href="#" class="form-button" onclick="var arg = $.extend({}, {htmlentities($optionsJson)}, { onlyActiveUser:true}); $app.module('apiuser').showUserList(arg);">
 					<span class="form-button-text">Show Only Active User</span>
 				</a>
-				{/if}
-                                <a href="#" class="form-button" onclick="$app.module('apiuser').showDownloadAllReportMesasge();" style="float: right;">
-                                    Download Billing Reports
-                                </a>
+			{/if}
+                <a href="#" class="form-button" onclick="$app.module('apiuser').showDownloadAllReportMesasge();" style="float: right;">
+                    Download Billing Reports
+                </a>
 			</th>
 		</tr>
 		<tr>
-			<th style="width: 20%;">Account Name</th>
+			<th style="width: 10%;">Account Name</th>
 			<th style="width: 20%;">Client Name</th>
 			<th style="width: 10%;">Balance</th>
 			<th style="width: 10%;">Status</th>
+			{if !($options.onlyActiveUser)}
+				<th style="width: 10%;">Inactive Reason</th>
+			{/if}
 			<th style="width: 40%;">
 					{if $options.onlySpecifiedClient}
 					<a href="#" class="form-button" onclick="$app.module('apiuser').createUser({$options.clientID});">
@@ -53,11 +57,14 @@
 			<td class="type-text">{$users[list].clientCompanyName}</td>
 			<td class="type-counter">{$users[list].userCredit}</td>
 			<td class="type-status">{$users[list].statusName}</td>
+			{if !($options.onlyActiveUser)}
+				<td class="type-text">{$users[list].inactiveReason}</td>
+			{/if}
 			<td class="type-action">
 				{if {$users[list].active}}
-				<a href="#" title="Deactivate" onclick="$app.module('apiuser').deactivateUser({$users[list].userID}, true);" class="form-button"><img src="skin/images/icon-disable.png" class="icon-image" alt="" /></a>
+				<a href="#" title="Deactivate" onclick='$app.module("apiuser").deactivateUser({$users[list].userID}, true, {$optionsJson});' class="form-button"><img src="skin/images/icon-disable.png" class="icon-image" alt="" /></a>
 				{else}
-				<a href="#" title="Activate" onclick="$app.module('apiuser').activateUser({$users[list].userID}, true);" class="form-button"><img src="skin/images/icon-enable.png" class="icon-image" alt="" /></a>
+				<a href="#" title="Activate" onclick='$app.module("apiuser").activateUser({$users[list].userID}, true,{$optionsJson});' class="form-button"><img src="skin/images/icon-enable.png" class="icon-image" alt="" /></a>
 				{/if}
 				<a href="#" title="View Details" class="form-button" onclick="$app.module('apiuser').showUserDetails({$users[list].userID});"><img src="skin/images/icon-view.png" class="icon-image" alt="" /></a>
 				<a href="#" title="Edit" class="form-button" onclick="$app.module('apiuser').editUser({$users[list].userID});"><img src="skin/images/icon-edit.png" class="icon-image" alt="" /></a>

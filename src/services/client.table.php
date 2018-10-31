@@ -11,16 +11,24 @@ $page = SmsApiAdmin::getTemplate();
 $clientManager = new ApiBusinessClient();
 try {
 	$optionDefinitions =array(
+		'onlyUnarchived'=>array(
+			'filter'=>FILTER_VALIDATE_BOOLEAN,
+			'flags'=>FILTER_NULL_ON_FAILURE
+		),
 		'highlight'=>array(
 			'filter'=>FILTER_VALIDATE_INT,
 			'options'=>array('min_range'=>1)
 		)
 	);
 	$filters = array(
+		'archived'=>0,
 	);
+	$flag = 0 ;
 	$options = array(
-		'highlight'=>null
+		'onlyUnarchived'=>true,
+		'highlight'=>null,
 	);
+
 	$allOptions = filter_input_array(INPUT_POST, $optionDefinitions);
 	if($allOptions) {
 		foreach($allOptions as $optionName=>$optionValue){
@@ -28,22 +36,15 @@ try {
 				continue;
 			$options[$optionName] = $optionValue;
 			switch($optionName){
-//				case 'onlyActiveUser':
-//					if($optionValue){
-//						$filters['active'] = 1;
-//					}elseif(isset($filters['active'])){
-//						unset($filters['active']);
-//					}
-//				break;
-			}//end switch
-		}//end foreach
+				case 'onlyUnarchived':
+					if($optionValue) $flag = 0;
+					else $flag = 1;
+				break;
+			}
+		}
 	}
-//	if($filters){
-//		$clients = $clientManager->getAll();
-//	}else{
-		$clients = $clientManager->getAll();
-//	}
 
+	$clients = ($flag===0 ? $clientManager->getOnlyUnarchivedClient() : $clientManager->getAll() );
 
 	$page->assign('options', $options);
 	$page->assign('optionsJson', json_encode($options));

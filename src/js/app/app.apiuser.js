@@ -196,7 +196,7 @@
          * @param userID
          * @param list Show user list if success
          */
-        mod.deactivateUser = function(userID, list) {
+        mod.deactivateUser = function(userID, list, optionsJson) {
             try {
                 checkValidRecordID(userID);
                 $app.call('apiuser.deactivate', {
@@ -206,7 +206,12 @@
                         var success = $app.form.checkServiceReply(reply, false, 'Disable User Account');
                         if (success) {
                             if ((typeof list == 'object') || (list === true)) {
-                                mod.showUserList(list);
+                               if (optionsJson.onlySpecifiedClient) {
+                                    mod.showUserList(optionsJson);
+                                }
+                                else{
+                                    mod.showUserList(list);
+                                }
                             } else {
                                 mod.editUser(userID, 'account');
                             }
@@ -224,7 +229,7 @@
          * @param userID
          * @param list Show user list if success
          */
-        mod.activateUser = function(userID, list) {
+        mod.activateUser = function(userID, list, optionsJson) {
             try {
                 checkValidRecordID(userID);
                 $app.call('apiuser.activate', {
@@ -234,7 +239,12 @@
                         var success = $app.form.checkServiceReply(reply, false, 'Enable User Account');
                         if (success) {
                             if ((typeof list == 'object') || (list === true)) {
-                                mod.showUserList(list);
+                                if (optionsJson.onlySpecifiedClient) {
+                                    mod.showUserList(optionsJson);
+                                }
+                                else{
+                                    mod.showUserList(list);
+                                }
                             } else {
                                 mod.editUser(userID, 'account');
                             }
@@ -250,15 +260,26 @@
         /**
          * Show user list
          * @param options Displaying options
+         * @param isArchived flag for archived client
          *                i.e., highlight
          *
          */
-        mod.showUserList = function(options) {
+        mod.showUserList = function(options,isArchived) {
             try {
                 var args;
                 if ((typeof options != 'object') || $.isEmptyObject(options)) {
                     args = null;
-                } else {
+                }
+                if (isArchived===1){
+                    var data = {
+                            clientID           : options.clientID,
+                            highlight          : null,
+                            onlyActiveUser     : false,
+                            onlySpecifiedClient: true,
+                        };
+                    args=data;
+                }
+                else {
                     args = options;
                 }
                 $app.content('apiuser.table', args, function() {

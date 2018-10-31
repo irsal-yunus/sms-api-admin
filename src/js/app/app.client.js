@@ -48,7 +48,7 @@
          * @param clientID The client ID
          * @param options displaying options
          */
-        mod.manageUsers = function(clientID, options) {
+        mod.manageUsers = function(clientID, options,isArchived) {
             try {
                 checkValidRecordID(clientID);
                 var args = {
@@ -57,7 +57,9 @@
                 };
                 if (typeof options == 'object')
                     args = $.extend({}, options, args);
-                $app.module('apiuser').showUserList(args);
+
+                if(isArchived===1) $app.module('apiuser').showUserList(args,1);
+                else               $app.module('apiuser').showUserList(args);
             } catch (ex) {
                 $1.error("[mod:client.manageUsers] Error.", ex);
             }
@@ -146,6 +148,38 @@
             $app.registerModule(mod, MODULE_NAME);
         } catch (ex) {
             $1.log('[mod:client] Failed registering module ' + MODULE_NAME);
+        }
+
+        mod.archived = function(clientID,archivedDate){
+            try{
+                checkValidRecordID(clientID);
+                var title        = (archivedDate===undefined)?'Client Archiving':'Client Unarchiving';
+                var confirmation = (archivedDate===undefined)?'archiving':'unarchiving';
+                var unArchived   = (archivedDate===undefined)?1:0;
+                $app.confirm('Do you want to '+confirmation+' this client?', title, function() {
+                    $app.call('client.archived', {
+                        clientID: clientID
+                    }, function(reply) {
+                        try {
+                            var success = $app.form.checkServiceReply(reply, false, title);
+                            if (unArchived===0) {
+                                $app.confirm('Unarchived Success, do you want to reactivate user api?','Confirmation',function(){
+                                    mod.manageUsers(clientID,null,1);
+                                });
+                            }
+                            if (success)
+                                mod.showClientList();
+                        } catch (ex) {
+                            $1.error("[mod:client.archived@ajaxsuccess] Error.", ex);
+                        }
+                    });
+                });
+
+            }
+            catch(ex){
+
+            }
+
         }
 
 

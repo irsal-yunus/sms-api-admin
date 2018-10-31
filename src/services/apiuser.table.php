@@ -65,12 +65,11 @@ try {
 		$clientManager = new ApiBusinessClient();
 		$page->assign('client', $clientManager->getDetails($clientID));
 	}
-	
+
 	$page->assign('options', $options);
 	$page->assign('optionsJson', json_encode($options));
 	$page->assign('users', $users);
 	$page->display('apiuser.table.tpl');
-
 } catch (Exception $e) {
 	SmsApiAdmin::returnError($e->getMessage());
 }
