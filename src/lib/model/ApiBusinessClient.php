@@ -57,6 +57,11 @@ class ApiBusinessClient extends ApiBaseModel {
         }
     }
 
+    /**
+     * Get non archived client only
+     *
+     * @return  array
+     */
     public function getOnlyUnarchivedClient(){
         $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
         $query = 'select
@@ -179,9 +184,10 @@ class ApiBusinessClient extends ApiBaseModel {
 
     /**
      * set the client data to archived or non archived,
+     *
      * the client that has belongs to archived client is inactive.
      * @param  $clientID (int)
-     * @return exception
+     * @return void
      */
     public function archived($clientID){
         $db     = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
@@ -200,8 +206,9 @@ class ApiBusinessClient extends ApiBaseModel {
 
     /**
      * set user that has belongs to archived client to inactive.
+     *
      * @param $clientID (int)
-     * @return exception
+     * @return void
      */
     public function setInactiveUser($clientID){
         $db     = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);

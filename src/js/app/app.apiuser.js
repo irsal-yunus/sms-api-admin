@@ -239,7 +239,7 @@
                         var success = $app.form.checkServiceReply(reply, false, 'Enable User Account');
                         if (success) {
                             if ((typeof list == 'object') || (list === true)) {
-                                if (optionsJson&&optionsJson.onlySpecifiedClient) {
+                                if (optionsJson && optionsJson.onlySpecifiedClient) {
                                     mod.showUserList(optionsJson);
                                 }
                                 else{
@@ -266,20 +266,16 @@
          */
         mod.showUserList = function(options,isArchived) {
             try {
-                var args;
-                if (isArchived===1){
-                    var data = {
-                            clientID           : options.clientID,
-                            highlight          : null,
-                            onlyActiveUser     : false,
-                            onlySpecifiedClient: true,
-                        };
-                    args=data;
+                if (isArchived === 1) {
+                   options = {
+                        clientID           : options.clientID,
+                        highlight          : null,
+                        onlyActiveUser     : false,
+                        onlySpecifiedClient: true,
+                    };
                 }
-                else {
-                    args = options;
-                }
-                $app.content('apiuser.table', args, function() {
+
+                $app.content('apiuser.table', options, function() {
                     title('User List');
                 });
             } catch (ex) {
