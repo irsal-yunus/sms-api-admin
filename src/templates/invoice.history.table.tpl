@@ -57,10 +57,10 @@
                     <a href="#" onclick="$app.module('invoice').showInvoice({$invoice.invoiceId}, {$invoice.profileId})" class="form-button" title="Edit Invoice">
                         <img src="skin/images/icon-edit.png" class="icon-image icon-size-small" alt="" />
                     </a>
+                    <a href="#" onclick="$app.module('invoice').lockInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Lock Invoice">
+                        <img src="skin/images/icon-lock.png" class="icon-image icon-size-small" alt="" />
+                    </a>
                 {/if}
-                <a href="#" onclick="$app.module('invoice').lockInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Lock Invoice">
-                    <img src="skin/images/icon-lock.png" class="icon-image icon-size-small" alt="" />
-                </a>
                 <a href="#" onclick="$app.module('invoice').deleteInvoice({(!isset($profile))?'null':$invoice.profileId}, {$invoice.invoiceId})" class="form-button" title="Remove Invoice">
                     <img src="skin/images/icon-remove.png" class="icon-image icon-size-small" alt="" />
                 </a>
