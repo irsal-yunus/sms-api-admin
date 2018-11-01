@@ -10,7 +10,7 @@
             <th class="zebra-even">Status</th>
             <th class="zebra-even">Type</th>
             <th class="zebra-odd">
-                {if isset($profile)}
+                {if isset($profile) && $profile.archivedDate eq null}
                 <a href="#" onclick="$app.module('invoice').addInvoice({$profile.profileId})" class="form-button" title="Add New Invoice">
                         <img title="Register" src="skin/images/icon-add.png" class="form-button-image" alt="" />
                         <span class="form-button-text">Add New</span>
@@ -44,16 +44,20 @@
                 <a href="#" onclick="$app.module('invoice').downloadInvoice({$invoice.invoiceId}, 1)" class="form-button" title="Download Invoice File">
                     <img src="skin/images/icon-download.png" class="icon-image icon-size-small" alt="" />
                 </a>
-                <a href="#" onclick="$app.module('invoice').copyInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Copy Invoice">
-                    <img src="skin/images/icon-copy.png" class="icon-image icon-size-small" alt="" />
-                </a>
-                <a href="#" onclick="$app.module('invoice').reviseInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Revise Invoice">
-                    <img src="skin/images/icon-revise.png" class="icon-image icon-size-small" alt="" />
-                </a>
+                    {if $profile.archivedDate eq null}
+                        <a href="#" onclick="$app.module('invoice').copyInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Copy Invoice">
+                            <img src="skin/images/icon-copy.png" class="icon-image icon-size-small" alt="" />
+                        </a>
+                        <a href="#" onclick="$app.module('invoice').reviseInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Revise Invoice">
+                            <img src="skin/images/icon-revise.png" class="icon-image icon-size-small" alt="" />
+                        </a>
+                    {/if}
                 {else}
-                <a href="#" onclick="$app.module('invoice').showInvoice({$invoice.invoiceId}, {$invoice.profileId})" class="form-button" title="Edit Invoice">
-                    <img src="skin/images/icon-edit.png" class="icon-image icon-size-small" alt="" />
-                </a>
+                {if $profile.archivedDate eq null}
+                    <a href="#" onclick="$app.module('invoice').showInvoice({$invoice.invoiceId}, {$invoice.profileId})" class="form-button" title="Edit Invoice">
+                        <img src="skin/images/icon-edit.png" class="icon-image icon-size-small" alt="" />
+                    </a>
+                {/if}
                 <a href="#" onclick="$app.module('invoice').lockInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Lock Invoice">
                     <img src="skin/images/icon-lock.png" class="icon-image icon-size-small" alt="" />
                 </a>

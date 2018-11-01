@@ -8,8 +8,8 @@
         if ($app.hasModule(MODULE_NAME)) return;
         var mod = {}; //implementation
         var SERVICE_URL = 'services/';
-        var TAB_INVOICE_PROFILE = 0;
-        var TAB_INVOICE_SETTING = 1;
+        var TAB_INVOICE_PROFILE = 1;
+        var TAB_INVOICE_SETTING = 2;
         var PROFILE_PRODUCT_TYPE = 'PROFILE';
         var HISTORY_PRODUCT_TYPE = 'HISTORY';
         var mainTitle = 'Invoice Management';
@@ -686,6 +686,23 @@
             } catch (ex) {
                 $1.error("[mod:invoice.bank.delete] Error.", ex);
             }
+        };
+
+
+        function showProfileTable(type) {
+            if (type){
+                return $('#invoice-view-tabs')
+                    .tabs('url', 1, resolveServiceUrl('invoice.profile') + "?type="+(type||''))
+                    .tabs('load', TAB_INVOICE_PROFILE)
+            }
+            else{
+                return $('#invoice-view-tabs').tabs('url', 1, resolveServiceUrl('invoice.profile'))
+                    .tabs('load', TAB_INVOICE_PROFILE)
+            }
+        }
+
+        mod.showClient = function(archived){
+            showProfileTable(archived).tabs('select', 1);
         };
 
         try {
