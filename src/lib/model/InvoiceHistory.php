@@ -69,15 +69,16 @@ class InvoiceHistory extends ModelContract
     {
         $query = "SELECT * FROM {$this->tableName} "
             . " LEFT JOIN " . DB_INVOICE . ".INVOICE_PROFILE ON {$this->tableName}.PROFILE_ID = INVOICE_PROFILE.PROFILE_ID "
-            . " LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = INVOICE_PROFILE.CLIENT_ID ";
+            . " LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = INVOICE_PROFILE.CLIENT_ID "
+            . " WHERE ARCHIVED_DATE is null";
 
         if (strtolower($status) === 'locked' || $status === self::INVOICE_LOCK)
         {
-            $query .= " WHERE STATUS = " . self::INVOICE_LOCK;
+            $query .= " AND STATUS = " . self::INVOICE_LOCK;
         }
         else if (strtolower($status) === 'unlocked' || $status === self::INVOICE_UNLOCK)
         {
-            $query .= " WHERE STATUS = " . self::INVOICE_UNLOCK;
+            $query .= " AND STATUS = " . self::INVOICE_UNLOCK;
         }
 
         $query .= " ORDER BY STATUS ASC, INVOICE_NUMBER DESC, {$this->tableName}.INVOICE_ID DESC";
