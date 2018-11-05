@@ -70,9 +70,6 @@
                         {else}
                         {$product.productName} on {$product->period|date_format:" jS F, Y"}
                         {/if}
-                        {if $product.userApiReport}
-                            ({$product.userApiReport})
-                        {/if}
                     </td>
                     <td class="qty">
                         {number_format($product.qty)}
