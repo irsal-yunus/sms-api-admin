@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Invoice</title>
-    <link rel="stylesheet" href="{$smarty.const.SMSAPIADMIN_BASE_DIR}skin/invoice.print.css" media="all" />
+    <link rel="stylesheet" href="/skin/invoice.print.css" media="all" />
 </head>
 <body>
     <main>
@@ -92,7 +92,7 @@
                 </tr>
                 {/foreach}
                 {if count($invoice.products) gt 0}
-                    {for $i=1 to (12 - count($invoice.products))}
+                    {for $i=1 to (10 - count($invoice.products))}
                         <tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -130,9 +130,8 @@
             Amount In Words:
             <i><b>{$invoice->spellTotal()} Rupiah</b></i>
         </div>
-        <!-- <br> -->
     </main>
-    <footer class="">
+    <div class="footer {($pageCount>1)?'page-break':''}">
         <div id="payment">
             <b><u>Payment Details:</u></b>
             <table border="0" cellspacing="0" cellpadding="2" id="bank-acount">
@@ -188,11 +187,5 @@
                 </div>
             </div>
         </div>
-        <div id="notices">
-            <b>Notes:</b>
-            <div class="notice">
-                {nl2br($setting.noteMessage)}
-            </div>
-        </div>
-    </footer>
+    </div>
 </body>
