@@ -2,17 +2,19 @@
 
 	<thead>
 		<tr>
-			<th style="width: 15%;">Fill Date</th>
-			<th style="width: 15%;">Reference</th>
-			<th style="width: 15%;">Mutation</th>
-			<th style="width: 15%;" colspan="2">Value</th>
-			<th style="width: 15%;">Payment Date</th>
+			<th style="width: 10%;">Fill Date</th>
+			<th style="width: 10%;">Reference</th>
+			<th style="width: 10%;">Mutation</th>
+			<th style="width: 10%;">Previous credit</th>
+			<th style="width: 10%;">Current credit</th>
+			<th style="width: 10%;" colspan="2">Value</th>
+			<th style="width: 10%;">Payment Date</th>
 			<th style="width: 25%;">&nbsp;</th>
 		</tr>
 	</thead>
 	<tfoot>
 		<tr>
-			<th colspan="8">&nbsp;</th>
+			<th colspan="10">&nbsp;</th>
 		</tr>
 	</tfoot>
 	<tbody>
@@ -21,6 +23,8 @@
 			<td class="type-date">{$history[list].transactionCreatedDate}</td>
 			<td class="type-code">{$history[list].transactionRef}</td>
 			<td class="type-counter">{$history[list].transactionCredit}</td>
+			<td class="type-counter">{$history[list].previousBalance}</td>
+			<td class="type-counter">{$history[list].currentBalance}</td>
 			<td class="type-text"><strong>{$currencySign[$history[list].transactionCurrency]}</strong></td>
 			<td class="type-money">{$history[list].transactionPrice}</td>
 			<td class="type-date">{$history[list].paymentDate}</td>

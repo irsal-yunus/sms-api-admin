@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright(c) 2010 1rstWAP. All rights reserved.
  */
 
@@ -15,17 +15,27 @@ $userID = filter_input(INPUT_POST, 'userID', FILTER_VALIDATE_INT);
 if(!$userID)
 	throw new InvalidArgumentException('Missing userID from arguments');
 $userModel = new ApiUser();
+$user  			= $userModel->getDetailsByID($userID);
+$previousBalance= $user['userCredit'];
+
 if(!$userModel->checkExistence($userID)){
 	Logger::getRootLogger()->warn("Attempt to add credit for User with ID=$userID which is not exist");
 	SmsApiAdmin::returnError("User not found");
 }
+$user  			= $userModel->getDetailsByID($userID);
+$previousBalance= $user['userCredit'];
 
 $definitions = array(
 	'transactionCredit' => FILTER_VALIDATE_INT,
-	'transactionRemark' => FILTER_SANITIZE_STRING
+	'transactionRemark' => FILTER_SANITIZE_STRING,
+	'previousBalance'   => 0,
+	'currentBalance'    => 0,
 );
 
 $deduction = filter_input_array(INPUT_POST, $definitions);
+$deduction['previousBalance'] = $previousBalance;
+$deduction['currentBalance']  = $deduction['previousBalance']-$deduction['transactionCredit'];
+
 
 $errorFields = array();
 if($deduction['transactionCredit'] === null){
