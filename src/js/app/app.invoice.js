@@ -124,7 +124,6 @@
 
             $('#useReport').on('change', function() {
                 var value = +$(this).val();
-                console.log("use report : "+value);
                 if (value === 1) {
                     $('#label-reportName').show();
                     $('#reportName').show();
@@ -144,7 +143,7 @@
                     $('#date').show();
                     $('#useReport').val(0).change();
                 }
-                if (value === 1){
+                else{
                     $('#label-period').text('Period');
                     $('.use-period').show();
                     $('#date').hide();
