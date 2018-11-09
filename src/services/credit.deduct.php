@@ -12,53 +12,58 @@ $tranCfg = SmsApiAdmin::getConfig('transaction');
 
 $service = new AppJsonService();
 $userID = filter_input(INPUT_POST, 'userID', FILTER_VALIDATE_INT);
-if(!$userID)
-	throw new InvalidArgumentException('Missing userID from arguments');
-$userModel = new ApiUser();
-$user  			= $userModel->getDetailsByID($userID);
-$previousBalance= $user['userCredit'];
 
-if(!$userModel->checkExistence($userID)){
-	Logger::getRootLogger()->warn("Attempt to add credit for User with ID=$userID which is not exist");
-	SmsApiAdmin::returnError("User not found");
+if (!$userID) {
+    throw new InvalidArgumentException('Missing userID from arguments');
 }
-$user  			= $userModel->getDetailsByID($userID);
-$previousBalance= $user['userCredit'];
+
+$userModel      = new ApiUser();
+$user           = $userModel->getDetailsByID($userID);
+
+if (!isset($user['userID']))
+{
+    Logger::getRootLogger()->warn("Attempt to add credit for User with ID=$userID which is not exist");
+    SmsApiAdmin::returnError("User not found");
+}
 
 $definitions = array(
-	'transactionCredit' => FILTER_VALIDATE_INT,
-	'transactionRemark' => FILTER_SANITIZE_STRING,
+    'transactionCredit' => FILTER_VALIDATE_INT,
+    'transactionRemark' => FILTER_SANITIZE_STRING,
 );
 
 $deduction = filter_input_array(INPUT_POST, $definitions);
 
 $errorFields = array();
+
 if($deduction['transactionCredit'] === null){
-	$errorFields['transactionCredit'] = 'Credit amount must be set!';
+    $errorFields['transactionCredit'] = 'Credit amount must be set!';
 }elseif($deduction['transactionCredit'] === false){
-	$errorFields['transactionCredit'] = 'Invalid credit amount!';
+    $errorFields['transactionCredit'] = 'Invalid credit amount!';
 }elseif((int) $deduction['transactionCredit'] <= 0){
-	$errorFields['transactionCredit'] = 'Credit amount must be greater than zero!';
+    $errorFields['transactionCredit'] = 'Credit amount must be greater than zero!';
 }
 
 if(trim($deduction['transactionRemark'])===''){
-	$errorFields['transactionRemark'] = 'Remark must be given!';
+    $errorFields['transactionRemark'] = 'Remark must be given!';
 }
 
-if($errorFields){
-	$service->setStatus(false);
-	$service->summarise('Input fields error');
-	$service->attachRaw($errorFields);
-	$service->deliver();
+if ($errorFields) {
+    $service->setStatus(false);
+    $service->summarise('Input fields error');
+    $service->attachRaw($errorFields);
+    $service->deliver();
 }
 
-$deduction['previousBalance'] = $previousBalance;
-$deduction['currentBalance']  = $deduction['previousBalance']-$deduction['transactionCredit'];
+$deduction['previousBalance'] = $user['userCredit'];
+$deduction['currentBalance']  = $deduction['previousBalance'] - $deduction['transactionCredit'];
 
 $creditManager = new ApiUserCredit();
 $transactionID = $creditManager->deduct($userID, $deduction);
-if(!$transactionID)
-	SmsApiAdmin::returnError('Transaction was failed!');
+
+if (!$transactionID) {
+    SmsApiAdmin::returnError('Transaction was failed!');
+}
+
 $service->setStatus(true);
 $service->attach('creditTransactionID', $transactionID);
 $service->deliver();
