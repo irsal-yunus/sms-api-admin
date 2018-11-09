@@ -28,14 +28,9 @@ $previousBalance= $user['userCredit'];
 $definitions = array(
 	'transactionCredit' => FILTER_VALIDATE_INT,
 	'transactionRemark' => FILTER_SANITIZE_STRING,
-	'previousBalance'   => 0,
-	'currentBalance'    => 0,
 );
 
 $deduction = filter_input_array(INPUT_POST, $definitions);
-$deduction['previousBalance'] = $previousBalance;
-$deduction['currentBalance']  = $deduction['previousBalance']-$deduction['transactionCredit'];
-
 
 $errorFields = array();
 if($deduction['transactionCredit'] === null){
@@ -56,6 +51,9 @@ if($errorFields){
 	$service->attachRaw($errorFields);
 	$service->deliver();
 }
+
+$deduction['previousBalance'] = $previousBalance;
+$deduction['currentBalance']  = $deduction['previousBalance']-$deduction['transactionCredit'];
 
 $creditManager = new ApiUserCredit();
 $transactionID = $creditManager->deduct($userID, $deduction);

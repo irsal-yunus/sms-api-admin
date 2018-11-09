@@ -38,14 +38,9 @@ $definitions = array(
 		'flags'=>FILTER_FLAG_STRIP_LOW
 	),
 	'transactionRemark' => FILTER_SANITIZE_STRING,
-	'previousBalance'   => 0,
-	'currentBalance'    => 0,
 );
 
 $transaction = filter_input_array(INPUT_POST, $definitions);
-
-$transaction['previousBalance'] = $previousBalance;
-$transaction['currentBalance']  = $transaction['transactionCredit'] + $transaction['previousBalance'];
 
 $errorFields = array();
 if($transaction['transactionCredit'] === null){
@@ -93,6 +88,9 @@ if($errorFields){
 	$service->attachRaw($errorFields);
 	$service->deliver();
 }
+
+$transaction['previousBalance'] = $previousBalance;
+$transaction['currentBalance']  = $transaction['transactionCredit'] + $transaction['previousBalance'];
 
 $creditManager = new ApiUserCredit();
 $transactionID = $creditManager->topUp($userID, $transaction);
