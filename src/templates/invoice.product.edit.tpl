@@ -14,19 +14,19 @@
         <span class="ui-helper-clearfix"></span>
         {if $product.ownerType eq 'HISTORY'}
         <label class="form-flag-required" id="label-period"></label>
-        <select name="period" id="period" size="1" class="flexible-width">
+        <select name="period" id="period" size="1" class="flexible-width use-period">
             {html_options options=$dateRange selected=$selectedRange}
         </select>
         <input type="date" id="date" name="date" value="{$realDate}">
         <span class="ui-helper-clearfix"></span>
         {/if}
-        <label class="" id="label-useReport">User Report ?</label>
-        <select name="useReport" id="useReport" size="1" class="flexible-width">
+        <label class="use-period" id="label-useReport">User Report ?</label>
+        <select name="useReport" id="useReport" size="1" class="flexible-width use-period">
             {html_options options=['No','Yes'] selected=intval(in_array($product.useReport, [1,2]))}
         </select>
         <span class="ui-helper-clearfix"></span>
-        <label class="report-name">User/Group Name</label>
-        <select name="reportName" id="reportName" class="hidden report-name">
+        <label class="report-name use-period" id="label-reportName">User/Group Name</label>
+        <select name="reportName" id="reportName" class="hidden report-name use-period">
             {html_options options=$reports selected=$product.reportName}
         </select>
         <span class="ui-helper-clearfix"></span>
