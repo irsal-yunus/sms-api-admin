@@ -140,23 +140,65 @@ class InvoiceGenerator
         $page->assign('profile', $profile);
         $page->assign('setting', $setting);
         $page->assign('invoice', $invoice);
+        $page->assign('pageCount', 1);
         $page->setTemplateDir(SMSAPIADMIN_TEMPLATE_DIR . "/pdf");
 
-        $mpdf = new Mpdf([
-            'margin_left' => 10,
-            'margin_right' => 10,
-            'margin_top' => $invoice->invoiceType === $invoice::ORIGINAL ? 45 : 50,
-            'margin_bottom' => 0,
-        ]);
-
-        $header     = $page->fetch('invoice.header.tpl');
+        $marginTop  = $invoice->invoiceType === $invoice::ORIGINAL ? 45 : 50;
         $content    = $page->fetch('invoice.content.tpl');
+        $pageCount  = $this->getPageCount(['margin_top' => $marginTop], $content);
 
+        if ($pageCount > 1) {
+            $page->assign('pageCount', $pageCount);
+            $content    = $page->fetch('invoice.content.tpl');
+        }
+
+        $mpdf       = $this->initMpdfInstance(['margin_top' => $marginTop]);
+        $header     = $page->fetch('invoice.header.tpl');
+        $footer     = $page->fetch('invoice.footer.tpl');
+
+        $mpdf->SetHTMLFooter($footer);
         $mpdf->SetHTMLHeader($header);
         $mpdf->WriteHTML($content);
+
         $mpdf->Output(SMSAPIADMIN_INVOICE_DIR.$fileName, Destination::FILE);
 
         return $fileName;
+    }
+
+
+    /**
+     * Get page count from content
+     *
+     * @param  array  $mpdfConfig
+     * @param  string $htmlContent
+     * @return Integer
+     */
+    protected function getPageCount($mpdfConfig = [], $htmlContent = '')
+    {
+        $cloneMpdf = $this->initMpdfInstance($mpdfConfig);
+        $cloneMpdf->WriteHTML($htmlContent);
+
+        return $cloneMpdf->page;
+    }
+
+    /**
+     * Initialize mpdf instance
+     *
+     * @param  array  $config
+     * @return Mpdf
+     */
+    protected function initMpdfInstance($config = [])
+    {
+        $defaultConfig = [
+            'margin_left' => 10,
+            'margin_right' => 10,
+            'margin_top' => 45,
+            'margin_bottom' => 30,
+        ];
+
+        $config = array_merge($defaultConfig, $config);
+
+        return new Mpdf($config);
     }
 
     /**

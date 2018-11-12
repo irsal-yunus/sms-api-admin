@@ -62,7 +62,7 @@ class InvoiceGeneratorTest extends TestCase
      *
      * @return  void
      */
-    protected function initialProduct()
+    protected function initialProduct($countData = 1)
     {
         $product = new InvoiceProduct();
         $product->select("DELETE FROM {$product->tableName()}")->execute();
@@ -90,8 +90,10 @@ class InvoiceGeneratorTest extends TestCase
             ],
         ];
 
-        foreach ($data as $value) {
-            $product->insert($value);
+        for ($i=0; $i < $countData ; $i++) {
+            foreach ($data as $value) {
+                $product->insert($value);
+            }
         }
     }
 
@@ -104,6 +106,9 @@ class InvoiceGeneratorTest extends TestCase
     public function testGenerateMethod()
     {
         $this->initialData();
+
+        $this->initialProduct(10);
+
         $generator = new InvoiceGenerator;
         $history = new InvoiceHistory;
         ob_start();

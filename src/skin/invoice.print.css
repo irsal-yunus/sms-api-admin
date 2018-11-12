@@ -13,7 +13,6 @@ body {
     position: relative;
     width: 21cm;
     height: 29.7cm;
-    /* height: auto; */
     margin: 0 auto;
     color: #232323;
     background: #ffffff;
@@ -117,7 +116,6 @@ table.item thead tr th {
 }
 
 table.item th {
-    /* border-top: 1px solid #aaa; */
     border-bottom: 1px solid #aaa;
 }
 
@@ -196,16 +194,14 @@ table.item tfoot td {
 }
 
 #notices {
-    padding-left: 6px;
     font-size: 10px;
-    /*border-left: 6px solid #0087c3;*/
-    margin-top: 30px;
+    /*margin-top: 30px;*/
 }
 
 .word-total {
     border-top: 1px solid #aaa;
     border-bottom: 1px solid #aaa;
-    margin-bottom: 0px;
+    margin-bottom: 10px;
     padding: 5px 0;
     font-size: 14px;
 }
@@ -218,9 +214,8 @@ table.item tfoot td {
 }
 
 #payment {
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     width: 60%;
-    /* margin-top: 25px; */
 }
 
 #payment table {
@@ -241,7 +236,6 @@ table.item tfoot td {
 
 #authorized {
     text-align: center;
-    margin-top: 30px;
 }
 
 .signature-item {
@@ -267,8 +261,6 @@ table.item tfoot td {
     height: 20px;
 }
 
-footer {
-    position: absolute;
-    bottom: 30px;
-    page-break-inside: avoid;
+.page-break {
+    page-break-before: always;
 }
