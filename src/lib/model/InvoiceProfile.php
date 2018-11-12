@@ -31,12 +31,20 @@ class InvoiceProfile extends ModelContract
     /**
      * Get all Profile data
      *
+     * @param Integer $includeArchived
      * @return array
      */
-    public function all($nonArchived)
+    public function all($includeArchived = false)
     {
-        $nonArchived = ($nonArchived===1) ? "WHERE ARCHIVED_DATE is null" : "";
-        return $this->select("{$this->defaultQuery()} {$nonArchived} ORDER BY CLIENT.COMPANY_NAME ASC")->fetchAll();
+        $query = $this->defaultQuery();
+
+        if ($includeArchived === false) {
+            $query .= " WHERE ARCHIVED_DATE IS NULL ";
+        }
+
+        $query .=  ' ORDER BY CLIENT.COMPANY_NAME ASC, PROFILE_NAME ASC';
+
+        return $this->select($query)->fetchAll();
     }
 
     /**

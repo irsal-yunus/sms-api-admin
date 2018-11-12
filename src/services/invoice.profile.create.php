@@ -16,7 +16,7 @@ try {
         $client = new ApiBusinessClient();
         $bank = new InvoiceBank();
 
-        $clients = $client->dontHaveInvoiceProfile();
+        $clients = $client->getSelectClient();
         $banks = $bank->all();
 
         $page->assign('banks', array_column($banks, 'bankName', 'bankId'));

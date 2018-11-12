@@ -18,6 +18,7 @@ try {
         "autoGenerate" => FILTER_SANITIZE_NUMBER_INT,
         "approvedName" => FILTER_SANITIZE_STRING,
         "approvedPosition" => FILTER_SANITIZE_STRING,
+        "profileName" => FILTER_SANITIZE_STRING,
     ];
     $newData = filter_input_array(INPUT_POST, $definitions);
     foreach ($newData as $key => $value) {
@@ -36,6 +37,10 @@ try {
         $errorFields['clientId'] = 'Client Name should not be empty!';
     }
 
+    if (empty($newData['profileName'])) {
+        $errorFields['profileName'] = 'Profile Name should not be empty!';
+    }
+
     if (empty($newData['bankId'])) {
         $errorFields['bankId'] = 'Payment Detail should not be empty!';
     }
@@ -48,11 +53,11 @@ try {
     } else {
         $model = new InvoiceProfile();
 
-        if ($model->isClientDuplicate($newData['clientId'])) {
-            $service->setStatus(false);
-            $service->summarise("Client already have invoice profile");
-            $service->deliver();
-        }
+        // if ($model->isClientDuplicate($newData['clientId'])) {
+        //     $service->setStatus(false);
+        //     $service->summarise("Client already have invoice profile");
+        //     $service->deliver();
+        // }
 
         $profileId = $model->insert($newData);
         $service->setStatus(true);

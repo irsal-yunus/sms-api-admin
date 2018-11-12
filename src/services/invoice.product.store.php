@@ -6,9 +6,10 @@ require_once '../../vendor/autoload.php';
 
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProduct;
 
-$logger = Logger::getRootLogger();
 SmsApiAdmin::filterAccess();
-$service = new AppJsonService();
+
+$logger     = Logger::getRootLogger();
+$service    = new AppJsonService();
 
 function convertCurrencyString($string)
 {

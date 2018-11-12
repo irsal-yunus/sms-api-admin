@@ -1,6 +1,9 @@
 <form action="invoice.profile.store" class="admin-xform">
     <fieldset class="float-centre">
         <legend>Invoice Profile</legend>
+        <label class="form-flag-required">Profile Name</label>
+        <input name="profileName" value="" type="text" maxlength="100" required />
+        <span class="ui-helper-clearfix"></span>
         <label class="form-flag-required">Client</label>
         <select name="clientId" size="1" class="flexible-width">
             {html_options options=$clients}

@@ -19,12 +19,17 @@ try {
         "autoGenerate" => FILTER_SANITIZE_NUMBER_INT,
         "approvedName" => FILTER_SANITIZE_STRING,
         "approvedPosition" => FILTER_SANITIZE_STRING,
+        "profileName" => FILTER_SANITIZE_STRING,
     ];
 
     $updates = filter_input_array(INPUT_POST, $definitions);
 
     if (empty($updates['profileId'])) {
         SmsApiAdmin::returnError("Invalid Invoice Profile ID ({$updates['profileId']}) !");
+    }
+
+    if (empty($updates['profileName'])) {
+        $errorFields['profileName'] = 'Profile Name should not be empty!';
     }
 
     if (empty($updates['bankId'])) {

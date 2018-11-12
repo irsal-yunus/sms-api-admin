@@ -30,7 +30,7 @@ try {
         $client = new ApiBusinessClient();
         $bank = new InvoiceBank();
 
-        $clients = $client->dontHaveInvoiceProfile($profile->clientId);
+        $clients = $client->getSelectClient($profile->clientId);
         $banks = $bank->all();
 
         $page->assign('profile', $profile);
