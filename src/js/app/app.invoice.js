@@ -104,15 +104,15 @@
                 $('.toggle-report').prop('disabled', useReport);
                 $('.report-name ').toggleClass('hidden', !useReport);
             }
+            var isPeriod = +$('#isPeriod').val();
+            if (isPeriod===0) {
+                $('#useReport').val(0).change();
+                $('#label-reportName').hide();
+            }
 
             $("#form-product").on('submit', function(event) {
                 removeMasking();
             });
-
-            $('#useReport').on('change', function() {
-                var value = $(this).val();
-                toggleReport(parseInt(value, 10) === 1);
-            }).trigger('change');
 
             $('#manualInput').on('change', function(event) {
                 var isChecked = event.currentTarget.checked;
@@ -122,21 +122,32 @@
                 }
             }).trigger('change');
 
+            $('#useReport').on('change', function() {
+                var value = +$(this).val();
+                if (value === 1) {
+                    $('#label-reportName').show();
+                    $('#reportName').show();
+                }
+                if (value === 0) {
+                    $('#label-reportName').hide();
+                    $('#reportName').hide();
+                }
+                toggleReport(parseInt(value, 10) === 1);
+            });
+
             $('#isPeriod').on('change',function(event){
                 var value = +$(this).val();
                 if (value === 0) {
                     $('#label-period').text('Date');
-                    $('#useReport').hide();
-                    $('#label-useReport').hide();
-                    $('#period').hide();
+                    $('.use-period').hide();
                     $('#date').show();
+                    $('#useReport').val(0).change();
                 }
-                if (value === 1){
+                else{
                     $('#label-period').text('Period');
-                    $('#useReport').show();
-                    $('#label-useReport').show();
+                    $('.use-period').show();
                     $('#date').hide();
-                    $('#period').show();
+                    $('#useReport').trigger('change');
                 }
             }).trigger('change');
 
