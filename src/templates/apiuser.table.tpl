@@ -1,4 +1,5 @@
 <form action="#" class="admin-stealthform">
+<button onclick="$app.module('apiuser').topFunction();" id="backToTop" class="form-button back-to-top"><img src="skin/images/icon-backtotop.png" class="icon-backtotop"/></button>
 <table id="apiuser-simpletable" class="admin-table">
 	{if $options.onlySpecifiedClient}
 	<caption>API Users of Client "<strong>{$client.companyName}</strong>"</caption>
@@ -15,9 +16,9 @@
 					<span class="form-button-text">Show Only Active User</span>
 				</a>
 				{/if}
-                                <a href="#" class="form-button" onclick="$app.module('apiuser').showDownloadAllReportMesasge();" style="float: right;">
-                                    Download Billing Reports
-                                </a>
+                <a href="#" class="form-button" onclick="$app.module('apiuser').showDownloadAllReportMesasge();" style="float: right;">
+                    Download Billing Reports
+                </a>
 			</th>
 		</tr>
 		<tr>

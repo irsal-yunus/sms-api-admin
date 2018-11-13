@@ -1,3 +1,4 @@
+<button onclick="$app.module('client').topFunction();" id="backToTop" class="form-button back-to-top"><img src="skin/images/icon-backtotop.png" class="icon-backtotop"/></button>
 <table class="admin-table">
 	<thead>
 		<tr>
