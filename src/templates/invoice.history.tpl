@@ -1,10 +1,12 @@
 <fieldset class="content">
     <h2 class="type-action">Invoice History</h2><br>
     <div class="action-container text-right">
+        {if $profile.archivedDate eq null}
         <a href="#" class="form-button" onclick="$app.module('invoice').showProfile({$profile.profileId});" title="Profile Details">
             <img src="skin/images/icon-profile.png" class="icon-image icon-size-small" alt="" />
             <span class="form-button-text"></span>
         </a>
+        {/if}
     </div>
     <dl class="admin-definitions">
         <dt>Customer ID</dt>

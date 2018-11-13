@@ -16,7 +16,8 @@ try {
 
     if (empty($profileId)) {
         $profilesModel = new InvoiceProfile();
-        $profiles = $profilesModel->all();
+
+        $profiles = $profilesModel->all(1);
         $page->assign('profiles', array_column($profiles, 'companyName', 'profileId'));
     } else {
         $page->assign('profileId', $profileId);

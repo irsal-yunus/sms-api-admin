@@ -33,9 +33,10 @@ class InvoiceProfile extends ModelContract
      *
      * @return array
      */
-    public function all()
+    public function all($nonArchived)
     {
-        return $this->select("{$this->defaultQuery()} ORDER BY CLIENT.COMPANY_NAME ASC")->fetchAll();
+        $nonArchived = ($nonArchived===1) ? "WHERE ARCHIVED_DATE is null" : "";
+        return $this->select("{$this->defaultQuery()} {$nonArchived} ORDER BY CLIENT.COMPANY_NAME ASC")->fetchAll();
     }
 
     /**
@@ -62,10 +63,10 @@ class InvoiceProfile extends ModelContract
     {
         $firstDate = date('Y-m-d', strtotime('first day of this month'));
         $query = "{$this->defaultQuery()} WHERE AUTO_GENERATE = 1
+            AND ARCHIVED_DATE is null
             AND {$this->tableName}.{$this->primaryKey} NOT IN
                 (SELECT INVOICE_HISTORY.{$this->primaryKey} FROM INVOICE_HISTORY WHERE START_DATE >= '$firstDate')
             ORDER BY CLIENT.COMPANY_NAME ASC";
-
         $profiles = $this->select($query)->fetchAll();
 
         return $this->loadProduct($profiles);

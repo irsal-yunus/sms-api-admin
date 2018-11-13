@@ -46,7 +46,6 @@ try {
     $page->assign('invoices', $invoices);
     $page->assign('setting', $setting);
     $page->display('invoice.history.tpl');
-
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     SmsApiAdmin::returnError($e->getMessage());
