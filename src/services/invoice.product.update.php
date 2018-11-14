@@ -4,21 +4,21 @@
  */
 require_once '../../vendor/autoload.php';
 
+use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProduct;
 
-$logger = Logger::getRootLogger();
 SmsApiAdmin::filterAccess();
+$logger = Logger::getRootLogger();
 $service = new AppJsonService();
 
-function convertCurrencyString($string)
+function convertCurrencyString($string = '')
 {
     return floatval(str_replace(',', '', $string));
 }
 
 try {
     $errorFields = [];
-
-    $definitions = [
+    $updateData = filter_input_array(INPUT_POST, [
         "productName" => FILTER_SANITIZE_STRING,
         "reportName"  => FILTER_SANITIZE_STRING,
         "ownerType"   => FILTER_SANITIZE_STRING,
@@ -36,15 +36,7 @@ try {
         ],
         "useReport"   => FILTER_SANITIZE_NUMBER_INT,
         "manualInput" => FILTER_SANITIZE_NUMBER_INT,
-    ];
-
-    $updateData = filter_input_array(INPUT_POST, $definitions);
-
-    if ($updateData['isPeriod'] == 0) {
-        $date                 = ["date"=> FILTER_SANITIZE_STRING];
-        $realDate             = filter_input_array(INPUT_POST,$date);
-        $updateData['period'] = $realDate['date'];
-    }
+    ]);
 
     foreach ($updateData as $key => $value) {
         if ($value === null) {
@@ -56,6 +48,17 @@ try {
         $service->setStatus(false);
         $service->summarise('No data to add');
         $service->deliver();
+    }
+
+    if ($updateData['isPeriod'] === 0) {
+        $date       = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
+        $timestamp  = strtotime($date);
+
+        if ($timestamp === false) {
+            $errorFields['date']  = 'Date input is wrong format';
+        } else {
+            $updateData['period'] = date('Y-m-d', $timestamp);
+        }
     }
 
     if (empty($updateData['productId'])) {
@@ -110,6 +113,15 @@ try {
     } else {
         $model = new InvoiceProduct();
         $model->updateProduct($updateData['productId'], $updateData);
+
+        if ($model->isHistory()) {
+            $invoiceModel = new InvoiceHistory;
+
+            if ($invoice = $invoiceModel->find($model->ownerId)) {
+                $invoice->createInvoiceFile();
+            }
+        }
+
         $service->setStatus(true);
         $service->attachRaw($updateData);
         $service->summarise('Product successfully updated');

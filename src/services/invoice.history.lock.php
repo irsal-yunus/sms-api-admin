@@ -76,5 +76,6 @@ try {
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     $logger->error($e->getTraceAsString());
+    $logger->error(json_encode($e->getTrace(), JSON_PRETTY_PRINT));
     SmsApiAdmin::returnError($e->getMessage());
 }
