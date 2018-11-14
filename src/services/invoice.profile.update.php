@@ -6,9 +6,11 @@ require_once '../../vendor/autoload.php';
 
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
 
-$logger = Logger::getRootLogger();
 SmsApiAdmin::filterAccess();
-$service = new AppJsonService();
+
+$logger     = Logger::getRootLogger();
+$service    = new AppJsonService();
+$model      = new InvoiceProfile();
 
 try {
 
@@ -31,6 +33,9 @@ try {
     if (empty($updates['profileName'])) {
         $errorFields['profileName'] = 'Profile Name should not be empty!';
     }
+    elseif ($model->isProfileNameDuplicate($updates['profileName'], $updates['profileId'])) {
+        $errorFields['profileName'] = 'Profile Name already exists!';
+    }
 
     if (empty($updates['bankId'])) {
         $errorFields['bankId'] = 'Payment Detail should not be empty!';
@@ -42,7 +47,6 @@ try {
         $service->attachRaw($errorFields);
         $service->deliver();
     } else {
-        $model = new InvoiceProfile();
         $model->updateProfile($updates['profileId'], $updates);
         $service->setStatus(true);
         $service->summarise('Invoice Profile successfully updated');

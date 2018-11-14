@@ -193,15 +193,15 @@ class InvoiceProfile extends ModelContract
     }
 
     /**
-     * validate client is duplicate or not
+     * validate profile name is duplicate or not
      *
-     * @param String $clientId
+     * @param String $profileName
      * @param mixed $profileId
      * @return  bool
      */
-    public function isClientDuplicate($clientId, $profileId = null)
+    public function isProfileNameDuplicate($profileName, $profileId = null)
     {
-        $query = "SELECT count(1) from $this->tableName where CLIENT_ID = '{$clientId}'";
+        $query = "SELECT count(1) from $this->tableName where PROFILE_NAME = '{$profileName}'";
 
         if ($profileId) {
             $query .= " AND {$this->primaryKey} != $profileId";
