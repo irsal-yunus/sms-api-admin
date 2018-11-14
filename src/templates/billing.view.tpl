@@ -49,7 +49,7 @@
 <div style="padding: 3px;">
     <a href="#" onclick="$app.module('billing').viewMessageFilterPage();">SMS Content Department Filter (Adira)</a>
 </div>
-<button onclick="$app.module('billing').topFunction();" id="backToTop" class="form-button back-to-top"><img src="skin/images/icon-backtotop.png" class="icon-backtotop"/></button>
+<button onclick="$app.module('billing').topFunction();" id="backToTop" class="form-button back-to-top" title="Back to top"><img src="skin/images/icon-backtotop.png" class="icon-backtotop" alt="Back to top" /></button>
 <form id="billing-view" class="admin-tabform" action="#" method="post" style="width: 100%;">
 	<div id="billing-view-tabs" class="panel-tabs">
 		<ul>
