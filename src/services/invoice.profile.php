@@ -17,7 +17,7 @@ try {
     $model           = new InvoiceProfile();
 
     $includeArchived = strtolower($archived) === 'archived';
-    $profiles        = $model->all();
+    $profiles        = $model->all($includeArchived);
     $rowspan         = [];
 
     foreach ($profiles as $profile) {

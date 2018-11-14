@@ -1,11 +1,11 @@
 <fieldset class="content">
-    <div class="action-container text-right" style="padding: 10px ;">
+    <div class="action-container text-left" style="padding: 10px;">
         {if $archived eq null}
-            <a href="#" class="form-button" onclick="$app.module('invoice').showClient('archived');" style="float:left" >
+            <a href="#" class="form-button" onclick="$app.module('invoice').showClient('archived');" >
                 <span class="form-button-text">Include Archived Client</span>
             </a>
         {else}
-            <a href="#" class="form-button" onclick="$app.module('invoice').showClient();" style="float:left" >
+            <a href="#" class="form-button" onclick="$app.module('invoice').showClient();" >
                 <span class="form-button-text">Show only non Archived Client</span>
             </a>
         {/if}

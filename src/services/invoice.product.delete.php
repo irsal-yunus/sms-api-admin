@@ -4,6 +4,7 @@
  */
 require_once '../../vendor/autoload.php';
 
+use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProduct;
 
 $logger = Logger::getLogger("service");
@@ -29,6 +30,14 @@ try {
         }
 
         $product->delete();
+
+        if ($product->isHistory()) {
+            $invoiceModel = new InvoiceHistory;
+
+            if ($invoice = $invoiceModel->find($product->ownerId)) {
+                $invoice->createInvoiceFile();
+            }
+        }
 
         $service->setStatus(true);
         $service->summarise('Product successfully deleted');
