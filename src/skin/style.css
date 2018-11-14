@@ -66,7 +66,7 @@ a.link, a.link:visited {
     clear: both;
     width: 100%;
     overflow: hidden;
-    /*	background-color: #a8c3d7;*/
+    /*  background-color: #a8c3d7;*/
     background-color: #8dc5f0;
 }
 
@@ -85,7 +85,7 @@ a.link, a.link:visited {
     clear: both;
     width: 100%;
     min-height: 200px;
-    /*	overflow:auto;*/
+    /*  overflow:auto;*/
     margin-bottom: 24px;
     padding: 20px 0px 10px 0px;
     position: relative;
@@ -130,7 +130,7 @@ a.link, a.link:visited {
 }
 
 #contentPanel > .panel {
-    /*	width: 95%;*/
+    /*  width: 95%;*/
 }
 
 #contentPanel .panel {
@@ -424,8 +424,8 @@ table.invoice-table > tbody > tr > td {
 
 dl.admin-definitions {
     display: block;
-    /*	margin-top: 1em;*/
-    /*	margin-bottom: 1em;*/
+    /*  margin-top: 1em;*/
+    /*  margin-bottom: 1em;*/
 }
 
 dl.admin-definitions > dt, dl.admin-definitions > dd {
@@ -435,7 +435,7 @@ dl.admin-definitions > dt, dl.admin-definitions > dd {
     line-height: 1.5em;
     min-height: 1.5em;
     margin: .1em 0em;
-    /*	padding: .25em 0em;*/
+    /*  padding: .25em 0em;*/
     text-indent: .5em;
     vertical-align: top;
 }
@@ -447,7 +447,7 @@ dl.admin-definitions > dt {
     font-weight: bold;
     background-color: lightsteelblue;
     background-color: #a8c3d7;
-    /*	color: #1D5987;*/
+    /*  color: #1D5987;*/
     color: #444;
 }
 
@@ -551,7 +551,7 @@ form.admin-stdform {
 }
 
 form.admin-stdform fieldset {
-    /*	float: left;*/
+    /*  float: left;*/
     margin: .5em auto;
     padding: 1.2em 0;
     width: 90%;
@@ -914,5 +914,22 @@ form fieldset input[type=checkbox].checkbox-normal {
     margin-top: -24px;
     margin-right: 10px;
     position: relative;
+}
+
+.back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right:  30px;
+    width:80px;
+    height: 80px;
+    z-index: 99;
+    cursor: pointer;
+}
+
+.icon-backtotop{
+    width: 50px;
+    height: 50px;
+    margin-top: -20px;
 }
 
