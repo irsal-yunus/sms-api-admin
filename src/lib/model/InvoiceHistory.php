@@ -99,6 +99,7 @@ class InvoiceHistory extends ModelContract
 
         return $query;
     }
+
     /**
      * Get history per page
      *
@@ -194,6 +195,7 @@ class InvoiceHistory extends ModelContract
         $query = "SELECT * FROM {$this->tableName}
             WHERE DATE_FORMAT(START_DATE, '%m-%Y') = '{$date}'
             ORDER BY START_DATE DESC";
+
         return $this->select($query)->fetchAll();
     }
 

@@ -63,7 +63,7 @@ class InvoiceProfile extends ModelContract
     public function getProfilebyPage($archived=null,$page=1){
         $chunk  = LIMIT_PER_PAGE;
         $offset = ($page - 1) * ($chunk);
-        $totalQuery  = $this->queryAll($archived,"count(1),");
+        $totalQuery  = $this->queryAll($archived,"count(1)");
 
         $query       = $this->queryAll($archived);
         $query      .= " LIMIT {$chunk} OFFSET {$offset} ";
@@ -113,11 +113,12 @@ class InvoiceProfile extends ModelContract
     /**
      * Get default queries for select action
      *
+     * @param String $select
      * @return string
      */
-    protected function defaultQuery($select="")
+    protected function defaultQuery($select="*")
     {
-        return "SELECT {$select} {$this->tableName}.*, CLIENT.*, INVOICE_BANK.* from {$this->tableName}
+        return "SELECT {$select} from {$this->tableName}
             LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
             LEFT JOIN ".DB_INVOICE.".INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID";
     }
