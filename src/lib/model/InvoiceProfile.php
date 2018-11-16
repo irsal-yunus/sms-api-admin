@@ -47,7 +47,8 @@ class InvoiceProfile extends ModelContract
      * @param  $select  string
      * @return array
      */
-    public function queryAll($archived,$select){
+    public function queryAll($archived, $select = '*')
+    {
         $archived = ($archived===null) ? "WHERE ARCHIVED_DATE is null" : "";
         $query="{$this->defaultQuery($select)} {$archived} ORDER BY CLIENT.COMPANY_NAME ASC";
         return $query;
@@ -60,10 +61,11 @@ class InvoiceProfile extends ModelContract
      * @param $page int
      * @return array
      */
-    public function getProfilebyPage($archived=null,$page=1){
+    public function getProfilebyPage($archived=null,$page=1)
+    {
         $chunk  = LIMIT_PER_PAGE;
         $offset = ($page - 1) * ($chunk);
-        $totalQuery  = $this->queryAll($archived,"count(1)");
+        $totalQuery  = $this->queryAll($archived, "count(1)");
 
         $query       = $this->queryAll($archived);
         $query      .= " LIMIT {$chunk} OFFSET {$offset} ";

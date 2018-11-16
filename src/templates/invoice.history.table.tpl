@@ -1,4 +1,4 @@
-<table class="admin-simpletable invoice-table">
+    <table class="admin-simpletable invoice-table">
     <thead>
         <tr>
             <th class="zebra-odd">Invoice Number</th>
@@ -77,7 +77,7 @@
     </tbody>
 </table>
 <br>
-
+{if isset($pageCount)}
 <div class="pagination" style="float:left">
     <a href="#" class="paging first" onclick="$app.module('invoice').showInvoiceTable('{$type}', 1)"> << </a>
     {if $page-1 >= 1}
@@ -92,7 +92,7 @@
         <a href="#" class="paging" onclick="$app.module('invoice').showInvoiceTable('{$type}', {$pageCount})"> > </a>
     {/if}
     <a href="#" class="paging end" onclick="$app.module('invoice').showInvoiceTable('{$type}', {$pageCount})"> >> </a>
-    <span style="margin:auto; font-color:grey;">&nbsp; ({$numberFiles['firstNumber']}-{$numberFiles['endNumber']}/{$totalData}) </span>
-    <span style="margin:auto">&nbsp; Showing Page {$page} of {$pageCount}</span>&nbsp;
+    <span style="margin:auto">&nbsp; Showing {$numberFiles['firstNumber']}-{$numberFiles['endNumber']} of {$totalData}</span>&nbsp;
 </div>
+{/if}
 <br>
