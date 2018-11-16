@@ -31,6 +31,7 @@ class InvoiceProfile extends ModelContract
     /**
      * Get all Profile data
      *
+     * @param  $archived int
      * @return array
      */
     public function all($archived)
@@ -39,14 +40,28 @@ class InvoiceProfile extends ModelContract
         return $this->select($query)->fetchAll();
     }
 
+    /**
+     * Get Query for all based on archived status
+     *
+     * @param  $archived int
+     * @param  $select  string
+     * @return array
+     */
     public function queryAll($archived,$select){
         $archived = ($archived===null) ? "WHERE ARCHIVED_DATE is null" : "";
         $query="{$this->defaultQuery($select)} {$archived} ORDER BY CLIENT.COMPANY_NAME ASC";
         return $query;
     }
 
+    /**
+     * Get Profile data by page
+     *
+     * @param  $archived int
+     * @param $page int
+     * @return array
+     */
     public function getProfilebyPage($archived=null,$page=1){
-        $chunk  = 25;
+        $chunk  = LIMIT_PER_PAGE;
         $offset = ($page - 1) * ($chunk);
         $totalQuery  = $this->queryAll($archived,"count(1),");
 

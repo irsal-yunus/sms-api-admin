@@ -23,7 +23,7 @@ try {
 
     $pending            =   $historyModel->pendingCount();
     $paginate           =   $historyModel->getHistorybyPage($invoiceType, $invoicePage);
-    $chunk              =   25;
+    $chunk              =   LIMIT_PER_PAGE;
     $pageCount          =   ceil($paginate['total'] / $chunk);
 
     $numberFiles = [

@@ -72,6 +72,13 @@ class InvoiceHistory extends ModelContract
         return $this->select($query)->fetchAll();
     }
 
+    /**
+     * Get query where status
+     *
+     * @param $status string
+     * @param $select string
+     * @return string
+     */
     protected function queryWhereStatus($status = null, $select = "*")
     {
         $query = "SELECT {$select} FROM {$this->tableName} "
@@ -92,10 +99,16 @@ class InvoiceHistory extends ModelContract
 
         return $query;
     }
-
+    /**
+     * Get history per page
+     *
+     * @param $status string
+     * @param   $page int
+     * @return  array
+     */
     public function getHistorybyPage($status, $page = 1)
     {
-        $chunk  = 25;
+        $chunk  = LIMIT_PER_PAGE;
         $offset = ($page - 1) * ($chunk);
 
         $totalQuery  = $this->queryWhereStatus($status, "count(1)");

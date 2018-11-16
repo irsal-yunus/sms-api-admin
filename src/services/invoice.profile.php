@@ -26,7 +26,7 @@ try {
 
         $pending    =   $invoice->pendingCount();
         $paginate   =   $model->getProfilebyPage($archived, $invoicePage);
-        $chunk      =   25;
+        $chunk      =   LIMIT_PER_PAGE;
         $pageCount  =   ceil($paginate['total']/$chunk);
 
         $numberFiles = [
