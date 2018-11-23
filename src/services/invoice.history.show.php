@@ -28,14 +28,14 @@ try {
         if (empty($history)) {
             SmsApiAdmin::returnError("Invoice not found !");
         }
-
+        echo json_encode($history);
         $history = $history[0];
         $profile = $history->getProfile();
-
         $page->assign('profile', $profile);
         $page->assign('invoice', $history);
         $page->assign('setting', $settingModel->getSetting());
         $page->display('invoice.history.show.tpl');
+
     } catch (Exception $e) {
         $logger->error($e->getTraceAsString());
         SmsApiAdmin::returnError($e->getMessage());

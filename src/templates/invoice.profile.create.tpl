@@ -27,5 +27,27 @@
         <label>Approved Position</label>
         <input name="approvedPosition" value="" type="text" maxlength="45" />
         <span class="ui-helper-clearfix"></span>
+        <!--minimum commitment setting-->
+        <label>Commitment Setting</label>
+        <input name="commitmentSettingOption" value="1" type="radio" checked="checked" />
+        <label class="flexible-width ">Yes</label>
+        <input name="commitmentSettingOption" value="0" type="radio" />
+        <label class="flexible-width ">No</label>
+        <!--it will appear if commitment setting is yes, otherwise it'll dissapear-->
+        <span class="ui-helper-clearfix"></span>
+        <label class="commitmentSetting">Based On</label>
+        <select name="bankId" size="1" class="flexible-width commitmentSetting">
+            <option>Price</option>
+            <option>Quantity</option>
+        </select>
+        <span class="ui-helper-clearfix"></span>
+        <label class="commitmentSetting">Minimum Value</label>
+        <input type="number" name="" class="commitmentSetting">
+        <span class="ui-helper-clearfix"></span>
+        <label class="commitmentSetting">Use Combine</label>
+        <input name="" value="1" type="radio" checked="checked" class="commitmentSetting" />
+        <label class="flexible-width commitmentSetting">Yes</label>
+        <input class="commitmentSetting" name="" value="0" type="radio" />
+        <label class="flexible-width commitmentSetting">No</label>
     </fieldset>
 </form>

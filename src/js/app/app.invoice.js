@@ -115,13 +115,6 @@
                 removeMasking();
             });
 
-            $('#manualInput').on('change', function(event) {
-                var isChecked = event.currentTarget.checked;
-                var useReport = $('#useReport').val() == 1;
-                if (useReport) {
-                    $('.toggle-report').prop('disabled', isChecked === false);
-                }
-            }).trigger('change');
 
             $('#useReport').on('change', function() {
                 var value = +$(this).val();
@@ -169,6 +162,14 @@
                 ]
             });
 
+            $('#manualInput').on('change', function(event) {
+                var isChecked = event.currentTarget.checked;
+                var useReport = $('#useReport').val() == 1;
+                if (useReport) {
+                    $('.toggle-report').prop('disabled', isChecked === false);
+                }
+            }).trigger('change');
+
             initMasking();
         }
 
@@ -194,6 +195,10 @@
                     $('#dueDate').val(dueDate);
                 })
                 .trigger('change')
+        }
+
+        function iniFormProfile() {
+            console.log("iniii form open");
         }
 
         mod.showInvoiceManagement = function(callback) {
@@ -524,7 +529,7 @@
                     if (reply && reply.attachment && reply.attachment.profileId) {
                         mod.showProfile(reply.attachment.profileId);
                     }
-                });
+                },iniFormProfile);
             } catch (ex) {
                 $1.error("[mod:invoice.profile.create] Error.", ex);
             }

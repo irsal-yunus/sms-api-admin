@@ -35,6 +35,13 @@ class InvoiceHistory extends ModelContract
     const COPIED    = "COPIED";
     const REVISED   = "REVISED";
 
+
+    /**
+     * Minimum Commitment Constant
+     */
+    const MINIMUM_QTY = "QTY";
+    const MINIMUM_PRICE = "PRICE";
+
     /**
      * Table name of invoice history
      *
@@ -440,6 +447,30 @@ class InvoiceHistory extends ModelContract
         return $this->select($query)->fetchColumn() > 0;
     }
 
+    public function combineMinimumCommitment()
+    {
+        if (empty($this->products)) {
+            return false;
+        }
+
+        $useReports = array_filter($this->products, function($product) {
+            return (bool) $product->useReport;
+        });
+
+        $total = array_reduce($this->products, function ($carry, $product) {
+            $carry += $product->amount();
+            return round($carry, 2);
+        }, 0);
+
+        if ($total > floatval($this->minimumCommitmentAmount)) {
+            return 0;
+        }
+
+        return $this->minimumCommitmentAmount - $total;
+    }
+
+
+
     /**
      * Get sub total product
      *
@@ -454,7 +485,7 @@ class InvoiceHistory extends ModelContract
         return array_reduce($this->products, function ($carry, $product) {
             $carry += $product->amount();
             return round($carry, 2);
-        });
+        }, 0);
     }
 
     /**

@@ -34,8 +34,8 @@
             {foreach $profiles as $profile}
             <tr>
                 {if isset($profile->print)}
-                <td class="type-status" rowspan="{$rowspan[$profile.customerId]}">{$profile.customerId}</td>
-                <td class="type-text" rowspan="{$rowspan[$profile.customerId]}">{$profile.companyName}</td>
+                <td class="type-status" rowspan="{$rowspan[$profile.clientId]}">{$profile.customerId}</td>
+                <td class="type-text" rowspan="{$rowspan[$profile.clientId]}">{$profile.companyName}</td>
                 {/if}
                 <td class="type-text">{$profile.profileName}</td>
                 <td class="type-text">{$profile.bankName}</td>

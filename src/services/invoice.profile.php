@@ -21,11 +21,11 @@ try {
     $rowspan         = [];
 
     foreach ($profiles as $profile) {
-        if (empty($rowspan[$profile->customerId])) {
-            $rowspan[$profile->customerId] = 1;
+        if (empty($rowspan[$profile->clientId])) {
+            $rowspan[$profile->clientId] = 1;
             $profile->print = true;
         } else {
-            $rowspan[$profile->customerId]++;
+            $rowspan[$profile->clientId]++;
         }
     }
 
