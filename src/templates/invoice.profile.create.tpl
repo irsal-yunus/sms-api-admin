@@ -29,10 +29,10 @@
         <span class="ui-helper-clearfix"></span>
         <!--minimum commitment setting-->
         <label>Commitment Setting</label>
-        <input name="commitmentSettingOption" value="1" type="radio" checked="checked" />
-        <label class="flexible-width ">Yes</label>
-        <input name="commitmentSettingOption" value="0" type="radio" />
-        <label class="flexible-width ">No</label>
+        <select name="useCommitment" id ="useCommitment" size="1" class="flexible-width commitmentSetting">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
         <!--it will appear if commitment setting is yes, otherwise it'll dissapear-->
         <span class="ui-helper-clearfix"></span>
         <label class="commitmentSetting">Based On</label>

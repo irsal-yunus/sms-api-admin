@@ -199,6 +199,9 @@
 
         function iniFormProfile() {
             console.log("iniii form open");
+            //var useCommitment = +$("#useCommitment").val();
+            //tambah logic coy
+
         }
 
         mod.showInvoiceManagement = function(callback) {
