@@ -447,45 +447,34 @@ class InvoiceHistory extends ModelContract
         return $this->select($query)->fetchColumn() > 0;
     }
 
-    public function combineMinimumCommitment()
-    {
-        if (empty($this->products)) {
-            return false;
-        }
-
-        $useReports = array_filter($this->products, function($product) {
-            return (bool) $product->useReport;
-        });
-
-        $total = array_reduce($this->products, function ($carry, $product) {
-            $carry += $product->amount();
-            return round($carry, 2);
-        }, 0);
-
-        if ($total > floatval($this->minimumCommitmentAmount)) {
-            return 0;
-        }
-
-        return $this->minimumCommitmentAmount - $total;
-    }
-
-
-
     /**
      * Get sub total product
      *
      * @return float
      */
-    public function subTotal()
+    public function subTotal($useReport)
     {
         if (empty($this->products)) {
             return 0;
         }
 
-        return array_reduce($this->products, function ($carry, $product) {
-            $carry += $product->amount();
-            return round($carry, 2);
-        }, 0);
+        if ($useReport!==null)
+        {
+            return array_reduce($this->products, function ($carry, $product) {
+                if((int)$product->useReport!==0)
+                {
+                    $carry += $product->amount();
+                }
+                return round($carry, 2);
+            }, 0);
+        }
+        else
+        {
+            return array_reduce($this->products, function ($carry, $product) {
+                $carry += $product->amount();
+                return round($carry, 2);
+            }, 0);
+        }
     }
 
     /**
@@ -718,4 +707,89 @@ class InvoiceHistory extends ModelContract
 
         return $dueDate < $currentDate;
     }
+
+    //---------------------------------------------------------
+
+    public function totalQty(){
+        if (empty($this->products)) {
+            return 0;
+        }
+
+        return array_reduce($this->products, function ($carry, $product) {
+            if ((int)$product->useReport!==0) {
+                 $carry += $product->qty;
+            }
+            return $carry;
+        }, 0);
+
+
+    }
+
+    public function makeNewProduct($productName,$productPrice)
+    {
+        $object = new InvoiceProduct;
+        $object->productName  =  $productName;
+        $object->unitPrice    =  $productPrice;
+        $object->qty          =  1;
+        return $object;
+    }
+
+    public function notCombined($type,$name,$commitmentValue,$minCharge){
+        $appendedProduct    = [];
+        foreach ($this->products as $product)
+        {
+            $value     = ($type=='PRICE') ? $product->amount() : $product->qty;
+            if ( ( (int)$value < (int)$commitmentValue ) && ((int)$product->useReport!==0))
+            {
+                $newCommitmentPrice = ($type=='PRICE') ? $commitmentValue-$product->amount(): $minCharge;
+                $newName            = $name . $product->productName;
+                array_push($appendedProduct,$this->makeNewProduct($newName,$newCommitmentPrice) );
+            }
+        }
+        return $appendedProduct;
+    }
+
+    public function minimumCommitment($profile){
+        if(!empty($this->products)){
+            if ($profile['minCommitmentType']=='PRICE')
+            {
+                if ($profile['combinedMinCommitment']==1)
+                {
+                    $subTotal = $this->subTotal(1);
+                    if ($subTotal < (int)$profile['minCommitmentAmount'])
+                    {
+                        return $product =  $this->makeNewProduct('Minimum Price Commitment Combined',
+                                                                $profile['minCommitmentAmount']-$subTotal);
+                    }
+                    return null;
+                }
+                else if ($profile['combinedMinCommitment']==0)
+                {
+                    return $appendedProduct = $this->notCombined($profile[ 'minCommitmentType'],
+                                                                'Minimum Commitment for ',
+                                                                $profile['minCommitmentAmount']);
+                }
+            }
+            else if ($profile['minCommitmentType']=='QUANTITY')
+            {
+                if ($profile['combinedMinCommitment']==1) {
+                    if ($this->totalQty() < (int)$profile['minCommitmentAmount'] && (int)$this->totalQty() !== 0) {
+                        return $product =  $this->makeNewProduct('Minimum Charge Combined',
+                                                                $profile['minCharge']);
+                    }
+                    return null;
+                }
+                else if ($profile['combinedMinCommitment']==0)
+                {
+                    return $appendedProduct = $this->notCombined($profile['minCommitmentType'],
+                                                                'Minimum Charge for ',
+                                                                $profile['minCommitmentAmount'],
+                                                                $profile['minCharge']);
+                }
+            }
+        }
+        return null;
+    }
+
+
 }

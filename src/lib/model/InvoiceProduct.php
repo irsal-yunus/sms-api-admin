@@ -334,19 +334,4 @@ class InvoiceProduct extends ModelContract
         return $this->ownerType === self::PROFILE_PRODUCT;
     }
 
-
-    public function insufficientCharge($type, $minimumCommitment)
-    {
-        switch (strtoupper($type)) {
-            case InvoiceProfile::MINIMUM_QTY: {
-
-            }
-            case InvoiceProfile::MINIMUM_PRICE:
-                # code...
-                break;
-            default:
-                # code...
-                break;
-        }
-    }
 }

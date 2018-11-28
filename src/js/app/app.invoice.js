@@ -197,10 +197,33 @@
                 .trigger('change')
         }
 
-        function iniFormProfile() {
-            console.log("iniii form open");
-            //var useCommitment = +$("#useCommitment").val();
-            //tambah logic coy
+        function initFormProfile() {
+            $('#useCommitment').on('change', function(event) {
+                var useCommitment = +$(this).val();
+                if (useCommitment===0) {
+                    $('.commitmentSetting').hide();
+                }
+                else{
+                    $('.commitmentSetting').show();
+                }
+            }).trigger('change');
+
+            $('#commitmentType').on('change', function(event) {
+                var type = $(this).val();
+                if (type=='PRICE') {
+                    $('#minimumLabel').text("Minimum Price");
+                    $('.quantity').hide();
+                    $('.minAMount').attr("data-mask",'000,000,000,000,000.00');
+
+                }
+                else{
+                   $('#minimumLabel').text("Minimum Quantity");
+                   $('.quantity').show();
+                   $('.minAMount').attr("data-mask",'###,###,###,###,###,###');
+                }
+            }).trigger('change');
+
+        initMasking();
 
         }
 
@@ -532,7 +555,7 @@
                     if (reply && reply.attachment && reply.attachment.profileId) {
                         mod.showProfile(reply.attachment.profileId);
                     }
-                },iniFormProfile);
+                },initFormProfile);
             } catch (ex) {
                 $1.error("[mod:invoice.profile.create] Error.", ex);
             }
@@ -571,7 +594,7 @@
                     if (changePage !== false) {
                         mod.showProfile(profileId);
                     }
-                });
+                },initFormProfile);
             } catch (ex) {
                 $1.error("[mod:invoice.profile.edit] Error.", ex);
             }

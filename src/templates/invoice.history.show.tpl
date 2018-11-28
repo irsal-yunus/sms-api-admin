@@ -86,13 +86,17 @@
                         {$i+1}
                     </td>
                     <td class="desc">
-                        {if $product.isPeriod eq '1'}
-                            {$product.productName} period {$product->period|date_format:"1 - %e %B %Y"}
+                        {if $product.productId eq null}
+                            {$product.productName}
                         {else}
-                            {$product.productName} on {$product->period|date_format:"jS F, Y"}
-                        {/if}
-                        {if $product.userApiReport}
-                            ({$product.userApiReport})
+                             {if $product.isPeriod eq '1'}
+                                {$product.productName} period {$product->period|date_format:"1 - %e %B %Y"}
+                            {else}
+                                {$product.productName} on {$product->period|date_format:"jS F, Y"}
+                            {/if}
+                            {if $product.userApiReport}
+                                ({$product.userApiReport})
+                            {/if}
                         {/if}
                     </td>
                     <td class="qty">
@@ -102,15 +106,23 @@
                         {number_format($product.unitPrice, 2)}
                     </td>
                     <td class="total">
-                        {number_format($product->amount(), 2)}
+                        {if $product.productId eq null}
+                            {number_format($product.unitPrice ,2)}
+                        {else}
+                            {number_format($product->amount(), 2)}
+                        {/if}
                     </td>
                     <td class="type-action">
-                        <a href="#" onclick="$app.module('invoice').editInvoiceProduct({$product.productId}, {$invoice.invoiceId})" class="form-button" title="Edit Product">
-                            <img src="skin/images/icon-edit.png" class="icon-image icon-size-small" alt="" />
-                        </a>
-                        <a href="#" onclick="$app.module('invoice').deleteInvoiceProduct({$product.productId}, {$invoice.invoiceId})" class="form-button" title="Remove Product">
-                            <img src="skin/images/icon-remove.png" class="icon-image icon-size-small" alt="" />
-                        </a>
+                        {if $product.productId neq null}
+                            <a href="#" onclick="$app.module('invoice').editInvoiceProduct({$product.productId}, {$invoice.invoiceId})" class="form-button" title="Edit Product">
+                                <img src="skin/images/icon-edit.png" class="icon-image icon-size-small" alt="" />
+                            </a>
+                            <a href="#" onclick="$app.module('invoice').deleteInvoiceProduct({$product.productId}, {$invoice.invoiceId})" class="form-button" title="Remove Product">
+                                <img src="skin/images/icon-remove.png" class="icon-image icon-size-small" alt="" />
+                            </a>
+                        {else}
+                            <br><br>
+                        {/if}
                     </td>
                 </tr>
                 {foreachelse}
@@ -126,7 +138,7 @@
                     <td colspan="3"></td>
                     <td>SUB TOTAL :</td>
                     <td>
-                        {number_format($invoice->subTotal(), 2)}
+                        {number_format($invoice->subTotal(),2)}
                     </td>
                 </tr>
                 <tr>
