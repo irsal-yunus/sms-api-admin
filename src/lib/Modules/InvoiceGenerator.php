@@ -34,10 +34,11 @@ class InvoiceGenerator
      */
     public function generate()
     {
-        $setting = $this->getSetting();
+        $setting  = $this->getSetting();
         $profiles = $this->getProfiles();
 
-        if (empty($profiles)) {
+        if (empty($profiles))
+        {
             // Logger
             $this->logger->info('NO Profile that should generate in this month or the invoices already generated for this month');
             echo "\033[1;31mNo Profiles\n\033[1;37m";
@@ -52,10 +53,12 @@ class InvoiceGenerator
         $maxLength = max(array_map('strlen', array_column($profiles, 'companyName')));
         // End Logger
 
-        foreach ($profiles as $profile) {
+        foreach ($profiles as $profile)
+        {
             // Logger
             $repeat = str_repeat(' ', $maxLength - strlen($profile->companyName));
-            echo "\033[1;34m$profile->companyName$repeat\t\t\t";
+            $repeat2 = str_repeat(' ', $maxLength - strlen($profile->profileName));
+            echo "\033[1;34m$profile->companyName $repeat\t\t\t $profile->profileName $repeat2\t\t\t";
             // End Logger
 
             try {
@@ -63,7 +66,8 @@ class InvoiceGenerator
 
                 $invoice = $this->insertInvoice($setting, $profile);
 
-                foreach ($profile->products as $product) {
+                foreach ($profile->products as $product)
+                {
                     $product->profile2History($invoice, $invoice->key());
                 }
 
@@ -72,16 +76,18 @@ class InvoiceGenerator
                 $profile->commit();
 
                 // Logger
-                $this->logger->info('Success Invoice for '. $profile->companyName);
+                $this->logger->info('Success Invoice for ' . $profile->companyName);
                 echo "\033[1;32mSuccess\n\033[1;37m";
                 // End Logger
-            } catch (\Exception $e) {
+            }
+            catch (\Exception $e)
+            {
                 $profile->rollback();
                 $invoice->deleteInvoiceFile();
                 $setting->refreshInvoiceNumber();
 
                 // Logger
-                $this->logger->error('Failed Invoice for '. $profile->companyName);
+                $this->logger->error('Failed Invoice for ' . $profile->companyName);
                 $this->logger->error($e->getMessage());
                 $this->logger->error($e->getTraceAsString());
                 echo "\033[1;31mFailed\n\033[1;37m";
@@ -114,7 +120,7 @@ class InvoiceGenerator
         ];
 
         $history           = $this->history($attributes);
-        $history->fileName = $this->getFolderPath($history).$this->generateFileName($history, $profile);
+        $history->fileName = $this->getFolderPath($history) . $this->generateFileName($history, $profile);
 
         $history->save();
 
@@ -133,9 +139,16 @@ class InvoiceGenerator
     {
         $invoice->loadProduct();
 
-        $folderPath     = $this->getFolderPath($invoice);
-        $fileName       = $folderPath.$this->generateFileName($invoice, $profile);
-        $page           = \SmsApiAdmin::getTemplate();
+        if ($profile->useMinCommitment)
+        {
+            $invoice->minimumCommitment($profile);
+        }
+
+        // var_dump($invoice->products);
+
+        $folderPath = $this->getFolderPath($invoice);
+        $fileName   = $folderPath . $this->generateFileName($invoice, $profile);
+        $page       = \SmsApiAdmin::getTemplate();
 
         $page->assign('profile', $profile);
         $page->assign('setting', $setting);
@@ -143,28 +156,28 @@ class InvoiceGenerator
         $page->assign('pageCount', 1);
         $page->setTemplateDir(SMSAPIADMIN_TEMPLATE_DIR . "/pdf");
 
-        $marginTop  = $invoice->invoiceType === $invoice::ORIGINAL ? 45 : 50;
-        $content    = $page->fetch('invoice.content.tpl');
-        $pageCount  = $this->getPageCount(['margin_top' => $marginTop], $content);
+        $marginTop = $invoice->invoiceType === $invoice::ORIGINAL ? 45 : 50;
+        $content   = $page->fetch('invoice.content.tpl');
+        $pageCount = $this->getPageCount(['margin_top' => $marginTop], $content);
 
-        if ($pageCount > 1) {
+        if ($pageCount > 1)
+        {
             $page->assign('pageCount', $pageCount);
-            $content    = $page->fetch('invoice.content.tpl');
+            $content = $page->fetch('invoice.content.tpl');
         }
 
-        $mpdf       = $this->initMpdfInstance(['margin_top' => $marginTop]);
-        $header     = $page->fetch('invoice.header.tpl');
-        $footer     = $page->fetch('invoice.footer.tpl');
+        $mpdf   = $this->initMpdfInstance(['margin_top' => $marginTop]);
+        $header = $page->fetch('invoice.header.tpl');
+        $footer = $page->fetch('invoice.footer.tpl');
 
         $mpdf->SetHTMLFooter($footer);
         $mpdf->SetHTMLHeader($header);
         $mpdf->WriteHTML($content);
 
-        $mpdf->Output(SMSAPIADMIN_INVOICE_DIR.$fileName, Destination::FILE);
+        $mpdf->Output(SMSAPIADMIN_INVOICE_DIR . $fileName, Destination::FILE);
 
         return $fileName;
     }
-
 
     /**
      * Get page count from content
@@ -190,9 +203,9 @@ class InvoiceGenerator
     protected function initMpdfInstance($config = [])
     {
         $defaultConfig = [
-            'margin_left' => 10,
-            'margin_right' => 10,
-            'margin_top' => 45,
+            'margin_left'   => 10,
+            'margin_right'  => 10,
+            'margin_top'    => 45,
             'margin_bottom' => 30,
         ];
 
@@ -210,18 +223,17 @@ class InvoiceGenerator
      */
     public function generateFileName(InvoiceHistory $invoice, InvoiceProfile $profile)
     {
-        $startDate      = strtotime($invoice->startDate);
-        $fullMonth      = date('F', $startDate);
-        $clientName     = $profile->companyName;
-        $status         = $invoice->isLock() ? "FINAL" : "PREVIEW";
-        $profileName    = $profile->profileName ?? 'NO_PROFILE_NAME';
-        $invoiceUsage   = $invoice->invoiceUsage > 0 ? "_{$invoice->invoiceUsage}" : '';
+        $startDate    = strtotime($invoice->startDate);
+        $fullMonth    = date('F', $startDate);
+        $clientName   = $profile->companyName;
+        $status       = $invoice->isLock() ? "FINAL" : "PREVIEW";
+        $profileName  = $profile->profileName ?? 'NO_PROFILE_NAME';
+        $invoiceUsage = $invoice->invoiceUsage > 0 ? "_{$invoice->invoiceUsage}" : '';
 
-        $fileName       = "{$invoice->invoiceNumber}_{$clientName}_($profileName)_{$fullMonth}_{$invoice->invoiceType}{$invoiceUsage}_{$status}.pdf";
+        $fileName = "{$invoice->invoiceNumber}_{$clientName}_($profileName)_{$fullMonth}_{$invoice->invoiceType}{$invoiceUsage}_{$status}.pdf";
 
         return $this->parseFileName($fileName);
     }
-
 
     /**
      * Parse filename into accepted characters
@@ -248,8 +260,9 @@ class InvoiceGenerator
         $month      = date('m', $startDate);
         $folderPath = "$year/$month/";
 
-        if (!file_exists(SMSAPIADMIN_INVOICE_DIR.$folderPath)) {
-            mkdir(SMSAPIADMIN_INVOICE_DIR.$folderPath, 0777, true);
+        if (!file_exists(SMSAPIADMIN_INVOICE_DIR . $folderPath))
+        {
+            mkdir(SMSAPIADMIN_INVOICE_DIR . $folderPath, 0777, true);
         }
 
         return $folderPath;
@@ -274,7 +287,7 @@ class InvoiceGenerator
      */
     protected function getProfiles()
     {
-        return (new InvoiceProfile)->getProfileForAutoGenerate();
+        return (new InvoiceProfile())->getProfileForAutoGenerate();
     }
 
     /**

@@ -49,7 +49,7 @@
             </select>
             <span class="ui-helper-clearfix"></span>
             <label id="minimumLabel"></label>
-            <input name="minCommitmentAmount"  data-mask="" value="{$profile.minCommitmentAmount}" type="text" maxlength="15" class="minAMount" />
+            <input name="minCommitmentAmount"  data-mask="" value="{$profile.minCommitmentAmount}" type="text" maxlength="15" id="minAmount" />
             <div>
                 <span class="ui-helper-clearfix"></span>
                 <div class="combine">

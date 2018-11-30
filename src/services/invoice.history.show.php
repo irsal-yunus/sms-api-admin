@@ -33,24 +33,7 @@ try {
         $profile = $history->getProfile();
 
         if ($profile['useMinCommitment'] == 1) {
-            $minimumCommitment = $history->minimumCommitment($profile,$invoiceId);
-            if ($minimumCommitment) {
-                $products   = $history->products;
-                if ($profile['combinedMinCommitment']==0)
-                {
-                    foreach ($minimumCommitment as $minimum)
-                    {
-                        $products[] = $minimum;
-                    }
-                    $history->products = $products;
-                }
-                else
-                {
-                    $products[]        = $minimumCommitment;
-                    $history->products = $products;
-                }
-
-            }
+            $history->minimumCommitment($profile);
         }
 
         $page->assign('profile', $profile);

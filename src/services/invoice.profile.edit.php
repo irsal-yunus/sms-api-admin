@@ -30,6 +30,9 @@ try {
 
     $clients = $client->getSelectClient($profile->clientId);
     $banks = $bank->all();
+    if ($profile->minCommitmentType == 'QUANTITY') {
+        $profile->minCommitmentAmount = (int)$profile->minCommitmentAmount;
+    }
     $page->assign('profile', $profile);
     $page->assign('banks', array_column($banks, 'bankName', 'bankId'));
     $page->assign('clients', $clients);

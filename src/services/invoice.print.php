@@ -22,6 +22,7 @@ try {
     $historyModel = new InvoiceHistory();
     $profileModel = new InvoiceProfile();
     $settingModel = new InvoiceSetting();
+    $minimumCommitment = null;
 
     $history = $historyModel->withProduct($invoiceId);
 
@@ -30,6 +31,7 @@ try {
     }
 
     $history = $history[0];
+    $profile = $history->getProfile();
 
     if (!$history->isLock()) {
         $history->createInvoiceFile();

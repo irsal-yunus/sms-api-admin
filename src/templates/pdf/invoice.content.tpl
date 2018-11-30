@@ -66,10 +66,13 @@
                     </td>
                     <td class="desc">
                         {if $product.isPeriod eq '1'}
-                        {$product.productName} period {$product->period|date_format:"1 - %e %B %Y"}
+                            {$product.productName} period {$product->period|date_format:"1 - %e %B %Y"}
+                        {else if $product.productId neq null}
+                            {$product.productName} on {$product->period|date_format:" jS F, Y"}
                         {else}
-                        {$product.productName} on {$product->period|date_format:" jS F, Y"}
+                            {$product.productName}
                         {/if}
+
                         {if $product.userApiReport}
                             ({$product.userApiReport})
                         {/if}

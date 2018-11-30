@@ -2,12 +2,10 @@
 
 namespace Firstwap\SmsApiAdmin\lib\model;
 
-use Firstwap\SmsApiAdmin\lib\Modules\InvoiceGenerator;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProduct;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
 use Firstwap\SmsApiAdmin\lib\model\ModelContract;
-use Mpdf\Mpdf;
-use Mpdf\Output\Destination;
+use Firstwap\SmsApiAdmin\lib\Modules\InvoiceGenerator;
 use \DateTime;
 use \Exception;
 use \NumberFormatter;
@@ -25,21 +23,20 @@ class InvoiceHistory extends ModelContract
      * Constant Invoice Status
      */
     const INVOICE_UNLOCK = 0;
-    const INVOICE_LOCK = 1;
+    const INVOICE_LOCK   = 1;
 
     /**
      * Constance Invoice Type
      * ORIGINAL, COPY, REVISED
      */
-    const ORIGINAL  = "ORIGINAL";
-    const COPIED    = "COPIED";
-    const REVISED   = "REVISED";
-
+    const ORIGINAL = "ORIGINAL";
+    const COPIED   = "COPIED";
+    const REVISED  = "REVISED";
 
     /**
      * Minimum Commitment Constant
      */
-    const MINIMUM_QTY = "QTY";
+    const MINIMUM_QTY   = "QUANTITY";
     const MINIMUM_PRICE = "PRICE";
 
     /**
@@ -76,14 +73,14 @@ class InvoiceHistory extends ModelContract
     {
         $query = "SELECT * FROM {$this->tableName} "
             . " LEFT JOIN " . DB_INVOICE . ".INVOICE_PROFILE ON {$this->tableName}.PROFILE_ID = INVOICE_PROFILE.PROFILE_ID "
-            . " LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = INVOICE_PROFILE.CLIENT_ID "
+            . " LEFT JOIN " . DB_SMS_API_V2 . ".CLIENT on " . DB_SMS_API_V2 . ".CLIENT.CLIENT_ID = INVOICE_PROFILE.CLIENT_ID "
             . " WHERE ARCHIVED_DATE is null";
 
         if (strtolower($status) === 'locked' || $status === self::INVOICE_LOCK)
         {
             $query .= " AND STATUS = " . self::INVOICE_LOCK;
         }
-        else if (strtolower($status) === 'unlocked' || $status === self::INVOICE_UNLOCK)
+        elseif (strtolower($status) === 'unlocked' || $status === self::INVOICE_UNLOCK)
         {
             $query .= " AND STATUS = " . self::INVOICE_UNLOCK;
         }
@@ -125,7 +122,9 @@ class InvoiceHistory extends ModelContract
             $this->commit();
 
             return $deleted;
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e)
+        {
             $this->rollBack();
             \Logger::getLogger("service")->error($e->getMessage());
             \Logger::getLogger("service")->error($e->getTraceAsString());
@@ -156,7 +155,8 @@ class InvoiceHistory extends ModelContract
      */
     public function whereStartDate($timestamp)
     {
-        if (!strtotime("@$timestamp")) {
+        if (!strtotime("@$timestamp"))
+        {
             return;
         }
 
@@ -176,10 +176,14 @@ class InvoiceHistory extends ModelContract
      */
     public function withProduct($historyId = null)
     {
-        if (is_null($historyId)) {
+        if (is_null($historyId))
+        {
             $data = $this->all();
-        } else {
-            if (!$model = $this->find($historyId)) {
+        }
+        else
+        {
+            if (!$model = $this->find($historyId))
+            {
                 throw new Exception("History Not Found");
             }
             $data = [$model];
@@ -198,15 +202,17 @@ class InvoiceHistory extends ModelContract
      */
     public function loadProduct(array &$data = null)
     {
-        if (is_null($data)) {
+        if (is_null($data))
+        {
             return $this->products = $this->getProduct($this->key());
         }
 
         $historyIds = array_column($data, $this->keyName());
-        $products = $this->getProduct($historyIds);
-        $products = $this->groupBy($products, 'ownerId');
+        $products   = $this->getProduct($historyIds);
+        $products   = $this->groupBy($products, 'ownerId');
 
-        foreach ($data as &$item) {
+        foreach ($data as &$item)
+        {
             $item['products'] = $products[$item->key()] ?? null;
         }
     }
@@ -219,7 +225,8 @@ class InvoiceHistory extends ModelContract
      */
     public function getProduct($historyId)
     {
-        if (empty($historyId)) {
+        if (empty($historyId))
+        {
             return [];
         }
 
@@ -314,7 +321,7 @@ class InvoiceHistory extends ModelContract
         $this->deleteInvoiceFile();
 
         $this->update([
-            'status' => self::INVOICE_LOCK,
+            'status'   => self::INVOICE_LOCK,
             'lockedAt' => date('Y-m-d H:i:s'),
         ]);
 
@@ -345,7 +352,8 @@ class InvoiceHistory extends ModelContract
      */
     public function reviseInvoice()
     {
-        if ($existingRevised = $this->hasExistingInvoiceRevise()) {
+        if ($existingRevised = $this->hasExistingInvoiceRevise())
+        {
             $this->attributes = $existingRevised->attributes();
             return $this->key();
         }
@@ -360,7 +368,6 @@ class InvoiceHistory extends ModelContract
         return $this->duplicateInvoice($attributes);
     }
 
-
     /**
      * Check invoice that has unlocked status for revised invoice
      * User can not revise invoice when there is another invoice
@@ -373,7 +380,7 @@ class InvoiceHistory extends ModelContract
         $unlockedStatus = self::INVOICE_UNLOCK;
         $revisedType    = self::REVISED;
 
-        $query          = "SELECT * FROM {$this->tableName}
+        $query = "SELECT * FROM {$this->tableName}
             WHERE
                 INVOICE_NUMBER   = {$this->invoiceNumber}
                 AND PROFILE_ID   = {$this->profileId}
@@ -399,7 +406,7 @@ class InvoiceHistory extends ModelContract
 
         if (!empty($invoiceType))
         {
-            $query .= " AND INVOICE_TYPE = '".strtoupper($invoiceType)."'";
+            $query .= " AND INVOICE_TYPE = '" . strtoupper($invoiceType) . "'";
         }
 
         return (int) $this->select($query)->fetchColumn();
@@ -417,12 +424,15 @@ class InvoiceHistory extends ModelContract
     {
         $profile = $this->profile()->withProduct($data['profileId']);
 
-        if (empty($profile)) {
+        if (empty($profile))
+        {
             throw new Exception("Profile not found");
         }
 
-        if ($products = $profile[0]->products) {
-            foreach ($products as $product) {
+        if ($products = $profile[0]->products)
+        {
+            foreach ($products as $product)
+            {
                 $product->profile2History($data, $invoiceId);
             }
         }
@@ -454,27 +464,28 @@ class InvoiceHistory extends ModelContract
      */
     public function subTotal($useReport)
     {
-        if (empty($this->products)) {
+        if (empty($this->products))
+        {
             return 0;
         }
 
-        if ($useReport!==null)
+        if ($useReport !== null)
         {
-            return array_reduce($this->products, function ($carry, $product) {
-                if((int)$product->useReport!==0)
+            return array_reduce($this->products, function ($carry, $product)
+            {
+                if ((int) $product->useReport !== 0)
                 {
                     $carry += $product->amount();
                 }
                 return round($carry, 2);
             }, 0);
         }
-        else
+
+        return array_reduce($this->products, function ($carry, $product)
         {
-            return array_reduce($this->products, function ($carry, $product) {
-                $carry += $product->amount();
-                return round($carry, 2);
-            }, 0);
-        }
+            $carry += $product->amount();
+            return round($carry, 2);
+        }, 0);
     }
 
     /**
@@ -494,7 +505,7 @@ class InvoiceHistory extends ModelContract
      */
     public function spellTotal()
     {
-        $fmt = new NumberFormatter('en', NumberFormatter::SPELLOUT);
+        $fmt       = new NumberFormatter('en', NumberFormatter::SPELLOUT);
         $totalWord = $fmt->format($this->total());
 
         return ucwords($totalWord);
@@ -517,7 +528,7 @@ class InvoiceHistory extends ModelContract
      */
     public function paymentPeriod()
     {
-        $dueDate = new DateTime($this->dueDate);
+        $dueDate   = new DateTime($this->dueDate);
         $startDate = new DateTime($this->startDate);
 
         return $dueDate->diff($startDate)->format("%d");
@@ -533,13 +544,14 @@ class InvoiceHistory extends ModelContract
      */
     public function isInvoiceAlreadyExists($paymentDate, $profileId, $invoiceId = null)
     {
-        $date = new DateTime($paymentDate);
+        $date      = new DateTime($paymentDate);
         $monthYear = $date->format('Y-m');
-        $query = "SELECT COUNT(*) FROM {$this->tableName}
+        $query     = "SELECT COUNT(*) FROM {$this->tableName}
             WHERE DATE_FORMAT(START_DATE, \"%Y-%m\") = \"{$monthYear}\"
             AND PROFILE_ID = $profileId";
 
-        if (!empty($invoiceId)) {
+        if (!empty($invoiceId))
+        {
             $query .= " AND INVOICE_ID != $invoiceId ";
         }
 
@@ -573,16 +585,22 @@ class InvoiceHistory extends ModelContract
      */
     public function deleteInvoiceFile()
     {
-        if ($this->fileExists()) {
-            if (unlink($this->filePath())) {
-                \Logger::getLogger("service")->info("Success Delete File: ".$this->filePath());
+        if ($this->fileExists())
+        {
+            if (unlink($this->filePath()))
+            {
+                \Logger::getLogger("service")->info("Success Delete File: " . $this->filePath());
                 return true;
-            } else {
-                \Logger::getLogger("service")->error("Failed Delete File: ".$this->filePath());
+            }
+            else
+            {
+                \Logger::getLogger("service")->error("Failed Delete File: " . $this->filePath());
                 return false;
             }
-        } else {
-            \Logger::getLogger("service")->warn("File Not Found: ".$this->filePath());
+        }
+        else
+        {
+            \Logger::getLogger("service")->warn("File Not Found: " . $this->filePath());
             return false;
         }
     }
@@ -604,7 +622,7 @@ class InvoiceHistory extends ModelContract
      */
     public function getSetting()
     {
-        return (new InvoiceSetting)->getSetting();
+        return (new InvoiceSetting())->getSetting();
     }
 
     /**
@@ -615,9 +633,10 @@ class InvoiceHistory extends ModelContract
     public function createInvoiceFile()
     {
         $this->deleteInvoiceFile();
-        $profile    = $this->getProfile();
-        $setting    = $this->getSetting();
-        $fileName   = $this->generator()->createPdfFile($this, $profile, $setting);
+
+        $profile  = $this->getProfile();
+        $setting  = $this->getSetting();
+        $fileName = $this->generator()->createPdfFile($this, $profile, $setting);
 
         return $this->update(compact('fileName'));
     }
@@ -629,7 +648,7 @@ class InvoiceHistory extends ModelContract
      */
     protected function generator()
     {
-        return new InvoiceGenerator;
+        return new InvoiceGenerator();
     }
 
     /**
@@ -639,8 +658,8 @@ class InvoiceHistory extends ModelContract
      */
     public function downloadFile()
     {
-
-        if ($this->fileExists()) {
+        if ($this->fileExists())
+        {
             ob_start();
             $filePath = $this->filePath();
             header('Pragma: public');
@@ -654,7 +673,9 @@ class InvoiceHistory extends ModelContract
             header('Content-Length: ' . filesize($filePath));
             ob_end_clean();
             @readfile($filePath);
-        } else {
+        }
+        else
+        {
             http_response_code(404);
             echo "File Not Found ";
         }
@@ -667,7 +688,8 @@ class InvoiceHistory extends ModelContract
      */
     public function previewFile()
     {
-        if ($this->fileExists()) {
+        if ($this->fileExists())
+        {
             ob_start();
             $filePath = $this->filePath();
             header('Content-Type: application/pdf');
@@ -678,7 +700,9 @@ class InvoiceHistory extends ModelContract
             header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
             ob_end_clean();
             @readfile($filePath);
-        } else {
+        }
+        else
+        {
             http_response_code(404);
             echo "File Not Found";
         }
@@ -694,7 +718,6 @@ class InvoiceHistory extends ModelContract
         return self::INVOICE_LOCK === intval($this->status);
     }
 
-
     /**
      * Check invoice is already expired
      *
@@ -708,88 +731,118 @@ class InvoiceHistory extends ModelContract
         return $dueDate < $currentDate;
     }
 
-    //---------------------------------------------------------
-
-    public function totalQty(){
-        if (empty($this->products)) {
+    /**
+    * get total quantity of current product(product with useReport only)
+    *
+    * @return int
+    */
+    public function totalQty()
+    {
+        if (empty($this->products))
+        {
             return 0;
         }
 
-        return array_reduce($this->products, function ($carry, $product) {
-            if ((int)$product->useReport!==0) {
-                 $carry += $product->qty;
+        return array_reduce($this->products, function ($carry, $product)
+        {
+            if ((int) $product->useReport !== 0)
+            {
+                $carry += $product->qty;
             }
             return $carry;
         }, 0);
 
-
     }
 
-    public function makeNewProduct($productName,$productPrice)
+    /**
+    * Create new object for minimum commitment product
+    *
+    * @param   $productName  [string]
+    * @param   $productPrice [float]
+    * @return  InvoiceProduct
+    */
+    public function makeNewProduct($productName, $productPrice)
     {
-        $object = new InvoiceProduct;
-        $object->productName  =  $productName;
-        $object->unitPrice    =  $productPrice;
-        $object->qty          =  1;
+        $object              = new InvoiceProduct();
+        $object->productName = $productName;
+        $object->unitPrice   = $productPrice;
+        $object->qty         = 1;
+
         return $object;
     }
 
-    public function notCombined($type,$name,$commitmentValue,$minCharge){
-        $appendedProduct    = [];
+    /**
+     * Create minimum commitment for each product
+     * @param   $type            [string]
+     * @param   $name            [string]
+     * @param   $commitmentValue [float]
+     * @param   $minCharge       [float]
+     * @return  array
+     */
+    public function notCombined($type, $name, $commitmentValue, $minCharge)
+    {
+        $appendedProduct = [];
+
         foreach ($this->products as $product)
         {
-            $value     = ($type=='PRICE') ? $product->amount() : $product->qty;
-            if ( ( (int)$value < (int)$commitmentValue ) && ((int)$product->useReport!==0))
+            $value = ($type == 'PRICE') ? $product->amount() : $product->qty;
+            if (((int) $value < (int) $commitmentValue) && ((int) $product->useReport !== 0))
             {
-                $newCommitmentPrice = ($type=='PRICE') ? $commitmentValue-$product->amount(): $minCharge;
+                $newCommitmentPrice = ($type == 'PRICE') ? $commitmentValue - $product->amount() : $minCharge;
                 $newName            = $name . $product->productName;
-                array_push($appendedProduct,$this->makeNewProduct($newName,$newCommitmentPrice) );
+                array_push($appendedProduct, $this->makeNewProduct($newName, $newCommitmentPrice));
             }
         }
+
         return $appendedProduct;
     }
 
-    public function minimumCommitment($profile){
-        if(!empty($this->products)){
-            if ($profile['minCommitmentType']=='PRICE')
+    /**
+     * To Calculate minimum commitment based on invoice profile
+     * @param   $profile [InvoiceProfile]
+     * @return  array
+     */
+    public function minimumCommitment($profile)
+    {
+        $products = $this->products;
+
+        if (!empty($products))
+        {
+            if ($profile['minCommitmentType'] === static::MINIMUM_PRICE)
             {
-                if ($profile['combinedMinCommitment']==1)
+                if ($profile['combinedMinCommitment'])
                 {
                     $subTotal = $this->subTotal(1);
-                    if ($subTotal < (int)$profile['minCommitmentAmount'])
-                    {
-                        return $product =  $this->makeNewProduct('Minimum Price Commitment Combined',
-                                                                $profile['minCommitmentAmount']-$subTotal);
-                    }
-                    return null;
-                }
-                else if ($profile['combinedMinCommitment']==0)
-                {
-                    return $appendedProduct = $this->notCombined($profile[ 'minCommitmentType'],
-                                                                'Minimum Commitment for ',
-                                                                $profile['minCommitmentAmount']);
-                }
-            }
-            else if ($profile['minCommitmentType']=='QUANTITY')
-            {
-                if ($profile['combinedMinCommitment']==1) {
-                    if ($this->totalQty() < (int)$profile['minCommitmentAmount'] && (int)$this->totalQty() !== 0) {
-                        return $product =  $this->makeNewProduct('Minimum Charge Combined',
-                                                                $profile['minCharge']);
-                    }
-                    return null;
-                }
-                else if ($profile['combinedMinCommitment']==0)
-                {
-                    return $appendedProduct = $this->notCombined($profile['minCommitmentType'],
-                                                                'Minimum Charge for ',
-                                                                $profile['minCommitmentAmount'],
-                                                                $profile['minCharge']);
-                }
-            }
-        }
-        return null;
-    }
 
+                    if ($subTotal < (int) $profile['minCommitmentAmount'])
+                    {
+                        $products[] = $this->makeNewProduct('Minimum Commitment Surcharge (Price Combined)', $profile['minCommitmentAmount'] - $subTotal);
+                    }
+                }
+                else
+                {
+                    $newProducts = $this->notCombined($profile['minCommitmentType'], 'Minimum Commitment Surcharge (Price) for ', $profile['minCommitmentAmount']);
+                    $products    = array_merge($products, $newProducts);
+                }
+            }
+            elseif ($profile['minCommitmentType'] === static::MINIMUM_QTY)
+            {
+                if ($profile['combinedMinCommitment'])
+                {
+                    if ($this->totalQty() < (int) $profile['minCommitmentAmount'] && (int) $this->totalQty() > 0)
+                    {
+                        $products[] = $this->makeNewProduct('Minimum Commitment Surcharge (Quantity Combined) ', $profile['minCharge']);
+                    }
+                }
+                else
+                {
+                    $newProducts = $this->notCombined($profile['minCommitmentType'], 'Minimum Commitment Surcharge (Quantity) for ', $profile['minCommitmentAmount'], $profile['minCharge']);
+                    $products    = array_merge($products, $newProducts);
+                }
+            }
+            $this->products = $products;
+        }
+        return $products;
+    }
 
 }

@@ -213,13 +213,15 @@
                 if (type=='PRICE') {
                     $('#minimumLabel').text("Minimum Price");
                     $('.quantity').hide();
-                    $('.minAMount').attr("data-mask",'000,000,000,000,000.00');
+                    $('#minAmount').attr("data-mask",'000,000,000,000,000.00');
+                    initMasking();
 
                 }
                 else{
                    $('#minimumLabel').text("Minimum Quantity");
                    $('.quantity').show();
-                   $('.minAMount').attr("data-mask",'###,###,###,###,###,###');
+                   $('#minAmount').attr("data-mask",'###,###,###,###,###,###');
+                   initMasking();
                 }
             }).trigger('change');
 
