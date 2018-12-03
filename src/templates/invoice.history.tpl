@@ -11,6 +11,8 @@
     <dl class="admin-definitions">
         <dt>Customer ID</dt>
         <dd>{$profile.customerId}</dd>
+        <dt>Profile Name</dt>
+        <dd>{$profile.profileName}</dd>
         <dt>Client Name</dt>
         <dd><a href="#" onclick="$app.module('client').viewClient({$profile.clientId});">{$profile.companyName}</a></dd>
         <dt>API Users</dt>

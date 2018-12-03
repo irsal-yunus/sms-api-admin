@@ -31,12 +31,20 @@ class InvoiceProfile extends ModelContract
     /**
      * Get all Profile data
      *
+     * @param Integer $includeArchived
      * @return array
      */
-    public function all($nonArchived)
+    public function all($includeArchived = false)
     {
-        $nonArchived = ($nonArchived===1) ? "WHERE ARCHIVED_DATE is null" : "";
-        return $this->select("{$this->defaultQuery()} {$nonArchived} ORDER BY CLIENT.COMPANY_NAME ASC")->fetchAll();
+        $query = $this->defaultQuery();
+
+        if ($includeArchived === false) {
+            $query .= " WHERE ARCHIVED_DATE IS NULL ";
+        }
+
+        $query .=  ' ORDER BY CLIENT.COMPANY_NAME ASC, PROFILE_NAME ASC';
+
+        return $this->select($query)->fetchAll();
     }
 
     /**
@@ -185,15 +193,15 @@ class InvoiceProfile extends ModelContract
     }
 
     /**
-     * validate client is duplicate or not
+     * validate profile name is duplicate or not
      *
-     * @param String $clientId
+     * @param String $profileName
      * @param mixed $profileId
      * @return  bool
      */
-    public function isClientDuplicate($clientId, $profileId = null)
+    public function isProfileNameDuplicate($profileName, $profileId = null)
     {
-        $query = "SELECT count(1) from $this->tableName where CLIENT_ID = '{$clientId}'";
+        $query = "SELECT count(1) from $this->tableName where PROFILE_NAME = '{$profileName}'";
 
         if ($profileId) {
             $query .= " AND {$this->primaryKey} != $profileId";

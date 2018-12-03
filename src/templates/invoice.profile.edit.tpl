@@ -2,6 +2,9 @@
     <fieldset class="float-centre">
         <input type="hidden" name="profileId" value="{$profile.profileId}">
         <legend>Invoice Profile</legend>
+        <label class="form-flag-required">Profile Name</label>
+        <input name="profileName" value="{$profile.profileName}" type="text" maxlength="100" />
+        <span class="ui-helper-clearfix"></span>
         <label class="form-flag-required">Client</label>
         <select name="clientId" size="1" class="flexible-width" disabled>
             {html_options options=$clients selected=$profile.clientId}}

@@ -4,11 +4,13 @@
  */
 require_once '../../vendor/autoload.php';
 
+use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProduct;
 
-$logger = Logger::getRootLogger();
 SmsApiAdmin::filterAccess();
-$service = new AppJsonService();
+
+$logger     = Logger::getRootLogger();
+$service    = new AppJsonService();
 
 function convertCurrencyString($string)
 {
@@ -17,8 +19,7 @@ function convertCurrencyString($string)
 
 try {
     $errorFields = [];
-
-    $definitions = [
+    $newData = filter_input_array(INPUT_POST, [
         "productName" => FILTER_SANITIZE_STRING,
         "reportName"  => FILTER_SANITIZE_STRING,
         "ownerType"   => FILTER_SANITIZE_STRING,
@@ -35,18 +36,7 @@ try {
         ],
         "useReport"   => FILTER_SANITIZE_NUMBER_INT,
         "manualInput" => FILTER_SANITIZE_NUMBER_INT,
-    ];
-
-    $newData = filter_input_array(INPUT_POST, $definitions);
-
-    if ($newData['isPeriod'] === 0) {
-        $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
-        if (strtotime($date) === false) {
-            $errorFields['date'] = 'Date input is wrong format';
-        } else {
-            $newData['period'] = date('Y-m-d', strtotime($date));
-        }
-    }
+    ]);
 
     foreach ($newData as $key => $value) {
         if ($value === null) {
@@ -58,6 +48,17 @@ try {
         $service->setStatus(false);
         $service->summarise('No data to add');
         $service->deliver();
+    }
+
+    if ($newData['isPeriod'] === 0) {
+        $date       = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
+        $timestamp  = strtotime($date);
+
+        if ($timestamp === false) {
+            $errorFields['date'] = 'Date input is wrong format';
+        } else {
+            $newData['period'] = date('Y-m-d', $timestamp);
+        }
     }
 
     if (empty($newData['productName'])) {
@@ -104,6 +105,17 @@ try {
     } else {
         $model = new InvoiceProduct();
         $model->insertProduct($newData);
+
+        if ($model->isHistory()) {
+            $invoiceModel = new InvoiceHistory;
+
+            if ($invoice = $invoiceModel->find($model->ownerId)) {
+                $invoice->createInvoiceFile();
+            }
+
+            $logger->info($invoice);
+        }
+
         $service->setStatus(true);
         $service->summarise('Product successfully added');
         $service->deliver();
