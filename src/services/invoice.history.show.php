@@ -19,23 +19,28 @@ try {
     }
 
     try {
+
         $historyModel = new InvoiceHistory();
         $profileModel = new InvoiceProfile();
         $settingModel = new InvoiceSetting();
-
+        $minimumCommitment = null;
         $history = $historyModel->withProduct($invoiceId);
 
         if (empty($history)) {
             SmsApiAdmin::returnError("Invoice not found !");
         }
-
         $history = $history[0];
         $profile = $history->getProfile();
+
+        if ($profile['useMinCommitment'] == 1) {
+            $history->minimumCommitment($profile);
+        }
 
         $page->assign('profile', $profile);
         $page->assign('invoice', $history);
         $page->assign('setting', $settingModel->getSetting());
         $page->display('invoice.history.show.tpl');
+
     } catch (Exception $e) {
         $logger->error($e->getTraceAsString());
         SmsApiAdmin::returnError($e->getMessage());

@@ -63,6 +63,8 @@ class InvoiceProfileTest extends TestCase
      */
     protected function initialBank()
     {
+        $model = new InvoiceBank();
+        $model->select("DELETE FROM {$model->tableName()}")->execute();
         $data = [
             'bankId' => 1,
             'bankName' => "BCA",
@@ -70,8 +72,6 @@ class InvoiceProfileTest extends TestCase
             'accountName' => "accountName",
             'accountNumber' => "90909090909",
         ];
-
-        $model = new InvoiceBank();
 
         return $model->insert($data);
     }

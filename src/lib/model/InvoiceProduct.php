@@ -333,4 +333,5 @@ class InvoiceProduct extends ModelContract
     {
         return $this->ownerType === self::PROFILE_PRODUCT;
     }
+
 }

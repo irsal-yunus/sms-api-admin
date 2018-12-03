@@ -29,8 +29,6 @@ try {
         $apiUsers = $profile[0]->loadApiUsers();
 
         if (is_array($apiUsers)) {
-            // var_dump(array_column($apiUsers, 'userId'));
-            // $apiUsers = implode(', ', array_column($apiUsers, 'userName','userId'));
              $apiUsers = array_column($apiUsers, 'userName','userId');
         }
 

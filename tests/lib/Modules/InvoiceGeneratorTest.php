@@ -107,7 +107,7 @@ class InvoiceGeneratorTest extends TestCase
     {
         $this->initialData();
 
-        $this->initialProduct(10);
+        $this->initialProduct(100);
 
         $generator = new InvoiceGenerator;
         $history = new InvoiceHistory;

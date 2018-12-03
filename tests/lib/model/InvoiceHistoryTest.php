@@ -68,6 +68,11 @@ class InvoiceHistoryTest extends TestCase
             'profileId' => 1,
             'bankId' => 1,
             'clientId' => 1,
+            'useMinCommitment' => 1,
+            'minCommitmentType' => 'PRICE',
+            'minCommitmentAmount' => 250000.00,
+            'minCharge'=> null,
+            'combinedMinCommitment' => 0,
         ];
 
         $model = new InvoiceProfile();
@@ -496,6 +501,8 @@ class InvoiceHistoryTest extends TestCase
         $history = $histories[0];
         $this->assertNotEmpty($history);
         $this->assertNotEmpty($history->subTotal());
+
+        $this->assertNotEmpty($history->subTotal(1));
     }
 
     /**
@@ -671,4 +678,135 @@ class InvoiceHistoryTest extends TestCase
             exec("mv " . $invoiceDirTest . " " . $invoiceDir);
         }
     }
+
+    /**
+    * Test totalQty method
+    *
+    * @return void
+    */
+    public function testTotalQtyMethod()
+    {
+        $this->initialData();
+        $this->initialProduct();
+
+        $this->assertEmpty($this->model->totalQty());
+
+        $histories = $this->model->withProduct();
+        $history   = $histories[0];
+
+        $this->assertNotEmpty($history->totalQty());
+
+    }
+
+    /**
+    * Test minimumCommitment method
+    *
+    * @return void
+    */
+    public function testMinimumCommitment()
+    {
+        $this->initialData();
+        $this->initialProduct();
+        $dummyProfile = [
+            'profileId'             => 1,
+            'profileName'           => 'user',
+            'clientId'              => 1,
+            'bankId'                => 1,
+            'autoGenerate'          => 0,
+            'approvedName'          => null,
+            'approvedPosition'      => Null,
+            'useMinCommitment'      => 1,
+            'minCommitmentType'     => 'PRICE',
+            'minCommitmentAmount'   => 250000.00,
+            'minCharge'             => null,
+            'combinedMinCommitment' => 0,
+        ];
+
+        $this->assertEmpty($this->model->minimumCommitment());
+
+        /*
+         Price, with not combined
+         */
+        $histories = $this->model->withProduct();
+        $history   = $histories[0];
+        $this->assertCount(4,$history->minimumCommitment($dummyProfile));
+
+        $histories = $this->model->withProduct();
+        $history   = $histories[0];
+        $products  = $history->minimumCommitment($dummyProfile);
+        $this->assertEmpty($products[2]->productId);
+        $this->assertEmpty($products[3]->productId);
+        $this->assertNotEmpty($products[2]);
+        $this->assertNotEmpty($products[3]);
+
+        /*
+         Price , combined
+         */
+        $histories = $this->model->withProduct();
+        $history   = $histories[0];
+        $dummyProfile['combinedMinCommitment'] = 1;
+        $this->assertCount(3,$history->minimumCommitment($dummyProfile));
+
+        $histories = $this->model->withProduct();
+        $history   = $histories[0];
+        $products  = $history->minimumCommitment($dummyProfile);
+        $this->assertEmpty($products[2]->productId);
+        $this->assertNotEmpty($products[2]);
+
+        /*
+         Price , combined , but dont have any product that have subtotal below
+         minimum commitment amount
+         */
+        $histories = $this->model->withProduct();
+        $history   = $histories[0];
+        $dummyProfile['minCommitmentAmount'] = 1200.00;
+        $this->assertCount(2,$history->minimumCommitment($dummyProfile));
+
+        /*
+        Quantity, Combined
+         */
+        $histories = $this->model->withProduct();
+        $history   = $histories[0];
+        $dummyProfile['minCommitmentType']     = 'QUANTITY';
+        $dummyProfile['minCommitmentAmount']   = 500;
+        $dummyProfile['minCharge']             = 50000.00;
+        $this->assertCount(3,$history->minimumCommitment($dummyProfile));
+
+        $histories = $this->model->withProduct();
+        $history   = $histories[0];
+        $products  = $history->minimumCommitment($dummyProfile);
+        $this->assertEmpty($products[2]->productId);
+        $this->assertNotEmpty($products[2]);
+
+        /*
+        Quantity , Combined, but dont have any product that have total quantity below
+         minimum commitment amount
+        */
+        $histories = $this->model->withProduct();
+        $history   = $histories[0];
+        $dummyProfile['minCommitmentAmount']   = 100;
+        $dummyProfile['minCharge']             = 50000.00;
+        $this->assertCount(2,$history->minimumCommitment($dummyProfile));
+
+        /*
+         Quantity , not combined
+        */
+        $histories = $this->model->withProduct();
+        $history   = $histories[0];
+        $dummyProfile['combinedMinCommitment']  = 0;
+        $dummyProfile['minCommitmentAmount']    = 500;
+        $dummyProfile['minCharge']              = 50000.00;
+        $this->assertCount(4,$history->minimumCommitment($dummyProfile) );
+
+        $histories = $this->model->withProduct();
+        $history   = $histories[0];
+        $products  = $history->minimumCommitment($dummyProfile);
+        $this->assertEmpty($products[2]->productId);
+        $this->assertEmpty($products[3]->productId);
+        $this->assertNotEmpty($products[2]);
+        $this->assertNotEmpty($products[3]);
+
+    }
+
+
 }
