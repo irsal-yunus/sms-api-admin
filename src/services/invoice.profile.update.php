@@ -5,6 +5,7 @@
 require_once '../../vendor/autoload.php';
 
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
+use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
 
 SmsApiAdmin::filterAccess();
 
@@ -38,16 +39,15 @@ try {
 
     $updates = filter_input_array(INPUT_POST, $definitions);
 
-    if ($updates['useMinCommitment']==1 && empty($updates['minCommitmentAmount'])) {
+    if ($updates['useMinCommitment'] == 1 && empty($updates['minCommitmentAmount'])) {
         $errorFields['minCommitmentAmount'] = 'Minimum Commitment Amount should not be empty!';
     }
 
-    if ($updates['minCommitmentType']=="QUANTITY" && empty($updates['minCharge'])) {
+    if ($updates['minCommitmentType'] == InvoiceHistory::MINIMUM_QTY && empty($updates['minCharge'])) {
         $errorFields['minCharge'] = 'Minimum Charge should not be empty!';
     }
 
-
-    if ($updates['minCommitmentType']=="PRICE") {
+    if ($updates['minCommitmentType'] == InvoiceHistory::MINIMUM_PRICE) {
         $updates['minCharge'] = null;
     }
 

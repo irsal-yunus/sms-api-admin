@@ -66,7 +66,7 @@ class InvoiceHistory extends ModelContract
     /**
      * Get all Unlocked invoice
      *
-     * @param String $status
+     * @param  String  $status
      * @return array
      */
     public function whereStatus($status = null)
@@ -95,7 +95,7 @@ class InvoiceHistory extends ModelContract
     /**
      * Get pending count invoice history
      *
-     * @return  int
+     * @return int
      */
     public function pendingCount()
     {
@@ -135,8 +135,8 @@ class InvoiceHistory extends ModelContract
     /**
      * Get invoice history base on profile invoice
      *
-     * @param Int $profileId
-     * @return  array
+     * @param  Int     $profileId
+     * @return array
      */
     public function whereProfile($profileId)
     {
@@ -150,8 +150,8 @@ class InvoiceHistory extends ModelContract
     /**
      * Get invoice history base on period
      *
-     * @param int $timestamp
-     * @return  array
+     * @param  int     $timestamp
+     * @return array
      */
     public function whereStartDate($timestamp)
     {
@@ -171,7 +171,7 @@ class InvoiceHistory extends ModelContract
     /**
      * Get all History with product value
      *
-     * @param string $historyId
+     * @param  string  $historyId
      * @return array
      */
     public function withProduct($historyId = null)
@@ -197,7 +197,7 @@ class InvoiceHistory extends ModelContract
     /**
      * Load product for historys
      *
-     * @param array $data
+     * @param  array   $data
      * @return array
      */
     public function loadProduct(array &$data = null)
@@ -220,7 +220,7 @@ class InvoiceHistory extends ModelContract
     /**
      * Get product that belongsto history
      *
-     * @param int|array $historyId
+     * @param  int|array $historyId
      * @return array
      */
     public function getProduct($historyId)
@@ -254,11 +254,10 @@ class InvoiceHistory extends ModelContract
     }
 
     /**
-     * Create History
+     * Create History ['profileId', 'invoiceNumber', 'startDate', 'dueDate', 'refNumber', 'invoiceType']
      *
-     * @param array $data   Format $data should have attributes :
-     *                      ['profileId', 'invoiceNumber', 'startDate', 'dueDate', 'refNumber', 'invoiceType']
-     * @return  int
+     * @param  array $data Format $data should have attributes :
+     * @return int
      */
     public function createHistory(array $data)
     {
@@ -276,7 +275,7 @@ class InvoiceHistory extends ModelContract
     /**
      * Duplicate invoice from existing one
      *
-     * @param array $data  An Array of updated attribute values
+     * @param  array $data An Array of updated attribute values
      * @return int
      */
     public function duplicateInvoice(array $data = [])
@@ -394,8 +393,8 @@ class InvoiceHistory extends ModelContract
     /**
      * Get last Invoice usage value
      *
-     * @param string $invoiceType
-     * @return  int
+     * @param  string $invoiceType
+     * @return int
      */
     public function lastInvoiceUsage($invoiceType = null)
     {
@@ -416,8 +415,8 @@ class InvoiceHistory extends ModelContract
      * Insert invoice product for current history base on
      * invoice profile
      *
-     * @param array $data
-     * @param Int $invoiceId
+     * @param  array  $data
+     * @param  Int    $invoiceId
      * @return void
      */
     protected function insertProductFromProfile($data, $invoiceId)
@@ -441,9 +440,9 @@ class InvoiceHistory extends ModelContract
     /**
      * validate invoice number is duplicate or not
      *
-     * @param String $invoiceNumber
-     * @param mixed $invoiceId
-     * @return  bool
+     * @param  String $invoiceNumber
+     * @param  mixed  $invoiceId
+     * @return bool
      */
     public function isInvoiceNumberDuplicate($invoiceNumber, $invoiceId = null)
     {
@@ -460,16 +459,17 @@ class InvoiceHistory extends ModelContract
     /**
      * Get sub total product
      *
+     * @param  boolan  $useReport
      * @return float
      */
-    public function subTotal($useReport)
+    public function subTotal($useReport = false)
     {
         if (empty($this->products))
         {
             return 0;
         }
 
-        if ($useReport !== null)
+        if ($useReport)
         {
             return array_reduce($this->products, function ($carry, $product)
             {
@@ -537,9 +537,9 @@ class InvoiceHistory extends ModelContract
     /**
      * Determine whether Invoices already exist this month
      *
-     * @param string $paymentDate
-     * @param integer $profileId
-     * @param integer $invoiceId
+     * @param  string    $paymentDate
+     * @param  integer   $profileId
+     * @param  integer   $invoiceId
      * @return boolean
      */
     public function isInvoiceAlreadyExists($paymentDate, $profileId, $invoiceId = null)
@@ -571,7 +571,7 @@ class InvoiceHistory extends ModelContract
     /**
      * Determain invoice file exists
      *
-     * @return  bool
+     * @return bool
      */
     public function fileExists()
     {
@@ -608,7 +608,7 @@ class InvoiceHistory extends ModelContract
     /**
      * Get invoice profile for current invoice
      *
-     * @return  InvoiceProfile|null
+     * @return InvoiceProfile|null
      */
     public function getProfile()
     {
@@ -618,7 +618,7 @@ class InvoiceHistory extends ModelContract
     /**
      * Get invoice setting
      *
-     * @return  InvoiceSetting
+     * @return InvoiceSetting
      */
     public function getSetting()
     {
@@ -732,10 +732,10 @@ class InvoiceHistory extends ModelContract
     }
 
     /**
-    * get total quantity of current product(product with useReport only)
-    *
-    * @return int
-    */
+     * get total quantity of current product(product with useReport only)
+     *
+     * @return int
+     */
     public function totalQty()
     {
         if (empty($this->products))
@@ -755,12 +755,12 @@ class InvoiceHistory extends ModelContract
     }
 
     /**
-    * Create new object for minimum commitment product
-    *
-    * @param   $productName  [string]
-    * @param   $productPrice [float]
-    * @return  InvoiceProduct
-    */
+     * Create new object for minimum commitment product
+     *
+     * @param  String           $productName
+     * @param  float            $productPrice
+     * @return InvoiceProduct
+     */
     public function makeNewProduct($productName, $productPrice)
     {
         $object              = new InvoiceProduct();
@@ -773,23 +773,24 @@ class InvoiceHistory extends ModelContract
 
     /**
      * Create minimum commitment for each product
-     * @param   $type            [string]
-     * @param   $name            [string]
-     * @param   $commitmentValue [float]
-     * @param   $minCharge       [float]
-     * @return  array
+     *
+     * @param  String  $minimumType
+     * @param  String  $productName
+     * @param  Float   $commitmentValue
+     * @param  Float   $minCharge
+     * @return array
      */
-    public function notCombined($type, $name, $commitmentValue, $minCharge)
+    public function notCombined($minimumType, $productName, $commitmentValue, $minCharge)
     {
         $appendedProduct = [];
 
         foreach ($this->products as $product)
         {
-            $value = ($type == 'PRICE') ? $product->amount() : $product->qty;
+            $value = ($minimumType == static::MINIMUM_PRICE) ? $product->amount() : $product->qty;
             if (((int) $value < (int) $commitmentValue) && ((int) $product->useReport !== 0))
             {
-                $newCommitmentPrice = ($type == 'PRICE') ? $commitmentValue - $product->amount() : $minCharge;
-                $newName            = $name . $product->productName;
+                $newCommitmentPrice = ($minimumType == static::MINIMUM_PRICE) ? $commitmentValue - $product->amount() : $minCharge;
+                $newName            = $productName . $product->productName;
                 array_push($appendedProduct, $this->makeNewProduct($newName, $newCommitmentPrice));
             }
         }
@@ -799,8 +800,9 @@ class InvoiceHistory extends ModelContract
 
     /**
      * To Calculate minimum commitment based on invoice profile
-     * @param   $profile [InvoiceProfile]
-     * @return  array
+     *
+     * @param  InvoiceProfile $profile
+     * @return array
      */
     public function minimumCommitment($profile)
     {
@@ -812,7 +814,7 @@ class InvoiceHistory extends ModelContract
             {
                 if ($profile['combinedMinCommitment'])
                 {
-                    $subTotal = $this->subTotal(1);
+                    $subTotal = $this->subTotal(true);
 
                     if ($subTotal < (int) $profile['minCommitmentAmount'])
                     {

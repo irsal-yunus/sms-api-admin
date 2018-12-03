@@ -50,16 +50,16 @@
             <dt>Minimum Commitment Amout</dt>
             <dd>
                 {if $profile.minCommitmentType eq 'PRICE'}
-                    {{$profile.minCommitmentAmount}} (IDR)
+                    {{number_format($profile.minCommitmentAmount, 2)|default:'-'}} (IDR)
                 {else}
-                    {{intval($profile.minCommitmentAmount)}}
+                    {{number_format(intval($profile.minCommitmentAmount))|default:'-'}}
                 {/if}
             </dd>
             <dt>Use Combined Minimum Commitment? </dt>
             <dd>{($profile.combinedMinCommitment)?"Yes":"No"}</dd>
             {if $profile.minCommitmentType eq 'QUANTITY'}
                 <dt>Minimum Charge </dt>
-                <dd>{$profile.minCharge} (IDR) </dd>
+                <dd>{number_format($profile.minCharge, 2)|default:'-'} (IDR) </dd>
             {/if}
         {/if}
     </dl>

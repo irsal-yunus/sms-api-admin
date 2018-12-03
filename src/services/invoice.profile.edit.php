@@ -7,6 +7,7 @@ require_once SMSAPIADMIN_LIB_DIR . 'model/ApiBusinessClient.php';
 
 use Firstwap\SmsApiAdmin\lib\model\InvoiceBank;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
+use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
 
 $logger = Logger::getLogger("service");
 try {
@@ -30,7 +31,7 @@ try {
 
     $clients = $client->getSelectClient($profile->clientId);
     $banks = $bank->all();
-    if ($profile->minCommitmentType == 'QUANTITY') {
+    if ($profile->minCommitmentType == InvoiceHistory::MINIMUM_QTY) {
         $profile->minCommitmentAmount = (int)$profile->minCommitmentAmount;
     }
     $page->assign('profile', $profile);
