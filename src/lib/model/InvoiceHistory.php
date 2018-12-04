@@ -38,6 +38,8 @@ class InvoiceHistory extends ModelContract
      */
     const MINIMUM_QTY   = "QUANTITY";
     const MINIMUM_PRICE = "PRICE";
+    const MIN_COM_QTY   = "Minimum Commitment";
+    const MIN_COM_PRICE = "Minimum Surcharge";
 
     /**
      * Table name of invoice history
@@ -818,12 +820,12 @@ class InvoiceHistory extends ModelContract
 
                     if ($subTotal < (int) $profile['minCommitmentAmount'])
                     {
-                        $products[] = $this->makeNewProduct('Minimum Commitment Surcharge (Price Combined)', $profile['minCommitmentAmount'] - $subTotal);
+                        $products[] = $this->makeNewProduct(static::MIN_COM_PRICE, $profile['minCommitmentAmount'] - $subTotal);
                     }
                 }
                 else
                 {
-                    $newProducts = $this->notCombined($profile['minCommitmentType'], 'Minimum Commitment Surcharge (Price) for ', $profile['minCommitmentAmount']);
+                    $newProducts = $this->notCombined($profile['minCommitmentType'], static::MIN_COM_PRICE .' for ' , $profile['minCommitmentAmount']);
                     $products    = array_merge($products, $newProducts);
                 }
             }
@@ -833,12 +835,12 @@ class InvoiceHistory extends ModelContract
                 {
                     if ($this->totalQty() < (int) $profile['minCommitmentAmount'] && (int) $this->totalQty() > 0)
                     {
-                        $products[] = $this->makeNewProduct('Minimum Commitment Surcharge (Quantity Combined) ', $profile['minCharge']);
+                        $products[] = $this->makeNewProduct(static::MIN_COM_QTY, $profile['minCharge']);
                     }
                 }
                 else
                 {
-                    $newProducts = $this->notCombined($profile['minCommitmentType'], 'Minimum Commitment Surcharge (Quantity) for ', $profile['minCommitmentAmount'], $profile['minCharge']);
+                    $newProducts = $this->notCombined($profile['minCommitmentType'], static::MIN_COM_QTY .' for ', $profile['minCommitmentAmount'], $profile['minCharge']);
                     $products    = array_merge($products, $newProducts);
                 }
             }
