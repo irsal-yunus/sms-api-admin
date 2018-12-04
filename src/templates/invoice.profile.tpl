@@ -1,11 +1,11 @@
 <fieldset class="content">
-    <div class="action-container text-right" style="padding: 10px ;">
+    <div class="action-container text-left" style="padding: 10px;">
         {if $archived eq null}
-            <a href="#" class="form-button" onclick="$app.module('invoice').showClient('archived');" style="float:left" >
+            <a href="#" class="form-button" onclick="$app.module('invoice').showClient('archived');" >
                 <span class="form-button-text">Include Archived Client</span>
             </a>
         {else}
-            <a href="#" class="form-button" onclick="$app.module('invoice').showClient();" style="float:left" >
+            <a href="#" class="form-button" onclick="$app.module('invoice').showClient();" >
                 <span class="form-button-text">Show only non Archived Client</span>
             </a>
         {/if}
@@ -14,14 +14,15 @@
             <span class="form-button-text">Download All</span>
         </a>
     </div>
-    <table class="admin-simpletable invoice-table">
+    <table class="admin-simpletable invoice-table border-inside">
         <thead>
             <tr>
-                <th class="zebra-odd">Customer ID</th>
-                <th class="zebra-odd">Company Name</th>
+                <th class="zebra-even">Customer ID</th>
+                <th class="zebra-even">Company Name</th>
+                <th class="zebra-even">Profile Name</th>
                 <th class="zebra-even">Payment Detail</th>
                 <th class="zebra-even">Auto Generate</th>
-                <th class="zebra-odd">
+                <th class="zebra-even">
                     <a href="#" onclick="$app.module('invoice').createProfile()" class="form-button" title="Add New Profile">
                         <img title="Register" src="skin/images/icon-add.png" class="form-button-image" alt="" />
                         <span class="form-button-text">Add New</span>
@@ -31,10 +32,13 @@
         </thead>
         <tbody>
             {foreach $profiles as $profile}
-            <tr class="{cycle values="zebra-odd,zebra-even"}">
-                <td class="type-status">{$profile.customerId}</td>
-                <td class="type-status">{$profile.companyName}</td>
-                <td class="type-status">{$profile.bankName}</td>
+            <tr>
+                {if isset($profile->print)}
+                <td class="type-status" rowspan="{$rowspan[$profile.customerId]}">{$profile.customerId}</td>
+                <td class="type-text" rowspan="{$rowspan[$profile.customerId]}">{$profile.companyName}</td>
+                {/if}
+                <td class="type-text">{$profile.profileName}</td>
+                <td class="type-text">{$profile.bankName}</td>
                 <td class="type-status">{($profile.autoGenerate)?'Yes':'No'}</td>
                 <td class="type-action">
                     {if $profile.archivedDate eq null}

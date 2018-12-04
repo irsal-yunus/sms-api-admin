@@ -339,52 +339,6 @@ class InvoiceHistoryTest extends TestCase
         } catch (\Exception $e) {
             $this->assertContains("Profile not found", $e->getMessage());
         }
-    }
-
-    /**
-     * Test updateHistory method
-     *
-     * @return  void
-     */
-    public function testUpdateHistoryMethod()
-    {
-        $this->initialData();
-        $result = $this->model->all();
-        $this->assertNotEmpty($result);
-        $this->assertTrue(is_array($result));
-        $this->assertInstanceOf(InvoiceHistory::class, $result[0]);
-
-        $result = $this->model->find($result[0]->key());
-        $this->assertNotEmpty($result);
-        $this->assertInstanceOf(InvoiceHistory::class, $result);
-
-        $updateData = [
-            'invoiceNumber' => 22,
-            'profileId' => 22,
-            'startDate' => date('Y-m-d', strtotime('+1 day')),
-            'dueDate' => date('Y-m-d', strtotime('+22 days')),
-        ];
-
-        $this->model->updateHistory($result->key(), $updateData);
-        $result = $this->model->find($result->key());
-        $this->assertNotEmpty($result);
-        $this->assertInstanceOf(InvoiceHistory::class, $result);
-        $this->assertArrayHasKey('invoiceId', $result);
-        $this->assertArrayHasKey('invoiceNumber', $result);
-        $this->assertArrayHasKey('profileId', $result);
-        $this->assertArrayHasKey('startDate', $result);
-        $this->assertArrayHasKey('dueDate', $result);
-        $this->assertEquals($updateData['invoiceNumber'], $result['invoiceNumber']);
-        $this->assertEquals($updateData['startDate'], $result['startDate']);
-        $this->assertEquals($updateData['dueDate'], $result['dueDate']);
-        $this->assertEquals(json_encode($result->attributes()), (string) $result);
-
-        try {
-            $this->model->updateHistory(0, $updateData);
-            $this->fail("Exception not raised");
-        } catch (\Exception $e) {
-            $this->assertContains('History Not Found', $e->getMessage());
-        }
 
         $result = $this->model->getProduct('');
         $this->assertEmpty($result);

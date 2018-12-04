@@ -50,6 +50,7 @@ class InvoiceProfileTest extends TestCase
             'profileId' => 1,
             'bankId' => 1,
             'clientId' => $client ?: 1,
+            'profileName' => 'a',
         ];
 
         $this->model->insert($data);
@@ -349,7 +350,7 @@ class InvoiceProfileTest extends TestCase
     }
 
     /**
-     * Test isClientDuplicate Method
+     * Test isProfileNameDuplicate Method
      *
      * @return  void
      */
@@ -361,16 +362,16 @@ class InvoiceProfileTest extends TestCase
         $this->assertTrue(is_array($profiles));
         $this->assertInstanceOf(InvoiceProfile::class, $profiles[0]);
         // Check existing acount nummber
-        $result = $this->model->isClientDuplicate($profiles[0]->clientId);
+        $result = $this->model->isProfileNameDuplicate($profiles[0]->profileName);
         $this->assertTrue($result);
-        $result = $this->model->isClientDuplicate($profiles[0]->clientId, $profiles[0]->key());
+        $result = $this->model->isProfileNameDuplicate($profiles[0]->profileName, $profiles[0]->key());
         $this->assertFalse($result);
 
         /**
          * Test if delete profile and check the client id should not duplicate
          */
         $this->assertTrue($profiles[0]->delete());
-        $result = $this->model->isClientDuplicate($profiles[0]->clientId);
+        $result = $this->model->isProfileNameDuplicate($profiles[0]->profileName);
         $this->assertFalse($result);
     }
 

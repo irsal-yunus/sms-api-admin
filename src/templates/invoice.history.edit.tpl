@@ -2,12 +2,11 @@
     <fieldset class="float-centre">
         <legend>Invoice</legend>
         <input type="hidden" name="invoiceId" value="{$invoice.invoiceId}" />
-        <input type="hidden" name="profileId" value="{$invoice.profileId}" />
         <label class="form-flag-required">Invoice Number</label>
         <div class="input-group">
             <div class="input-group-icon">{$setting.invoiceNumberPrefix}</div>
             <div class="input-group-input">
-                <input name="invoiceNumber" id="invoiceNumber" value="{$setting.lastInvoiceNumber}" type="number" />
+                <input name="invoiceNumber" id="invoiceNumber" value="{$invoice.invoiceNumber}" type="number" {($invoice->invoiceType!==$invoice::ORIGINAL)?'disabled':''} />
             </div>
         </div>
         <span class="ui-helper-clearfix"></span>

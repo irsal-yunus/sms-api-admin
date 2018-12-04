@@ -7,24 +7,26 @@ require_once SMSAPIADMIN_LIB_DIR.'model/ApiBusinessClient.php';
 
 use Firstwap\SmsApiAdmin\lib\model\InvoiceBank;
 
+SmsApiAdmin::filterAccess();
 $logger = Logger::getLogger("service");
+
 try {
-    SmsApiAdmin::filterAccess();
-    $page = SmsApiAdmin::getTemplate();
 
-    try {
-        $client = new ApiBusinessClient();
-        $bank = new InvoiceBank();
+    $client  = new ApiBusinessClient();
+    $bank    = new InvoiceBank();
 
-        $clients = $client->dontHaveInvoiceProfile();
-        $banks = $bank->all();
+    $clients = $client->getSelectClient();
+    $banks   = $bank->all();
 
-        $page->assign('banks', array_column($banks, 'bankName', 'bankId'));
-        $page->assign('clients', $clients);
-        $page->display('invoice.profile.create.tpl');
-    } catch (Exception $e) {
-        SmsApiAdmin::returnError($e->getMessage());
-    }
+    $page    = SmsApiAdmin::getTemplate();
+
+    $page->assign('banks', array_column($banks, 'bankName', 'bankId'));
+    $page->assign('clients', $clients);
+    $page->display('invoice.profile.create.tpl');
+
 } catch (Exception $e) {
     $logger->error("$e");
+    $logger->error($e->getMessage());
+    $logger->error($e->getTraceAsString());
+    SmsApiAdmin::returnError($e->getMessage());
 }

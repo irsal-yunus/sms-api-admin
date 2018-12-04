@@ -240,24 +240,6 @@ class InvoiceHistory extends ModelContract
     }
 
     /**
-     * Perform update History
-     *
-     * @param string $key
-     * @param  array $data
-     * @return void
-     */
-    public function updateHistory($key, array $data)
-    {
-        if (!$model = $this->find($key)) {
-            throw new Exception("History Not Found");
-        }
-
-        $data['updatedAt'] = date('Y-m-d H:i:s');
-
-        return $model->update($data);
-    }
-
-    /**
      * Create History
      *
      * @param array $data   Format $data should have attributes :
@@ -288,6 +270,7 @@ class InvoiceHistory extends ModelContract
         $attributes = array_merge($this->attributes, $data);
         $products   = $this->loadProduct();
 
+        $attributes['fileName'] = null;
         unset($attributes[$this->keyName()]);
         unset($attributes['createdAt']);
         unset($attributes['products']);
@@ -304,6 +287,8 @@ class InvoiceHistory extends ModelContract
                 $product->save(['ownerId' => $invoiceId]);
             }
         }
+
+        $this->setKey($invoiceId);
 
         $this->commit();
 
@@ -445,9 +430,10 @@ class InvoiceHistory extends ModelContract
      */
     public function isInvoiceNumberDuplicate($invoiceNumber, $invoiceId = null)
     {
-        $query = "SELECT count(1) from {$this->tableName} where INVOICE_NUMBER = '{$invoiceNumber}'";
+        $query = " SELECT count(1) from {$this->tableName} where INVOICE_NUMBER = '{$invoiceNumber}' ";
 
-        if ($invoiceId) {
+        if ($invoiceId)
+        {
             $query .= " AND {$this->primaryKey} != $invoiceId";
         }
 
@@ -608,6 +594,7 @@ class InvoiceHistory extends ModelContract
      */
     public function createInvoiceFile()
     {
+        $this->deleteInvoiceFile();
         $profile    = $this->getProfile();
         $setting    = $this->getSetting();
         $fileName   = $this->generator()->createPdfFile($this, $profile, $setting);
