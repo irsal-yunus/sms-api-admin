@@ -16,6 +16,11 @@
 					<span class="form-button-text">Show Only Active User</span>
 				</a>
 			{/if}
+			{if $options.onlySpecifiedClient && $activeClient}
+				<a href="#" class="form-button" onclick="$app.module('apiuser').activeAllButton({$options.clientID})">
+					<span class="form-button-text">Active All User</span>
+				</a>
+			{/if}
                 <a href="#" class="form-button" onclick="$app.module('apiuser').showDownloadAllReportMesasge();" style="float: right;">
                     Download Billing Reports
                 </a>
@@ -69,7 +74,7 @@
 				<a href="#" title="View Details" class="form-button" onclick="$app.module('apiuser').showUserDetails({$users[list].userID});"><img src="skin/images/icon-view.png" class="icon-image" alt="" /></a>
 				<a href="#" title="Edit" class="form-button" onclick="$app.module('apiuser').editUser({$users[list].userID});"><img src="skin/images/icon-edit.png" class="icon-image" alt="" /></a>
 				<a href="#" title="Manage Credit" class="form-button" onclick="$app.module('credit').manageUserCredit({$users[list].userID});"><img src="skin/images/icon-credit.png" class="icon-image" alt="" /></a>
-                                <a href="#" title="Report" class="form-button" onclick="$app.module('apiuser').reportBilling({$users[list].userID});"><img src="skin/images/icon-history.png" class="icon-image" alt="" /></a>
+                <a href="#" title="Report" class="form-button" onclick="$app.module('apiuser').reportBilling({$users[list].userID});"><img src="skin/images/icon-history.png" class="icon-image" alt="" /></a>
 			</td>
 		</tr>
 		{/section}

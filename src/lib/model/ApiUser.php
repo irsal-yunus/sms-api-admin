@@ -351,6 +351,19 @@ class ApiUser extends ApiBaseModel{
 		}
 	}
 
+	/**
+	 * To activate all users by its clientID
+	 *
+	 * @param  integer $clientID
+	 */
+	public function activateUserByClient($clientID)
+	{
+        $db   = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+        $stmt = $db->prepare('update USER set ACTIVE=1,INACTIVE_REASON=null WHERE `CLIENT_ID` = '.$clientID);
+		$stmt->bindValue($clientID, PDO::PARAM_INT);
+		$stmt->execute();
+	}
+
     public function activateUser($userID) {
         try {
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
