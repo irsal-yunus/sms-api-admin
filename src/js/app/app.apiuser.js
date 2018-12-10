@@ -266,7 +266,6 @@
          */
         mod.showUserList = function(options,isArchived) {
             try {
-                console.log(options);
                 if (isArchived === 1) {
                    options = {
                         clientID           : options.clientID,
@@ -553,7 +552,6 @@
 
         mod.activeAllButton = function(clientID) {
             try {
-                console.log(clientID);
                 options = {
                             clientID           : clientID,
                            onlySpecifiedClient : true,};
