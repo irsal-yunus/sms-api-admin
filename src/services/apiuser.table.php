@@ -5,9 +5,11 @@
 
 require_once '../init.d/init.php';
 require_once SMSAPIADMIN_LIB_DIR.'model/ApiUser.php';
+require_once SMSAPIADMIN_LIB_DIR.'model/ApiBusinessClient.php';
 SmsApiAdmin::filterAccess();
 $page = SmsApiAdmin::getTemplate();
 $apiuserManager = new ApiUser();
+$apiclientManager = new ApiBusinessClient();
 try {
 	$optionDefinitions =array(
 		'onlyActiveUser'=>array(
@@ -66,6 +68,10 @@ try {
 		$page->assign('client', $clientManager->getDetails($clientID));
 	}
 
+	$client = $apiclientManager->getDetails($options['clientID']);
+	$activeClient = $client['archivedDate'] === null;
+
+	$page->assign('activeClient', $activeClient);
 	$page->assign('options', $options);
 	$page->assign('optionsJson', json_encode($options));
 	$page->assign('users', $users);

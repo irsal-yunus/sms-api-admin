@@ -42,6 +42,7 @@ class InvoiceBankTest extends TestCase
      */
     protected function initialData()
     {
+        $this->model->select("DELETE FROM {$this->model->tableName()}")->execute();
         $data = [
             'bankName' => "BCA",
             'address' => "address",
