@@ -69,7 +69,7 @@ try {
 	}
 
 	$client = $apiclientManager->getDetails($options['clientID']);
-	$activeClient = ($client['archivedDate']===null) ? $activeClient = true : $activeClient = false;
+	$activeClient = $client['archivedDate'] === null
 
 	$page->assign('activeClient', $activeClient);
 	$page->assign('options', $options);
