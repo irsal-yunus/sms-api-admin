@@ -39,10 +39,13 @@ try {
 
     $newData = filter_input_array(INPUT_POST, $definitions);
 
-    if ($newData['isPeriod'] == 0) {
-        $date              = ["date"=> FILTER_SANITIZE_STRING];
-        $realDate          = filter_input_array(INPUT_POST,$date);
-        $newData['period'] = $realDate['date'];
+    if ($newData['isPeriod'] === 0) {
+        $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
+        if (strtotime($date) === false) {
+            $errorFields['date'] = 'Date input is wrong format';
+        } else {
+            $newData['period'] = date('Y-m-d', strtotime($date));
+        }
     }
 
     foreach ($newData as $key => $value) {

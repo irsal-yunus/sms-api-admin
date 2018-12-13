@@ -1,4 +1,4 @@
-<table class="admin-simpletable invoice-table">
+    <table class="admin-simpletable invoice-table">
     <thead>
         <tr>
             <th class="zebra-odd">Invoice Number</th>
@@ -10,7 +10,7 @@
             <th class="zebra-even">Status</th>
             <th class="zebra-even">Type</th>
             <th class="zebra-odd">
-                {if isset($profile)}
+                {if isset($profile) && $profile.archivedDate eq null}
                 <a href="#" onclick="$app.module('invoice').addInvoice({$profile.profileId})" class="form-button" title="Add New Invoice">
                         <img title="Register" src="skin/images/icon-add.png" class="form-button-image" alt="" />
                         <span class="form-button-text">Add New</span>
@@ -44,19 +44,23 @@
                 <a href="#" onclick="$app.module('invoice').downloadInvoice({$invoice.invoiceId}, 1)" class="form-button" title="Download Invoice File">
                     <img src="skin/images/icon-download.png" class="icon-image icon-size-small" alt="" />
                 </a>
-                <a href="#" onclick="$app.module('invoice').copyInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Copy Invoice">
-                    <img src="skin/images/icon-copy.png" class="icon-image icon-size-small" alt="" />
-                </a>
-                <a href="#" onclick="$app.module('invoice').reviseInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Revise Invoice">
-                    <img src="skin/images/icon-revise.png" class="icon-image icon-size-small" alt="" />
-                </a>
+                    {if $profile.archivedDate eq null}
+                        <a href="#" onclick="$app.module('invoice').copyInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Copy Invoice">
+                            <img src="skin/images/icon-copy.png" class="icon-image icon-size-small" alt="" />
+                        </a>
+                        <a href="#" onclick="$app.module('invoice').reviseInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Revise Invoice">
+                            <img src="skin/images/icon-revise.png" class="icon-image icon-size-small" alt="" />
+                        </a>
+                    {/if}
                 {else}
-                <a href="#" onclick="$app.module('invoice').showInvoice({$invoice.invoiceId}, {$invoice.profileId})" class="form-button" title="Edit Invoice">
-                    <img src="skin/images/icon-edit.png" class="icon-image icon-size-small" alt="" />
-                </a>
-                <a href="#" onclick="$app.module('invoice').lockInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Lock Invoice">
-                    <img src="skin/images/icon-lock.png" class="icon-image icon-size-small" alt="" />
-                </a>
+                {if $profile.archivedDate eq null}
+                    <a href="#" onclick="$app.module('invoice').showInvoice({$invoice.invoiceId}, {$invoice.profileId})" class="form-button" title="Edit Invoice">
+                        <img src="skin/images/icon-edit.png" class="icon-image icon-size-small" alt="" />
+                    </a>
+                    <a href="#" onclick="$app.module('invoice').lockInvoice({$invoice.invoiceId}, {(!isset($profile))?'true':'false'})" class="form-button" title="Lock Invoice">
+                        <img src="skin/images/icon-lock.png" class="icon-image icon-size-small" alt="" />
+                    </a>
+                {/if}
                 <a href="#" onclick="$app.module('invoice').deleteInvoice({(!isset($profile))?'null':$invoice.profileId}, {$invoice.invoiceId})" class="form-button" title="Remove Invoice">
                     <img src="skin/images/icon-remove.png" class="icon-image icon-size-small" alt="" />
                 </a>
@@ -72,3 +76,23 @@
         {/foreach}
     </tbody>
 </table>
+<br>
+{if isset($pageCount)}
+<div class="pagination" style="float:left">
+    <a href="#" class="paging first" onclick="$app.module('invoice').showInvoiceTable('{$type}', 1)"> << </a>
+    {if $page-1 >= 1}
+        <a href="#" class="paging"onclick="$app.module('invoice').showInvoiceTable('{$type}', {$page-1})"> < </a>
+    {else}
+        <a href="#" class="paging" onclick="$app.module('invoice').showInvoiceTable('{$type}',1)"> < </a>
+    {/if}
+    <input type="number" id="targetPage" class="input-page" value="{$page}" min="1" max="{$pageCount}" onchange="$app.module('invoice').getInputPage(0,'{$type}',{$pageCount})">
+    {if $page+1 <= $pageCount}
+        <a href="#" class="paging" onclick="$app.module('invoice').showInvoiceTable('{$type}', {$page+1})"> > </a>
+    {else}
+        <a href="#" class="paging" onclick="$app.module('invoice').showInvoiceTable('{$type}', {$pageCount})"> > </a>
+    {/if}
+    <a href="#" class="paging end" onclick="$app.module('invoice').showInvoiceTable('{$type}', {$pageCount})"> >> </a>
+    <span style="margin:auto">&nbsp; Showing {$numberFiles['firstNumber']}-{$numberFiles['endNumber']} of {$totalData}</span>&nbsp;
+</div>
+{/if}
+<br>

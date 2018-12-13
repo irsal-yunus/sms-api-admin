@@ -933,3 +933,55 @@ form fieldset input[type=checkbox].checkbox-normal {
     margin-top: -20px;
 }
 
+.pagination {
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+
+.pagination a {
+    color: black;
+    /* float: left; */
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a.paging{
+    color: black;
+    /* float: left; */
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+}
+
+.pagination a.active {
+    background-color: #80b1da;
+    color: white;
+    border: 1px solid #80b1da;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+.pagination a.first{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.pagination a.end{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.input-page {
+    border: solid 1px #ddd;
+    width: 50px;
+    height: 27px;
+    margin: 0;
+    text-align: center;
+    float: none;
+    display: inline-block;
+    margin-right: -2px;
+}
+.input-page:disabled {
+    background-color: #fff;
+}

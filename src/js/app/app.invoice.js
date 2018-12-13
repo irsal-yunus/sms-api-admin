@@ -8,8 +8,8 @@
         if ($app.hasModule(MODULE_NAME)) return;
         var mod = {}; //implementation
         var SERVICE_URL = 'services/';
-        var TAB_INVOICE_PROFILE = 0;
-        var TAB_INVOICE_SETTING = 1;
+        var TAB_INVOICE_PROFILE = 1;
+        var TAB_INVOICE_SETTING = 2;
         var PROFILE_PRODUCT_TYPE = 'PROFILE';
         var HISTORY_PRODUCT_TYPE = 'HISTORY';
         var mainTitle = 'Invoice Management';
@@ -104,15 +104,15 @@
                 $('.toggle-report').prop('disabled', useReport);
                 $('.report-name ').toggleClass('hidden', !useReport);
             }
+            var isPeriod = +$('#isPeriod').val();
+            if (isPeriod===0) {
+                $('#useReport').val(0).change();
+                $('#label-reportName').hide();
+            }
 
             $("#form-product").on('submit', function(event) {
                 removeMasking();
             });
-
-            $('#useReport').on('change', function() {
-                var value = $(this).val();
-                toggleReport(parseInt(value, 10) === 1);
-            }).trigger('change');
 
             $('#manualInput').on('change', function(event) {
                 var isChecked = event.currentTarget.checked;
@@ -122,21 +122,32 @@
                 }
             }).trigger('change');
 
+            $('#useReport').on('change', function() {
+                var value = +$(this).val();
+                if (value === 1) {
+                    $('#label-reportName').show();
+                    $('#reportName').show();
+                }
+                if (value === 0) {
+                    $('#label-reportName').hide();
+                    $('#reportName').hide();
+                }
+                toggleReport(parseInt(value, 10) === 1);
+            });
+
             $('#isPeriod').on('change',function(event){
                 var value = +$(this).val();
                 if (value === 0) {
                     $('#label-period').text('Date');
-                    $('#useReport').hide();
-                    $('#label-useReport').hide();
-                    $('#period').hide();
+                    $('.use-period').hide();
                     $('#date').show();
+                    $('#useReport').val(0).change();
                 }
-                if (value === 1){
+                else{
                     $('#label-period').text('Period');
-                    $('#useReport').show();
-                    $('#label-useReport').show();
+                    $('.use-period').show();
                     $('#date').hide();
-                    $('#period').show();
+                    $('#useReport').trigger('change');
                 }
             }).trigger('change');
 
@@ -209,19 +220,48 @@
             }
         };
 
-        function showInvoiceTable(type) {
+        function showInvoiceTable(type, page) {
             return $('#invoice-view-tabs')
-                .tabs('url', 0, resolveServiceUrl('invoice.table') + "?type="+(type||''));
+                .tabs('url', 0, resolveServiceUrl('invoice.table') + "?type="+(type||'')+"&page="+(page||1));
         }
 
-        mod.showInvoiceTable = function(type, reload) {
+        mod.showInvoiceTable = function(type,page,reload) {
             if (reload) {
                 mod.showInvoiceManagement(function(){
-                    showInvoiceTable(type).tabs('select', 0);
+                    showInvoiceTable(type,page).tabs('select', 0);
                 });
             } else {
-                showInvoiceTable(type).tabs('load', 0);
+                showInvoiceTable(type,page).tabs('load', 0);
             }
+        }
+
+        mod.getInputPage = function(tabNumber,type,pageCount){
+            var pageHistory = +$('#targetPage').val();
+            var pageProfile = +$('#targetPageProfile').val();
+            if (pageHistory)
+            {
+                var page = pageHistory;
+            }
+            else if (pageProfile)
+            {
+                var page = pageProfile;
+            }
+
+            if (page > pageCount || page < 1 || page % 1 != 0) {
+                alert("Please insert a correct page number");
+            }
+            else{
+                if (tabNumber===0)
+                {
+                    showInvoiceTable(type,page).tabs('load',tabNumber);
+                }
+                else if(tabNumber===1)
+                {
+                    showProfileTable(type,page).tabs('load',tabNumber);
+                }
+            }
+            $('#targetPage').val("");
+            $('#targetPageProfile').val("");
         }
 
         mod.showHistory = function(profileId) {
@@ -686,6 +726,22 @@
             } catch (ex) {
                 $1.error("[mod:invoice.bank.delete] Error.", ex);
             }
+        };
+
+        function showProfileTable(type,page) {
+            if (type){
+                return $('#invoice-view-tabs')
+                    .tabs('url', 1, resolveServiceUrl('invoice.profile') + "?type="+(type||'')+"&page="+(page||1))
+                    .tabs('load', TAB_INVOICE_PROFILE)
+            }
+            else{
+                return $('#invoice-view-tabs').tabs('url', 1, resolveServiceUrl('invoice.profile')+"?page="+(page||1))
+                    .tabs('load', TAB_INVOICE_PROFILE)
+            }
+        }
+
+        mod.showClient = function(archived,page){
+            showProfileTable(archived,page).tabs('select', 1);
         };
 
         try {

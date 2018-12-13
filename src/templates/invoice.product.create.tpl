@@ -13,19 +13,19 @@
         <span class="ui-helper-clearfix"></span>
         {if $owner['ownerType'] eq 'HISTORY'}
         <label class="form-flag-required" id="label-period">Period</label>
-        <select name="period" id="period" size="1" class="flexible-width">
+        <select name="period" id="period" size="1" class="flexible-width use-period">
             {html_options options=$dateRange}
         </select>
         <input type="date" id="date" name="date">
         <span class="ui-helper-clearfix"></span>
         {/if}
-        <label class="" id="label-useReport">Use Billing Report ?</label>
-        <select name="useReport" id="useReport" size="1" class="flexible-width">
+        <label class="use-period" id="label-useReport">Use Billing Report ?</label>
+        <select name="useReport" id="useReport" size="1" class="flexible-width use-period">
             {html_options options=['No','Yes']}
         </select>
         <span class="ui-helper-clearfix"></span>
-        <label class="report-name">Report Name</label>
-        <select name="reportName" id="reportName" class="hidden report-name">
+        <label class="report-name use-period" id="label-reportName">Report Name</label>
+        <select name="reportName" id="reportName" class="hidden report-name use-period">
             {html_options options=$reports}
         </select>
         <span class="ui-helper-clearfix"></span>
