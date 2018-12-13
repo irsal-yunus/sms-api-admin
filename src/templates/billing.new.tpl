@@ -325,11 +325,11 @@
 
     function showSettingContainer(type){
         if(type.toLowerCase() == 'operator'){
-           $('#tiering-container').hide();
+           $('.tiering-type').hide();
            $('#operator-container').show();
         }else{
            $('#operator-container').hide();
-           $('#tiering-container').show();
+           $('.tiering-type').show();
         }
     }
 
@@ -337,130 +337,137 @@
 {/literal}
 
 <form id="billingProfile-form" class="admin-xform">
-	<div class="panel">
-		<div class="panel-header"><img src="skin/images/icon-history.png" class="icon-image" alt="" /><span>New Billing Profile</span></div>
-		<div class="panel-body">
-			<div class="panel-content">
-				<fieldset class="float-centre" style="padding-bottom: 10px;padding-top: 10px;">
-                                        <input type="hidden" name="mode" value="{if isset($mode)}{$mode}{else}new{/if}">
-                                        <input type="hidden" name="billingProfileID" value="{if isset($billingProfileID)}{$billingProfileID}{/if}">
-                                        <div>
-                                            <label>Name</label>
-                                            <input type="text" id="input-name" name="name" value="{if isset($description['NAME'])}{$description['NAME']}{/if}" data-validation="required">
-                                        </div>
-                                        <span class="ui-helper-clearfix"></span>
-                                        <div>
-                                            <label>Description</label>
-                                            <textarea id="text-description" name="description">{if isset($description['DESCRIPTION'])}{$description['DESCRIPTION']}{/if}</textarea>
-                                        </div>
-                                        <span class="ui-helper-clearfix"></span>
-                                        <div>
-                                            <label>Type</label>
-                                            <select class="flexible-width" name="price_based" id="select-type" {if isset($mode) && $mode == 'edit'}disabled{/if} data-val='{if isset($description['BILLING_TYPE'])}{$description['BILLING_TYPE']}{/if}' data-validation="required" style="margin-left:5px;">
-                                                    <option value="operator">Operator</option>
-                                                    <option value="tiering">Tiering</option>
-                                            </select>
-                                        </div>
-                                        {if isset($mode) && $mode == 'edit'}
-                                            <input type="hidden" id="price_based" name="price_based" value="{$description['BILLING_TYPE']}">
+    <div class="panel">
+        <div class="panel-header"><img src="skin/images/icon-history.png" class="icon-image" alt="" /><span>New Billing Profile</span></div>
+        <div class="panel-body">
+            <div class="panel-content">
+                <fieldset class="float-centre" style="padding-bottom: 10px;padding-top: 10px;">
+                    <input type="hidden" name="mode" value="{if isset($mode)}{$mode}{else}new{/if}">
+                    <input type="hidden" name="billingProfileID" value="{if isset($billingProfileID)}{$billingProfileID}{/if}">
+                    <div>
+                        <label>Name</label>
+                        <input type="text" id="input-name" name="name" value="{if isset($description['NAME'])}{$description['NAME']}{/if}" data-validation="required">
+                    </div>
+                    <span class="ui-helper-clearfix"></span>
+                    <div>
+                        <label>Description</label>
+                        <textarea id="text-description" name="description">{if isset($description['DESCRIPTION'])}{$description['DESCRIPTION']}{/if}</textarea>
+                    </div>
+                    <span class="ui-helper-clearfix"></span>
+                    <div>
+                        <label>Type</label>
+                        <select class="flexible-width" name="price_based" id="select-type" {if isset($mode) && $mode == 'edit'}disabled{/if} data-val='{if isset($description['BILLING_TYPE'])}{$description['BILLING_TYPE']}{/if}' data-validation="required" style="margin-left:5px;">
+                                <option value="operator">Operator</option>
+                                <option value="tiering">Tiering</option>
+                        </select>
+                    </div>
+                    {if isset($mode) && $mode == 'edit'}
+                        <input type="hidden" id="price_based" name="price_based" value="{$description['BILLING_TYPE']}">
+                    {/if}
+                    <span class="ui-helper-clearfix"></span>
+                    <div>
+                        <label>Users</label>
+                            <select id="list-user" name ="user[]" multiple="multiple">
+                                <div style="max-height: 100px;overflow-y:scroll;overflow-x:hidden;">
+                                {if isset($user)}
+                                    {foreach from=$user item=item}
+                                        <option value='{$item['USER_ID']}' selected>{$item['USER_NAME']}</option>
+                                    {/foreach}
+                                {/if}
+                                </div>
+                            </select>
+                            <span style="font-size:10px;color:red;margin-left:110px;display:block;">* Select users whose implement this billing profile</span>
+
+                            {if isset($mode) && $mode == 'edit' &&  isset($tieringSettings)}
+                              <span style="font-size:10px;color:red;margin-left:110px;display:block;">** If you delete users from this billing profile, any tiering group the users belongs are removed too</span>
+                            {/if}
+                    </div>
+                    <div class="tiering-type" style="display:none;">
+                        <br/>
+                        <span class="ui-helper-clearfix"></span>
+                        <label>International Price ?</label>
+                        <input name="useInternationalPrice" value="1" type="radio" {if isset($description['USE_INTERNATIONAL_PRICE']) AND $description['USE_INTERNATIONAL_PRICE'] == 1}checked{/if} data-validation="required"/>
+                        <label class="flexible-width">Yes</label>
+                        <input name="useInternationalPrice" value="0" type="radio" {if isset($description['USE_INTERNATIONAL_PRICE']) AND $description['USE_INTERNATIONAL_PRICE'] != 1}checked{/if} data-validation="required"/>
+                        <label class="flexible-width">No</label>
+                    </div>
+                    <span class="ui-helper-clearfix"></span>
+                    <label>Settings</label>
+                        <div  id="operator-container" style="display:block;">
+                            <div class="scroll-container" style="max-height: 150px; min-height:50px;margin-top:10px;overflow-x: auto;">
+                                <table id="operator-table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Operator name</th>
+                                            <th>Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-operator="{if isset($operatorSettings)}{htmlspecialchars(json_encode($operatorSettings))}{/if}">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <a href="#" class="form-button" style="margin:5px;float:left;margin-left: 110px;" id="add-operator-field">
+                                <span class="form-button-text">Add Field</span>
+                            </a>
+                        </div>
+                        <div id="tiering-container" class="tiering-type" style="display:none;">
+                            <div class="scroll-container" style="max-height: 150px; margin-top:10px;overflow-x: auto;">
+                                <table id="tiering-table">
+                                    <thead>
+                                        <tr align="left">
+                                            <th></th>
+                                            <th>From</th>
+                                            <th>Up to</th>
+                                            <th>Price</th>
+                                             <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {if !isset($tieringSettings)}
+                                        <tr>
+                                            <th>
+                                                <img src='skin/images/icon-remove.png' class='form-button-image btn-tiering-remove' alt='Remove' width='13px' style='cursor:pointer;' />
+                                            </th>
+                                            <th><input type='text' class='tiering-from input-qty' name='tiering[0][from]' value='0' data-validation='required' readonly></th>
+                                            <th><input type='text' class='tiering-to input-qty' name ='tiering[0][to]' id='tiering_upto' value ='MAX' data-validation='required' readonly></th>
+                                            <th><input type='text' class='tiering-price input-price' name ='tiering[0][price]' value='' data-validation='required'></th>
+                                            <th>
+                                                <img src='skin/images/icon-add.png' class='form-button-image btn-tiering-add' alt='Add New Field' width='13px' style='cursor:pointer;' />
+                                            </th>
+                                        </tr>
+                                        {else}
+                                            {foreach from=$tieringSettings key=key item=item}
+                                                <tr>
+                                                    <th>
+                                                        <img src='skin/images/icon-remove.png' class='form-button-image btn-tiering-remove' alt='Remove' width='13px' style='cursor:pointer;' />
+                                                    </th>
+                                                    <th><input type='text' class='tiering-from input-qty' name='tiering[{$key}][from]' value='{$item['SMS_COUNT_FROM']}' data-validation='required' {if $key == 0} readonly {/if}></th>
+                                                    <th><input type='text' class='tiering-to input-qty' name ='tiering[{$key}][to]' id='tiering_upto' value='{$item['SMS_COUNT_UP_TO']}' data-validation='required' {if $item['SMS_COUNT_UP_TO'] == 'MAX'} readonly {/if}></th>
+                                                    <th><input type='text' class='tiering-price input-price' name ='tiering[{$key}][price]' value='{number_format(floatval($item['PER_SMS_PRICE']), 2, '.', '')}' data-validation='required'></th>
+                                                    <th>
+                                                        <img src='skin/images/icon-add.png' class='form-button-image btn-tiering-add' alt='Add New Field' width='13px' style='cursor:pointer;' />
+                                                    </th>
+                                                </tr>
+                                            {/foreach}
                                         {/if}
-                                        <span class="ui-helper-clearfix"></span>
-                                        <div>
-                                            <label>Users</label>
-                                                <select id="list-user" name ="user[]" multiple="multiple">
-                                                    <div style="max-height: 100px;overflow-y:scroll;overflow-x:hidden;">
-                                                    {if isset($user)}
-                                                        {foreach from=$user item=item}
-                                                            <option value='{$item['USER_ID']}' selected>{$item['USER_NAME']}</option>
-                                                        {/foreach}
-                                                    {/if}
-                                                    </div>
-                                                </select>
-                                                <span style="font-size:10px;color:red;margin-left:110px;display:block;">* Select users whose implement this billing profile</span>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </fieldset>
 
-                                                {if isset($mode) && $mode == 'edit' &&  isset($tieringSettings)}
-                                                  <span style="font-size:10px;color:red;margin-left:110px;display:block;">** If you delete users from this billing profile, any tiering group the users belongs are removed too</span>
-                                                {/if}
-                                        </div>
-                                        <span class="ui-helper-clearfix"></span>
-                                        <label>Settings</label>
-                                            <div  id="operator-container" style="display:block;">
-                                                <div class="scroll-container" style="max-height: 150px; min-height:50px;margin-top:10px;overflow-x: auto;">
-                                                        <table id="operator-table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th></th>
-                                                                    <th>Operator name</th>
-                                                                    <th>Price</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody data-operator="{if isset($operatorSettings)}{htmlspecialchars(json_encode($operatorSettings))}{/if}">
-                                                            </tbody>
-                                                        </table>
-
-                                                </div>
-                                                <a href="#" class="form-button" style="margin:5px;float:left;margin-left: 110px;" id="add-operator-field">
-                                                    <span class="form-button-text">Add Field</span>
-                                                </a>
-                                            </div>
-                                            <div id="tiering-container" style="display:none;">
-                                                <div class="scroll-container" style="max-height: 150px; margin-top:10px;overflow-x: auto;">
-                                                        <table id="tiering-table">
-                                                            <thead>
-                                                                <tr align="left">
-                                                                    <th></th>
-                                                                    <th>From</th>
-                                                                    <th>Up to</th>
-                                                                    <th>Price</th>
-                                                                     <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                    {if !isset($tieringSettings)}
-                                                                        <tr>
-                                                                                <th>
-                                                                                    <img src='skin/images/icon-remove.png' class='form-button-image btn-tiering-remove' alt='Remove' width='13px' style='cursor:pointer;' />
-                                                                                </th>
-                                                                                <th><input type='text' class='tiering-from input-qty' name='tiering[0][from]' value='0' data-validation='required' readonly></th>
-                                                                                <th><input type='text' class='tiering-to input-qty' name ='tiering[0][to]' id='tiering_upto' value ='MAX' data-validation='required' readonly></th>
-                                                                                <th><input type='text' class='tiering-price input-price' name ='tiering[0][price]' value='' data-validation='required'></th>
-                                                                                <th>
-                                                                                    <img src='skin/images/icon-add.png' class='form-button-image btn-tiering-add' alt='Add New Field' width='13px' style='cursor:pointer;' />
-                                                                                </th>
-                                                                            </tr>
-                                                                    {else}
-                                                                        {foreach from=$tieringSettings key=key item=item}
-                                                                            <tr>
-                                                                                <th>
-                                                                                    <img src='skin/images/icon-remove.png' class='form-button-image btn-tiering-remove' alt='Remove' width='13px' style='cursor:pointer;' />
-                                                                                </th>
-                                                                                <th><input type='text' class='tiering-from input-qty' name='tiering[{$key}][from]' value='{$item['SMS_COUNT_FROM']}' data-validation='required' {if $key == 0} readonly {/if}></th>
-                                                                                <th><input type='text' class='tiering-to input-qty' name ='tiering[{$key}][to]' id='tiering_upto' value='{$item['SMS_COUNT_UP_TO']}' data-validation='required' {if $item['SMS_COUNT_UP_TO'] == 'MAX'} readonly {/if}></th>
-                                                                                <th><input type='text' class='tiering-price input-price' name ='tiering[{$key}][price]' value='{number_format(floatval($item['PER_SMS_PRICE']), 2, '.', '')}' data-validation='required'></th>
-                                                                                <th>
-                                                                                    <img src='skin/images/icon-add.png' class='form-button-image btn-tiering-add' alt='Add New Field' width='13px' style='cursor:pointer;' />
-                                                                                </th>
-                                                                            </tr>
-                                                                        {/foreach}
-                                                                    {/if}
-                                                            </tbody>
-                                                        </table>
-
-                                                </div>
-                                            </div>
-				</fieldset>
-
-                                 <fieldset class="form-fieldset-submission" style="width: 100%;">
-                                        <a href="#" id="btn-submit" class="form-button" style="margin:5px;float:left;">
-						<img src="skin/images/icon-store.png" class="form-button-image" alt="" />
-						<span class="form-button-text">Save</span>
-					</a>
-                                        <a href="#" class="form-button" onclick="$app.module('billing').showBilling()" style="margin:5px;float:left;">
-						<img src="skin/images/icon-cancel.png" class="form-button-image" alt="" />
-						<span class="form-button-text">Cancel</span>
-					</a>
-				</fieldset>
-			</div>
-		</div>
-	</div>
+                    <fieldset class="form-fieldset-submission" style="width: 100%;">
+                        <a href="#" id="btn-submit" class="form-button" style="margin:5px;float:left;">
+                            <img src="skin/images/icon-store.png" class="form-button-image" alt="" />
+                            <span class="form-button-text">Save</span>
+                        </a>
+                        <a href="#" class="form-button" onclick="$app.module('billing').showBilling()" style="margin:5px;float:left;">
+                            <img src="skin/images/icon-cancel.png" class="form-button-image" alt="" />
+                            <span class="form-button-text">Cancel</span>
+                        </a>
+                </fieldset>
+            </div>
+        </div>
+    </div>
 </form>

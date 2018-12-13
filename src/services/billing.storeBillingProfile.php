@@ -21,7 +21,8 @@ try {
                                         ->insertToBillingProfile(
                                                 $_POST['name'],
                                                 strtoupper($_POST['price_based']),
-                                                $_POST['description']
+                                                $_POST['description'],
+                                                $_POST['useInternationalPrice'] ?? 0
                                             );
 
             if(!empty($billingProfileID)){
@@ -76,7 +77,8 @@ try {
                                                 $billingProfileID,
                                                 $_POST['name'],
                                                 strtoupper($_POST['price_based']),
-                                                $_POST['description']
+                                                $_POST['description'],
+                                                $_POST['useInternationalPrice'] ?? 0
                                             );
                 if(isset($_POST['user']) && !empty($_POST['user'])){
                     $user = isset($_POST['user']) && !is_null($_POST['user']) ? $_POST['user'] : [];

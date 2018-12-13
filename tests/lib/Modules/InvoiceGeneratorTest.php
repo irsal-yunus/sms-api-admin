@@ -48,8 +48,11 @@ class InvoiceGeneratorTest extends TestCase
         $data = [
             'profileId' => 1,
             'bankId' => 1,
+            'profileName' => 'UNIT TEST',
             'clientId' => 1,
             'autoGenerate' => 1,
+            'useMinCommitment' => 0,
+            'minCommitmentType' => 0,
         ];
 
         $this->model->select("DELETE FROM {$this->model->tableName()}")->execute();
@@ -101,14 +104,13 @@ class InvoiceGeneratorTest extends TestCase
      * Test Generate Invoice
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      * @return  void
      */
     public function testGenerateMethod()
     {
         $this->initialData();
-
         $this->initialProduct(100);
-
         $generator = new InvoiceGenerator;
         $history = new InvoiceHistory;
         ob_start();

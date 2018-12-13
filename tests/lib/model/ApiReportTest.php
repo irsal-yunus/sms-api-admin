@@ -1,5 +1,6 @@
 <?php
 
+
 use Firstwap\SmsApiAdmin\Test\TestCase;
 
 require_once dirname(dirname(dirname(__DIR__))) . '/src/lib/model/ApiReport.php';
@@ -11,33 +12,32 @@ require_once dirname(dirname(dirname(__DIR__))) . '/src/lib/model/ApiReport.php'
  */
 class ApiReportTest extends TestCase
 {
-
     protected $opertors = [
         [
-            "OP_ID" => "DEFAULT",
+            "OP_ID"       => "DEFAULT",
             "RANGE_LOWER" => "0000",
-            "RANGE_UPPER" => "0000000000000"
+            "RANGE_UPPER" => "0000000000000",
         ],
         [
-            "OP_ID" => "THREE",
+            "OP_ID"       => "THREE",
             "RANGE_LOWER" => "62895000000",
-            "RANGE_UPPER" => "62899999999"
+            "RANGE_UPPER" => "62899999999",
         ],
         [
-            "OP_ID" => "THREE",
+            "OP_ID"       => "THREE",
             "RANGE_LOWER" => "628950000000",
-            "RANGE_UPPER" => "628999999999"
+            "RANGE_UPPER" => "628999999999",
         ],
         [
-            "OP_ID" => "THREE",
+            "OP_ID"       => "THREE",
             "RANGE_LOWER" => "6289500000000",
-            "RANGE_UPPER" => "6289999999999"
+            "RANGE_UPPER" => "6289999999999",
         ],
         [
-            "OP_ID" => "THREE",
+            "OP_ID"       => "THREE",
             "RANGE_LOWER" => "62895000000000",
-            "RANGE_UPPER" => "62899999999999"
-        ]
+            "RANGE_UPPER" => "62899999999999",
+        ],
     ];
 
     /**
@@ -45,7 +45,8 @@ class ApiReportTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        if (file_exists('src/archive/reports')) {
+        if (file_exists('src/archive/reports'))
+        {
             shell_exec("mv src/archive/reports src/archive/reports-bk");
         }
     }
@@ -55,11 +56,13 @@ class ApiReportTest extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        if (file_exists('src/archive/reports')) {
+        if (file_exists('src/archive/reports'))
+        {
             shell_exec("rm -rf src/archive/reports");
         }
 
-        if (file_exists('src/archive/reports-bk')){
+        if (file_exists('src/archive/reports-bk'))
+        {
             shell_exec("mv src/archive/reports-bk src/archive/reports");
         }
     }
@@ -149,7 +152,7 @@ class ApiReportTest extends TestCase
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
 
-        $result = $report->getUserDetail([1],1);
+        $result = $report->getUserDetail([1], 1);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
@@ -292,11 +295,11 @@ class ApiReportTest extends TestCase
     {
         $report = new ApiReport("2018", "01", true);
 
-        $result = $report->getUserMessageStatus([1], $report->firstDateOfMonth, $report->lastDateOfMonth,1,0);
+        $result = $report->getUserMessageStatus([1], $report->firstDateOfMonth, $report->lastDateOfMonth, 1, 0);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
 
-        $result = $report->getUserMessageStatus(1, $report->firstDateOfMonth, $report->lastDateOfMonth,1,0);
+        $result = $report->getUserMessageStatus(1, $report->firstDateOfMonth, $report->lastDateOfMonth, 1, 0);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
@@ -310,11 +313,11 @@ class ApiReportTest extends TestCase
     {
         $report = new ApiReport("2018", "01", true);
 
-        $result = $report->getGroupMessageStatus([1 => $report->firstDateOfMonth], $report->lastDateOfMonth,1,0);
+        $result = $report->getGroupMessageStatus([1 => $report->firstDateOfMonth], $report->lastDateOfMonth, 1, 0);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
 
-        $result = $report->getGroupMessageStatus([], $report->lastDateOfMonth,1,0);
+        $result = $report->getGroupMessageStatus([], $report->lastDateOfMonth, 1, 0);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
@@ -326,9 +329,14 @@ class ApiReportTest extends TestCase
      */
     public function testGetTieringTrafficMethod()
     {
-        $report = new ApiReport("2018", "01", true);
-
-        $result = $report->getTieringTraffic([['USER_ID' => 1]]);
+        $report      = new ApiReport("2018", "01", true);
+        $statusArray = array_keys($report->getDeliveryStatus(ApiReport::SMS_STATUS_UNCHARGED));
+        $statusArray = array_map(function ($item)
+        {
+            return "'$item'";
+        }, $statusArray);
+        $report->unchargedDeliveryStatus = implode(',', $statusArray);
+        $result                          = $report->getTieringTraffic([['USER_ID' => 1]]);
         $this->assertNotNull($result);
 
         $result = $report->getTieringTraffic(1, true);
@@ -342,79 +350,145 @@ class ApiReportTest extends TestCase
      */
     public function testAssignMessagePriceMethod()
     {
-        $report = new ApiReport("2018", "01", true);
+        $report    = new ApiReport("2018", "01", true);
         $operators = $this->opertors;
-        $price = [
+        $price     = [
             [
-                "OP_ID" => "DEFAULT",
-                "PER_SMS_PRICE" => "200"
-            ]
+                "OP_ID"         => "DEFAULT",
+                "PER_SMS_PRICE" => "200",
+            ],
         ];
 
         $message = [
             [
-                'MESSAGE_ID' => "0GPI2018-01-02 00:00:01.000.uvgjE",
-                'DESTINATION' => "628190000001",
-                'MESSAGE_CONTENT' => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
-                'MESSAGE_STATUS' => "23",
+                'MESSAGE_ID'       => "0GPI2018-01-02 00:00:01.000.uvgjE",
+                'DESTINATION'      => "628190000001",
+                'MESSAGE_CONTENT'  => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
+                'MESSAGE_STATUS'   => "23",
                 'DESCRIPTION_CODE' => "",
                 'RECEIVE_DATETIME' => "2018-01-02 00:00:01",
-                'SEND_DATETIME' => "2018-01-02 00:00:01",
-                'SENDER' => "Rachmat",
-                'USER_ID' => "rachmat",
+                'SEND_DATETIME'    => "2018-01-02 00:00:01",
+                'SENDER'           => "Rachmat",
+                'USER_ID'          => "rachmat",
+                'MESSAGE_COUNT'    => "1",
             ],
             [
-                'MESSAGE_ID' => "0GPI2018-01-02 00:00:01.000.uvgjE",
-                'DESTINATION' => "628190000001",
-                'MESSAGE_CONTENT' => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
-                'MESSAGE_STATUS' => "0+0+0+0",
+                'MESSAGE_ID'       => "0GPI2018-01-02 00:00:01.000.uvgjE",
+                'DESTINATION'      => "628190000001",
+                'MESSAGE_CONTENT'  => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
+                'MESSAGE_STATUS'   => "0+0+0+0",
                 'DESCRIPTION_CODE' => "",
                 'RECEIVE_DATETIME' => "2018-01-02 00:00:01",
-                'SEND_DATETIME' => "2018-01-02 00:00:01",
-                'SENDER' => "Rachmat",
-                'USER_ID' => "rachmat",
-            ]
+                'SEND_DATETIME'    => "2018-01-02 00:00:01",
+                'SENDER'           => "Rachmat",
+                'USER_ID'          => "rachmat",
+                'MESSAGE_COUNT'    => "1",
+            ],
+            [
+                'MESSAGE_ID'       => "0GPI2018-01-02 00:00:01.000.uvgjE",
+                'DESTINATION'      => "628190000001",
+                'MESSAGE_CONTENT'  => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
+                'MESSAGE_STATUS'   => "",
+                'DESCRIPTION_CODE' => "",
+                'RECEIVE_DATETIME' => "2018-01-02 00:00:01",
+                'SEND_DATETIME'    => "2018-01-02 00:00:01",
+                'SENDER'           => "Rachmat",
+                'USER_ID'          => "rachmat",
+                'MESSAGE_COUNT'    => "1",
+            ],
         ];
 
         $method = $this->getMethod(ApiReport::class, 'createReportFile');
-        $method->invoke($report, ['aaaaaa', $isNewFile]);
+        $isNewFile = false;
+        $method->invoke($report, ['aaaaaa', $isNewFile, null, true]);
 
         $this->callMethod($report, 'assignMessagePrice', [ApiReport::BILLING_OPERATOR_BASE, &$message, &$price, &$operators]);
         $this->assertArrayHasKey('OPERATOR', current($message));
-        $this->assertArrayHasKey('MESSAGE_COUNT', current($message));
         $this->assertArrayHasKey('PRICE', current($message));
         $this->assertNotEmpty(current($message)['DESCRIPTION_CODE']);
         $this->assertNotEquals("2018-01-02 00:00:01", current($message)['RECEIVE_DATETIME']);
         $this->assertNotEquals("2018-01-02 00:00:01", current($message)['SEND_DATETIME']);
 
+        $report->internationalPrices = $this->callMethod($report, 'getInternationalPrices', []);
+
+        $prefix = current($report->internationalPrices)['PHONE_CODE'] ?? 44;
+
         $message = [
             [
-                'MESSAGE_ID' => "0GPI2018-01-02 00:00:01.000.uvgjE",
-                'DESTINATION' => "628190000001",
-                'MESSAGE_CONTENT' => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
-                'MESSAGE_STATUS' => "23",
+                'MESSAGE_ID'       => "0GPI2018-01-02 00:00:01.000.uvgjE",
+                'DESTINATION'      => "628190000001",
+                'MESSAGE_CONTENT'  => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
+                'MESSAGE_STATUS'   => "23",
                 'DESCRIPTION_CODE' => "",
                 'RECEIVE_DATETIME' => "2018-01-02 00:00:01",
-                'SEND_DATETIME' => "2018-01-02 00:00:01",
-                'SENDER' => "Rachmat",
-                'USER_ID' => "rachmat",
+                'SEND_DATETIME'    => "2018-01-02 00:00:01",
+                'SENDER'           => "Rachmat",
+                'USER_ID'          => "rachmat",
+                'MESSAGE_COUNT'    => "1",
             ],
             [
-                'MESSAGE_ID' => "0GPI2018-01-02 00:00:01.000.uvgjE",
-                'DESTINATION' => "628190000001",
-                'MESSAGE_CONTENT' => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
-                'MESSAGE_STATUS' => "0+0+0+0",
+                'MESSAGE_ID'       => "0GPI2018-01-02 00:00:01.000.qqjE",
+                'DESTINATION'      => "628190000001",
+                'MESSAGE_CONTENT'  => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
+                'MESSAGE_STATUS'   => "1+0+0+0",
                 'DESCRIPTION_CODE' => "",
                 'RECEIVE_DATETIME' => "2018-01-02 00:00:01",
-                'SEND_DATETIME' => "2018-01-02 00:00:01",
-                'SENDER' => "Rachmat",
-                'USER_ID' => "rachmat",
-            ]
+                'SEND_DATETIME'    => "2018-01-02 00:00:01",
+                'SENDER'           => "Rachmat",
+                'USER_ID'          => "rachmat",
+                'MESSAGE_COUNT'    => "1",
+            ],
+            [
+                'MESSAGE_ID'       => "0GPI2018-01-02 00:00:01.000.uvgjE",
+                'DESTINATION'      => "628190000001",
+                'MESSAGE_CONTENT'  => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
+                'MESSAGE_STATUS'   => "0+0+0+0",
+                'DESCRIPTION_CODE' => "",
+                'RECEIVE_DATETIME' => "2018-01-02 00:00:01",
+                'SEND_DATETIME'    => "2018-01-02 00:00:01",
+                'SENDER'           => "Rachmat",
+                'USER_ID'          => "rachmat",
+                'MESSAGE_COUNT'    => "1",
+            ],
+            [
+                'MESSAGE_ID'       => "0GPI2018-01-02 00:00:01.000.uvqjE",
+                'DESTINATION'      => "448190000001",
+                'MESSAGE_CONTENT'  => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
+                'MESSAGE_STATUS'   => "",
+                'DESCRIPTION_CODE' => "",
+                'RECEIVE_DATETIME' => "2018-01-02 00:00:01",
+                'SEND_DATETIME'    => "2018-01-02 00:00:01",
+                'SENDER'           => "Rachmat",
+                'USER_ID'          => "rachmat",
+                'MESSAGE_COUNT'    => "1",
+            ],
+            [
+                'MESSAGE_ID'       => "0GPI2018-01-02 00:00:01.000.uvqjE",
+                'DESTINATION'      => $prefix."8190000001",
+                'MESSAGE_CONTENT'  => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
+                'MESSAGE_STATUS'   => "0+0+0+0",
+                'DESCRIPTION_CODE' => "",
+                'RECEIVE_DATETIME' => "2018-01-02 00:00:01",
+                'SEND_DATETIME'    => "2018-01-02 00:00:01",
+                'SENDER'           => "Rachmat",
+                'USER_ID'          => "rachmat",
+                'MESSAGE_COUNT'    => "1",
+            ],
         ];
 
-        $this->callMethod($report, 'assignMessagePrice', [ApiReport::BILLING_TIERING_BASE, &$message, &$price, &$operators]);
+        $hasEmptyStatus              = false;
+        $this->callMethod($report, 'assignMessagePrice', [ApiReport::BILLING_TIERING_BASE, &$message, &$price, &$operators, &$hasEmptyStatus, true]);
+        $this->assertTrue($hasEmptyStatus);
         $this->assertArrayHasKey('OPERATOR', current($message));
-        $this->assertArrayHasKey('MESSAGE_COUNT', current($message));
+        $this->assertArrayHasKey('PRICE', current($message));
+        $this->assertNotEmpty(current($message)['DESCRIPTION_CODE']);
+        $this->assertNotEquals("2018-01-02 00:00:01", current($message)['RECEIVE_DATETIME']);
+        $this->assertNotEquals("2018-01-02 00:00:01", current($message)['SEND_DATETIME']);
+
+        $hasEmptyStatus = false;
+        $this->callMethod($report, 'assignMessagePrice', [ApiReport::BILLING_TIERING_BASE, &$message, &$price, &$operators, &$hasEmptyStatus, false]);
+        $this->assertTrue($hasEmptyStatus);
+        $this->assertArrayHasKey('OPERATOR', current($message));
         $this->assertArrayHasKey('PRICE', current($message));
         $this->assertNotEmpty(current($message)['DESCRIPTION_CODE']);
         $this->assertNotEquals("2018-01-02 00:00:01", current($message)['RECEIVE_DATETIME']);
@@ -428,25 +502,24 @@ class ApiReportTest extends TestCase
      */
     public function testFormatMessageDataMethod()
     {
-        $report = new ApiReport("2018", "01", true);
+        $report    = new ApiReport("2018", "01", true);
         $operators = $this->opertors;
 
         $message = [
-            'MESSAGE_ID' => "0GPI2018-01-02 00:00:01.000.uvgjE",
-            'DESTINATION' => "628990000001",
-            'MESSAGE_CONTENT' => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
-            'MESSAGE_STATUS' => "23",
+            'MESSAGE_ID'       => "0GPI2018-01-02 00:00:01.000.uvgjE",
+            'DESTINATION'      => "628990000001",
+            'MESSAGE_CONTENT'  => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
+            'MESSAGE_STATUS'   => "23",
             'DESCRIPTION_CODE' => "",
             'RECEIVE_DATETIME' => "2018-01-02 00:00:01",
-            'SEND_DATETIME' => "2018-01-02 00:00:01",
-            'SENDER' => "Rachmat",
-            'USER_ID' => "rachmat",
+            'SEND_DATETIME'    => "2018-01-02 00:00:01",
+            'SENDER'           => "Rachmat",
+            'USER_ID'          => "rachmat",
         ];
 
-        $this->callMethod($report, 'formatMessageData', [&$message, &$operators]);
+        $this->callMethod($report, 'formatMessageData', [ & $message, &$operators]);
         $this->assertNotEmpty($message['DESCRIPTION_CODE']);
         $this->assertArrayHasKey('OPERATOR', $message);
-        $this->assertArrayHasKey('MESSAGE_COUNT', $message);
         $this->assertNotEquals("2018-01-02 00:00:01", $message['RECEIVE_DATETIME']);
         $this->assertNotEquals("2018-01-02 00:00:01", $message['SEND_DATETIME']);
 
@@ -454,22 +527,20 @@ class ApiReportTest extends TestCase
          * Test If message content have unicode character
          */
         $message = [
-            'MESSAGE_ID' => "0GPI2018-01-02 00:00:01.000.uvgjE",
-            'DESTINATION' => "628190000001",
-            'MESSAGE_CONTENT' => "DUMMY TEXT DELETE ل THIS IF MENGGANGGU sdadads WKWKWKW",
-            'MESSAGE_STATUS' => "23",
+            'MESSAGE_ID'       => "0GPI2018-01-02 00:00:01.000.uvgjE",
+            'DESTINATION'      => "628190000001",
+            'MESSAGE_CONTENT'  => "DUMMY TEXT DELETE ل THIS IF MENGGANGGU sdadads WKWKWKW",
+            'MESSAGE_STATUS'   => "23",
             'DESCRIPTION_CODE' => "",
             'RECEIVE_DATETIME' => "2018-01-02 00:00:01",
-            'SEND_DATETIME' => "2018-01-02 00:00:01",
-            'SENDER' => "Rachmat",
-            'USER_ID' => "rachmat",
+            'SEND_DATETIME'    => "2018-01-02 00:00:01",
+            'SENDER'           => "Rachmat",
+            'USER_ID'          => "rachmat",
         ];
 
-        $this->callMethod($report, 'formatMessageData', [&$message, &$operators]);
+        $this->callMethod($report, 'formatMessageData', [ & $message, &$operators]);
         $this->assertNotEmpty($message['DESCRIPTION_CODE']);
         $this->assertArrayHasKey('OPERATOR', $message);
-        $this->assertArrayHasKey('MESSAGE_COUNT', $message);
-        $this->assertEquals($message['MESSAGE_COUNT'], 1);
         $this->assertNotEquals("2018-01-02 00:00:01", $message['RECEIVE_DATETIME']);
         $this->assertNotEquals("2018-01-02 00:00:01", $message['SEND_DATETIME']);
     }
@@ -501,7 +572,7 @@ class ApiReportTest extends TestCase
 
         // Test the value is timestamp
         $timestamp = "1508976000";
-        $value = $this->callMethod($report, 'parseDatetimeInput', [$timestamp]);
+        $value     = $this->callMethod($report, 'parseDatetimeInput', [$timestamp]);
         $this->assertEquals("2017-10-26 00:00:00", $value);
     }
 
@@ -520,7 +591,7 @@ class ApiReportTest extends TestCase
         $this->assertEquals("2017-10-25 07:00:00", $report->clientTimeZone($date));
 
         // parameter with custom format
-        $date = "2017-10-25";
+        $date         = "2017-10-25";
         $customFormat = 'Y-m-d H:i';
         $this->assertEquals("2017-10-25 07:00", $report->clientTimeZone($date, $customFormat));
 
@@ -584,7 +655,6 @@ class ApiReportTest extends TestCase
         $this->assertEquals(date('Y-m-d H:i:s'), $report->serverTimeZone($date));
     }
 
-
     /**
      * Test formatPrice method
      *
@@ -627,5 +697,83 @@ class ApiReportTest extends TestCase
         $value = "1,400.56";
         $value = $this->callMethod($report, 'toFloat', [$value]);
         $this->assertEquals(1400.56, $value);
+    }
+
+    /**
+     * Test getBillingReport method
+     *
+     * @return  void
+     */
+    public function testGetBillingReportMethod()
+    {
+        $report = new ApiReport("2018", "10", true);
+
+        $result = $report->getBillingReport();
+
+        $this->assertTrue(is_array($result));
+
+        $result = $report->getBillingReport(1);
+
+        $this->assertTrue(is_array($result));
+    }
+
+    /**
+     * Test getBillingReportGroup method
+     *
+     * @return  void
+     */
+    public function testGetBillingReportGroupMethod()
+    {
+        $report = new ApiReport("2018", "10", true);
+
+        $result = $report->getBillingReportGroup();
+
+        $this->assertTrue(is_array($result));
+
+        $result = $report->getBillingReportGroup(1);
+
+        $this->assertTrue(is_array($result));
+    }
+
+    /**
+     * Test getUserByCertainUser method
+     *
+     * @return  void
+     */
+    public function testGetUserByCertainUserMethod()
+    {
+        $report = new ApiReport("2018", "10", true);
+
+        $result = $report->getUserByCertainUser([1]);
+
+        $this->assertTrue(is_array($result));
+    }
+
+    /**
+     * Test getBillingProfileTieringOnly method
+     *
+     * @return  void
+     */
+    public function testGetBillingProfileTieringOnlyMethod()
+    {
+        $report = new ApiReport("2018", "10", true);
+
+        $result = $report->getBillingProfileTieringOnly();
+
+        $this->assertTrue(is_array($result));
+    }
+
+    /**
+     * Test getUserTiering method
+     *
+     * @return  void
+     */
+    public function testGetUserTieringMethod()
+    {
+        $report = new ApiReport("2018", "10", true);
+
+        $result = $report->getUserTiering();
+
+        $this->assertTrue(is_array($result));
     }
 }

@@ -38,7 +38,7 @@ define('DB_SMS_API_V2',         'SMS_API_V2');
 define('DB_BILL_U_MESSAGE',     'BILL_U_MESSAGE');
 define('DB_BILL_PRICELIST',     'BILL_PRICELIST');
 define('DB_First_Intermedia',   'First_Intermedia');
-define('DB_INVOICE',            'SMS_API_V2');
+define('DB_INVOICE',             DB_SMS_API_V2);
 
 
 /**
@@ -55,12 +55,6 @@ define('SMSAPIADMIN_ARCHIEVE_CSV_DELIMITER',     ',');
 define('SMSAPIADMIN_ARCHIEVE_CSV_ENCLOSURE',     '"');
 define('REPORT_PER_BATCH_SIZE',                  100000);
 
-/**
- * Invoice Setting
- */
-define('SUMMARY_USER_API_CELL', 'B2');
-define('SUMMARY_TOTAL_SMS_CHARGED_CELL', 'B8');
-define('SUMMARY_TOTAL_PRICE_CELL', 'B9');
 
 /**
  * pagination settings

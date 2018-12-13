@@ -6,6 +6,8 @@ use Firstwap\SmsApiAdmin\lib\model\ModelContract;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use \Exception;
 
+require_once SMSAPIADMIN_LIB_DIR . 'model/ApiReport.php';
+
 /**
  * Model for INVOICE_PRODUCT table
  * This model use to get and update Product for invoice
@@ -19,6 +21,11 @@ class InvoiceProduct extends ModelContract
      */
     const PROFILE_PRODUCT = "PROFILE";
     const HISTORY_PRODUCT = "HISTORY";
+
+    const SUMMARY_INTERNATIONAL_PRICE_CELL = 'B4';
+    const SUMMARY_USER_API_CELL            = 'B5';
+    const SUMMARY_TOTAL_SMS_CHARGED_CELL   = 'B11';
+    const SUMMARY_TOTAL_PRICE_CELL         = 'B12';
 
     /**
      * Table name of invoice profile
@@ -71,7 +78,7 @@ class InvoiceProduct extends ModelContract
      * Insert new product
      *
      * @param array $data
-     * @return int
+     * @return int|array
      */
     public function insertProduct(array $data)
     {
@@ -79,7 +86,7 @@ class InvoiceProduct extends ModelContract
 
         if ($this->isHistory() && intval($this->useReport) === 1)
         {
-            $this->setQtyAndUnitPriceFromReport();
+            return $this->setQtyAndUnitPriceFromReport();
         }
 
         return $this->save();
@@ -112,18 +119,23 @@ class InvoiceProduct extends ModelContract
     protected function productType($ownerType = null, $ownerId = null)
     {
         $ownerType = strtoupper($ownerType) === self::PROFILE_PRODUCT
-        ? self::PROFILE_PRODUCT
-        : self::HISTORY_PRODUCT;
+            ? self::PROFILE_PRODUCT
+            : self::HISTORY_PRODUCT;
 
         $query = "SELECT * from $this->tableName WHERE OWNER_TYPE = \"$ownerType\" ";
 
-        if ($ownerId !== null) {
-            if (is_array($ownerId)) {
-                $ownerId = implode(', ', array_map(function ($item) {
+        if ($ownerId !== null)
+        {
+            if (is_array($ownerId))
+            {
+                $ownerId = implode(', ', array_map(function ($item)
+                {
                     return "'$item'";
                 }, $ownerId));
                 $query .= " AND OWNER_ID IN ($ownerId) ";
-            } else {
+            }
+            else
+            {
                 $query .= " AND OWNER_ID = \"$ownerId\" ";
             }
         }
@@ -136,20 +148,21 @@ class InvoiceProduct extends ModelContract
      *
      * @param array $data
      * @param int $historyId
-     * @return bool
+     * @return int|array
      */
     public function profile2History($data, $historyId)
     {
-        $this->period = $this->getPeriodDate($data['startDate']);
+        $this->period    = $this->getPeriodDate($data['startDate']);
         $this->ownerType = self::HISTORY_PRODUCT;
-        $this->ownerId = $historyId;
+        $this->ownerId   = $historyId;
+        $this->setKey(null);
 
-        if ($this->useReport) {
-            $this->setQtyAndUnitPriceFromReport();
+        if ($this->useReport)
+        {
+            return $this->setQtyAndUnitPriceFromReport();
         }
 
         $data = $this->attributes();
-        unset($data[$this->keyName()]);
 
         return $this->insert($data);
     }
@@ -171,27 +184,39 @@ class InvoiceProduct extends ModelContract
     /**
      * Set quantity and unit price base on summary report
      *
-     * @return  void
+     * @return  int|array
      */
     protected function setQtyAndUnitPriceFromReport()
     {
-        $period = strtotime($this->period);
-
-        if ($period === false || empty($this->reportName)) {
-            return;
-        }
-
         $userApi = null;
-        $qty = $unitPrice = 0;
-        $reportPath = $this->summaryPath($period, $this->reportName);
+        $qty     = $unitPrice     = 0;
+        $period  = strtotime($this->period);
 
-        if (file_exists($reportPath)) {
-            list($qty, $unitPrice, $userApi) = $this->getSummaryValue($reportPath);
+        if ($period !== false && !empty($this->reportName))
+        {
+            $reportPath = $this->summaryPath($period, $this->reportName);
+
+            if (file_exists($reportPath))
+            {
+                $results = $this->getSummaryValue($reportPath);
+                if (is_array(current($results)))
+                {
+                    return $this->storeIntlProducts($results);
+                }
+                elseif (isset($results['qty']))
+                {
+                    $qty       = $results['qty'];
+                    $unitPrice = $results['unitPrice'];
+                    $userApi   = $results['userApi'];
+                }
+            }
         }
 
-        $this->qty = $qty;
-        $this->unitPrice = $unitPrice;
+        $this->qty           = $qty;
+        $this->unitPrice     = $unitPrice;
         $this->userApiReport = $userApi;
+
+        return $this->save();
     }
 
     /**
@@ -203,42 +228,144 @@ class InvoiceProduct extends ModelContract
      */
     protected function summaryPath($period, $reportName)
     {
-        $month = date('m', $period);
-        $year = date('Y', $period);
+        $month     = date('m', $period);
+        $year      = date('Y', $period);
         $reportDir = SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT . $year . '/' . $month . '/FINAL_STATUS/';
 
         return $reportDir . $reportName . '_' . date('M_Y', $period) . '_Summary.xlsx';
     }
 
     /**
-     * Read excel file
+     * Get summary values by read summary report file
      *
-     * @param String $filePath
+     * @param String $filePath  Summary Report file path
      * @return  array
      */
     protected function getSummaryValue($filePath)
     {
-        $qty = $unitPrice = 0;
-        $userApi = null;
-
         try {
-            $reader = $this->getExcelReader();
-            $sheet = $reader->load($filePath)->getActiveSheet();
-            $sms = $sheet->getCell(SUMMARY_TOTAL_SMS_CHARGED_CELL)->getValue();
-            $price = $sheet->getCell(SUMMARY_TOTAL_PRICE_CELL)->getValue();
-            $userApi = $sheet->getCell(SUMMARY_USER_API_CELL)->getValue();
+            $reader    = $this->getExcelReader();
+            $sheet     = $reader->load($filePath)->getActiveSheet();
+            $intlPrice = $sheet->getCell(static::SUMMARY_INTERNATIONAL_PRICE_CELL)->getValue();
+
+            if (strtoupper($intlPrice) === 'YES')
+            {
+                return $this->getIntlSummaryValues($sheet);
+            }
+
+            $qty     = $unitPrice     = 0;
+            $userApi = null;
+            $sms     = $sheet->getCell(static::SUMMARY_TOTAL_SMS_CHARGED_CELL)->getValue();
+            $price   = $sheet->getCell(static::SUMMARY_TOTAL_PRICE_CELL)->getValue();
+            $userApi = $sheet->getCell(static::SUMMARY_USER_API_CELL)->getValue();
 
             if (($qty = $this->toFloat($sms)) > 0)
             {
                 $unitPrice = round($this->toFloat($price) / $qty, 2);
             }
 
-        } catch (\Exception $e) {
-
+            return [
+                'qty'       => $qty,
+                'unitPrice' => $unitPrice,
+                'userApi'   => $userApi,
+            ];
+        }
+        catch (\Exception $e)
+        {
+            \Logger::getLogger("service")->error($e->getMessage());
             \Logger::getLogger("service")->error($e->getTraceAsString());
         }
 
-        return [$qty, $unitPrice, $userApi];
+        return [];
+    }
+
+    /**
+     * Store international products from report summary
+     *
+     * @param  array $products  An array international price products
+     *                          [<productName>, <qty>, <unitPrice>]
+     * @return array            An array of id
+     */
+    protected function storeIntlProducts($products)
+    {
+        $baseAttribute = array_merge($this->attributes(), [
+            'useReport'  => 0,
+            'reportName' => '',
+            'productId'  => null,
+            'unitPrice'  => 0,
+            'qty'        => 0,
+        ]);
+        $results = [];
+
+        foreach ($products as $product)
+        {
+            $product = new static(array_merge($baseAttribute, [
+                'productName' => $this->productName . ' (' . ucwords(strtolower($product[0])) . ')',
+                'qty'         => $this->toFloat($product[1]),
+                'unitPrice'   => $this->toFloat($product[2]),
+            ]));
+            $results[] = $product->save();
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get International prices summary
+     *
+     * @param  \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet &$sheet Instance of worksheet
+     * @return array
+     */
+    protected function getIntlSummaryValues(&$sheet)
+    {
+        if (!$rowNumber = $this->getRowNumber($sheet, \ApiReport::INTL_PRICE_SUMMARY_TITLE, 'A', 1))
+        {
+            throw new Exception("International Column Not Found");
+        }
+
+        if (!$totalRow = $this->getRowNumber($sheet, \ApiReport::INTL_PRICE_SUMMARY_TOTAL, 'A', $rowNumber, false))
+        {
+            throw new Exception("Total International Price Not Found");
+        }
+
+        $values = $sheet->rangeToArray('A' . ($rowNumber + 2) . ':F' . ($totalRow - 1));
+
+        return array_map(function ($item)
+        {
+            return array_values(array_filter($item));
+        }, $values);
+
+    }
+
+    /**
+     * Get row number that match with given content
+     *
+     * @param  PhpOffice\PhpSpreadsheet\Worksheet\Worksheet  &$sheet
+     * @param  string  $content
+     * @param  string  $column
+     * @param  integer $startRow
+     * @param  boolean $skipEmpty
+     * @return integer
+     */
+    protected function getRowNumber(&$sheet, $content, $column = 'A', $startRow = 1, $skipEmpty = true)
+    {
+        // Set the max row that will check the value
+        $maxRow = $startRow + 100;
+
+        while (($value = $sheet->getCell($column . $startRow)->getValue()) !== $content)
+        {
+            // Stop the iteration If it is not skipEmpty mode and the value is empty
+            // Or iteration is more than maxRow
+            // It will return 0 that indicate the content is not found
+            if (($skipEmpty === false && empty($value)) || $startRow > $maxRow)
+            {
+                return 0;
+            }
+
+            $startRow++;
+        }
+
+        return $startRow;
     }
 
     /**
@@ -270,11 +397,12 @@ class InvoiceProduct extends ModelContract
      *
      * @param string $key
      * @param  array $data
-     * @return void
+     * @return array|int
      */
     public function updateProduct($key, array $data)
     {
-        if (!$model = $this->find($key)) {
+        if (!$model = $this->find($key))
+        {
             throw new Exception("Product Not Found");
         }
 
@@ -284,11 +412,12 @@ class InvoiceProduct extends ModelContract
 
         $this->attributes = array_merge($this->attributes, $model->attributes(), $newData);
 
-        if ($this->isHistory() && intval($this->useReport) === 1) {
-            $this->setQtyAndUnitPriceFromReport();
+        if ($this->isHistory() && intval($this->useReport) === 1)
+        {
+            return $this->setQtyAndUnitPriceFromReport();
         }
 
-        $this->update($this->attributes);
+        return $this->update($this->attributes);
     }
 
     /**
@@ -298,7 +427,7 @@ class InvoiceProduct extends ModelContract
      */
     public function amount()
     {
-        $qty = intval($this->qty);
+        $qty       = intval($this->qty);
         $unitPrice = floatval($this->unitPrice);
 
         return $qty * $unitPrice;
