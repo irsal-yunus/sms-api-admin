@@ -61,3 +61,8 @@ define('REPORT_PER_BATCH_SIZE',                  100000);
 define('SUMMARY_USER_API_CELL', 'B2');
 define('SUMMARY_TOTAL_SMS_CHARGED_CELL', 'B8');
 define('SUMMARY_TOTAL_PRICE_CELL', 'B9');
+
+/**
+ * pagination settings
+ */
+define('LIMIT_PER_PAGE', 25);

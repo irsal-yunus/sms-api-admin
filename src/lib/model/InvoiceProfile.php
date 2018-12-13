@@ -31,12 +31,52 @@ class InvoiceProfile extends ModelContract
     /**
      * Get all Profile data
      *
+     * @param  $archived int
      * @return array
      */
-    public function all($nonArchived)
+    public function all($archived)
     {
-        $nonArchived = ($nonArchived===1) ? "WHERE ARCHIVED_DATE is null" : "";
-        return $this->select("{$this->defaultQuery()} {$nonArchived} ORDER BY CLIENT.COMPANY_NAME ASC")->fetchAll();
+        $query = $this->queryAll($archived);
+        return $this->select($query)->fetchAll();
+    }
+
+    /**
+     * Get Query for all based on archived status
+     *
+     * @param  $archived int
+     * @param  $select  string
+     * @return array
+     */
+    public function queryAll($archived, $select = '*')
+    {
+        $archived = ($archived===null) ? "WHERE ARCHIVED_DATE is null" : "";
+        $query="{$this->defaultQuery($select)} {$archived} ORDER BY CLIENT.COMPANY_NAME ASC";
+        return $query;
+    }
+
+    /**
+     * Get Profile data by page
+     *
+     * @param  $archived int
+     * @param $page int
+     * @return array
+     */
+    public function getProfilebyPage($archived=null,$page=1)
+    {
+        $chunk  = LIMIT_PER_PAGE;
+        $offset = ($page - 1) * ($chunk);
+        $totalQuery  = $this->queryAll($archived, "count(1)");
+
+        $query       = $this->queryAll($archived);
+        $query      .= " LIMIT {$chunk} OFFSET {$offset} ";
+
+        $data       = $this->select($query)->fetchAll();
+        $totalData  = $this->select($totalQuery)->fetchColumn();
+
+        return [
+            'data' => $data,
+            'total' => $totalData
+        ];
     }
 
     /**
@@ -75,11 +115,12 @@ class InvoiceProfile extends ModelContract
     /**
      * Get default queries for select action
      *
+     * @param String $select
      * @return string
      */
-    protected function defaultQuery()
+    protected function defaultQuery($select="*")
     {
-        return "SELECT {$this->tableName}.*, CLIENT.*, INVOICE_BANK.* from {$this->tableName}
+        return "SELECT {$select} from {$this->tableName}
             LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
             LEFT JOIN ".DB_INVOICE.".INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID";
     }
