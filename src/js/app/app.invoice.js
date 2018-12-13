@@ -260,19 +260,48 @@
             $('#invoice-view-tabs').tabs('select', TAB_INVOICE_PROFILE);
         }
 
-        function showInvoiceTable(type) {
+        function showInvoiceTable(type, page) {
             return $('#invoice-view-tabs')
-                .tabs('url', 0, resolveServiceUrl('invoice.table') + "?type="+(type||''));
+                .tabs('url', 0, resolveServiceUrl('invoice.table') + "?type="+(type||'')+"&page="+(page||1));
         }
 
-        mod.showInvoiceTable = function(type, reload) {
+        mod.showInvoiceTable = function(type,page,reload) {
             if (reload) {
                 mod.showInvoiceManagement(function(){
-                    showInvoiceTable(type).tabs('select', 0);
+                    showInvoiceTable(type,page).tabs('select', 0);
                 });
             } else {
-                showInvoiceTable(type).tabs('load', 0);
+                showInvoiceTable(type,page).tabs('load', 0);
             }
+        }
+
+        mod.getInputPage = function(tabNumber,type,pageCount){
+            var pageHistory = +$('#targetPage').val();
+            var pageProfile = +$('#targetPageProfile').val();
+            if (pageHistory)
+            {
+                var page = pageHistory;
+            }
+            else if (pageProfile)
+            {
+                var page = pageProfile;
+            }
+
+            if (page > pageCount || page < 1 || page % 1 != 0) {
+                alert("Please insert a correct page number");
+            }
+            else{
+                if (tabNumber===0)
+                {
+                    showInvoiceTable(type,page).tabs('load',tabNumber);
+                }
+                else if(tabNumber===1)
+                {
+                    showProfileTable(type,page).tabs('load',tabNumber);
+                }
+            }
+            $('#targetPage').val("");
+            $('#targetPageProfile').val("");
         }
 
         mod.showHistory = function(profileId) {
@@ -739,21 +768,20 @@
             }
         };
 
-
-        function showProfileTable(type) {
+        function showProfileTable(type, page) {
             if (type){
                 return $('#invoice-view-tabs')
-                    .tabs('url', TAB_INVOICE_PROFILE, resolveServiceUrl('invoice.profile') + "?type="+(type||''))
+                    .tabs('url', TAB_INVOICE_PROFILE, resolveServiceUrl('invoice.profile') + "?type="+(type||'')+"&page="+(page||1))
                     .tabs('load', TAB_INVOICE_PROFILE)
             }
             else{
-                return $('#invoice-view-tabs').tabs('url', TAB_INVOICE_PROFILE, resolveServiceUrl('invoice.profile'))
+                return $('#invoice-view-tabs').tabs('url', TAB_INVOICE_PROFILE, resolveServiceUrl('invoice.profile')+"?page="+(page||1))
                     .tabs('load', TAB_INVOICE_PROFILE)
             }
         }
 
-        mod.showClient = function(archived){
-            showProfileTable(archived).tabs('select', TAB_INVOICE_PROFILE);
+        mod.showClient = function(archived, page){
+            showProfileTable(archived,page).tabs('select', TAB_INVOICE_PROFILE);
         };
 
         try {

@@ -1,4 +1,4 @@
-<table class="admin-simpletable invoice-table">
+    <table class="admin-simpletable invoice-table">
     <thead>
         <tr>
             <th class="zebra-odd">Invoice Number</th>
@@ -80,3 +80,23 @@
         {/foreach}
     </tbody>
 </table>
+<br>
+{if isset($pageCount)}
+<div class="pagination" style="float:left">
+    <a href="#" class="paging first" onclick="$app.module('invoice').showInvoiceTable('{$type}', 1)"> << </a>
+    {if $page-1 >= 1}
+        <a href="#" class="paging"onclick="$app.module('invoice').showInvoiceTable('{$type}', {$page-1})"> < </a>
+    {else}
+        <a href="#" class="paging" onclick="$app.module('invoice').showInvoiceTable('{$type}',1)"> < </a>
+    {/if}
+    <input type="number" id="targetPage" class="input-page" value="{$page}" min="1" max="{$pageCount}" onchange="$app.module('invoice').getInputPage(0,'{$type}',{$pageCount})">
+    {if $page+1 <= $pageCount}
+        <a href="#" class="paging" onclick="$app.module('invoice').showInvoiceTable('{$type}', {$page+1})"> > </a>
+    {else}
+        <a href="#" class="paging" onclick="$app.module('invoice').showInvoiceTable('{$type}', {$pageCount})"> > </a>
+    {/if}
+    <a href="#" class="paging end" onclick="$app.module('invoice').showInvoiceTable('{$type}', {$pageCount})"> >> </a>
+    <span style="margin:auto">&nbsp; Showing {$numberFiles['firstNumber']}-{$numberFiles['endNumber']} of {$totalData}</span>&nbsp;
+</div>
+{/if}
+<br>

@@ -133,6 +133,19 @@ class InvoiceProfileTest extends TestCase
     }
 
     /**
+     * test getProfilebyPage method
+     * @return void
+     */
+    public function testGetProfilebyPage()
+    {
+        $this->initialData();
+        $result = $this->model->getProfilebyPage();
+        $this->assertNotEmpty($result);
+        $this->assertArrayHasKey('data', $result);
+        $this->assertArrayHasKey('total', $result);
+    }
+
+    /**
      * Test find method
      *
      * @return  void

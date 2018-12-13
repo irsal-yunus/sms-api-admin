@@ -73,7 +73,21 @@ class InvoiceHistory extends ModelContract
      */
     public function whereStatus($status = null)
     {
-        $query = "SELECT * FROM {$this->tableName} "
+        $query = $this->queryWhereStatus($status);
+
+        return $this->select($query)->fetchAll();
+    }
+
+    /**
+     * Get query where status
+     *
+     * @param $status string
+     * @param $select string
+     * @return string
+     */
+    protected function queryWhereStatus($status = null, $select = "*")
+    {
+        $query = "SELECT {$select} FROM {$this->tableName} "
             . " LEFT JOIN " . DB_INVOICE . ".INVOICE_PROFILE ON {$this->tableName}.PROFILE_ID = INVOICE_PROFILE.PROFILE_ID "
             . " LEFT JOIN " . DB_SMS_API_V2 . ".CLIENT on " . DB_SMS_API_V2 . ".CLIENT.CLIENT_ID = INVOICE_PROFILE.CLIENT_ID "
             . " WHERE ARCHIVED_DATE is null";
@@ -89,9 +103,32 @@ class InvoiceHistory extends ModelContract
 
         $query .= " ORDER BY STATUS ASC, INVOICE_NUMBER DESC, {$this->tableName}.INVOICE_ID DESC";
 
-        return $this
-            ->select($query)
-            ->fetchAll();
+        return $query;
+    }
+
+    /**
+     * Get history per page
+     *
+     * @param $status string
+     * @param   $page int
+     * @return  array
+     */
+    public function getHistorybyPage($status, $page = 1)
+    {
+        $chunk  = LIMIT_PER_PAGE;
+        $offset = ($page - 1) * ($chunk);
+
+        $totalQuery  = $this->queryWhereStatus($status, "count(1)");
+        $query       = $this->queryWhereStatus($status);
+        $query      .= " LIMIT {$chunk} OFFSET {$offset} ";
+
+        $data = $this->select($query)->fetchAll();
+        $totalData = $this->select($totalQuery)->fetchColumn();
+
+        return [
+            'data' => $data,
+            'total' => $totalData
+        ];
     }
 
     /**
@@ -167,6 +204,7 @@ class InvoiceHistory extends ModelContract
         $query = "SELECT * FROM {$this->tableName}
             WHERE DATE_FORMAT(START_DATE, '%m-%Y') = '{$date}'
             ORDER BY START_DATE DESC";
+
         return $this->select($query)->fetchAll();
     }
 

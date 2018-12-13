@@ -31,6 +31,21 @@
             }
         }
 
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                $("#backToTop").show();
+
+            } else {
+                $("#backToTop").hide();
+            }
+        }
+
+        mod.topFunction = function () {
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+        }
+
         mod.viewClient = function(clientID) {
             try {
                 checkValidRecordID(clientID);
