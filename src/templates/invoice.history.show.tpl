@@ -89,10 +89,7 @@
                         {if $product.isPeriod eq '1'}
                             {$product.productName} period {$product->period|date_format:"1 - %e %B %Y"}
                         {else}
-                            {$product.productName} on {$product->period|date_format:"jS F, Y"}
-                        {/if}
-                        {if $product.userApiReport}
-                            ({$product.userApiReport})
+                            {$product.productName} on {$product->period|date_format:"F jS, Y"}
                         {/if}
                     </td>
                     <td class="qty">

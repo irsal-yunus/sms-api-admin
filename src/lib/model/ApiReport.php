@@ -77,6 +77,7 @@ class ApiReport {
     const   CACHE_LAST_DATE                 = 'lastSendDateTime.lfu',
             CACHE_BILLING_PROFILE           = 'billingProfiles.lfu',
             CACHE_REPORT_GROUP              = 'reportGroups.lfu',
+            CACHE_REGENERATE_REPORT         = 'regegenerate.lfu',
             ALL_REPORT_PACKAGE              = 'BILLING_REPORT';
 
 
@@ -799,8 +800,8 @@ class ApiReport {
      *                                              ]]
      */
     public function getUserMessageStatus($userId, $startDateTime, $endDateTime, $dataSize, $startIndex) {
-        //MESSAGE ID                    DESTINATION	MESSAGE CONTENT	ERROR CODE	DESCRIPTION CODE	SEND DATETIME           SENDER      USER ID     MESSAGE COUNT	||  OPERATOR    PRICE
-        //5GPI2017-04-11 06:13:29.470	15629689999	Test msg sms	0+0+0+0         DELIVERED               2017-04-09 00:00:00	1rstWAP     PEPTrial                1	||  DEFAULT     315
+        //MESSAGE ID                    DESTINATION MESSAGE CONTENT ERROR CODE  DESCRIPTION CODE    SEND DATETIME           SENDER      USER ID     MESSAGE COUNT   ||  OPERATOR    PRICE
+        //5GPI2017-04-11 06:13:29.470   15629689999 Test msg sms    0+0+0+0         DELIVERED               2017-04-09 00:00:00 1rstWAP     PEPTrial                1   ||  DEFAULT     315
         $userIdClause = is_array($userId)
                             ? ' IN ('.implode(',', $userId).')'
                             : ' = '.$userId;
@@ -991,10 +992,10 @@ class ApiReport {
      *                              [['OP_ID', 'PREFIX', 'MIN_LENGTH', 'MAX_LENGTH']]
      * @return  Int                 Total price
      */
-    public function assignMessagePrice(String $type, Array &$messages, Array &$rules, Array &$operators = []) {
+    public function assignMessagePrice(String $type, Array &$messages, Array &$rules, Array &$operators = [], &$hasEmptyStatus) {
         return $type == self::BILLING_OPERATOR_BASE
-                    ? $this->assignOperatorPrice($messages, $rules, $operators)
-                    : $this->assignTieringPrice ($messages, $rules, $operators);
+                    ? $this->assignOperatorPrice($messages, $rules, $operators, $hasEmptyStatus)
+                    : $this->assignTieringPrice ($messages, $rules, $operators, $hasEmptyStatus);
     }
 
 
@@ -1010,10 +1011,19 @@ class ApiReport {
      *                              ]]
      * @param   Array   $rule       2D array of Pricing  [['OP_ID', 'PER_SMS_PRICE']]
      */
-    private function assignTieringPrice(&$messages, &$rules, &$operators) {
+    private function assignTieringPrice(&$messages, &$rules, &$operators, &$hasEmptyStatus) {
         $price         =  current($rules)['PER_SMS_PRICE'];
 
-        foreach($messages as &$message) {
+        foreach($messages as &$message)
+        {
+            /**
+             * Add hasEmptyStatus when there is a message that don't have status
+             */
+            if ($message['MESSAGE_STATUS'] === '' || $message['MESSAGE_STATUS'] === null)
+            {
+                $hasEmptyStatus = true;
+            }
+
             /**
              * Validate if the message already formated or not
              */
@@ -1042,13 +1052,21 @@ class ApiReport {
      * @param   Array   $operator   2D Array of Billing Rule                                    <br />
      *                              [['OP_ID', 'RANGE_LOWER', 'RANGE_UPPER']]
      */
-    private function assignOperatorPrice(&$messages, &$rules, &$operators)
+    private function assignOperatorPrice(&$messages, &$rules, &$operators, &$hasEmptyStatus)
     {
         $chargedStatus = [self::SMS_STATUS_DELIVERED, self::SMS_STATUS_UNDELIVERED_CHARGED];
         $mappedRules = array_column($rules, 'PER_SMS_PRICE', 'OP_ID');
 
         foreach($messages as &$message)
         {
+            /**
+             * Add hasEmptyStatus when there is a message that don't have status
+             */
+            if ($message['MESSAGE_STATUS'] === '' || $message['MESSAGE_STATUS'] === null)
+            {
+                $hasEmptyStatus = true;
+            }
+
             $this->formatMessageData($message, $operators);
 
             if ($message['DESCRIPTION_CODE'] !== self::SMS_STATUS_UNDELIVERED)
@@ -1135,12 +1153,42 @@ class ApiReport {
      *
      * @param   Array   $data       List of all user messages last send date time
      *                              [['USER_ID', 'RECEIVE_DATETIME']]
-     * @param   String  $dir        directory path for specific report period
      * @return  Bool                Save status
      */
     private function saveLastMessageDate(Array &$data) {
         $cache  = $this->mergeArray($this->loadLastMessageDate(), $data);
         return $this->saveCache(self::CACHE_LAST_DATE, $cache);
+    }
+
+
+
+    /**
+     * Load regenerate flag from file cache
+     *
+     * @param   String  $fileName   report fileName
+     * @return  Array|Bool          List or boolean flag for regenerate report
+     */
+    public function loadRegenerateCache($fileName = null)
+    {
+        $cache = $this->loadCache(self::CACHE_REGENERATE_REPORT);
+
+        if (is_null($fileName)) {
+            return $cache;
+        }
+
+        return array_key_exists($fileName, $cache) && $cache[$fileName];
+    }
+
+
+    /**
+     * Save last message send date time for every user
+     *
+     * @param   Array   $data       List of reportname that should be regenerate
+     * @return  Bool                Save status
+     */
+    private function saveRegenerateCache(Array $data)
+    {
+        return $this->saveCache(self::CACHE_REGENERATE_REPORT, $data);
     }
 
 
@@ -1316,6 +1364,7 @@ class ApiReport {
         $dirFinal              = $this->reportDir.'/'. self::DIR_FINAL_REPORT;
         $finalReport           = $dirFinal.       '/'.$fileName.$this->periodSuffix.self::SUFFIX_FINAL_REPORT.'.xlsx';
         $summaryFinalReport    = $dirFinal.       '/'.$fileName.$this->periodSuffix.self::SUFFIX_SUMMARY_FINAL_REPORT.'.xlsx';
+        $isRegenerate          = $this->loadRegenerateCache($fileName);
 
         is_dir($dirFinal)    ?: @mkdir($dirFinal, 0777, true);
 
@@ -1331,7 +1380,7 @@ class ApiReport {
 
         $this->finalReportWriter    ->setDefaultRowStyle($defaultStyle);
 
-        if(file_exists($finalReport) && filesize($finalReport) > 0) {
+        if($isRegenerate === false && file_exists($finalReport) && filesize($finalReport) > 0) {
             $this->log->info('Copy data from existing '.$fileName.' report');
             $this->copyFinalStatusReport($fileName, $newFixedPrice);
             $isNewFile = false;
@@ -1571,17 +1620,17 @@ class ApiReport {
      * Dump symmary data by group 'userId' or 'operator' or 'sender'
      *
      * -----------------|--------------------------------------------------------------------------------------------
-     *                  |				OPERATOR							# level 1
+     *                  |               OPERATOR                            # level 1
      *                  |--------------------------------------------------------------------------------------------
-     *     Date         |               TELKOMSEL						DEFAULT			# level 2
+     *     Date         |               TELKOMSEL                       DEFAULT         # level 2
      *                  |--------------------------------------------------------------------------------------------
-     *                  | D	UD_C	UD_UC	TS	TS_C	TP	D	UD_C	UD_UC	TS	TS_C	TP      # level 3
+     *                  | D UD_C    UD_UC   TS  TS_C    TP  D   UD_C    UD_UC   TS  TS_C    TP      # level 3
      * -----------------|--------------------------------------------------------------------------------------------
-     * 2017-05-01	| 0	0	0	0	0	0	0	0	0	0	0	0
-     * 2017-05-02	| 29	0	0	29	29	0	33	0	0	33	33	0
-     * 2017-05-03	| 48	0	1	48	49	0	65	0	0	65	65	0
-     * 2017-05-04	| 39	0	0	39	39	0	42	1	0	43	43	0
-     * 2017-05-05       | 38	0	0	38	38	0	55	1	0	56	56	0
+     * 2017-05-01       | 0 0   0   0   0   0   0   0   0   0   0   0
+     * 2017-05-02       | 29    0   0   29  29  0   33  0   0   33  33  0
+     * 2017-05-03       | 48    0   1   48  49  0   65  0   0   65  65  0
+     * 2017-05-04       | 39    0   0   39  39  0   42  1   0   43  43  0
+     * 2017-05-05       | 38    0   0   38  38  0   55  1   0   56  56  0
      * -----------------|--------------------------------------------------------------------------------------------
      *
      * @param String    $type       Group Name
@@ -1606,19 +1655,19 @@ class ApiReport {
             $startCol = PHPExcel_Cell::stringFromColumnIndex($start);
             $endCol   = PHPExcel_Cell::stringFromColumnIndex($i *6);
             $col      = [
-                            'd' 	=> PHPExcel_Cell::stringFromColumnIndex($start),
-                            'udC' 	=> PHPExcel_Cell::stringFromColumnIndex($start +1),
-                            'udUc' 	=> PHPExcel_Cell::stringFromColumnIndex($start +2),
-                            'ts' 	=> PHPExcel_Cell::stringFromColumnIndex($start +3),
-                            'tsC' 	=> PHPExcel_Cell::stringFromColumnIndex($start +4),
-                            'tp' 	=> PHPExcel_Cell::stringFromColumnIndex($start +5),
+                            'd'     => PHPExcel_Cell::stringFromColumnIndex($start),
+                            'udC'   => PHPExcel_Cell::stringFromColumnIndex($start +1),
+                            'udUc'  => PHPExcel_Cell::stringFromColumnIndex($start +2),
+                            'ts'    => PHPExcel_Cell::stringFromColumnIndex($start +3),
+                            'tsC'   => PHPExcel_Cell::stringFromColumnIndex($start +4),
+                            'tp'    => PHPExcel_Cell::stringFromColumnIndex($start +5),
                         ];
             $lastCol  = $col['tp'];
 
 
             // Set Column Title level 2 & 3
             $sheet
-                ->setCellValue($startCol   . ($startRow +1), $group) 	->mergeCells($startCol.($startRow +1).':'.$endCol.($startRow +1))
+                ->setCellValue($startCol   . ($startRow +1), $group)    ->mergeCells($startCol.($startRow +1).':'.$endCol.($startRow +1))
                 ->setCellValue($col['d']   . ($startRow +2), 'D')
                 ->setCellValue($col['udC'] . ($startRow +2), 'UD_C')
                 ->setCellValue($col['udUc']. ($startRow +2), 'UD_UC')
@@ -1841,6 +1890,7 @@ class ApiReport {
 
 
 
+
     /**
      * Create Zip package
      * Will Create an user or a group or all package file if
@@ -1848,13 +1898,25 @@ class ApiReport {
      * @param String    $fileName   Report file name
      */
     private function createReportPackage($fileName = '*') {
-        $dirFinal        = $this->reportDir.'/'. self::DIR_FINAL_REPORT;
-        $finalReport     = $dirFinal.       '/'.$fileName.$this->periodSuffix.'*.xlsx';
+        $dirFinal         = $this->reportDir.'/'. self::DIR_FINAL_REPORT;
+        $finalReport      = $dirFinal.       '/'.$fileName.$this->periodSuffix.'.xlsx';
+        $finalSummary     = $dirFinal.       '/'.$fileName.$this->periodSuffix.self::SUFFIX_SUMMARY_FINAL_REPORT.'.xlsx';
+        $optionCommand    = '';
 
-        $fileName        = $fileName == '*' ? self::ALL_REPORT_PACKAGE : $fileName;
-        $finalPackage    = $dirFinal.       '/'.$fileName.$this->periodSuffix.'.zip';
+        if ($fileName === '*')
+        {
+            if (date('Ym') !== $this->year.$this->month && date('d') > 4)
+            {
+                $optionCommand = '-m';
+            }
 
-        exec('zip -j '.$finalPackage   .' '.$finalReport);
+            $fileName = self::ALL_REPORT_PACKAGE;
+        }
+
+        $finalPackage     = $dirFinal.       '/'.$fileName.$this->periodSuffix.'.zip';
+
+        exec('zip -j '.$optionCommand.' '.$finalPackage   .' '.$finalReport);
+        exec('zip -j '.$finalPackage   .' '.$finalSummary);
     }
 
 
@@ -1926,6 +1988,7 @@ class ApiReport {
             $prevBillingProfileId        = null;
             $excludedUser                = [];
             $newUserLastSendDate         = [];
+            $needRegenerate              = [];
 
             /**
              * Start Generate user's report
@@ -1940,6 +2003,7 @@ class ApiReport {
                 $userReportGroupId     = $user['BILLING_REPORT_GROUP_ID'];
                 $userReportGroup       = null;
                 $getByGroup            = false;
+                $hasEmptyStatus        = false;
                 $userReportGroupDates  = [];
 
                 if(is_null($userId) || in_array($userId, $excludedUser)) continue;
@@ -1947,7 +2011,7 @@ class ApiReport {
                 $this->log->debug('Validate Billing Profile for User "'.$userName.'"');
                 $this->log->debug('Load last message date');
 
-                $userLastSendDate      = $this->loadLastMessageDate($userId);
+                $userLastSendDate      = $this->loadRegenerateCache($fileName) ? $this->firstDateOfMonth : $this->loadLastMessageDate($userId);
                 $this->log->debug('got '.$userLastSendDate);
                 $counter               = 0;
 
@@ -1994,10 +2058,11 @@ class ApiReport {
                     $fileName     = $userReportGroup['NAME'];
                     $this->log->debug('get list of user on report group '.$fileName);
                     $userGroups   = $this->getReportGroupUserList($userReportGroupId);
+                    $isRegenerate = $this->loadRegenerateCache($fileName);
                     $userId       = array_merge([$userId], array_column($userGroups, 'USER_ID'));
                     $excludedUser = array_merge($excludedUser, $userId);
                     foreach($userId as $id) {
-                        $userReportGroupDates[$id] = $this->loadLastMessageDate($id);
+                        $userReportGroupDates[$id] = $isRegenerate ? $this->firstDateOfMonth : $this->loadLastMessageDate($id);
                     }
                 }
                 /* =======================================
@@ -2053,7 +2118,7 @@ class ApiReport {
                             if ($messagesTotal > 0)
                             {
                                 $lastSendDate  = $messages[$messagesTotal - 1]['RECEIVE_DATETIME'];
-                                $this->assignMessagePrice(self::BILLING_OPERATOR_BASE, $messages, $operatorPrice, $operatorPrefix);
+                                $this->assignMessagePrice(self::BILLING_OPERATOR_BASE, $messages, $operatorPrice, $operatorPrefix, $hasEmptyStatus);
                                 $counter      += REPORT_PER_BATCH_SIZE;
                             }
                         } while ($messagesTotal > 0 && $messagesTotal === REPORT_PER_BATCH_SIZE);
@@ -2071,6 +2136,9 @@ class ApiReport {
                         else {
                             $newUserLastSendDate[$userId] = $lastSendDate;
                         }
+
+
+                        $needRegenerate[$fileName] = $hasEmptyStatus;
                     }
                     else if(strtoupper($userBillingProfile['BILLING_TYPE']) == self::BILLING_TIERING_BASE) {
 
@@ -2124,7 +2192,7 @@ class ApiReport {
                             {
                                 $lastSendDate  = $messages[$messagesTotal - 1]['RECEIVE_DATETIME'];
                                 // TIERING BASE - Final
-                                $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $finalPrice, $operatorPrefix);
+                                $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $finalPrice, $operatorPrefix, $hasEmptyStatus);
                                 $counter      += REPORT_PER_BATCH_SIZE;
                             }
                         } while ($messagesTotal > 0 && $messagesTotal === REPORT_PER_BATCH_SIZE);
@@ -2143,6 +2211,8 @@ class ApiReport {
                         {
                             $newUserLastSendDate[$userId] = $lastSendDate;
                         }
+
+                        $needRegenerate[$fileName] = $hasEmptyStatus;
                     }
 
                     if(in_array(
@@ -2173,6 +2243,12 @@ class ApiReport {
 
                 // Update last message send date time
                 $this->saveLastMessageDate($newUserLastSendDate);
+
+                if (date('Ym') === $this->year.$this->month || date('d') < 5) {
+                    $this->saveRegenerateCache($needRegenerate);
+                } else {
+                    $this->saveRegenerateCache([]);
+                }
             }
 
             $this->log->info('Finish generate report for '.$this->year.'-'.$this->month.' period');

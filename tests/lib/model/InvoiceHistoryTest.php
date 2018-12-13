@@ -223,6 +223,15 @@ class InvoiceHistoryTest extends TestCase
         $this->assertNotEmpty($locked);
     }
 
+    public function testGetHistorybyPage(){
+        $this->initialData();
+        $result = $this->model->getHistorybyPage();
+
+        $this->assertNotEmpty($result);
+        $this->assertArrayHasKey('data', $result);
+        $this->assertArrayHasKey('total', $result);
+    }
+
     /**
      * Test whereProfile method
      *

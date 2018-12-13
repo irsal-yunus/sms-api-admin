@@ -63,6 +63,8 @@ class InvoiceProfileTest extends TestCase
      */
     protected function initialBank()
     {
+        $model = new InvoiceBank();
+        $model->select("DELETE FROM {$model->tableName()}")->execute();
         $data = [
             'bankId' => 1,
             'bankName' => "BCA",
@@ -71,7 +73,6 @@ class InvoiceProfileTest extends TestCase
             'accountNumber' => "90909090909",
         ];
 
-        $model = new InvoiceBank();
 
         return $model->insert($data);
     }
@@ -130,6 +131,19 @@ class InvoiceProfileTest extends TestCase
         $this->assertInstanceOf(InvoiceProfile::class, $result[0]);
         $this->assertArrayHasKey('clientId', $result[0]);
         $this->assertArrayHasKey('bankId', $result[0]);
+    }
+
+    /**
+     * test getProfilebyPage method
+     * @return void
+     */
+    public function testGetProfilebyPage()
+    {
+        $this->initialData();
+        $result = $this->model->getProfilebyPage();
+        $this->assertNotEmpty($result);
+        $this->assertArrayHasKey('data', $result);
+        $this->assertArrayHasKey('total', $result);
     }
 
     /**
