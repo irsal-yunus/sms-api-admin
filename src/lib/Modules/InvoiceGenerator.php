@@ -210,12 +210,29 @@ class InvoiceGenerator
      */
     public function generateFileName(InvoiceHistory $invoice, InvoiceProfile $profile)
     {
-        $startDate  = strtotime($invoice->startDate);
-        $fullMonth  = date('F', $startDate);
-        $clientName = str_replace(" ", "_", $profile->companyName);
-        $status     = $invoice->isLock() ? "_FINAL" : "_PREVIEW";
+        $startDate      = strtotime($invoice->startDate);
+        $fullMonth      = date('F', $startDate);
+        $clientName     = $profile->companyName;
+        $status         = $invoice->isLock() ? "FINAL" : "PREVIEW";
+        $profileName    = $profile->profileName ?? 'NO_PROFILE_NAME';
+        $invoiceUsage   = $invoice->invoiceUsage > 0 ? "_{$invoice->invoiceUsage}" : '';
 
-        return "{$invoice->invoiceNumber}_{$clientName}_{$fullMonth}_{$invoice->invoiceType}$status.pdf";
+        $fileName       = "{$invoice->invoiceNumber}_{$clientName}_($profileName)_{$fullMonth}_{$invoice->invoiceType}{$invoiceUsage}_{$status}.pdf";
+
+        return $this->parseFileName($fileName);
+    }
+
+
+    /**
+     * Parse filename into accepted characters
+     * replace invalid characters to underscore character
+     *
+     * @param   String $fileName
+     * @return  String
+     */
+    protected function parseFileName($fileName = '')
+    {
+        return preg_replace('/[^0-9a-zA-Z\_\-\.\#\(\)]/', "_", $fileName);
     }
 
     /**

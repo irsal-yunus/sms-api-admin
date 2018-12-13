@@ -18,7 +18,7 @@ class InvoiceProfile extends ModelContract
      *
      * @var string
      */
-    protected $tableName = DB_INVOICE.'.INVOICE_PROFILE';
+    protected $tableName = DB_INVOICE . '.INVOICE_PROFILE';
 
     /**
      * Primary key of invoice profile
@@ -27,55 +27,59 @@ class InvoiceProfile extends ModelContract
      */
     protected $primaryKey = 'PROFILE_ID';
 
-
     /**
      * Get all Profile data
      *
-     * @param  $archived int
+     * @param boolean $includeArchived
      * @return array
      */
-    public function all($archived)
+    public function all($includeArchived = false)
     {
-        $query = $this->queryAll($archived);
+        $query = $this->queryAll($includeArchived);
         return $this->select($query)->fetchAll();
     }
 
     /**
      * Get Query for all based on archived status
      *
-     * @param  $archived int
-     * @param  $select  string
+     * @param boolean $includeArchived
+     * @param  string $select
      * @return array
      */
-    public function queryAll($archived, $select = '*')
+    public function queryAll($includeArchived = false, $select = '*')
     {
-        $archived = ($archived===null) ? "WHERE ARCHIVED_DATE is null" : "";
-        $query="{$this->defaultQuery($select)} {$archived} ORDER BY CLIENT.COMPANY_NAME ASC";
-        return $query;
+        $query = $this->defaultQuery($select);
+
+        if (!$includeArchived)
+        {
+            $query .= " WHERE ARCHIVED_DATE IS NULL ";
+        }
+
+        return $query . " ORDER BY CLIENT.COMPANY_NAME ASC ";
     }
 
     /**
      * Get Profile data by page
      *
-     * @param  $archived int
-     * @param $page int
+     * @param boolean $includeArchived
+     * @param integer $page
      * @return array
      */
-    public function getProfilebyPage($archived=null,$page=1)
+    public function getProfilebyPage($includeArchived = false, $page = 1)
     {
-        $chunk  = LIMIT_PER_PAGE;
-        $offset = ($page - 1) * ($chunk);
-        $totalQuery  = $this->queryAll($archived, "count(1)");
+        $chunk      = LIMIT_PER_PAGE;
+        $offset     = ($page - 1) * ($chunk);
+        $totalQuery = $this->queryAll($includeArchived, "count(1)");
 
-        $query       = $this->queryAll($archived);
-        $query      .= " LIMIT {$chunk} OFFSET {$offset} ";
+        $query = $this->queryAll($includeArchived);
+        $query .= " LIMIT {$chunk} OFFSET {$offset} ";
 
-        $data       = $this->select($query)->fetchAll();
-        $totalData  = $this->select($totalQuery)->fetchColumn();
+        $data      = $this->select($query)->fetchAll();
+        $totalData = $this->select($totalQuery)->fetchColumn();
 
         return [
-            'data' => $data,
-            'total' => $totalData
+            'data'  => $data,
+            'total' => $totalData,
         ];
     }
 
@@ -102,7 +106,7 @@ class InvoiceProfile extends ModelContract
     public function getProfileForAutoGenerate()
     {
         $firstDate = date('Y-m-d', strtotime('first day of this month'));
-        $query = "{$this->defaultQuery()} WHERE AUTO_GENERATE = 1
+        $query     = "{$this->defaultQuery()} WHERE AUTO_GENERATE = 1
             AND ARCHIVED_DATE is null
             AND {$this->tableName}.{$this->primaryKey} NOT IN
                 (SELECT INVOICE_HISTORY.{$this->primaryKey} FROM INVOICE_HISTORY WHERE START_DATE >= '$firstDate')
@@ -118,11 +122,11 @@ class InvoiceProfile extends ModelContract
      * @param String $select
      * @return string
      */
-    protected function defaultQuery($select="*")
+    protected function defaultQuery($select = "*")
     {
         return "SELECT {$select} from {$this->tableName}
-            LEFT JOIN ".DB_SMS_API_V2.".CLIENT on ".DB_SMS_API_V2.".CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
-            LEFT JOIN ".DB_INVOICE.".INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID";
+            LEFT JOIN " . DB_SMS_API_V2 . ".CLIENT on " . DB_SMS_API_V2 . ".CLIENT.CLIENT_ID = {$this->tableName}.CLIENT_ID
+            LEFT JOIN " . DB_INVOICE . ".INVOICE_BANK on INVOICE_BANK.BANK_ID = {$this->tableName}.BANK_ID";
     }
 
     /**
@@ -132,11 +136,12 @@ class InvoiceProfile extends ModelContract
      */
     public function loadApiUsers()
     {
-        if (empty($this->clientId)) {
+        if (empty($this->clientId))
+        {
             throw new Exception("Client ID is empty");
         }
 
-        $query = "SELECT * FROM ".DB_SMS_API_V2.".USER
+        $query = "SELECT * FROM " . DB_SMS_API_V2 . ".USER
             WHERE CLIENT_ID = {$this->clientId}
             ORDER BY USER_NAME ASC";
 
@@ -151,10 +156,14 @@ class InvoiceProfile extends ModelContract
      */
     public function withProduct($profileId = null)
     {
-        if (is_null($profileId)) {
+        if (is_null($profileId))
+        {
             $data = $this->all();
-        } else {
-            if (!$model = $this->find($profileId)) {
+        }
+        else
+        {
+            if (!$model = $this->find($profileId))
+            {
                 throw new Exception("Profile Not Found");
             }
             $data = [$model];
@@ -172,10 +181,11 @@ class InvoiceProfile extends ModelContract
     public function loadProduct(array &$data)
     {
         $profileIds = array_column($data, $this->keyName());
-        $products = $this->getProduct($profileIds);
-        $products = $this->groupBy($products, 'ownerId');
+        $products   = $this->getProduct($profileIds);
+        $products   = $this->groupBy($products, 'ownerId');
 
-        foreach ($data as &$item) {
+        foreach ($data as &$item)
+        {
             $item['products'] = $products[$item->key()] ?? [];
         }
 
@@ -190,7 +200,8 @@ class InvoiceProfile extends ModelContract
      */
     public function getProduct($profileId)
     {
-        if (empty($profileId)) {
+        if (empty($profileId))
+        {
             return [];
         }
 
@@ -216,7 +227,8 @@ class InvoiceProfile extends ModelContract
      */
     public function updateProfile($key, array $data)
     {
-        if (!$model = $this->find($key)) {
+        if (!$model = $this->find($key))
+        {
             throw new Exception("Profile Not Found");
         }
 
@@ -226,17 +238,18 @@ class InvoiceProfile extends ModelContract
     }
 
     /**
-     * validate client is duplicate or not
+     * validate profile name is duplicate or not
      *
-     * @param String $clientId
+     * @param String $profileName
      * @param mixed $profileId
      * @return  bool
      */
-    public function isClientDuplicate($clientId, $profileId = null)
+    public function isProfileNameDuplicate($profileName, $profileId = null)
     {
-        $query = "SELECT count(1) from $this->tableName where CLIENT_ID = '{$clientId}'";
+        $query = "SELECT count(1) from $this->tableName where PROFILE_NAME = '{$profileName}'";
 
-        if ($profileId) {
+        if ($profileId)
+        {
             $query .= " AND {$this->primaryKey} != $profileId";
         }
 

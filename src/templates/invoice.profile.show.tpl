@@ -13,6 +13,8 @@
         </a>
     </div>
     <dl class="admin-definitions">
+        <dt>Profile Name</dt>
+        <dd>{$profile.profileName}</dd>
         <dt>Customer ID</dt>
         <dd>{$profile.customerId}</dd>
         <dt>Client Name</dt>

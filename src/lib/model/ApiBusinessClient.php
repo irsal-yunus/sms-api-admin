@@ -96,15 +96,16 @@ class ApiBusinessClient extends ApiBaseModel {
      * @param String|int $includeClient
      * @return  array
      */
-    public function dontHaveInvoiceProfile($includeClient = null)
+    public function getSelectClient($includeClient = null)
     {
         $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
-        $query = "SELECT CLIENT_ID, COMPANY_NAME FROM CLIENT
-            WHERE CLIENT_ID NOT IN (SELECT INVOICE_PROFILE.CLIENT_ID FROM ".DB_INVOICE.".INVOICE_PROFILE) AND ARCHIVED_DATE is NULL";
+        $query = "SELECT CLIENT_ID, COMPANY_NAME FROM CLIENT WHERE CLIENT.ARCHIVED_DATE is NULL ";
 
         if (!empty($includeClient)) {
             $query .= " OR CLIENT_ID = $includeClient";
         }
+
+        $query .= " ORDER BY COMPANY_NAME ASC";
 
         return $db->query($query)->fetchAll(PDO::FETCH_KEY_PAIR);
     }

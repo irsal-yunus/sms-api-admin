@@ -39,7 +39,7 @@
             return '<a href="#" class="link" onclick="$app.module(\'invoice\').' + functionName + '">' + text + '</a>';
         }
 
-        function title(titleData) {
+        function title(titleData, previous) {
             try {
                 var data = [];
 
@@ -48,8 +48,9 @@
                 } else {
                     data.push({
                         title: mainTitle,
-                        action: 'showInvoiceManagement()'
+                        action: 'showInvoiceManagement('+(previous||'')+')'
                     });
+
                     if ($.isArray(titleData)) {
                         for (var i = 0; i < titleData.length; i++) {
                             if (i === titleData.length - 1) {
@@ -213,12 +214,18 @@
                 $app.content('invoice.profile.show', {
                     profileId: profileId
                 }, function() {
-                    title('Profile Details');
+                    title('Profile Details', function() {
+                        $app.module('invoice').selectInvoiceProfileTab();
+                    });
                 });
             } catch (ex) {
                 $1.error("[mod:invoice.profile.show] Error.", ex);
             }
         };
+
+        mod.selectInvoiceProfileTab = function() {
+            $('#invoice-view-tabs').tabs('select', TAB_INVOICE_PROFILE);
+        }
 
         function showInvoiceTable(type, page) {
             return $('#invoice-view-tabs')
@@ -728,20 +735,20 @@
             }
         };
 
-        function showProfileTable(type,page) {
+        function showProfileTable(type, page) {
             if (type){
                 return $('#invoice-view-tabs')
-                    .tabs('url', 1, resolveServiceUrl('invoice.profile') + "?type="+(type||'')+"&page="+(page||1))
+                    .tabs('url', TAB_INVOICE_PROFILE, resolveServiceUrl('invoice.profile') + "?type="+(type||'')+"&page="+(page||1))
                     .tabs('load', TAB_INVOICE_PROFILE)
             }
             else{
-                return $('#invoice-view-tabs').tabs('url', 1, resolveServiceUrl('invoice.profile')+"?page="+(page||1))
+                return $('#invoice-view-tabs').tabs('url', TAB_INVOICE_PROFILE, resolveServiceUrl('invoice.profile')+"?page="+(page||1))
                     .tabs('load', TAB_INVOICE_PROFILE)
             }
         }
 
-        mod.showClient = function(archived,page){
-            showProfileTable(archived,page).tabs('select', 1);
+        mod.showClient = function(archived, page){
+            showProfileTable(archived,page).tabs('select', TAB_INVOICE_PROFILE);
         };
 
         try {

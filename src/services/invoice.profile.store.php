@@ -6,9 +6,11 @@ require_once '../../vendor/autoload.php';
 
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
 
-$logger = Logger::getRootLogger();
 SmsApiAdmin::filterAccess();
-$service = new AppJsonService();
+
+$logger     = Logger::getRootLogger();
+$service    = new AppJsonService();
+$model      = new InvoiceProfile();
 
 try {
     $errorFields = [];
@@ -18,6 +20,7 @@ try {
         "autoGenerate" => FILTER_SANITIZE_NUMBER_INT,
         "approvedName" => FILTER_SANITIZE_STRING,
         "approvedPosition" => FILTER_SANITIZE_STRING,
+        "profileName" => FILTER_SANITIZE_STRING,
     ];
     $newData = filter_input_array(INPUT_POST, $definitions);
     foreach ($newData as $key => $value) {
@@ -30,6 +33,13 @@ try {
         $service->setStatus(false);
         $service->summarise('No data to add');
         $service->deliver();
+    }
+
+    if (empty($newData['profileName'])) {
+        $errorFields['profileName'] = 'Profile Name should not be empty!';
+    }
+    elseif ($model->isProfileNameDuplicate($newData['profileName'])) {
+        $errorFields['profileName'] = 'Profile Name already exists!';
     }
 
     if (empty($newData['clientId'])) {
@@ -46,14 +56,6 @@ try {
         $service->attachRaw($errorFields);
         $service->deliver();
     } else {
-        $model = new InvoiceProfile();
-
-        if ($model->isClientDuplicate($newData['clientId'])) {
-            $service->setStatus(false);
-            $service->summarise("Client already have invoice profile");
-            $service->deliver();
-        }
-
         $profileId = $model->insert($newData);
         $service->setStatus(true);
         $service->attach('profileId', $profileId);

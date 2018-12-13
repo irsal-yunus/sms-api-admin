@@ -13,33 +13,32 @@ try {
     SmsApiAdmin::filterAccess();
     $page = SmsApiAdmin::getTemplate();
 
-    try {
+    $profileId = filter_input(INPUT_POST, 'profileId', FILTER_VALIDATE_INT);
 
-        $profileId = filter_input(INPUT_POST, 'profileId', FILTER_VALIDATE_INT);
-
-        if (empty($profileId)) {
-            SmsApiAdmin::returnError("Invalid Invoice Profile ID ($profileId) !");
-        }
-
-        $profileModel = new InvoiceProfile();
-
-        if (!$profile = $profileModel->find($profileId)) {
-            SmsApiAdmin::returnError("Invoice Profile not found !");
-        }
-
-        $client = new ApiBusinessClient();
-        $bank = new InvoiceBank();
-
-        $clients = $client->dontHaveInvoiceProfile($profile->clientId);
-        $banks = $bank->all();
-
-        $page->assign('profile', $profile);
-        $page->assign('banks', array_column($banks, 'bankName', 'bankId'));
-        $page->assign('clients', $clients);
-        $page->display('invoice.profile.edit.tpl');
-    } catch (Exception $e) {
-        SmsApiAdmin::returnError($e->getMessage());
+    if (empty($profileId)) {
+        SmsApiAdmin::returnError("Invalid Invoice Profile ID ($profileId) !");
     }
+
+    $profileModel = new InvoiceProfile();
+
+    if (!$profile = $profileModel->find($profileId)) {
+        SmsApiAdmin::returnError("Invoice Profile not found !");
+    }
+
+    $client = new ApiBusinessClient();
+    $bank = new InvoiceBank();
+
+    $clients = $client->getSelectClient($profile->clientId);
+    $banks = $bank->all();
+
+    $page->assign('profile', $profile);
+    $page->assign('banks', array_column($banks, 'bankName', 'bankId'));
+    $page->assign('clients', $clients);
+    $page->display('invoice.profile.edit.tpl');
+
 } catch (Exception $e) {
     $logger->error("$e");
+    $logger->error($e->getMessage());
+    $logger->error($e->getTraceAsString());
+    SmsApiAdmin::returnError($e->getMessage());
 }
