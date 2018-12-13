@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright(c) 2010 1rstWAP. All rights reserved.
  */
 
@@ -10,7 +10,7 @@ require_once SMSAPIADMIN_LIB_DIR.'model/ApiUser.php';
  * @author setia.budi
  */
 class ApiUserCredit extends ApiBaseModel{
-	
+
 	const TYPE_TOPUP = 'T';
 	const TYPE_DEDUCT = 'D';
 
@@ -40,6 +40,8 @@ class ApiUserCredit extends ApiBaseModel{
 					c.CREDIT_AMOUNT as transactionCredit,
 					c.CREDIT_PRICE as transactionPrice,
 					c.CURRENCY_CODE as transactionCurrency,
+					c.CURRENT_BALANCE as currentBalance,
+					c.PREVIOUS_BALANCE as previousBalance,
 					c.PAYMENT_METHOD as paymentMethod,
 					c.PAYMENT_DATE as paymentDate,
 					(c.PAYMENT_ACK=1) as paymentAcknowledged,
@@ -115,7 +117,7 @@ class ApiUserCredit extends ApiBaseModel{
 				$type = PDO::PARAM_STR;
 			}else{
 				throw new InvalidArgumentException("Missing transaction ID/Ref : $tranID/$tranRef");
-			}			
+			}
 
             $stmt = $db->prepare($query);
 			$stmt->bindValue(1, $key, $type);
@@ -159,23 +161,23 @@ class ApiUserCredit extends ApiBaseModel{
             $db = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
 			$this->apiuser->checkExistence($userID, true);
 			$rules = SmsApiAdmin::getConfig('transaction');
-			
+
 			$logQuery = "insert into CREDIT_TRANSACTION (
 							TRANSACTION_REF,USER_ID,
-							CREDIT_AMOUNT,CREDIT_PRICE,CURRENCY_CODE,
-							CREDIT_REQUESTER, PAYMENT_METHOD,PAYMENT_DATE,PAYMENT_ACK,
+							CREDIT_AMOUNT,CREDIT_PRICE,CURRENCY_CODE,CURRENT_BALANCE,
+							CREDIT_REQUESTER,PREVIOUS_BALANCE, PAYMENT_METHOD,PAYMENT_DATE,PAYMENT_ACK,
 							CREATED_BY,CREATED_DATE,UPDATED_BY,UPDATED_DATE,
 							TRANSACTION_REMARK
 						)
 						values (
 							:transactionRef, :userID,
-							:transactionCredit, :transactionPrice, :transactionCurrency,
-							:transactionRequester,:paymentMethod, NULL, 0,
+							:transactionCredit,   :transactionPrice, :transactionCurrency,:currentBalance,
+							:transactionRequester,:previousBalance,  :paymentMethod, NULL, 0,
 							:adminID, now(), NULL, NULL ,
 							:transactionRemark
 						)";
 			$creditQuery = 'update USER set CREDIT=CREDIT+:transactionCredit where USER_ID=:userID';
-			
+
 			if(!isset($transaction['transactionCredit']))
 				throw new InvalidArgumentException('Missing credit amount in arguments');
 			if(!isset($transaction['transactionRequester']))
@@ -189,9 +191,11 @@ class ApiUserCredit extends ApiBaseModel{
 			if(!isset($transaction['transactionRemark']))
 				$transaction['transactionRemark']='';
 
-			$transactionCredit = filter_var($transaction['transactionCredit'],
+			$transactionCredit= filter_var($transaction['transactionCredit'],
 										FILTER_SANITIZE_NUMBER_INT,
 										array('options'=>array('min_range'=>1)));
+			$currentBalance   = filter_var($transaction['currentBalance']);
+			$previousBalance  = filter_var($transaction['previousBalance']);
 			$transactionPrice = filter_var($transaction['transactionPrice'],
 										FILTER_SANITIZE_NUMBER_FLOAT,
 										array(
@@ -224,6 +228,8 @@ class ApiUserCredit extends ApiBaseModel{
 
             $logStmt = $db->prepare($logQuery);
 			$logStmt->bindValue(':transactionCredit', $transactionCredit, PDO::PARAM_INT);
+			$logStmt->bindValue(':currentBalance', $currentBalance, PDO::PARAM_INT);
+			$logStmt->bindValue(':previousBalance', $previousBalance, PDO::PARAM_INT);
 			$logStmt->bindValue(':transactionPrice', $transactionPrice, PDO::PARAM_STR);
 			$logStmt->bindValue(':transactionCurrency', $transactionCurrency, PDO::PARAM_STR);
 			$logStmt->bindValue(':paymentMethod', $paymentMethod, PDO::PARAM_STR);
@@ -263,14 +269,14 @@ class ApiUserCredit extends ApiBaseModel{
 
 			$logQuery = "insert into CREDIT_TRANSACTION (
 							TRANSACTION_REF,USER_ID,
-							CREDIT_AMOUNT,CREDIT_PRICE,CURRENCY_CODE,
+							CREDIT_AMOUNT,CREDIT_PRICE,CURRENCY_CODE,CURRENT_BALANCE,PREVIOUS_BALANCE,
 							CREDIT_REQUESTER, PAYMENT_METHOD,PAYMENT_DATE,PAYMENT_ACK,
 							CREATED_BY,CREATED_DATE,UPDATED_BY,UPDATED_DATE,
 							TRANSACTION_REMARK
 						)
 						values (
 							:transactionRef, :userID,
-							:transactionCredit, 0.0, :transactionCurrency,
+							:transactionCredit, 0.0, :transactionCurrency,:currentBalance,:previousBalance,
 							'-','', curdate(),1,
 							:adminID, now(), NULL, NULL ,
 							:transactionRemark
@@ -280,27 +286,31 @@ class ApiUserCredit extends ApiBaseModel{
 			if(!isset($transaction['transactionCredit']))
 				throw new InvalidArgumentException('Missing credit amount in arguments');
 
-			$transactionCredit = filter_var($transaction['transactionCredit'],
+			$previousBalance  	= filter_var($transaction['previousBalance']);
+			$currentBalance  	= filter_var($transaction['currentBalance']);
+			$transactionCredit 	= filter_var($transaction['transactionCredit'],
 										FILTER_SANITIZE_NUMBER_INT,
 										array('options'=>array('min_range'=>1)));
-			$transactionRemark = trim(filter_var($transaction['transactionRemark'],
+			$transactionRemark 	= trim(filter_var($transaction['transactionRemark'],
 										FILTER_SANITIZE_STRING,
 										array('flags'=>FILTER_FLAG_STRIP_LOW)));
-			$transactionRef = self::generateTransactionRefCode(self::TYPE_DEDUCT);
-			$adminID = SmsApiAdmin::getCurrentUser()->getID();
+			$transactionRef 	= self::generateTransactionRefCode(self::TYPE_DEDUCT);
+			$adminID			= SmsApiAdmin::getCurrentUser()->getID();
 
 			if($transactionCredit === false)
 				throw new Exception("Invalid credit amount: $transactionCredit");
 
-			$currentBalance = $this->getUserCredit($userID);
-			if($currentBalance < $transactionCredit)
-				throw new Exception("Can not deduct user credit more than current balance. Requested=$transactionCredit, balance=$currentBalance");
+			$oldBalance = $this->getUserCredit($userID);
+			if($oldBalance < $transactionCredit)
+				throw new Exception("Can not deduct user credit more than current balance. Requested=$transactionCredit, balance=$oldBalance");
 
             $logStmt = $db->prepare($logQuery);
 			$logStmt->bindValue(':transactionCredit', -$transactionCredit, PDO::PARAM_INT);
 			$logStmt->bindValue(':transactionRemark', $transactionRemark, PDO::PARAM_STR);
 			$logStmt->bindValue(':transactionCurrency', $rules['defaultCurrency'], PDO::PARAM_STR);
 			$logStmt->bindValue(':transactionRef', $transactionRef, PDO::PARAM_STR);
+			$logStmt->bindValue(':previousBalance', $previousBalance, PDO::PARAM_INT);
+			$logStmt->bindValue(':currentBalance', $currentBalance, PDO::PARAM_INT);
 			$logStmt->bindValue(':adminID', $adminID, PDO::PARAM_INT);
 			$logStmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 
@@ -482,7 +492,7 @@ class ApiUserCredit extends ApiBaseModel{
 			throw new Exception("Query error");
 		}
 	}
-	
+
 	private static function generateTransactionRefCode($type){
 		if(($type !== self::TYPE_TOPUP) && ($type !== self::TYPE_DEDUCT))
 			throw new Exception('Invalid transaction type: '.$type);
