@@ -92,7 +92,7 @@ EOD;
         $this->throwIfSheetFilePointerIsNotAvailable();
 
         fwrite($this->sheetFilePointer, self::SHEET_XML_FILE_HEADER);
-        fwrite($this->sheetFilePointer, '<cols><col min="1" max="1" width="34" customWidth="1"/><col min="2" max="4" width="20" customWidth="1"/><col min="5" max="7" width="30" customWidth="1"/><col min="8" max="11" width="18" customWidth="1"/></cols>');
+        fwrite($this->sheetFilePointer, '<cols><col min="1" max="1" width="34" customWidth="1"/><col min="2" max="4" width="20" customWidth="1"/><col min="5" max="7" width="30" customWidth="1"/><col min="8" max="11" width="20" customWidth="1"/><col min="13" max="13" width="18" customWidth="1"/></cols>');
         fwrite($this->sheetFilePointer, '<sheetData>');
     }
 

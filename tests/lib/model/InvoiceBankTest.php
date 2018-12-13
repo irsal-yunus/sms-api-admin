@@ -1,5 +1,7 @@
 <?php
 
+namespace Firstwap\SmsApiAdmin\Test\lib\model;
+
 use Firstwap\SmsApiAdmin\lib\model\InvoiceBank;
 use Firstwap\SmsApiAdmin\Test\TestCase;
 

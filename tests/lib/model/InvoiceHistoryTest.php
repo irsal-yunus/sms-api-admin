@@ -1,5 +1,7 @@
 <?php
 
+namespace Firstwap\SmsApiAdmin\Test\lib\model;
+
 use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProduct;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
@@ -118,6 +120,16 @@ class InvoiceHistoryTest extends TestCase
                 'unitPrice' => "123",
                 'qty' => "111",
                 'useReport' => 1,
+                'reportName' => null,
+                'ownerType' => 'PROFILE',
+                'ownerId' => 1,
+            ],
+            [
+                'productName' => "MBS 2",
+                'period' => date('Y-m-d'),
+                'unitPrice' => "123",
+                'qty' => "111",
+                'useReport' => 0,
                 'reportName' => null,
                 'ownerType' => 'PROFILE',
                 'ownerId' => 1,
@@ -271,7 +283,7 @@ class InvoiceHistoryTest extends TestCase
         $result = $this->model->whereStartDate(strtotime('now'));
         $this->assertNotEmpty($result);
         $this->assertInstanceOf(InvoiceHistory::class, $result[0]);
-        $this->assertTrue($result[0]->save());
+        $this->assertNotEmpty($result[0]->save());
 
         $result = $this->model->whereStartDate(false);
         $this->assertEmpty($result);
@@ -669,7 +681,7 @@ class InvoiceHistoryTest extends TestCase
 
         $results = $this->model->all();
         $result = $results[0]->createInvoiceFile();
-        $this->assertTrue($result);
+        $this->assertNotEmpty($result);
         $this->assertNotEmpty($results[0]->fileName);
         $this->assertTrue($results[0]->fileExists());
         ob_start();

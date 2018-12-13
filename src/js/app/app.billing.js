@@ -307,6 +307,88 @@ mod.viewMessageFilterPage = function(){
     }
 };
 
+/**
+ * International Price Module
+ */
+var TAB_BILLING_INTL = 3;
+
+var initMasking = function() {
+    var replaceMent = function(val) {
+        return val.replace(/(?!^)-/g, '').replace(/^,/, '').replace(/^-,/, '-');
+    }
+    $('input[data-mask]').each(function(i, input) {
+        var mask = $(input).mask(input.dataset.mask, {
+            reverse: true,
+            translation: {
+                '#': {
+                    pattern: /-|\d/,
+                    recursive: true
+                }
+            },
+            onChange: function(value, e) {
+                e.target.value = replaceMent(value);
+            }
+        });
+        mask.val(replaceMent(mask.val()))
+    });
+}
+var initIntlForm = function() {
+    $("#countryCode").select2({
+        placeholder: "Select a country",
+        width: '200px',
+    });
+    initMasking();
+}
+
+mod.selectIntlPriceTab = function() {
+    $('#billing-view-tabs').tabs('select', TAB_BILLING_INTL).tabs('load', TAB_BILLING_INTL);
+}
+
+mod.formIntlPrice = function(priceId) {
+    var title = priceId ? "Edit International Price" : "Add International Price";
+    var data = priceId ? { price_id: priceId } : null;
+
+    try {
+        $app.form.openAutoDialog('billing.intl.form', data, title, {
+            width: '40em',
+            height: 200
+        }, function(reply) {
+            if (reply.success) {
+                mod.selectIntlPriceTab();
+            }
+        }, initIntlForm);
+    } catch (ex) {
+        $1.error("[mod:billing.intl.form (create) Error.", ex);
+    }
+};
+
+
+mod.deleteIntlPrice = function(priceId) {
+    try {
+        var title = 'Deleted Internaltional Price';
+        $app.confirm('Are you sure to remove the Internaltional Price data ?', title, function() {
+            $app.call('billing.intl.delete', {
+                price_id: priceId
+            }, function(reply) {
+                try {
+                    var success = $app.form.checkServiceReply(reply, false, title);
+                    if (success) {
+                        if (reply && reply.summary) {
+                            $app.tell(reply.summary || 'Success!', title);
+                        }
+                        mod.selectIntlPriceTab();
+                    }
+                } catch (ex) {
+                    $1.error("[mod:invoice.history.delete@ajaxsuccess] Error.", ex);
+                }
+            });
+        });
+    } catch (ex) {
+        $1.error("[mod:invoice.history.delete] Error.", ex);
+    }
+};
+
+
 try{
 	$app.registerModule(mod, MODULE_NAME);
 }catch (ex){
