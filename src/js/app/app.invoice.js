@@ -115,13 +115,6 @@
                 removeMasking();
             });
 
-            $('#manualInput').on('change', function(event) {
-                var isChecked = event.currentTarget.checked;
-                var useReport = $('#useReport').val() == 1;
-                if (useReport) {
-                    $('.toggle-report').prop('disabled', isChecked === false);
-                }
-            }).trigger('change');
 
             $('#useReport').on('change', function() {
                 var value = +$(this).val();
@@ -169,6 +162,14 @@
                 ]
             });
 
+            $('#manualInput').on('change', function(event) {
+                var isChecked = event.currentTarget.checked;
+                var useReport = $('#useReport').val() == 1;
+                if (useReport) {
+                    $('.toggle-report').prop('disabled', isChecked === false);
+                }
+            }).trigger('change');
+
             initMasking();
         }
 
@@ -194,6 +195,38 @@
                     $('#dueDate').val(dueDate);
                 })
                 .trigger('change')
+        }
+
+        function initFormProfile() {
+            $('#useCommitment').on('change', function(event) {
+                var useCommitment = +$(this).val();
+                if (useCommitment===0) {
+                    $('.commitmentSetting').hide();
+                }
+                else{
+                    $('.commitmentSetting').show();
+                }
+            }).trigger('change');
+
+            $('#commitmentType').on('change', function(event) {
+                var type = $(this).val();
+                if (type=='PRICE') {
+                    $('#minimumLabel').text("Minimum Price");
+                    $('.quantity').hide();
+                    $('#minAmount').attr("data-mask",'000,000,000,000,000.00');
+                    initMasking();
+
+                }
+                else{
+                   $('#minimumLabel').text("Minimum Quantity");
+                   $('.quantity').show();
+                   $('#minAmount').attr("data-mask",'###,###,###,###,###,###');
+                   initMasking();
+                }
+            }).trigger('change');
+
+        initMasking();
+
         }
 
         mod.showInvoiceManagement = function(callback) {
@@ -553,7 +586,7 @@
                     if (reply && reply.attachment && reply.attachment.profileId) {
                         mod.showProfile(reply.attachment.profileId);
                     }
-                });
+                },initFormProfile);
             } catch (ex) {
                 $1.error("[mod:invoice.profile.create] Error.", ex);
             }
@@ -592,7 +625,7 @@
                     if (changePage !== false) {
                         mod.showProfile(profileId);
                     }
-                });
+                },initFormProfile);
             } catch (ex) {
                 $1.error("[mod:invoice.profile.edit] Error.", ex);
             }

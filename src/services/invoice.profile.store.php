@@ -5,6 +5,7 @@
 require_once '../../vendor/autoload.php';
 
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
+use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
 
 SmsApiAdmin::filterAccess();
 
@@ -12,17 +13,31 @@ $logger     = Logger::getRootLogger();
 $service    = new AppJsonService();
 $model      = new InvoiceProfile();
 
+function convertCurrencyString($string)
+{
+    return floatval(str_replace(',', '', $string));
+}
+
 try {
     $errorFields = [];
     $definitions = [
-        "clientId" => FILTER_SANITIZE_NUMBER_INT,
-        "bankId" => FILTER_SANITIZE_NUMBER_INT,
-        "autoGenerate" => FILTER_SANITIZE_NUMBER_INT,
-        "approvedName" => FILTER_SANITIZE_STRING,
-        "approvedPosition" => FILTER_SANITIZE_STRING,
-        "profileName" => FILTER_SANITIZE_STRING,
+        "clientId"              => FILTER_SANITIZE_NUMBER_INT,
+        "bankId"                => FILTER_SANITIZE_NUMBER_INT,
+        "autoGenerate"          => FILTER_SANITIZE_NUMBER_INT,
+        "approvedName"          => FILTER_SANITIZE_STRING,
+        "approvedPosition"      => FILTER_SANITIZE_STRING,
+        "profileName"           => FILTER_SANITIZE_STRING,
+        "useMinCommitment"      => FILTER_SANITIZE_NUMBER_INT,
+        "minCommitmentType"     => FILTER_SANITIZE_STRING,
+        "minCommitmentAmount"   => ['filter'  => FILTER_CALLBACK,
+                                    'options' => 'convertCurrencyString',],
+        "minCharge"             => ['filter'  => FILTER_CALLBACK,
+                                    'options' => 'convertCurrencyString',],
+        "combinedMinCommitment" => FILTER_SANITIZE_NUMBER_INT,
+
     ];
     $newData = filter_input_array(INPUT_POST, $definitions);
+
     foreach ($newData as $key => $value) {
         if ($value === null) {
             unset($newData[$key]);
@@ -33,6 +48,19 @@ try {
         $service->setStatus(false);
         $service->summarise('No data to add');
         $service->deliver();
+    }
+
+
+    if ($newData['useMinCommitment']==1 && empty($newData['minCommitmentAmount'])) {
+        $errorFields['minCommitmentAmount'] = 'Minimum Commitment Amount should not be empty!';
+    }
+
+    if ($newData['minCommitmentType'] == InvoiceHistory::MINIMUM_QTY && empty($newData['minCharge'])) {
+        $errorFields['minCharge'] = 'Minimum Charge should not be empty!';
+    }
+
+    if ($newData['minCommitmentType'] == InvoiceHistory::MINIMUM_PRICE) {
+        $newData['minCharge'] = null;
     }
 
     if (empty($newData['profileName'])) {
@@ -49,6 +77,7 @@ try {
     if (empty($newData['bankId'])) {
         $errorFields['bankId'] = 'Payment Detail should not be empty!';
     }
+
 
     if ($errorFields) {
         $service->setStatus(false);

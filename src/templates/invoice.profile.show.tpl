@@ -42,6 +42,26 @@
         <dd>{$profile.approvedName|default:'-'}</dd>
         <dt>Approved Position</dt>
         <dd>{$profile.approvedPosition|default:'-'}</dd>
+        <dt>Use Minimum Commitment?</dt>
+        <dd>{($profile.useMinCommitment)?"Yes":"No"}</dd>
+        {if $profile.useMinCommitment eq 1}
+            <dt>Minimum Commitment Type</dt>
+            <dd>{$profile.minCommitmentType}</dd>
+            <dt>Minimum Commitment Amout</dt>
+            <dd>
+                {if $profile.minCommitmentType eq 'PRICE'}
+                    {{number_format($profile.minCommitmentAmount, 2)|default:'-'}} (IDR)
+                {else}
+                    {{number_format(intval($profile.minCommitmentAmount))|default:'-'}}
+                {/if}
+            </dd>
+            <dt>Use Combined Minimum Commitment? </dt>
+            <dd>{($profile.combinedMinCommitment)?"Yes":"No"}</dd>
+            {if $profile.minCommitmentType eq 'QUANTITY'}
+                <dt>Minimum Charge </dt>
+                <dd>{number_format($profile.minCharge, 2)|default:'-'} (IDR) </dd>
+            {/if}
+        {/if}
     </dl>
     <span class="ui-helper-clearfix"></span>
     <h3 class="action-container type-action">Products for Invoice </h3>

@@ -73,7 +73,6 @@ class InvoiceProfileTest extends TestCase
             'accountNumber' => "90909090909",
         ];
 
-
         return $model->insert($data);
     }
 

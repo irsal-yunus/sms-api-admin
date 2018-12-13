@@ -5,12 +5,18 @@
 require_once '../../vendor/autoload.php';
 
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProfile;
+use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
 
 SmsApiAdmin::filterAccess();
 
 $logger     = Logger::getRootLogger();
 $service    = new AppJsonService();
 $model      = new InvoiceProfile();
+
+function convertCurrencyString($string)
+{
+    return floatval(str_replace(',', '', $string));
+}
 
 try {
 
@@ -22,9 +28,28 @@ try {
         "approvedName" => FILTER_SANITIZE_STRING,
         "approvedPosition" => FILTER_SANITIZE_STRING,
         "profileName" => FILTER_SANITIZE_STRING,
+        "useMinCommitment"      => FILTER_SANITIZE_NUMBER_INT,
+        "minCommitmentType"     => FILTER_SANITIZE_STRING,
+        "minCommitmentAmount"   => ['filter'  => FILTER_CALLBACK,
+                                    'options' => 'convertCurrencyString',],
+        "minCharge"             => ['filter'  => FILTER_CALLBACK,
+                                    'options' => 'convertCurrencyString',],
+        "combinedMinCommitment" => FILTER_SANITIZE_NUMBER_INT,
     ];
 
     $updates = filter_input_array(INPUT_POST, $definitions);
+
+    if ($updates['useMinCommitment'] == 1 && empty($updates['minCommitmentAmount'])) {
+        $errorFields['minCommitmentAmount'] = 'Minimum Commitment Amount should not be empty!';
+    }
+
+    if ($updates['minCommitmentType'] == InvoiceHistory::MINIMUM_QTY && empty($updates['minCharge'])) {
+        $errorFields['minCharge'] = 'Minimum Charge should not be empty!';
+    }
+
+    if ($updates['minCommitmentType'] == InvoiceHistory::MINIMUM_PRICE) {
+        $updates['minCharge'] = null;
+    }
 
     if (empty($updates['profileId'])) {
         SmsApiAdmin::returnError("Invalid Invoice Profile ID ({$updates['profileId']}) !");
