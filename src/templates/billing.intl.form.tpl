@@ -18,7 +18,7 @@
                     <option
                         value="{$country->COUNTRY_CODE_REF}"
                         {if isset($price) && $price->countryCodeRef === $country->COUNTRY_CODE_REF} selected {/if}
-                        {if $country->BILLING_INTERNATIONAL_PRICE_ID !== null} disabled {/if}
+                        {if $country->BILLING_INTERNATIONAL_PRICE_ID !== null AND (isset($price) && $price->countryCodeRef !== $country->COUNTRY_CODE_REF)} disabled {/if}
                     >
                     {$country->COUNTRY_NAME} (+{$country->PHONE_CODE})
                     </option>

@@ -23,8 +23,6 @@ try {
     }
 
     $countries = ApiCountry::getInternationalPriceCountry(InternationalPrice::DEFAULT_PRICE_COUNTRY_CODE);
-    // $countyIds = array_column($countries, 'COUNTRY_CODE_REF');
-    // $countries = array_column($countries, 'COUNTRY_NAME', 'COUNTRY_CODE_REF');
 
     $page->assign('countries', $countries);
     $page->display('billing.intl.form.tpl');
