@@ -628,4 +628,91 @@ class ApiReportTest extends TestCase
         $value = $this->callMethod($report, 'toFloat', [$value]);
         $this->assertEquals(1400.56, $value);
     }
+
+    /**
+     * Test getReportGroupUserList method
+     *
+     * @return  void
+     */
+    public function testGetReportGroupUserList()
+    {
+        $this->createDummyUserClient();
+        $apireport = new ApiReport();
+        $user = $apireport->getReportGroupUserList(888);
+        $this->assertEquals(999, (int)$user[0]['BILLING_PROFILE_ID']);
+        $this->deleteDummy();
+    }
+
+    /**
+     * Test getAllBillingProfile method
+     *
+     * @return  void
+     */
+    public function testGetAllBillingProfile()
+    {
+        $apireport  = new ApiReport();
+        $allBilling = $apireport->getAllBillingProfile();
+        $this->assertNotEmpty($allBilling);
+    }
+
+    /**
+     * Test getUserByBillingAndTiering method
+     *
+     * @return  void
+     */
+    public function testGetUserByBillingAndTiering()
+    {
+        $this->createDummyUserClient();
+        $apireport = new ApiReport();
+        $user = $apireport->getUserByBillingAndTiering(999);
+        $this->assertEquals(777, (int)$user[0]['BILLING_TIERING_GROUP_ID']);
+        $this->deleteDummy();
+    }
+
+    public function createDummyUserClient()
+    {
+        //CREATE user that hve belongs to dummy client
+        $userDummy  = array(
+            'userId'                 =>'1122',
+            'userName'               =>'dummy',
+            'userPassword'           =>'ASDFGHJK',
+            'clientID'               =>'1111',
+            'cobranderID'            =>'1RSTWAP',
+            'active'                 =>'1',
+            'isPostpaid'             =>'1',
+            'billingProfileId'       =>'999',
+            'billingReportId'        =>'888',
+            'billingTieringId'       =>'777',
+        );
+        $db1    = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+        $query2 = 'insert into USER (
+                        USER_ID, USER_NAME, PASSWORD, CLIENT_ID,
+                        COBRANDER_ID, ACTIVE, IS_POSTPAID , BILLING_PROFILE_ID , BILLING_REPORT_GROUP_ID , BILLING_TIERING_GROUP_ID
+                        )
+                    values (
+                        :userId, :userName, :userPassword, :clientID,
+                        :cobranderID, :active, :isPostpaid, :billingProfileId, :billingReportId , :billingTieringId
+                        )';
+
+        $stmt2 = $db1->prepare($query2);
+        $stmt2->bindValue(':userId'             , $userDummy['userId'           ], PDO::PARAM_STR);
+        $stmt2->bindValue(':userName'           , $userDummy['userName'         ], PDO::PARAM_STR);
+        $stmt2->bindValue(':userPassword'       , $userDummy['userPassword'     ], PDO::PARAM_STR);
+        $stmt2->bindValue(':clientID'           , $userDummy['clientID'         ], PDO::PARAM_STR);
+        $stmt2->bindValue(':cobranderID'        , $userDummy['cobranderID'      ], PDO::PARAM_STR);
+        $stmt2->bindValue(':active'             , $userDummy['active'           ], PDO::PARAM_STR);
+        $stmt2->bindValue(':isPostpaid'         , $userDummy['isPostpaid'       ], PDO::PARAM_STR);
+        $stmt2->bindValue(':billingProfileId'   , $userDummy['billingProfileId' ], PDO::PARAM_STR);
+        $stmt2->bindValue(':billingReportId'    , $userDummy['billingReportId'  ], PDO::PARAM_STR);
+        $stmt2->bindValue(':billingTieringId'   , $userDummy['billingTieringId' ], PDO::PARAM_STR);
+        $stmt2->execute();
+    }
+
+    public function deleteDummy()
+    {
+        $db    = SmsApiAdmin::getDB(SmsApiAdmin::DB_SMSAPI);
+        $query ='delete from USER where USER_ID = 1122 ';
+        $stmt  = $db->prepare($query);
+        $stmt ->execute();
+    }
 }

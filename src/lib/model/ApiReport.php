@@ -520,6 +520,18 @@ class ApiReport {
                     );
     }
 
+    /**
+     * Get Detail of  all type of Billing Profile (Tiering and Operator)
+     * @return  Array   Array ['BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT']
+     */
+    public function getAllBillingProfile()
+    {
+        return $this->query(
+                        'SELECT   BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT'
+                        .' FROM     '.DB_BILL_PRICELIST.'.BILLING_PROFILE'
+        );
+    }
+
      /**
      * Get Detail of user detail only by TIERING type
      * @return  Array   Array ['USER_NAME,USER_ID, NAME, BILLING_PROFILE_ID']
@@ -743,7 +755,7 @@ class ApiReport {
      */
     public function getReportGroupUserList($reportGroupId) {
         return $this->query(
-                         ' SELECT   USER_ID, USER_NAME'
+                         ' SELECT   USER_ID, USER_NAME,BILLING_PROFILE_ID'
                         .' FROM     '.DB_SMS_API_V2.'.USER'
                         .' WHERE    BILLING_REPORT_GROUP_ID = '.$reportGroupId
                     );
@@ -2343,11 +2355,29 @@ class ApiReport {
     * @param int $billingID
     * @return  array
     */
-    public function getUserByBilling($billingID){
-         return $this->query(
-                         ' SELECT   USER_ID,USER_NAME,BILLING_TIERING_GROUP_ID '
+    public function getUserByBilling($billingID,$type){
+        $andOperator = ($type === self::BILLING_TIERING_BASE) ? ' AND BILLING_TIERING_GROUP_ID IS NOT NULL' : null;
+
+        return $this->query(
+                         ' SELECT   USER_ID,USER_NAME,BILLING_TIERING_GROUP_ID,BILLING_PROFILE_ID '
                         .' FROM     '.DB_SMS_API_V2.'.USER'
                         .' WHERE    BILLING_PROFILE_ID = '.$billingID.''
+                        . $andOperator .''
+                    );
+    }
+
+    /**
+    * Function to get user data based on BILLING_PROFILE_ID where BILLING_TIERING_GROUP_ID is not null
+    * @param int $billingID
+    * @return  array
+    */
+    public function getUserByBillingAndTiering($billingID)
+    {
+        return $this->query(
+                         ' SELECT   USER_ID,USER_NAME,BILLING_TIERING_GROUP_ID '
+                        .' FROM     '.DB_SMS_API_V2.'.USER'
+                        .' WHERE    BILLING_PROFILE_ID = '.$billingID.' '
+                        .' AND      BILLING_TIERING_GROUP_ID IS NOT NULL '
                     );
     }
 
