@@ -63,7 +63,7 @@
                     {$price->countryName}
                 </td>
                 <td class="type-action">
-                    +{$price->phoneCode}
+                    +{$price->callingCode}
                 </td>
                 <td class="type-status">
                     {$price->unitPrice}

@@ -22,7 +22,7 @@ try {
         }
     }
 
-    $countries = ApiCountry::getInternationalPriceCountry(InternationalPrice::DEFAULT_PRICE_COUNTRY_CODE);
+    $countries = ApiCountry::getInternationalPriceCountry(InternationalPrice::DEFAULT_PRICE_COUNTRY_CODE, $priceId);
 
     $page->assign('countries', $countries);
     $page->display('billing.intl.form.tpl');

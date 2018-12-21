@@ -18,7 +18,7 @@ try {
         $profilesModel = new InvoiceProfile();
 
         $profiles = $profilesModel->all(1);
-        $page->assign('profiles', array_column($profiles, 'companyName', 'profileId'));
+        $page->assign('profiles', array_column($profiles, 'profileName', 'profileId'));
     } else {
         $page->assign('profileId', $profileId);
     }
