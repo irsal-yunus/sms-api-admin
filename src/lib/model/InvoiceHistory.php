@@ -571,7 +571,7 @@ class InvoiceHistory extends ModelContract
         $dueDate   = new DateTime($this->dueDate);
         $startDate = new DateTime($this->startDate);
 
-        return $dueDate->diff($startDate)->days;
+        return $dueDate->diff($startDate)->format("%d");
     }
 
     /**
