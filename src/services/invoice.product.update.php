@@ -50,7 +50,7 @@ try {
         $service->deliver();
     }
 
-    if ($updateData['isPeriod'] === 0) {
+    if ((int)$updateData['isPeriod'] === 0) {
         $date       = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
         $timestamp  = strtotime($date);
 
