@@ -606,20 +606,20 @@ class ApiReport {
      *                  [
      *                      DEFAULT => [COUNTRY_NAME => STRING, UNIT_PRICE => Float],
      *                      PRICES => [
-     *                          [COUNTRY_CODE_REF => String, PHONE_CODE => Int, UNIT_PRICE => Float ]
+     *                          [COUNTRY_CODE_REF => String, CALLING_CODE => Int, UNIT_PRICE => Float ]
      *                          .....
      *                      ]
      *                  ]
      */
     public function getInternationalPrices()
     {
-        $query = "SELECT BIP.COUNTRY_CODE_REF, COUNTRY_CODE, PHONE_CODE, UNIT_PRICE, UPPER(COUNTRY_NAME) as COUNTRY_NAME
+        $query = "SELECT BIP.COUNTRY_CODE_REF, COUNTRY_CODE, CALLING_CODE, UNIT_PRICE, UPPER(COUNTRY_NAME) as COUNTRY_NAME
             FROM ".DB_BILL_PRICELIST.".BILLING_INTERNATIONAL_PRICE BIP
             JOIN ".DB_SMS_API_V2.".COUNTRY
             ON BIP.COUNTRY_CODE_REF = COUNTRY.COUNTRY_CODE_REF
         ";
 
-        $otherPrices  = "$query WHERE BIP.COUNTRY_CODE_REF != 'ID' ORDER BY `COUNTRY`.`PHONE_CODE` DESC";
+        $otherPrices  = "$query WHERE BIP.COUNTRY_CODE_REF != 'ID' ORDER BY `COUNTRY`.`CALLING_CODE` DESC";
         $defaultPrice = "$query WHERE BIP.COUNTRY_CODE_REF = 'ID' LIMIT 1";
 
         $default    = $this->query($defaultPrice, self::QUERY_SINGLE_ROW);
@@ -1172,7 +1172,7 @@ class ApiReport {
     {
         foreach ($this->internationalPrices['PRICES'] as $country)
         {
-            if (preg_match("/^{$country['PHONE_CODE']}/", $message['DESTINATION']) > 0)
+            if (preg_match("/^{$country['CALLING_CODE']}/", $message['DESTINATION']) > 0)
             {
                 foreach ($country['OPERATORS'] as $operator)
                 {
