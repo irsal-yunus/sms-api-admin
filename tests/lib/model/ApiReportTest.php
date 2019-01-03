@@ -1,6 +1,8 @@
 <?php
 
+namespace Firstwap\SmsApiAdmin\Test\lib\model;
 
+use ApiReport;
 use Firstwap\SmsApiAdmin\Test\TestCase;
 
 require_once dirname(dirname(dirname(__DIR__))) . '/src/lib/model/ApiReport.php';
@@ -74,6 +76,7 @@ class ApiReportTest extends TestCase
      */
     public function testGetUserBillingGroupMethod()
     {
+        exec('rm -rf ' . BILLING_QUERY_HISTORY_DIR);
         $report = new ApiReport("2018", "01", true);
 
         $result = $report->getUserBillingGroup(1);
@@ -153,28 +156,6 @@ class ApiReportTest extends TestCase
         $this->assertTrue(is_array($result));
 
         $result = $report->getUserDetail([1], 1);
-        $this->assertNotNull($result);
-        $this->assertTrue(is_array($result));
-    }
-
-    /**
-     * Test getGroupLastSendDate method
-     *
-     * @return void
-     */
-    public function testGetGroupLastSendDateMethod()
-    {
-        $report = new ApiReport("2018", "01", true);
-
-        $result = $report->getGroupLastSendDate([1]);
-        $this->assertNotNull($result);
-        $this->assertTrue(is_array($result));
-
-        $result = $report->getGroupLastSendDate();
-        $this->assertNotNull($result);
-        $this->assertTrue(is_array($result));
-
-        $result = $report->getGroupLastSendDate([]);
         $this->assertNotNull($result);
         $this->assertTrue(is_array($result));
     }
@@ -341,14 +322,27 @@ class ApiReportTest extends TestCase
 
         $result = $report->getTieringTraffic(1, true);
         $this->assertNotNull($result);
+
+        $report      = new ApiReport(date('Y'), date('m'), true);
+        $statusArray = array_keys($report->getDeliveryStatus(ApiReport::SMS_STATUS_UNCHARGED));
+        $statusArray = array_map(function ($item)
+        {
+            return "'$item'";
+        }, $statusArray);
+        $report->unchargedDeliveryStatus = implode(',', $statusArray);
+        $result                          = $report->getTieringTraffic([['USER_ID' => 1]]);
+        $this->assertNotNull($result);
+
+        $result = $report->getTieringTraffic(1, true);
+        $this->assertNotNull($result);
     }
 
     /**
-     * Test assignMessagePrice method
+     * Test formatMessages method
      *
      * @return void
      */
-    public function testAssignMessagePriceMethod()
+    public function testFormatMessagesMethod()
     {
         $report    = new ApiReport("2018", "01", true);
         $operators = $this->opertors;
@@ -399,10 +393,9 @@ class ApiReportTest extends TestCase
         ];
 
         $method = $this->getMethod(ApiReport::class, 'createReportFile');
-        $isNewFile = false;
-        $method->invoke($report, ['aaaaaa', $isNewFile, null, true]);
+        $method->invoke($report, 'aaaaaa', true);
 
-        $this->callMethod($report, 'assignMessagePrice', [ApiReport::BILLING_OPERATOR_BASE, &$message, &$price, &$operators]);
+        $this->callMethod($report, 'formatMessages', [ApiReport::BILLING_OPERATOR_BASE, &$message, &$price, &$operators]);
         $this->assertArrayHasKey('OPERATOR', current($message));
         $this->assertArrayHasKey('PRICE', current($message));
         $this->assertNotEmpty(current($message)['DESCRIPTION_CODE']);
@@ -464,7 +457,7 @@ class ApiReportTest extends TestCase
             ],
             [
                 'MESSAGE_ID'       => "0GPI2018-01-02 00:00:01.000.uvqjE",
-                'DESTINATION'      => $prefix."8190000001",
+                'DESTINATION'      => $prefix . "8190000001",
                 'MESSAGE_CONTENT'  => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
                 'MESSAGE_STATUS'   => "0+0+0+0",
                 'DESCRIPTION_CODE' => "",
@@ -476,23 +469,306 @@ class ApiReportTest extends TestCase
             ],
         ];
 
-        $hasEmptyStatus              = false;
-        $this->callMethod($report, 'assignMessagePrice', [ApiReport::BILLING_TIERING_BASE, &$message, &$price, &$operators, &$hasEmptyStatus, true]);
-        $this->assertTrue($hasEmptyStatus);
+        $this->callMethod($report, 'formatMessages', [ApiReport::BILLING_TIERING_BASE, &$message, &$price, &$operators, true]);
         $this->assertArrayHasKey('OPERATOR', current($message));
         $this->assertArrayHasKey('PRICE', current($message));
         $this->assertNotEmpty(current($message)['DESCRIPTION_CODE']);
         $this->assertNotEquals("2018-01-02 00:00:01", current($message)['RECEIVE_DATETIME']);
         $this->assertNotEquals("2018-01-02 00:00:01", current($message)['SEND_DATETIME']);
 
-        $hasEmptyStatus = false;
-        $this->callMethod($report, 'assignMessagePrice', [ApiReport::BILLING_TIERING_BASE, &$message, &$price, &$operators, &$hasEmptyStatus, false]);
-        $this->assertTrue($hasEmptyStatus);
+        $this->callMethod($report, 'formatMessages', [ApiReport::BILLING_TIERING_BASE, &$message, &$price, &$operators, false]);
         $this->assertArrayHasKey('OPERATOR', current($message));
         $this->assertArrayHasKey('PRICE', current($message));
         $this->assertNotEmpty(current($message)['DESCRIPTION_CODE']);
         $this->assertNotEquals("2018-01-02 00:00:01", current($message)['RECEIVE_DATETIME']);
         $this->assertNotEquals("2018-01-02 00:00:01", current($message)['SEND_DATETIME']);
+
+        $method = $this->getMethod(ApiReport::class, 'saveReportFile');
+        $method->invoke($report);
+
+    }
+
+    /**
+     * Test get query method
+     *
+     * @return  void
+     */
+    public function testQueryMethod()
+    {
+        $report = new ApiReport("2018", "01", true);
+        $query  = "SELECT * FROM USER LIMIT 1";
+
+        $result = $this->callMethod($report, 'query', [$query, ApiReport::QUERY_SINGLE_COLUMN]);
+        $this->assertNotEmpty($result);
+    }
+
+    /**
+     * Test get report file name
+     *
+     * @return  void
+     */
+    public function testGetReportFileName()
+    {
+        $report = new ApiReport("2018", "01", true);
+        $result = $this->callMethod($report, 'getReportFileName', []);
+        $this->assertNotEmpty($result);
+        $result = $this->callMethod($report, 'getReportFileName', [0]);
+        $this->assertEmpty($result);
+        $result = $this->callMethod($report, 'getReportFileName', [1]);
+        $this->assertNotEmpty($result);
+
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["getUserDetail", 'loadReportGroupCache'])
+            ->getMock();
+        $executeMock
+            ->expects($this->once())->method("getUserDetail")
+            ->willReturn(['BILLING_REPORT_GROUP_ID' => 1]);
+        $executeMock
+            ->expects($this->once())->method("loadReportGroupCache")
+            ->willReturn(['NAME' => 'test']);
+
+        $result = $this->callMethod($executeMock, 'getReportFileName', [1]);
+        $this->assertNotEmpty($result);
+    }
+
+    /**
+     * Test deleteTieringGroup method
+     *
+     * @return  void
+     */
+    public function testDeleteTieringGroup()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["query"])
+            ->getMock();
+
+        $result = $this->callMethod($executeMock, 'deleteTieringGroup', [0]);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test deleteReportGroup method
+     *
+     * @return  void
+     */
+    public function testDeleteReportGroup()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'deleteReportGroup', [0]);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test deleteBillingProfileTiering method
+     *
+     * @return  void
+     */
+    public function testDeleteBillingProfileTiering()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'deleteBillingProfileTiering', [0]);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test deleteBillingProfileOperator method
+     *
+     * @return  void
+     */
+    public function testDeleteBillingProfileOperator()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'deleteBillingProfileOperator', [0]);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test deleteBillingProfile method
+     *
+     * @return  void
+     */
+    public function testDeleteBillingProfile()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'deleteBillingProfile', [0]);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test insertToTieringGroup method
+     *
+     * @return  void
+     */
+    public function testInsertToTieringGroup()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["exec_query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'insertToTieringGroup', ['test', 'TIERING']);
+
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test insertToReportGroup method
+     *
+     * @return  void
+     */
+    public function testInsertToReportGroup()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["exec_query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'insertToReportGroup', ['test', 'TIERING']);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test updateBillingProfile method
+     *
+     * @return  void
+     */
+    public function testUpdateBillingProfile()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'updateBillingProfile', [0, 'test', 'TIERING', 'test', 0]);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test getUserByBilling method
+     *
+     * @return  void
+     */
+    public function testGetUserByBilling()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'getUserByBilling', [0]);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test insertToTiering method
+     *
+     * @return  void
+     */
+    public function testInsertToTiering()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["exec_query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'insertToTiering', [0, 0, 10, 0]);
+
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test insertToOperator method
+     *
+     * @return  void
+     */
+    public function testInsertToOperator()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["exec_query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'insertToOperator', [0, 0, 0]);
+
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test insertToBillingProfile method
+     *
+     * @return  void
+     */
+    public function testInsertBillingProfile()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["exec_query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'insertToBillingProfile', ['test', 'TIERING', 'test', 0]);
+
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test updateTieringGroup method
+     *
+     * @return  void
+     */
+    public function testUpdateTieringGroup()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'updateTieringGroup', [0, 'test', 'test']);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test updateReportGroup method
+     *
+     * @return  void
+     */
+    public function testUpdateReportGroup()
+    {
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setMethods(["query"])
+            ->getMock();
+        $result = $this->callMethod($executeMock, 'updateReportGroup', [0, 'test', 'test']);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * Test isReportExist method
+     *
+     * @return  void
+     */
+    public function testIsReportExist()
+    {
+        $report = new ApiReport("2018", "01", true);
+        $this->assertEmpty($report->isReportExist());
+    }
+
+    /**
+     * Test get summary color style
+     *
+     * @return  void
+     */
+    public function testGetSummaryColorStyle()
+    {
+        $report = new ApiReport("2018", "01", true);
+        $method = $this->getMethod(ApiReport::class, 'getSummaryColorStyle');
+        $result = $method->invoke($report);
+        $this->assertNotEmpty($result);
     }
 
     /**
@@ -775,5 +1051,44 @@ class ApiReportTest extends TestCase
         $result = $report->getUserTiering();
 
         $this->assertTrue(is_array($result));
+    }
+
+    /**
+     * Test generate method
+     *
+     * @return  void
+     */
+    public function testGenerate()
+    {
+        $messages = [
+            [
+                "MESSAGE_ID"       => "0GPI2018-01-10 03:47:49.000.1i0vf",
+                "DESTINATION"      => "6285640000444",
+                "MESSAGE_CONTENT"  => "DUMMY TEXT DELETE THIS IF MENGGANGGU WKWKWKW",
+                "MESSAGE_STATUS"   => "2049",
+                "DESCRIPTION_CODE" => "",
+                "RECEIVE_DATETIME" => "2018-01-10 03:47:49",
+                "SEND_DATETIME"    => "2018-01-10 03:47:49",
+                "SENDER"           => "1rstWAP",
+                "USER_ID"          => "api0",
+                "MESSAGE_COUNT"    => "1",
+            ],
+        ];
+
+        $executeMock = $this
+            ->getMockBuilder("ApiReport")
+            ->setConstructorArgs(["2018", "01", true])
+            ->setMethods(["getGroupMessageStatus", "getUserMessageStatus"])
+            ->getMock();
+
+        $executeMock
+            ->expects($this->any())->method("getGroupMessageStatus")
+            ->willReturn($messages);
+        $executeMock
+            ->expects($this->any())->method("getUserMessageStatus")
+            ->willReturn($messages);
+        $result = $executeMock->generate();
+
+        $this->assertEmpty($result);
     }
 }
