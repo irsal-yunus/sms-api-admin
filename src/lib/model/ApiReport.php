@@ -899,7 +899,6 @@ class ApiReport {
                     . ' ORDER BY USER_MESSAGE_STATUS.MESSAGE_ID ASC '
                     . ' LIMIT     '.$startIndex.','.$dataSize;
         $messages = $this->query($message);
-        $this->log->debug("result ".$message);
 
         return $messages;
     }
@@ -2045,7 +2044,28 @@ class ApiReport {
     }
 
 
+    /**
+     * Get report package fileName
+     *
+     * @param  string $fileNamePrefix
+     * @return string
+     */
+    protected function reportPackageFileName($fileNamePrefix)
+    {
+        return $this->reportDir .'/' . self::DIR_FINAL_REPORT . '/' . $fileNamePrefix . $this->periodSuffix . '.zip';
+    }
 
+
+    /**
+     * Checking the report package exist or not
+     *
+     * @param string $fileNamePrefix
+     * @return  bool
+     */
+    protected function isReportPackageExists($fileNamePrefix)
+    {
+        return file_exists($this->reportPackageFileName($fileNamePrefix));
+    }
 
     /**
      * Debuging helper,
@@ -2176,7 +2196,6 @@ class ApiReport {
                     $this->log->info('Skip generate report for user '.$userName);
                     continue;
                 }
-
                 /* =======================================
                  *  End Of Get User billing information
                  * ======================================= */
@@ -2212,6 +2231,16 @@ class ApiReport {
                  *  End of Get report Group information
                  * ======================================= */
 
+                /* =======================================
+                 * Checking the report file are already
+                 * exist or not for the last month report
+                 * ======================================= */
+                if ($this->currentMonth === false && $this->isReportPackageExists($fileName))
+                {
+                    $this->log->debug('Report file already exists for '. $fileName);
+                    echo "\033[1;31m".$this->year.'-'.$this->month."\tSkipped  \t".$userBillingProfileId."\t".$userBillingProfile['BILLING_TYPE']." \t".$fileName.PHP_EOL;
+                    continue;
+                }
 
                 /* =============================================================
                  *  Start get User messages and insert into report file
