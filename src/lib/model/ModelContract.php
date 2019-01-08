@@ -135,7 +135,7 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
      * Perform Update action
      *
      * @param  array $data
-     * @return bool
+     * @return int
      */
     public function update(array $data)
     {
@@ -165,7 +165,7 @@ abstract class ModelContract implements ArrayAccess, JsonSerializable
 
         $this->attributes = array_merge($this->attributes, $values);
 
-        return $updated;
+        return $this->key();
     }
 
     /**

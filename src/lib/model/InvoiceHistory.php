@@ -668,7 +668,7 @@ class InvoiceHistory extends ModelContract
     /**
      * Create Invoice File
      *
-     * @return void
+     * @return integer
      */
     public function createInvoiceFile()
     {

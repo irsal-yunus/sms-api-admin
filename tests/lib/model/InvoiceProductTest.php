@@ -1,5 +1,7 @@
 <?php
 
+namespace Firstwap\SmsApiAdmin\Test\lib\model;
+
 use Firstwap\SmsApiAdmin\lib\model\InvoiceProduct;
 use Firstwap\SmsApiAdmin\Test\TestCase;
 
@@ -47,27 +49,28 @@ class InvoiceProductTest extends TestCase
         $data = [
             [
                 'productName' => "SMS API",
-                'period' => null,
-                'unitPrice' => "200",
-                'qty' => "200",
-                'useReport' => 0,
-                'reportName' => null,
-                'ownerType' => 'PROFILE',
-                'ownerId' => 1,
+                'period'      => null,
+                'unitPrice'   => "200",
+                'qty'         => "200",
+                'useReport'   => 0,
+                'reportName'  => null,
+                'ownerType'   => 'PROFILE',
+                'ownerId'     => 1,
             ],
             [
                 'productName' => "SMS HISTORY",
-                'period' => date('Y-m-d'),
-                'unitPrice' => "200",
-                'qty' => "200",
-                'useReport' => 1,
-                'reportName' => '1rstwap',
-                'ownerType' => 'HISTORY',
-                'ownerId' => 1,
+                'period'      => date('Y-m-d'),
+                'unitPrice'   => "200",
+                'qty'         => "200",
+                'useReport'   => 1,
+                'reportName'  => '1rstwap',
+                'ownerType'   => 'HISTORY',
+                'ownerId'     => 1,
             ],
         ];
 
-        foreach ($data as $value) {
+        foreach ($data as $value)
+        {
             $this->model->insertProduct($value);
         }
     }
@@ -174,13 +177,13 @@ class InvoiceProductTest extends TestCase
 
         $updateData = [
             'productName' => "SMS SAPI",
-            'period' => '2018-01-01',
-            'unitPrice' => "2000",
-            'qty' => "2000",
-            'useReport' => 0,
-            'reportName' => 'anu',
-            'ownerType' => 'PROFILE',
-            'ownerId' => 1,
+            'period'      => '2018-01-01',
+            'unitPrice'   => "2000",
+            'qty'         => "2000",
+            'useReport'   => 0,
+            'reportName'  => 'anu',
+            'ownerType'   => 'PROFILE',
+            'ownerId'     => 1,
         ];
 
         $this->model->updateProduct($result->key(), $updateData);
@@ -210,19 +213,21 @@ class InvoiceProductTest extends TestCase
         try {
             $this->model->updateProduct(0, $updateData);
             $this->fail("Exception not rais");
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e)
+        {
             $this->assertContains('Product Not Found', $e->getMessage());
         }
 
         $updateData = [
             'productName' => "SMS SAPI",
-            'period' => '2018-04-01',
-            'unitPrice' => "0",
-            'qty' => "0",
-            'useReport' => 1,
-            'reportName' => 'unittest',
-            'ownerType' => 'HISTORY',
-            'ownerId' => 1,
+            'period'      => '2018-04-01',
+            'unitPrice'   => "0",
+            'qty'         => "0",
+            'useReport'   => 1,
+            'reportName'  => 'unittest',
+            'ownerType'   => 'HISTORY',
+            'ownerId'     => 1,
         ];
         $result = $results[1];
         $this->model->updateProduct($result->key(), $updateData);
@@ -239,7 +244,7 @@ class InvoiceProductTest extends TestCase
             ->willThrowException(new \Exception(''));
         $productMock
             ->expects($this->once())->method("summaryPath")
-            ->willReturn(dirname(SMSAPIADMIN_BASE_DIR)."/tests/resources/unittest_Apr_2018_Summary.xlsx");
+            ->willReturn(dirname(SMSAPIADMIN_BASE_DIR) . "/tests/resources/unittest_Apr_2018_Summary.xlsx");
         $productMock->updateProduct($result->key(), $updateData);
         $result = $this->model->find($result->key());
         $this->assertNotEmpty($result);
@@ -251,7 +256,7 @@ class InvoiceProductTest extends TestCase
             ->getMock();
         $productMock
             ->expects($this->once())->method("summaryPath")
-            ->willReturn(dirname(SMSAPIADMIN_BASE_DIR)."/tests/resources/unittest_Apr_2018_Summary.xlsx");
+            ->willReturn(dirname(SMSAPIADMIN_BASE_DIR) . "/tests/resources/unittest_Apr_2018_Summary.xlsx");
         $productMock->updateProduct($result->key(), $updateData);
         $result = $this->model->find($result->key());
         $this->assertNotEmpty($result);
@@ -259,23 +264,147 @@ class InvoiceProductTest extends TestCase
 
         $updateData = [
             'productName' => "SMS SAPI",
-            'period' => null,
-            'unitPrice' => "0",
-            'qty' => "0",
-            'useReport' => 1,
-            'reportName' => 'rachmat',
-            'ownerType' => 'HISTORY',
-            'ownerId' => 1,
+            'period'      => null,
+            'unitPrice'   => "0",
+            'qty'         => "0",
+            'useReport'   => 1,
+            'reportName'  => 'rachmat',
+            'ownerType'   => 'HISTORY',
+            'ownerId'     => 1,
         ];
         $result = $results[1];
         $this->model->updateProduct($result->key(), $updateData);
         $result = $this->model->find($result->key());
         $this->assertNotEmpty($result);
         $this->assertInstanceOf(InvoiceProduct::class, $result);
+    }
 
-        //Update Data when isPeriod is false
+    /**
+     * Test Profile2History method
+     *
+     * @return void
+     */
+    public function testProfile2HistoryMethod()
+    {
+        $productMock = $this
+            ->getMockBuilder(InvoiceProduct::class)
+            ->setConstructorArgs([[
+                'productName' => "SMS SAPI",
+                'period'      => '2018-01-01',
+                'unitPrice'   => "2000",
+                'qty'         => "2000",
+                'useReport'   => 1,
+                'reportName'  => 'anu',
+                'ownerType'   => 'HISTORY',
+                'ownerId'     => 1,
+            ]])
+            ->setMethods(['summaryPath'])
+            ->getMock();
+
+        $productMock
+            ->expects($this->once())->method("summaryPath")
+            ->willReturn(dirname(SMSAPIADMIN_BASE_DIR) . "/tests/resources/Test_Report_Group_Nov_2018_Summary.xlsx");
+
+        $results = $productMock->profile2History([], 1);
+
+        $this->assertNotEmpty($results);
+        $this->assertTrue(is_array($results));
 
 
+        $productMock = $this
+            ->getMockBuilder(InvoiceProduct::class)
+            ->setConstructorArgs([[
+                'productName' => "SMS SAPI",
+                'period'      => '2018-01-01',
+                'unitPrice'   => "2000",
+                'qty'         => "2000",
+                'useReport'   => 1,
+                'reportName'  => 'anu',
+                'ownerType'   => 'HISTORY',
+                'ownerId'     => 1,
+            ]])
+            ->setMethods(['summaryPath'])
+            ->getMock();
+
+        $productMock
+            ->expects($this->once())->method("summaryPath")
+            ->willReturn(dirname(SMSAPIADMIN_BASE_DIR) . "/tests/resources/unittest_Apr_2018_Summary.xlsx");
+
+        $results = $productMock->profile2History([], 1);
+
+        $this->assertNotEmpty($results);
+        $this->assertFalse(is_array($results));
+    }
+
+    /**
+     * Test get summary international price
+     * when international price yes but no international title
+     *
+     * @return void
+     */
+    public function testGetSummaryInternationalPriceYesButNoInternationalTitle()
+    {
+
+        $productMock = $this
+            ->getMockBuilder(InvoiceProduct::class)
+            ->setConstructorArgs([[
+                'productName' => "SMS SAPI",
+                'period'      => '2018-01-01',
+                'unitPrice'   => "2000",
+                'qty'         => "2000",
+                'useReport'   => 1,
+                'reportName'  => 'anu',
+                'ownerType'   => 'HISTORY',
+                'ownerId'     => 1,
+            ]])
+            ->setMethods(['summaryPath'])
+            ->getMock();
+
+        $productMock
+            ->expects($this->once())->method("summaryPath")
+            ->willReturn(dirname(SMSAPIADMIN_BASE_DIR) . "/tests/resources/summary_international_price_yes_but_no_international_title.xlsx");
+
+        $results = $productMock->profile2History([], 1);
+
+        $this->assertNotEmpty($results);
+        $this->assertFalse(is_array($results));
+        $this->assertEquals(0, $productMock->unitPrice);
+        $this->assertEquals(0, $productMock->qty);
+    }
+    /**
+     * Test get summary international price
+     * when international price yes but no international title
+     *
+     * @return void
+     */
+    public function testGetSummaryInternationalPriceYesButNoTotalColumnTitle()
+    {
+
+        $productMock = $this
+            ->getMockBuilder(InvoiceProduct::class)
+            ->setConstructorArgs([[
+                'productName' => "SMS SAPI",
+                'period'      => '2018-01-01',
+                'unitPrice'   => "2000",
+                'qty'         => "2000",
+                'useReport'   => 1,
+                'reportName'  => 'anu',
+                'ownerType'   => 'HISTORY',
+                'ownerId'     => 1,
+            ]])
+            ->setMethods(['summaryPath'])
+            ->getMock();
+
+        $productMock
+            ->expects($this->once())->method("summaryPath")
+            ->willReturn(dirname(SMSAPIADMIN_BASE_DIR) . "/tests/resources/summary_international_price_yes_but_no_total_column_title.xlsx");
+
+        $results = $productMock->profile2History([], 1);
+
+        $this->assertNotEmpty($results);
+        $this->assertFalse(is_array($results));
+        $this->assertEquals(0, $productMock->unitPrice);
+        $this->assertEquals(0, $productMock->qty);
     }
 
     /**
@@ -299,7 +428,9 @@ class InvoiceProductTest extends TestCase
         try {
             $result[0]->delete();
             $this->fail("Exception not rais");
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e)
+        {
             $this->assertContains('data not found', strtolower($e->getMessage()));
         }
 
@@ -307,7 +438,9 @@ class InvoiceProductTest extends TestCase
             $model = new InvoiceProduct();
             $model->delete();
             $this->fail("Exception not rais");
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e)
+        {
             $this->assertContains('no primary key', strtolower($e->getMessage()));
         }
     }
@@ -353,8 +486,8 @@ class InvoiceProductTest extends TestCase
         $this->initialData();
         $products = $this->model->all();
         $this->assertNotEmpty($products[0]);
-        $product = $products[0];
-        $product->qty = 2;
+        $product            = $products[0];
+        $product->qty       = 2;
         $product->unitPrice = 100;
         $this->assertNotEmpty($product->amount());
         $this->assertEquals(2 * 100, $product->amount());
