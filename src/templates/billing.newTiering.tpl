@@ -95,7 +95,7 @@
                                             <input type="text" id="input-name" name="name" value='{if isset($tieringDetail['NAME'])}{$tieringDetail['NAME']}{/if}' data-validation="required">
                                         </div>
                                         <span class="ui-helper-clearfix"></span>
-                                         <div>
+                                        <div>
                                             <label>Biling Profile</label>
                                             <select class="flexible-width" id="select-billing" data-validation="required" style="margin-left:5px;">
                                                 <option value="">-- Select Tiering --</option>
