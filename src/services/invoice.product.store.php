@@ -53,11 +53,12 @@ try {
         $service->deliver();
     }
 
+
     if ($newData['isPeriod'] === 0)
     {
         $date      = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
         $timestamp = strtotime($date);
-
+        
         if ($timestamp === false)
         {
             $errorFields['date'] = 'Date input is wrong format';
