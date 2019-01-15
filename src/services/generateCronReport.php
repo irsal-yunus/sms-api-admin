@@ -33,7 +33,7 @@ try {
             true
         ))->generate();
 
-} catch (Throwable $e) {
+} catch (\Exception $e) {
     $log->error('generateCronReport Error: '.$e->getMessage());
     $log->error('generateCronReport Error: '.$e->getTraceAsString());
     echo 'generateCronReport Error: '.$e->getMessage();

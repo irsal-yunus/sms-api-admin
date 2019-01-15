@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright(c) 2010 1rstWAP. All rights reserved.
  */
 
@@ -18,6 +18,20 @@ function title(text){
 	} catch (ex) {
 		$1.error("[mod:client#title] Error.",ex);
 	}
+}
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        $("#backToTop").show();
+
+    } else {
+        $("#backToTop").hide();
+    }
+}
+
+mod.topFunction = function () {
+    $("html, body").animate({ scrollTop: 0 }, "slow");
 }
 /**
  * Show Billing profile
@@ -50,13 +64,13 @@ mod.showBillingDetail = function(options){
             $app
                 .form
                 .openDownloadAllReportMesasge(
-                    'apiuser.reportDownloadAll', 
-                    false, 
-                    'Download Billing Report', 
+                    'apiuser.reportDownloadAll',
+                    false,
+                    'Download Billing Report',
                     {
                         height  : 230,
                         width   : 280
-                    }, 
+                    },
                     function() {}
                 );
     } catch (ex) {
@@ -66,7 +80,7 @@ mod.showBillingDetail = function(options){
 
 /**
  * Show create or update billing profile page
- * @param Int       billingProfileID    
+ * @param Int       billingProfileID
  * @param String    billingType
  * @param String    mode
  */
@@ -74,10 +88,10 @@ mod.newBillingProfile = function(billingProfileID, billingType, mode){
     try {
         var titles = mode == 'update'? 'Update Biling Profile' : 'New Billing Profile';
         $app.content(
-                    'billing.new', 
+                    'billing.new',
                     {
-                        billingProfileID    : billingProfileID, 
-                        billingType         : billingType, 
+                        billingProfileID    : billingProfileID,
+                        billingType         : billingType,
                         mode                : mode
                     }, function(){
                         title(titles);
@@ -94,13 +108,13 @@ mod.newBillingProfile = function(billingProfileID, billingType, mode){
 mod.storeBillingProfile = function(data){
     try {
         $app.content(
-                    'billing.storeBillingProfile', 
+                    'billing.storeBillingProfile',
                     data,
                     function(){
         });
-        
-    } catch(ex) {   
-        
+
+    } catch(ex) {
+
     }
 };
 
@@ -113,9 +127,9 @@ mod.newTieringGroup = function(tieringID, mode){
     try {
         var titles = mode == 'update'? 'Update Tiering Group' : 'New Tiering Group';
         $app.content(
-                    'billing.newTiering', 
+                    'billing.newTiering',
                     {
-                        tieringID    : tieringID, 
+                        tieringID    : tieringID,
                         mode         : mode
                     }, function(){
                         title(titles);
@@ -132,19 +146,19 @@ mod.newTieringGroup = function(tieringID, mode){
 mod.storeTieringGroup = function(data){
     try {
         $app.content(
-                    'billing.storeTieringGroup', 
+                    'billing.storeTieringGroup',
                     data,
                     function(){
         });
-        
-    } catch(ex) {   
-        
+
+    } catch(ex) {
+
     }
 };
 
 /**
  * Show create or update report group page
- * 
+ *
  * @param Int       reportID
  * @param String    mode        create a new report group or update the existing one
  */
@@ -152,9 +166,9 @@ mod.newReportGroup = function(reportID, mode){
     try {
         var titles = mode == 'update'? 'Update Report Group' : 'New Report Group';
         $app.content(
-                    'billing.newReport', 
+                    'billing.newReport',
                     {
-                        reportID        : reportID, 
+                        reportID        : reportID,
                         mode            : mode
                     }, function(){
                         title(titles);
@@ -166,27 +180,27 @@ mod.newReportGroup = function(reportID, mode){
 
 /**
  * Call storeReportGroup services to process the report group data from view
- * 
+ *
  * @param Array data    [['mode','name','description','user']]
  */
 mod.storeReportGroup = function(data){
     try {
         $app.content(
-                    'billing.storeReportGroup', 
+                    'billing.storeReportGroup',
                     data,
                     function(){
         });
-        
-    } catch(ex) {   
-        
+
+    } catch(ex) {
+
     }
 };
 
 /**
  * Show window confirmation to delete billing profile, then call deleteBillingProfile services
- * 
- * @param Int       billingProfileID    
- * @param String    billingType         tiering or operator   
+ *
+ * @param Int       billingProfileID
+ * @param String    billingType         tiering or operator
  */
 mod.deleteBillingProfile = function(billingProfileID, billingType){
     try{
@@ -194,47 +208,15 @@ mod.deleteBillingProfile = function(billingProfileID, billingType){
             $app
                 .form
                 .openConfirmationDialog(
-                    'billing.deleteConfirmation', 
+                    'billing.deleteConfirmation',
                     {
                         billingProfileID : billingProfileID,
                         billingType      : billingType
-                    }, 
+                    },
                     {
                         action          : 'billing.deleteBillingProfile',
                         title           : title,
-                        message         : 'Are you sure want to delete this Billing Profile?'     
-                    }, 
-                    {
-                        width: '25em',
-                        height: 100
-                    }
-                );
-    } catch(ex) {
-      $1.error("[mod:billing.newReport] Error.",ex);
-    }
-
-    
-};
-
-/**
- * Show window confirmation to delete tiering group, then call deleteTieringGroup services
- * 
- * @param Int       tieringGroupID    
- */
-mod.deleteTieringGroup = function(tieringGroupID){
-    try{
-            var title = 'Delete Confirmation';
-            $app
-                .form
-                .openConfirmationDialog(
-                    'billing.deleteConfirmation', 
-                    {
-                        tieringGroupID   : tieringGroupID,
-                    }, 
-                    {
-                        action          : 'billing.deleteTieringGroup',
-                        title           : title,
-                        message         : 'Are you sure want to delete this Tiering Group?'     
+                        message         : 'Are you sure want to delete this Billing Profile?'
                     },
                     {
                         width: '25em',
@@ -245,12 +227,44 @@ mod.deleteTieringGroup = function(tieringGroupID){
       $1.error("[mod:billing.newReport] Error.",ex);
     }
 
-    
+
 };
 
 /**
  * Show window confirmation to delete tiering group, then call deleteTieringGroup services
- * 
+ *
+ * @param Int       tieringGroupID
+ */
+mod.deleteTieringGroup = function(tieringGroupID){
+    try{
+            var title = 'Delete Confirmation';
+            $app
+                .form
+                .openConfirmationDialog(
+                    'billing.deleteConfirmation',
+                    {
+                        tieringGroupID   : tieringGroupID,
+                    },
+                    {
+                        action          : 'billing.deleteTieringGroup',
+                        title           : title,
+                        message         : 'Are you sure want to delete this Tiering Group?'
+                    },
+                    {
+                        width: '25em',
+                        height: 100
+                    }
+                );
+    } catch(ex) {
+      $1.error("[mod:billing.newReport] Error.",ex);
+    }
+
+
+};
+
+/**
+ * Show window confirmation to delete tiering group, then call deleteTieringGroup services
+ *
  * @param Int reportGroupID
  */
 mod.deleteReportGroup = function(reportGroupID){
@@ -259,14 +273,14 @@ mod.deleteReportGroup = function(reportGroupID){
             $app
                 .form
                 .openConfirmationDialog(
-                    'billing.deleteConfirmation', 
+                    'billing.deleteConfirmation',
                     {
                         reportGroupID   : reportGroupID,
-                    }, 
+                    },
                     {
                         action          : 'billing.deleteReportGroup',
                         title           : title,
-                        message         : 'Are you sure want to delete this Report Group?'     
+                        message         : 'Are you sure want to delete this Report Group?'
                     },
                     {
                         width: '25em',
@@ -277,13 +291,13 @@ mod.deleteReportGroup = function(reportGroupID){
       $1.error("[mod:billing.newReport] Error.",ex);
     }
 
-    
+
 };
 
 mod.viewMessageFilterPage = function(){
     try {
         $app.content(
-                    'billing.messageFilterReport', 
+                    'billing.messageFilterReport',
                     function(){
                         title('SMS Content Department Filter');
                     }
@@ -292,6 +306,88 @@ mod.viewMessageFilterPage = function(){
         $1.error("[mod:billing.messageFilterReport] Error.",ex);
     }
 };
+
+/**
+ * International Price Module
+ */
+var TAB_BILLING_INTL = 3;
+
+var initMasking = function() {
+    var replaceMent = function(val) {
+        return val.replace(/(?!^)-/g, '').replace(/^,/, '').replace(/^-,/, '-');
+    }
+    $('input[data-mask]').each(function(i, input) {
+        var mask = $(input).mask(input.dataset.mask, {
+            reverse: true,
+            translation: {
+                '#': {
+                    pattern: /-|\d/,
+                    recursive: true
+                }
+            },
+            onChange: function(value, e) {
+                e.target.value = replaceMent(value);
+            }
+        });
+        mask.val(replaceMent(mask.val()))
+    });
+}
+var initIntlForm = function() {
+    $("#countryCode").select2({
+        placeholder: "Select a country",
+        width: '200px',
+    });
+    initMasking();
+}
+
+mod.selectIntlPriceTab = function() {
+    $('#billing-view-tabs').tabs('select', TAB_BILLING_INTL).tabs('load', TAB_BILLING_INTL);
+}
+
+mod.formIntlPrice = function(priceId) {
+    var title = priceId ? "Edit International Price" : "Add International Price";
+    var data = priceId ? { price_id: priceId } : null;
+
+    try {
+        $app.form.openAutoDialog('billing.intl.form', data, title, {
+            width: '40em',
+            height: 200
+        }, function(reply) {
+            if (reply.success) {
+                mod.selectIntlPriceTab();
+            }
+        }, initIntlForm);
+    } catch (ex) {
+        $1.error("[mod:billing.intl.form (create) Error.", ex);
+    }
+};
+
+
+mod.deleteIntlPrice = function(priceId) {
+    try {
+        var title = 'Deleted Internaltional Price';
+        $app.confirm('Are you sure to remove the Internaltional Price data ?', title, function() {
+            $app.call('billing.intl.delete', {
+                price_id: priceId
+            }, function(reply) {
+                try {
+                    var success = $app.form.checkServiceReply(reply, false, title);
+                    if (success) {
+                        if (reply && reply.summary) {
+                            $app.tell(reply.summary || 'Success!', title);
+                        }
+                        mod.selectIntlPriceTab();
+                    }
+                } catch (ex) {
+                    $1.error("[mod:invoice.history.delete@ajaxsuccess] Error.", ex);
+                }
+            });
+        });
+    } catch (ex) {
+        $1.error("[mod:invoice.history.delete] Error.", ex);
+    }
+};
+
 
 try{
 	$app.registerModule(mod, MODULE_NAME);

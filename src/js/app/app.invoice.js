@@ -115,13 +115,6 @@
                 removeMasking();
             });
 
-            $('#manualInput').on('change', function(event) {
-                var isChecked = event.currentTarget.checked;
-                var useReport = $('#useReport').val() == 1;
-                if (useReport) {
-                    $('.toggle-report').prop('disabled', isChecked === false);
-                }
-            }).trigger('change');
 
             $('#useReport').on('change', function() {
                 var value = +$(this).val();
@@ -169,6 +162,14 @@
                 ]
             });
 
+            $('#manualInput').on('change', function(event) {
+                var isChecked = event.currentTarget.checked;
+                var useReport = $('#useReport').val() == 1;
+                if (useReport) {
+                    $('.toggle-report').prop('disabled', isChecked === false);
+                }
+            }).trigger('change');
+
             initMasking();
         }
 
@@ -194,6 +195,38 @@
                     $('#dueDate').val(dueDate);
                 })
                 .trigger('change')
+        }
+
+        function initFormProfile() {
+            $('#useCommitment').on('change', function(event) {
+                var useCommitment = +$(this).val();
+                if (useCommitment===0) {
+                    $('.commitmentSetting').hide();
+                }
+                else{
+                    $('.commitmentSetting').show();
+                }
+            }).trigger('change');
+
+            $('#commitmentType').on('change', function(event) {
+                var type = $(this).val();
+                if (type=='PRICE') {
+                    $('#minimumLabel').text("Minimum Price");
+                    $('.quantity').hide();
+                    $('#minAmount').attr("data-mask",'000,000,000,000,000.00');
+                    initMasking();
+
+                }
+                else{
+                   $('#minimumLabel').text("Minimum Quantity");
+                   $('.quantity').show();
+                   $('#minAmount').attr("data-mask",'###,###,###,###,###,###');
+                   initMasking();
+                }
+            }).trigger('change');
+
+        initMasking();
+
         }
 
         mod.showInvoiceManagement = function(callback) {
@@ -227,19 +260,48 @@
             $('#invoice-view-tabs').tabs('select', TAB_INVOICE_PROFILE);
         }
 
-        function showInvoiceTable(type) {
+        function showInvoiceTable(type, page) {
             return $('#invoice-view-tabs')
-                .tabs('url', 0, resolveServiceUrl('invoice.table') + "?type="+(type||''));
+                .tabs('url', 0, resolveServiceUrl('invoice.table') + "?type="+(type||'')+"&page="+(page||1));
         }
 
-        mod.showInvoiceTable = function(type, reload) {
+        mod.showInvoiceTable = function(type,page,reload) {
             if (reload) {
                 mod.showInvoiceManagement(function(){
-                    showInvoiceTable(type).tabs('select', 0);
+                    showInvoiceTable(type,page).tabs('select', 0);
                 });
             } else {
-                showInvoiceTable(type).tabs('load', 0);
+                showInvoiceTable(type,page).tabs('load', 0);
             }
+        }
+
+        mod.getInputPage = function(tabNumber,type,pageCount){
+            var pageHistory = +$('#targetPage').val();
+            var pageProfile = +$('#targetPageProfile').val();
+            if (pageHistory)
+            {
+                var page = pageHistory;
+            }
+            else if (pageProfile)
+            {
+                var page = pageProfile;
+            }
+
+            if (page > pageCount || page < 1 || page % 1 != 0) {
+                alert("Please insert a correct page number");
+            }
+            else{
+                if (tabNumber===0)
+                {
+                    showInvoiceTable(type,page).tabs('load',tabNumber);
+                }
+                else if(tabNumber===1)
+                {
+                    showProfileTable(type,page).tabs('load',tabNumber);
+                }
+            }
+            $('#targetPage').val("");
+            $('#targetPageProfile').val("");
         }
 
         mod.showHistory = function(profileId) {
@@ -524,7 +586,7 @@
                     if (reply && reply.attachment && reply.attachment.profileId) {
                         mod.showProfile(reply.attachment.profileId);
                     }
-                });
+                },initFormProfile);
             } catch (ex) {
                 $1.error("[mod:invoice.profile.create] Error.", ex);
             }
@@ -563,7 +625,7 @@
                     if (changePage !== false) {
                         mod.showProfile(profileId);
                     }
-                });
+                },initFormProfile);
             } catch (ex) {
                 $1.error("[mod:invoice.profile.edit] Error.", ex);
             }
@@ -706,21 +768,20 @@
             }
         };
 
-
-        function showProfileTable(type) {
+        function showProfileTable(type, page) {
             if (type){
                 return $('#invoice-view-tabs')
-                    .tabs('url', TAB_INVOICE_PROFILE, resolveServiceUrl('invoice.profile') + "?type="+(type||''))
+                    .tabs('url', TAB_INVOICE_PROFILE, resolveServiceUrl('invoice.profile') + "?type="+(type||'')+"&page="+(page||1))
                     .tabs('load', TAB_INVOICE_PROFILE)
             }
             else{
-                return $('#invoice-view-tabs').tabs('url', TAB_INVOICE_PROFILE, resolveServiceUrl('invoice.profile'))
+                return $('#invoice-view-tabs').tabs('url', TAB_INVOICE_PROFILE, resolveServiceUrl('invoice.profile')+"?page="+(page||1))
                     .tabs('load', TAB_INVOICE_PROFILE)
             }
         }
 
-        mod.showClient = function(archived){
-            showProfileTable(archived).tabs('select', TAB_INVOICE_PROFILE);
+        mod.showClient = function(archived, page){
+            showProfileTable(archived,page).tabs('select', TAB_INVOICE_PROFILE);
         };
 
         try {

@@ -1,4 +1,5 @@
 <form action="#" class="admin-stealthform">
+<button onclick="$app.module('apiuser').topFunction();" id="backToTop" class="form-button back-to-top" title="Back to top"><img src="skin/images/icon-backtotop.png" class="icon-backtotop" alt="Back to top" /></button>
 <table id="apiuser-simpletable" class="admin-table">
 	{if $options.onlySpecifiedClient}
 	<caption>API Users of Client "<strong>{$client.companyName}</strong>"</caption>

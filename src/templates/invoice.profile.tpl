@@ -34,8 +34,8 @@
             {foreach $profiles as $profile}
             <tr>
                 {if isset($profile->print)}
-                <td class="type-status" rowspan="{$rowspan[$profile.customerId]}">{$profile.customerId}</td>
-                <td class="type-text" rowspan="{$rowspan[$profile.customerId]}">{$profile.companyName}</td>
+                <td class="type-status" rowspan="{$rowspan[$profile.clientId]}">{$profile.customerId}</td>
+                <td class="type-text" rowspan="{$rowspan[$profile.clientId]}">{$profile.companyName}</td>
                 {/if}
                 <td class="type-text">{$profile.profileName}</td>
                 <td class="type-text">{$profile.bankName}</td>
@@ -64,5 +64,22 @@
             </tr>
             {/foreach}
         </tbody>
-    </table>
+    </table><br>
+    <div class="pagination" style="float:left">
+        <a href="#" class="paging first" onclick="$app.module('invoice').showClient('{$archived}', 1)"> << </a>
+        {if $page-1 >= 1}
+            <a href="#" class="paging"onclick="$app.module('invoice').showClient('{$archived}', {$page-1})"> < </a>
+        {else}
+            <a href="#" class="paging" onclick="$app.module('invoice').showClient('{$archived}',1)"> < </a>
+        {/if}
+        <input type="number" id="targetPageProfile" class="input-page" value="{$page}" min="1" max="{$pageCount}" onchange="$app.module('invoice').getInputPage(1,'{$archived}',{$pageCount})">
+        {if $page+1 <= $pageCount}
+            <a href="#" class="paging" onclick="$app.module('invoice').showClient('{$archived}', {$page+1})"> > </a>
+        {else}
+             <a href="#" class="paging" onclick="$app.module('invoice').showClient('{$archived}', {$pageCount})"> > </a>
+        {/if}
+        <a href="#" class="paging end" onclick="$app.module('invoice').showClient('{$archived}', {$pageCount})"> >> </a>
+        <span style="margin:auto; font-color:grey;">&nbsp; ({$numberFiles['firstNumber']}-{$numberFiles['endNumber']}/{$totalData}) </span>
+        <span style="margin:auto">&nbsp; Showing {$page} of {$pageCount}</span>
+    </div>
 </fieldset>

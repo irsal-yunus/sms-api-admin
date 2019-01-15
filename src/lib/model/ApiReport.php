@@ -13,10 +13,10 @@ require_once dirname(dirname(__DIR__)).'/configs/config.php';
 require_once dirname(dirname(__DIR__)).'/classes/spout-2.7.3/src/Spout/Autoloader/autoload.php';
 require_once dirname(dirname(__DIR__)).'/classes/PHPExcel.php';
 
-use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Common\Type;
+use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Writer\Style\StyleBuilder;
+use Box\Spout\Writer\WriterFactory;
 
 
 class ApiReport {
@@ -32,7 +32,6 @@ class ApiReport {
     /**
      * SMS Status for Query where clause
      */
-    const   SMS_STATUS_ALL                  = 'STATUS_ALL';
     const   SMS_STATUS_CHARGED              = 'STATUS_CHARGED';
     const   SMS_STATUS_UNCHARGED            = 'STATUS_UNCHARGED';
 
@@ -44,13 +43,6 @@ class ApiReport {
     const   SMS_STATUS_UNDELIVERED_CHARGED  = 'UNDELIVERED (CHARGED)';
     const   SMS_STATUS_UNDELIVERED          = 'UNDELIVERED (UNCHARGED)';
     const   SMS_STATUS_UNDEFINED            = 'UNDELIVERED (CHARGED)';
-
-
-    /**
-     * SMS encoding type, affect the way to calculate SMS Length
-     */
-    const   SMS_TYPE_GSM_7BIT               = 'GSM_7BIT';
-    const   SMS_TYPE_UNICODE                = 'UNICODE';
 
     const   OPERATOR_INDONESIA              = ['1RSTWAP',  'AXIS', 'CDMA_ID','CERIA','ESIA','EXCELCOM', 'HEPI','IM3',  'LIPPO', 'MOBILE_8','PSN',
                                                'SATELINDO','SMART','STARONE','TELKOMMOBILE','TELKOMSEL','TELKOM_FLEXI','THREE'];
@@ -69,15 +61,19 @@ class ApiReport {
      * Default value for undefined operator
      */
     const   DEFAULT_OPERATOR                = 'DEFAULT';
+    const   INTL_LOCAL_SERVICE              = 'LOCAL SERVICE';
+    const   INTL_LOCAL_SERVICE_CODE         = 'IDN';
+    const   INTL_OTHER_COUNTRY              = 'OTHERS';
+    const   INTL_PRICE_SUMMARY_TITLE        = 'INTERNATIONAL PRICE';
+    const   INTL_PRICE_SUMMARY_TOTAL        = 'TOTAL';
+    const   LEGEND_SUMMARY_TITLE            = 'Legend';
 
 
     /**
      * Cache file name
      */
-    const   CACHE_LAST_DATE                 = 'lastSendDateTime.lfu',
-            CACHE_BILLING_PROFILE           = 'billingProfiles.lfu',
+    const   CACHE_BILLING_PROFILE           = 'billingProfiles.lfu',
             CACHE_REPORT_GROUP              = 'reportGroups.lfu',
-            CACHE_REGENERATE_REPORT         = 'regegenerate.lfu',
             ALL_REPORT_PACKAGE              = 'BILLING_REPORT';
 
 
@@ -110,7 +106,7 @@ class ApiReport {
      * Regular Expression to find a character except GSM 7Bit
      * The messages will set to latin if it only have character are defined on regex
      */
-    const   GSM_7BIT_CHARS                  = '~[^A-Za-z0-9 \r\n¤@£$¥èéùìòÇØøÅå\x{0394}_\x{5C}\x{03A6}\x{0393}\x{039B}\x{03A9}\x{03A0}\x{03A8}\x{03A3}\x{0398}\x{039E}ÆæßÉ!\"#$%&\'\(\)*+,\-.\/:;<=>;?¡ÄÖÑÜ§¿äöñüà^{}\[\~\]\|\x{20AC}]~u';
+    const   GSM_7BIT_CHARS                  = '[^A-Za-z0-9 @£$¥èéùìòÇØøÅåΔ_ΦΓΛΩΠΨΣΘΞ^{}€ÆæßÉ!./:;<=>?¡ÄÖÑÜ§¿äöñüà#¤%&\'()*+,\-\[\\\~\]\|\"]';
 
 
     /**
@@ -122,6 +118,7 @@ class ApiReport {
             $finalReportWriter,
             $finalReportSummary,
 
+            $currentMonth,
             $month,
             $year,
             $firstDateOfMonth,
@@ -129,6 +126,7 @@ class ApiReport {
             $lastFinalStatusDate,
 
             $unchargedDeliveryStatus,
+            $internationalPrices,
             $periodSuffix
             ;
 
@@ -163,9 +161,10 @@ class ApiReport {
     /**
      * Api Report constructor
      */
-    public function __construct($year = null, $month = null, $generateMode = false) {
+    public function __construct($year = null, $month = null, $generateMode = false)
+    {
         $this->log               = Logger::getLogger(get_class($this));
-
+        $this->currentMonth      = date('Ym') === $year.$month;
         $this->year              = sprintf('%02d', $year  ?: date('Y'));
         $this->month             = sprintf('%02d', $month ?: date('m'));
         $this->reportDir         = SMSAPIADMIN_ARCHIEVE_EXCEL_REPORT.$year.'/'.$month;
@@ -218,15 +217,19 @@ class ApiReport {
         if (!@is_dir($this->reportDir)) {
             $this->log->info('Create Report directory "'.$this->reportDir.'"');
             if(!@mkdir($this->reportDir, 0777, TRUE)){
+                // @codeCoverageIgnoreStart
                 $this->log->error('Could not create Report directory "'.$this->reportDir.'", please check the permission.');
                 $this->log->info ('Cancel generate Report.');
+                // @codeCoverageIgnoreEnd
             }
         }
 
         if(!file_exists(BILLING_QUERY_HISTORY_DIR)){
             if(!@mkdir(BILLING_QUERY_HISTORY_DIR, 0777, true)){
+                // @codeCoverageIgnoreStart
                 $this->log->error('Could not create History directory "'.BILLING_QUERY_HISTORY_DIR.'", please check the permission.');
                 $this->log->info ('Cancel generate Report.');
+                // @codeCoverageIgnoreEnd
             }
         }
     }
@@ -256,7 +259,7 @@ class ApiReport {
      * @param Int       $totalRecords       Total of record found
      * @param Float     $startTime          Starting time get from getMicroTime()
      */
-    private function storeQueryTime($queryCommand, $totalRecords, $startTime) {
+    protected function storeQueryTime($queryCommand, $totalRecords, $startTime) {
         $executionTime        = ($this->getMicroTime() - $startTime).' sec';
         $query                = preg_replace('/ +/', ' ', $queryCommand);
         $currentMemoryUsed    = (int)(memory_get_usage(1) /1024/1024);
@@ -286,7 +289,7 @@ class ApiReport {
      * @param   String  $mode
      * @return  Mixed
      */
-    private function query(String $query, String $mode = '') {
+    protected function query(String $query, String $mode = '') {
         try {
             $startTime = $this->getMicroTime();
             $return    = $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
@@ -323,12 +326,6 @@ class ApiReport {
             $this->log->debug(debug_print_backtrace());
             return [];
         }
-        catch (Throwable $e) {
-            $this->log->error('Failed to get data from database.');
-            $this->log->debug($e->getMessage());
-            $this->log->debug(debug_print_backtrace());
-            return [];
-        }
     }
 
 
@@ -337,18 +334,11 @@ class ApiReport {
     /**
      * Function to execute query and return the last inserted ID
      */
-    private function exec_query(String $query) {
-        try {
-            $startTime = $this->getMicroTime();
-            $return    = $this->db->query($query);
-            return $this->db->lastInsertId();
-        }
-        catch (Exception $e) {
-            $this->log->error('Failed to insert data to database.');
-            $this->log->debug($e->getMessage());
-            $this->log->debug(debug_print_backtrace());
-            return [];
-        }
+    protected function exec_query(String $query)
+    {
+        $return    = $this->db->query($query);
+
+        return $this->db->lastInsertId();
     }
 
 
@@ -465,7 +455,7 @@ class ApiReport {
      *
      * @return  Array   2D Array [['ERROR_CODE', 'STATUS', 'IS_RECREDITED']]
      */
-    public function getDeliveryStatus($statusType = 'STATUS_ALL') {
+    public function getDeliveryStatus($statusType = '') {
         switch(strtoupper($statusType)) {
             case self::SMS_STATUS_CHARGED   : $statusClause = ' WHERE IS_RECREDITED = 0 '; break;
             case self::SMS_STATUS_UNCHARGED : $statusClause = ' WHERE IS_RECREDITED = 1 '; break;
@@ -501,7 +491,7 @@ class ApiReport {
                                 ? ' WHERE    BILLING_PROFILE_ID = '.$billingProfileId
                                 : '';
         return  $this->query(
-                         ' SELECT   BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT'
+                         ' SELECT USE_INTERNATIONAL_PRICE,  BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT'
                         .' FROM     '.DB_BILL_PRICELIST.'.BILLING_PROFILE'
                         .  $profileIdClause
                         ,  is_null($billingProfileId) ?: self::QUERY_SINGLE_ROW
@@ -514,10 +504,22 @@ class ApiReport {
      */
     public function getBillingProfileTieringOnly() {
         return $this->query(
-                         ' SELECT   BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT'
+                         ' SELECT USE_INTERNATIONAL_PRICE, BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT'
                         .' FROM     '.DB_BILL_PRICELIST.'.BILLING_PROFILE'
                         .' WHERE    BILLING_TYPE = '. ' "TIERING" '
                     );
+    }
+
+    /**
+     * Get Detail of  all type of Billing Profile (Tiering and Operator)
+     * @return  Array   Array ['BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT']
+     */
+    public function getAllBillingProfile()
+    {
+        return $this->query(
+                        'SELECT   BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT'
+                        .' FROM     '.DB_BILL_PRICELIST.'.BILLING_PROFILE'
+        );
     }
 
      /**
@@ -567,6 +569,83 @@ class ApiReport {
                        .' FROM     '.DB_First_Intermedia.'.OPERATOR '
                        .  $opClause
                    );
+    }
+
+
+    /**
+     * Get operator detail by given country code
+     *
+     * @param   Array   $countryCode   List of country code
+     * @return  Mixed                  List of Operator details or null
+     */
+    public function getOperatorByCountry(Array $countryCode = [] )
+    {
+        $opClause = !empty($countryCode)
+                        ? ' WHERE OP_COUNTRY_CODE IN (\''.implode('\',\'', $countryCode).'\') ORDER BY OP_COUNTRY_CODE ASC'
+                        : '' ;
+
+        return $this->query(
+                        "SELECT OP_COUNTRY_CODE, OP_ID, OP_DIAL_RANGE_LOWER, OP_DIAL_RANGE_UPPER, COUNTRY_CODE
+                        FROM ".DB_First_Intermedia.".OPERATOR_DIAL_PREFIX OP
+                        JOIN ".DB_SMS_API_V2.".COUNTRY ON COUNTRY.COUNTRY_CODE_REF = OP.OP_COUNTRY_CODE
+                        "
+                       .  $opClause
+                   );
+    }
+
+
+    /**
+     * Get international prices detail
+     *
+     * @return  Array   Following is array format that returned
+     *                  [
+     *                      DEFAULT => [COUNTRY_NAME => STRING, UNIT_PRICE => Float],
+     *                      PRICES => [
+     *                          [COUNTRY_CODE_REF => String, CALLING_CODE => Int, UNIT_PRICE => Float ]
+     *                          .....
+     *                      ]
+     *                  ]
+     */
+    public function getInternationalPrices()
+    {
+        $query = "SELECT BIP.COUNTRY_CODE_REF, COUNTRY_CODE, CALLING_CODE, UNIT_PRICE, UPPER(COUNTRY_NAME) as COUNTRY_NAME
+            FROM ".DB_BILL_PRICELIST.".BILLING_INTERNATIONAL_PRICE BIP
+            JOIN ".DB_SMS_API_V2.".COUNTRY
+            ON BIP.COUNTRY_CODE_REF = COUNTRY.COUNTRY_CODE_REF
+        ";
+
+        $otherPrices  = "$query WHERE BIP.COUNTRY_CODE_REF != 'ID' ORDER BY `COUNTRY`.`CALLING_CODE` DESC";
+        $defaultPrice = "$query WHERE BIP.COUNTRY_CODE_REF = 'ID' LIMIT 1";
+
+        $default    = $this->query($defaultPrice, self::QUERY_SINGLE_ROW);
+        $others     = $this->query($otherPrices);
+
+        if (!empty($others))
+        {
+            $keys               = array_column($others, 'COUNTRY_CODE');
+            $others             = array_combine($keys, $others);
+            $countryCodeRefs    = array_column($others, 'COUNTRY_CODE_REF');
+            $operators          = $this->getOperatorByCountry($countryCodeRefs);
+
+            foreach ($operators as $operator)
+            {
+                if (!isset($others[$operator['COUNTRY_CODE']]['OPERATORS']))
+                {
+                    $others[$operator['COUNTRY_CODE']]['OPERATORS'] = [];
+                }
+
+                $others[$operator['COUNTRY_CODE']]['OPERATORS'][] = $operator;
+            }
+        }
+
+        return [
+            'DEFAULT' => [
+                'COUNTRY_CODE' => static::INTL_OTHER_COUNTRY,
+                'COUNTRY_NAME' => static::INTL_OTHER_COUNTRY,
+                'UNIT_PRICE'   => $default['UNIT_PRICE'] ?? 0,
+            ],
+            'PRICES'  => $others ?? [],
+        ];
     }
 
 
@@ -655,11 +734,12 @@ class ApiReport {
     /**
      * Get user or group tiering monthly traffic
      *
-     * @param   Mixed   $userIds        User Id or list of user id if need group traffic
-     * @param   Bool    $awaitingDr     Accumulate traffic including sms awaiting dr
+     * @param   Mixed   $userIds                   User Id or list of user id if need group traffic
+     * @param   Bool    $useInternationalPrice     Exclude the international number for accumulate traffic
      * @return  Int
      */
-    public function getTieringTraffic($userIds, $awaitingDr = false) {
+    public function getTieringTraffic($userIds, $useInternationalPrice = false)
+    {
         $userIds      = is_array($userIds)
                             ? array_column($userIds, 'USER_ID')
                             : $userIds;
@@ -668,23 +748,39 @@ class ApiReport {
                             ? ' IN ('.implode(',', $userIds).') '
                             : ' = '.$userIds;
 
-        $endDate      = $awaitingDr
-                            ? $this->lastDateOfMonth
-                            : $this->lastFinalStatusDate;
+        $destinationPrefixClause = $useInternationalPrice
+                                    ? " AND DESTINATION LIKE '62%' "
+                                    : '';
 
-        return $this->query(
-                        ' SELECT   COUNT(USER_ID_NUMBER) '
-                        . ' FROM  (SELECT '
-                                    . 'MESSAGE_STATUS,'
-                                    . 'STR_TO_DATE(SUBSTRING(MESSAGE_ID, 5, 19), \'%Y-%m-%d %H:%i:%s\') AS RECEIVE_DATETIME,'
-                                    . 'USER_ID_NUMBER '
-                        . ' FROM '. DB_SMS_API_V2 . '.USER_MESSAGE_STATUS) USER_MESSAGE_STATUS '
-                        . ' WHERE    USER_MESSAGE_STATUS.USER_ID_NUMBER ' . $usersClause
-                        . '          AND USER_MESSAGE_STATUS.RECEIVE_DATETIME > \'' . $this->firstDateOfMonth . '\''
-                        . '          AND USER_MESSAGE_STATUS.RECEIVE_DATETIME < \'' . $endDate . '\''
-                        . '          AND USER_MESSAGE_STATUS.MESSAGE_STATUS NOT IN (\'' . $this->unchargedDeliveryStatus . '\') '
-                        , self::QUERY_SINGLE_ROW_AND_COLUMN
-                ) ?: 0;
+        $endDateQuery = $this->currentMonth
+                        ? ''
+                        : "AND USER_MESSAGE_STATUS.RECEIVE_DATETIME < '{$this->lastFinalStatusDate}'";
+
+        $query = "SELECT SUM(MESSAGE_COUNT) FROM (SELECT
+                            STR_TO_DATE(SUBSTRING(MESSAGE_ID, 5, 19), '%Y-%m-%d %H:%i:%s') AS RECEIVE_DATETIME,
+                            IF(
+                                MESSAGE_CONTENT REGEXP \"".static::GSM_7BIT_CHARS."\",
+                                IF(
+                                    CHAR_LENGTH(MESSAGE_CONTENT) <= ".static::UNICODE_SINGLE_SMS.",
+                                    1,
+                                    CEILING(CHAR_LENGTH(MESSAGE_CONTENT) / ".static::UNICODE_MULTIPLE_SMS.")
+                                ),
+                                IF(
+                                    CHAR_LENGTH(MESSAGE_CONTENT) <= ".static::GSM_7BIT_SINGLE_SMS.",
+                                    1,
+                                    CEILING(CHAR_LENGTH(MESSAGE_CONTENT) / ".static::GSM_7BIT_MULTIPLE_SMS.")
+                                )
+                            ) AS MESSAGE_COUNT
+                            FROM ".DB_SMS_API_V2.".USER_MESSAGE_STATUS
+                            WHERE MESSAGE_STATUS NOT IN ({$this->unchargedDeliveryStatus})
+                                  $destinationPrefixClause
+                                  AND USER_ID_NUMBER {$usersClause}
+                  ) USER_MESSAGE_STATUS
+                    WHERE USER_MESSAGE_STATUS.RECEIVE_DATETIME > '{$this->firstDateOfMonth}'
+                          {$endDateQuery}
+                  ";
+
+        return $this->query($query, self::QUERY_SINGLE_ROW_AND_COLUMN) ?: 0;
     }
 
 
@@ -697,7 +793,8 @@ class ApiReport {
      * @param   Int     $traffic    Total traffic
      * @return  Array               applied Price
      */
-    private function getTieringPriceByTraffic(&$rules, $traffic) {
+    private function getTieringPriceByTraffic(&$rules, $traffic)
+    {
         foreach($rules as &$rule) {
             $min = is_numeric($rule['SMS_COUNT_FROM'])  ? (int)$rule['SMS_COUNT_FROM']  : 0;
             $max = is_numeric($rule['SMS_COUNT_UP_TO']) ? (int)$rule['SMS_COUNT_UP_TO'] : PHP_INT_MAX;
@@ -743,45 +840,12 @@ class ApiReport {
      */
     public function getReportGroupUserList($reportGroupId) {
         return $this->query(
-                         ' SELECT   USER_ID, USER_NAME'
+                         ' SELECT   USER_ID, USER_NAME,BILLING_PROFILE_ID'
                         .' FROM     '.DB_SMS_API_V2.'.USER'
                         .' WHERE    BILLING_REPORT_GROUP_ID = '.$reportGroupId
                     );
     }
 
-
-
-
-    /**
-     * Get last message send date time for group of user
-     * @param   Array   $userIds    list of user id
-     * @return  Array               list of user last message send date time
-     */
-    public function getGroupLastSendDate($userIds)
-    {
-        $dates = [];
-        foreach ($userIds as $userId) {
-            $lastSendDate = $this->query(
-                    '   SELECT USER_MESSAGE_STATUS.RECEIVE_DATETIME '
-                    . ' FROM (SELECT '
-                            . 'USER_ID_NUMBER,'
-                            . 'STR_TO_DATE(SUBSTRING(MESSAGE_ID, 5, 19), \'%Y-%m-%d %H:%i:%s\') AS RECEIVE_DATETIME'
-                    . ' FROM '. DB_SMS_API_V2 .'.USER_MESSAGE_STATUS) USER_MESSAGE_STATUS '
-                    . ' WHERE  USER_MESSAGE_STATUS.USER_ID_NUMBER = ' . $userId
-                            . ' AND USER_MESSAGE_STATUS.RECEIVE_DATETIME > \'' . $this->firstDateOfMonth . '\''
-                            . ' AND USER_MESSAGE_STATUS.RECEIVE_DATETIME < \'' . $this->lastFinalStatusDate . '\''
-                    . ' ORDER BY USER_MESSAGE_STATUS.RECEIVE_DATETIME DESC '
-                    . ' LIMIT    1'
-                    , self::QUERY_SINGLE_ROW_AND_COLUMN
-            );
-
-            $dates[$userId] = $lastSendDate == false
-                                ? $this->firstDateOfMonth
-                                : $lastSendDate;
-        }
-
-        return $dates;
-    }
 
     /**
      * Get User Message list from SMS_API_V2.USER_MESSAGE_STATUS                                            <br />
@@ -799,7 +863,8 @@ class ApiReport {
      *                                                  'SENDER', 'USER_ID', 'MESSAGE_COUNT'                    <br />
      *                                              ]]
      */
-    public function getUserMessageStatus($userId, $startDateTime, $endDateTime, $dataSize, $startIndex) {
+    public function getUserMessageStatus($userId, $startDateTime, $endDateTime, $dataSize, $startIndex)
+    {
         //MESSAGE ID                    DESTINATION MESSAGE CONTENT ERROR CODE  DESCRIPTION CODE    SEND DATETIME           SENDER      USER ID     MESSAGE COUNT   ||  OPERATOR    PRICE
         //5GPI2017-04-11 06:13:29.470   15629689999 Test msg sms    0+0+0+0         DELIVERED               2017-04-09 00:00:00 1rstWAP     PEPTrial                1   ||  DEFAULT     315
         $userIdClause = is_array($userId)
@@ -814,7 +879,8 @@ class ApiReport {
                             . 'USER_MESSAGE_STATUS.RECEIVE_DATETIME,'
                             . 'USER_MESSAGE_STATUS.SEND_DATETIME,'
                             . 'USER_MESSAGE_STATUS.SENDER,'
-                            . 'USER_MESSAGE_STATUS.USER_ID'
+                            . 'USER_MESSAGE_STATUS.USER_ID,'
+                            . 'USER_MESSAGE_STATUS.MESSAGE_COUNT'
                     . ' FROM  (SELECT '
                             . 'MESSAGE_ID,'
                             . 'DESTINATION,'
@@ -824,15 +890,27 @@ class ApiReport {
                             . 'STR_TO_DATE(SUBSTRING(MESSAGE_ID, 5, 19), \'%Y-%m-%d %H:%i:%s\') AS RECEIVE_DATETIME,'
                             . 'SENDER,'
                             . 'USER_ID_NUMBER,'
-                            . 'USER_ID'
+                            . 'USER_ID,'
+                            . "IF(
+                                MESSAGE_CONTENT REGEXP \"".static::GSM_7BIT_CHARS."\",
+                                IF(
+                                    CHAR_LENGTH(MESSAGE_CONTENT) <= ".static::UNICODE_SINGLE_SMS.",
+                                    1,
+                                    CEILING(CHAR_LENGTH(MESSAGE_CONTENT) / ".static::UNICODE_MULTIPLE_SMS.")
+                                ),
+                                IF(
+                                    CHAR_LENGTH(MESSAGE_CONTENT) <= ".static::GSM_7BIT_SINGLE_SMS.",
+                                    1,
+                                    CEILING(CHAR_LENGTH(MESSAGE_CONTENT) / ".static::GSM_7BIT_MULTIPLE_SMS.")
+                                )
+                            ) AS MESSAGE_COUNT"
                     . ' FROM '. DB_SMS_API_V2 . '.USER_MESSAGE_STATUS) USER_MESSAGE_STATUS '
                     . ' WHERE     USER_MESSAGE_STATUS.USER_ID_NUMBER '.$userIdClause
                     . '           AND USER_MESSAGE_STATUS.RECEIVE_DATETIME >  \''.$startDateTime.'\' '
-                    . '           AND USER_MESSAGE_STATUS.RECEIVE_DATETIME < \''.$endDateTime  .'\' '
+                    . (!$this->currentMonth ? '           AND USER_MESSAGE_STATUS.RECEIVE_DATETIME < \''.$endDateTime  .'\' ' : ' ')
                     . ' ORDER BY USER_MESSAGE_STATUS.MESSAGE_ID ASC '
                     . ' LIMIT     '.$startIndex.','.$dataSize;
         $messages = $this->query($message);
-        $this->log->debug("result ".$message);
 
         return $messages;
     }
@@ -853,12 +931,13 @@ class ApiReport {
      *                                              'SENDER', 'USER_ID', 'MESSAGE_COUNT'                    <br />
      *                                      ]]
      */
-    public function getGroupMessageStatus(array $users, $endDateTime, $dataSize, $startIndex) {
+    public function getGroupMessageStatus(array $users, $endDateTime, $dataSize, $startIndex)
+    {
         $userClause  = [];
         foreach($users as $userId => $startDateTime) {
             $userClause[] = '( USER_MESSAGE_STATUS.USER_ID_NUMBER = '.$userId
                            .'  AND USER_MESSAGE_STATUS.RECEIVE_DATETIME > \''.$startDateTime.'\''
-                           .'  AND USER_MESSAGE_STATUS.RECEIVE_DATETIME < \''.$endDateTime.'\')';
+                           .(!$this->currentMonth ? '  AND USER_MESSAGE_STATUS.RECEIVE_DATETIME < \''.$endDateTime.'\' ' : ' ').')';
         }
 
         if(empty($userClause)){
@@ -874,7 +953,8 @@ class ApiReport {
                             . 'USER_MESSAGE_STATUS.RECEIVE_DATETIME,'
                             . 'USER_MESSAGE_STATUS.SEND_DATETIME,'
                             . 'USER_MESSAGE_STATUS.SENDER,'
-                            . 'USER_MESSAGE_STATUS.USER_ID'
+                            . 'USER_MESSAGE_STATUS.USER_ID,'
+                            . 'USER_MESSAGE_STATUS.MESSAGE_COUNT'
                     . ' FROM  (SELECT '
                             . 'MESSAGE_ID,'
                             . 'DESTINATION,'
@@ -884,7 +964,20 @@ class ApiReport {
                             . 'STR_TO_DATE(SUBSTRING(MESSAGE_ID, 5, 19), \'%Y-%m-%d %H:%i:%s\') AS RECEIVE_DATETIME,'
                             . 'SENDER,'
                             . 'USER_ID_NUMBER,'
-                            . 'USER_ID'
+                            . 'USER_ID,'
+                            . "IF(
+                                MESSAGE_CONTENT REGEXP \"".static::GSM_7BIT_CHARS."\",
+                                IF(
+                                    CHAR_LENGTH(MESSAGE_CONTENT) <= ".static::UNICODE_SINGLE_SMS.",
+                                    1,
+                                    CEILING(CHAR_LENGTH(MESSAGE_CONTENT) / ".static::UNICODE_MULTIPLE_SMS.")
+                                ),
+                                IF(
+                                    CHAR_LENGTH(MESSAGE_CONTENT) <= ".static::GSM_7BIT_SINGLE_SMS.",
+                                    1,
+                                    CEILING(CHAR_LENGTH(MESSAGE_CONTENT) / ".static::GSM_7BIT_MULTIPLE_SMS.")
+                                )
+                            ) AS MESSAGE_COUNT"
                     . ' FROM '. DB_SMS_API_V2 . '.USER_MESSAGE_STATUS) USER_MESSAGE_STATUS '
                        .' WHERE     ('.implode(' OR ', $userClause).')'
                        .' ORDER BY USER_MESSAGE_STATUS.MESSAGE_ID ASC '
@@ -894,29 +987,6 @@ class ApiReport {
 
         return $messages;
     }
-
-
-
-    /**
-     * Calculate message base on the message type
-     *
-     * @param   String  $message        Message content
-     * @return  Int                     Message Count
-     */
-    private function getMessageCount($message) {
-        $messageLength = mb_strlen($message);
-
-        if($this->isGsm7bit($message)){
-            return  $messageLength <= self::GSM_7BIT_SINGLE_SMS
-                        ? 1
-                        : ceil( $messageLength / self::GSM_7BIT_MULTIPLE_SMS );
-        }else{
-            return  $messageLength <= self::UNICODE_SINGLE_SMS
-                        ? 1
-                        : ceil( $messageLength / self::UNICODE_MULTIPLE_SMS );
-        }
-    }
-
 
 
 
@@ -933,21 +1003,6 @@ class ApiReport {
                 ? $this->deliveryStatus[$errorCode]
                 : self::SMS_STATUS_UNDEFINED;
     }
-
-
-
-
-    /**
-     * Check if the message was Gsm_7bit or Unicode encoded
-     *
-     * @param   String  $message        Message content
-     * @return  boolean                 true for Gsm7bit and false for unicode
-     */
-    private function isGsm7bit($message) {
-        return preg_match(self::GSM_7BIT_CHARS, $message) === 0;
-    }
-
-
 
 
     /**
@@ -990,12 +1045,14 @@ class ApiReport {
      * @param   Array   $rule       2D array of Pricing  [['OP_ID', 'PER_SMS_PRICE']]
      * @param   Array   $operator   2D Array of Billing Rule                                    <br />
      *                              [['OP_ID', 'PREFIX', 'MIN_LENGTH', 'MAX_LENGTH']]
+     * @param   Boolean $useInternationalPrice  indicate the profile is use international price rules
      * @return  Int                 Total price
      */
-    public function assignMessagePrice(String $type, Array &$messages, Array &$rules, Array &$operators = [], &$hasEmptyStatus) {
+    public function formatMessages(String $type, Array &$messages, Array &$rules, Array &$operators = [], $useInternationalPrice = false)
+    {
         return $type == self::BILLING_OPERATOR_BASE
-                    ? $this->assignOperatorPrice($messages, $rules, $operators, $hasEmptyStatus)
-                    : $this->assignTieringPrice ($messages, $rules, $operators, $hasEmptyStatus);
+                    ? $this->formatOperatorPrice($messages, $rules, $operators)
+                    : $this->formatTieringPrice ($messages, $rules, $operators, $useInternationalPrice);
     }
 
 
@@ -1011,32 +1068,84 @@ class ApiReport {
      *                              ]]
      * @param   Array   $rule       2D array of Pricing  [['OP_ID', 'PER_SMS_PRICE']]
      */
-    private function assignTieringPrice(&$messages, &$rules, &$operators, &$hasEmptyStatus) {
+    private function formatTieringPrice(&$messages, &$rules, &$operators, $useInternationalPrice = false)
+    {
         $price         =  current($rules)['PER_SMS_PRICE'];
 
         foreach($messages as &$message)
         {
             /**
-             * Add hasEmptyStatus when there is a message that don't have status
-             */
-            if ($message['MESSAGE_STATUS'] === '' || $message['MESSAGE_STATUS'] === null)
-            {
-                $hasEmptyStatus = true;
-            }
-
-            /**
              * Validate if the message already formated or not
              */
-            if(empty($message['DESCRIPTION_CODE'])){
+            if (empty($message['DESCRIPTION_CODE']))
+            {
                 $this->formatMessageData($message, $operators);
             }
-            $message['PRICE']    = $message['DESCRIPTION_CODE'] !== self::SMS_STATUS_UNDELIVERED
-                                    ? $this->formatPrice($price *  $message['MESSAGE_COUNT'])
-                                    : 0;
+
+            if ($useInternationalPrice)
+            {
+                $isLocal = preg_match('/^62/', $message['DESTINATION']);
+                if ($isLocal !== false && $isLocal === 0)
+                {
+                    $intl               = $this->getPriceInternationalNumber($message);
+                    $message['PRICE']   = $this->determineMessagePrice($message, $intl['UNIT_PRICE']);
+                    $message['OPERATOR']= $intl['OPERATOR']['OP_ID'] ?? static::DEFAULT_OPERATOR;
+                    $message['COUNTRY'] = $intl['COUNTRY_CODE'];
+                    unset($intl);
+                }
+                else
+                {
+                    $message['PRICE']   = $this->determineMessagePrice($message, $price);
+                    $message['COUNTRY'] = static::INTL_LOCAL_SERVICE_CODE;
+                }
+            }
+            else
+            {
+                $message['PRICE']   = $this->determineMessagePrice($message, $price);;
+            }
 
             $this->getMessageSummary($message);
             $this->finalReportWriter->addRow($message);
         }
+    }
+
+
+    /**
+     * Determine message price based on message status
+     *
+     * @param  Array &$message
+     * @param  Float $price
+     * @return String
+     */
+    protected function determineMessagePrice(&$message, $price)
+    {
+        return $message['DESCRIPTION_CODE'] === self::SMS_STATUS_UNDELIVERED
+              ? 0
+              : $this->formatPrice($price *  $message['MESSAGE_COUNT']);
+    }
+
+    /**
+     * Find International Price for destination
+     *
+     * @return  Float
+     */
+    public function getPriceInternationalNumber(&$message)
+    {
+        foreach ($this->internationalPrices['PRICES'] as $country)
+        {
+            if (preg_match("/^{$country['CALLING_CODE']}/", $message['DESTINATION']) > 0)
+            {
+                foreach ($country['OPERATORS'] as $operator)
+                {
+                    if ($operator['OP_DIAL_RANGE_LOWER'] <= $message['DESTINATION'] && $operator['OP_DIAL_RANGE_UPPER'] >= $message['DESTINATION'] && ($country['OPERATOR'] = $operator))
+                    {
+                        return $country;
+                    }
+                }
+            }
+        }
+
+        return $this->internationalPrices['DEFAULT'];
     }
 
 
@@ -1052,21 +1161,13 @@ class ApiReport {
      * @param   Array   $operator   2D Array of Billing Rule                                    <br />
      *                              [['OP_ID', 'RANGE_LOWER', 'RANGE_UPPER']]
      */
-    private function assignOperatorPrice(&$messages, &$rules, &$operators, &$hasEmptyStatus)
+    private function formatOperatorPrice(&$messages, &$rules, &$operators)
     {
         $chargedStatus = [self::SMS_STATUS_DELIVERED, self::SMS_STATUS_UNDELIVERED_CHARGED];
         $mappedRules = array_column($rules, 'PER_SMS_PRICE', 'OP_ID');
 
         foreach($messages as &$message)
         {
-            /**
-             * Add hasEmptyStatus when there is a message that don't have status
-             */
-            if ($message['MESSAGE_STATUS'] === '' || $message['MESSAGE_STATUS'] === null)
-            {
-                $hasEmptyStatus = true;
-            }
-
             $this->formatMessageData($message, $operators);
 
             if ($message['DESCRIPTION_CODE'] !== self::SMS_STATUS_UNDELIVERED)
@@ -1121,77 +1222,8 @@ class ApiReport {
         $message['SEND_DATETIME']    = $this->clientTimeZone($message['SEND_DATETIME']);
         $message['RECEIVE_DATETIME'] = $this->clientTimeZone($message['RECEIVE_DATETIME']);
         $message['DESCRIPTION_CODE'] = $this->getMessageStatus($message);
-        $message['MESSAGE_COUNT']    = $this->getMessageCount($message['MESSAGE_CONTENT']);
         $message['OPERATOR']         = $this->getDestinationOperator($message['DESTINATION'], $operators);
     }
-
-
-    /**
-     * Load last message send date time for every user
-     *
-     * @param   String  $dir        directory path for specific report period
-     * @return  Mixed               List or string of User Last Message send date
-     */
-    public function loadLastMessageDate($userId = null) {
-        $cache = $this->loadCache(self::CACHE_LAST_DATE);
-        if(!is_null($userId)) {
-            foreach($cache as $id => $date) {
-                if($id == $userId) {
-                    return $date;
-                }
-            }
-            return $this->firstDateOfMonth;
-        }
-        return $cache;
-    }
-
-
-
-
-    /**
-     * Save last message send date time for every user
-     *
-     * @param   Array   $data       List of all user messages last send date time
-     *                              [['USER_ID', 'RECEIVE_DATETIME']]
-     * @return  Bool                Save status
-     */
-    private function saveLastMessageDate(Array &$data) {
-        $cache  = $this->mergeArray($this->loadLastMessageDate(), $data);
-        return $this->saveCache(self::CACHE_LAST_DATE, $cache);
-    }
-
-
-
-    /**
-     * Load regenerate flag from file cache
-     *
-     * @param   String  $fileName   report fileName
-     * @return  Array|Bool          List or boolean flag for regenerate report
-     */
-    public function loadRegenerateCache($fileName = null)
-    {
-        $cache = $this->loadCache(self::CACHE_REGENERATE_REPORT);
-
-        if (is_null($fileName)) {
-            return $cache;
-        }
-
-        return array_key_exists($fileName, $cache) && $cache[$fileName];
-    }
-
-
-    /**
-     * Save last message send date time for every user
-     *
-     * @param   Array   $data       List of reportname that should be regenerate
-     * @return  Bool                Save status
-     */
-    private function saveRegenerateCache(Array $data)
-    {
-        return $this->saveCache(self::CACHE_REGENERATE_REPORT, $data);
-    }
-
-
 
 
     /**
@@ -1200,16 +1232,22 @@ class ApiReport {
      * @param   Int     $profileId      Billing Profile id
      * @return  Mixed                   Billing profile Detail or null
      */
-    public function loadBillingProfileCache($profileId = null) {
+    public function loadBillingProfileCache($profileId = null)
+    {
         $cache = $this->loadCache(self::CACHE_BILLING_PROFILE);
 
-        if(empty($cache)) {
+        if (empty($cache))
+        {
             $cache = $this->getBilingProfileDetail();
-            foreach($cache as &$profile) {
-                if($profile['BILLING_TYPE'] == self::BILLING_TIERING_BASE) {
+
+            foreach($cache as &$profile)
+            {
+                if ($profile['BILLING_TYPE'] == self::BILLING_TIERING_BASE)
+                {
                     $profile['PRICING'] = $this->getTieringDetail($profile['BILLING_PROFILE_ID']);
                 }
-                else {
+                else
+                {
                     $profile['PRICING'] = $this->getOperatorBaseDetail($profile['BILLING_PROFILE_ID']);
                     $profile['PREFIX']  = $this->getOperatorDialPrefix(array_column($profile['PRICING'], 'OP_ID'));
                 }
@@ -1218,23 +1256,27 @@ class ApiReport {
             $this->saveCache(self::CACHE_BILLING_PROFILE, $cache);
         }
 
-        if(!is_null($profileId)) {
-            $key   = array_search(
-                        $profileId,
-                        array_column(
-                            $cache,
-                            'BILLING_PROFILE_ID'
-                        )
-                    );
-            if($key !== false){
-                $cache = $cache[$key];
-            }else{
-                $newCache = $this->getBilingProfileDetail($profileId);
-                if(!empty($newCache)){
+        if (!is_null($profileId))
+        {
+            $key   = array_search($profileId, array_column($cache, 'BILLING_PROFILE_ID'));
 
-                    if($newCache['BILLING_TYPE'] == self::BILLING_TIERING_BASE) {
+            if ($key !== false)
+            {
+                $cache = $cache[$key];
+            }
+            else
+            {
+                $newCache = $this->getBilingProfileDetail($profileId);
+
+                if (!empty($newCache))
+                {
+
+                    if ($newCache['BILLING_TYPE'] == self::BILLING_TIERING_BASE)
+                    {
                         $newCache['PRICING'] = $this->getTieringDetail($profileId);
-                    } else {
+                    }
+                    else
+                    {
                         $newCache['PRICING'] = $this->getOperatorBaseDetail($profileId);
                         $newCache['PREFIX']  = $this->getOperatorDialPrefix(array_column($newCache['PRICING'], 'OP_ID'));
                     }
@@ -1242,7 +1284,9 @@ class ApiReport {
                     $cache[] = $newCache;
                     $this->saveCache(self::CACHE_BILLING_PROFILE, $cache);
                     $cache = $newCache;
-                }else{
+                }
+                else
+                {
                     $cache = null;
                 }
             }
@@ -1286,23 +1330,6 @@ class ApiReport {
         }
 
         return $cache;
-    }
-
-
-
-
-    /**
-     * Update old cache with new data
-     *
-     * @param   Array   $data       Old cache Data
-     * @param   Array   $newData    New Cache Data
-     * @return  Array               Updated cache data
-     */
-    private function mergeArray(Array $data, Array &$newData) {
-        foreach($newData as $key => $val) {
-            $data[$key] = $val;
-        }
-        return $data;
     }
 
 
@@ -1354,22 +1381,23 @@ class ApiReport {
 
 
     /**
-     * Create Box\Spout file handler both final and awaiting report
+     * Create Report file and set the headers
      *
-     * @param String    $fileName           Report File name
-     * @param Boolean   $isNewFile          Reference to know the report is new file or not
-     * @param Array     $newFixedPrice      New Fix price rule
+     * @param String    $fileName               Report File name
+     * @param Boolean   $useInternationalPrice  Is price include the international price or not
+     * @return void
      */
-    private function createReportFile($fileName, &$isNewFile, $newFixedPrice = null) {
+    private function createReportFile($fileName, $useInternationalPrice = false)
+    {
         $dirFinal              = $this->reportDir.'/'. self::DIR_FINAL_REPORT;
         $finalReport           = $dirFinal.       '/'.$fileName.$this->periodSuffix.self::SUFFIX_FINAL_REPORT.'.xlsx';
         $summaryFinalReport    = $dirFinal.       '/'.$fileName.$this->periodSuffix.self::SUFFIX_SUMMARY_FINAL_REPORT.'.xlsx';
-        $isRegenerate          = $this->loadRegenerateCache($fileName);
+        $headers               = self::DETAILED_REPORT_HEADER;
 
         is_dir($dirFinal)    ?: @mkdir($dirFinal, 0777, true);
 
 
-        $this->finalReportSummary    = ['senderId' => [], 'operator' => [], 'userId' => []];
+        $this->finalReportSummary    = ['senderId' => [], 'operator' => [], 'userId' => [], 'intl' => []];
         $this->finalReportWriter     = WriterFactory::create(Type::XLSX);
 
         $defaultStyle = (new StyleBuilder())
@@ -1378,89 +1406,17 @@ class ApiReport {
                 ->setShouldWrapText(true)
                 ->build();
 
-        $this->finalReportWriter    ->setDefaultRowStyle($defaultStyle);
+        $this->finalReportWriter->setDefaultRowStyle($defaultStyle);
+        $this->finalReportWriter->openToFile($finalReport);
 
-        if($isRegenerate === false && file_exists($finalReport) && filesize($finalReport) > 0) {
-            $this->log->info('Copy data from existing '.$fileName.' report');
-            $this->copyFinalStatusReport($fileName, $newFixedPrice);
-            $isNewFile = false;
+
+        if ($useInternationalPrice)
+        {
+            $headers[] = "COUNTRY";
         }
-        else {
-            $this->finalReportWriter->openToFile($finalReport);
-            $this->finalReportWriter->addRow(self::DETAILED_REPORT_HEADER);
-            $isNewFile = true;
-        }
+
+        $this->finalReportWriter->addRow($headers);
     }
-
-
-
-
-    /**
-     * Copy final status message from old report to new report
-     *
-     * currently Box\Spout does not support to append data into existing file
-     * then we implement solution from their guide,
-     *
-     * this function may be the longest time consumer, since it have to
-     * copy alot of data from old file to new file.
-     *
-     *
-     * @param String    $fileName           Report File name
-     * @param Array     $newFixedPrice      New Fix Price rule
-     */
-    private function copyFinalStatusReport($fileName, $newFixedPrice = null) {
-        $dirFinal              = $this->reportDir.'/'. self::DIR_FINAL_REPORT;
-        $oldFinalReport        = $dirFinal.       '/'.$fileName.$this->periodSuffix.self::SUFFIX_FINAL_REPORT.'.xlsx.old';
-        $newFinalReport        = $dirFinal.       '/'.$fileName.$this->periodSuffix.self::SUFFIX_FINAL_REPORT.'.xlsx';
-        $summaryFinalReport    = $dirFinal.       '/'.$fileName.$this->periodSuffix.self::SUFFIX_SUMMARY_FINAL_REPORT.'.xlsx';
-
-        $this->log->info('Start Copy '.$fileName.' report file');
-        $startTime = $this->getMicroTime();
-        if(@rename($newFinalReport, $oldFinalReport)) {
-            $oldReportReader = ReaderFactory::create(Type::XLSX);
-            $oldReportReader->open($oldFinalReport);
-
-            $this->finalReportWriter->openToFile($newFinalReport);
-
-            foreach ($oldReportReader->getSheetIterator() as $sheetIndex => $sheet) {
-                if ($sheetIndex !== 1) {
-                    $this->finalReportWriter   ->addNewSheetAndMakeItCurrent();
-                }
-
-                foreach ($sheet->getRowIterator() as $row) {
-                    if(!empty($row) && current($row) != 'MESSAGE ID') {
-                        $fRow = array_combine(self::DETAILED_MESSAGE_FORMAT, $row) ?: [];
-
-                        if(!empty($fRow)) {
-                            if (!is_null($newFixedPrice))
-                            {
-                                $fRow['PRICE'] = $fRow['PRICE'] != 0 ? current($newFixedPrice['finalPrice'])   ['PER_SMS_PRICE'] * $fRow['MESSAGE_COUNT'] : 0;
-                            }
-
-                            $this->getMessageSummary($fRow);
-                        }
-
-                        $this->finalReportWriter   ->addRow($fRow);
-                    }
-                    else {
-                        $this->finalReportWriter   ->addRow($row);
-                    }
-
-                }
-            }
-
-            $oldReportReader->close();
-            unlink($oldFinalReport);
-            unset($oldReportReader);
-        }
-        else {
-            $this->log->warn('Could not rename Old Report file '.$oldFinalReport.' permission denied.');
-            $this->log->info('Replace existing file.');
-            $this->finalReportWriter->openToFile($newFinalReport);
-        }
-        $this->log->info('Completed copy '.$fileName.' report file in '.  number_format($this->getMicroTime() - $startTime, 2).' s');
-    }
-
 
 
 
@@ -1479,9 +1435,15 @@ class ApiReport {
             $price    = $this->toFloat($message['PRICE']);
             $smsCount = $message['MESSAGE_COUNT'];
 
+
             $this->storeSummary($this->finalReportSummary, 'senderId', $message['SENDER'], $sendDate, $status, $price, $smsCount);
             $this->storeSummary($this->finalReportSummary, 'operator', $message['OPERATOR'], $sendDate, $status, $price, $smsCount);
             $this->storeSummary($this->finalReportSummary, 'userId',   $message['USER_ID'], $sendDate, $status, $price, $smsCount);
+
+            if (isset($message['COUNTRY']) && $price > 0)
+            {
+                $this->storeInternationalPriceSummary($this->finalReportSummary, $message['COUNTRY'], $price, $smsCount);
+            }
         }
     }
 
@@ -1522,11 +1484,11 @@ class ApiReport {
      * @param Int       $price      Message Price
      * @param Int       $count      Message Count
      */
-    private function storeSummary(Array &$summary, $group, $member, $date, $status, $price, $count) {
-        isset($summary[$group])
-           ?: $summary[$group] = [];
+    private function storeSummary(Array &$summary, $group, $member, $date, $status, $price, $count)
+    {
+        isset($summary[$group]) ?: $summary[$group] = [];
 
-        if(!isset($summary[$group][$member])) {
+        if (!isset($summary[$group][$member])) {
            $startDate = $this->clientTimeZone(strtotime($this->firstDateOfMonth.' 1 second'));
            $endDate = $this->clientTimeZone(strtotime($this->lastDateOfMonth.' -1 second'));
            $period  = $this->getDateRange($startDate, $endDate);
@@ -1561,6 +1523,27 @@ class ApiReport {
         $transaction['ts'] += $count;
         $transaction['tp'] += $price;
     }
+
+
+    /**
+     * Store International Summary
+     *
+     * @param Array     $summary        "finalReportSummary"
+     * @param String    $countryCode    Country code for message
+     * @param Int       $price          Message Price
+     * @param Int       $quantity       Message Count
+     * @return  void
+     */
+     protected function storeInternationalPriceSummary(Array &$summary, $countryCode, $price, $quantity)
+     {
+        if (!isset($summary['intl'][$countryCode]))
+        {
+            $summary['intl'][$countryCode] = ['price' => 0, 'qty' => 0];
+        }
+
+        $summary['intl'][$countryCode]['price'] += $price;
+        $summary['intl'][$countryCode]['qty']   += $quantity;
+     }
 
 
 
@@ -1609,6 +1592,12 @@ class ApiReport {
             'ts'    => ['fill' => ['type' => 'solid','color' => ['rgb' => '33FF99']]],
             'tsC'   => ['fill' => ['type' => 'solid','color' => ['rgb' => '00FFFF']]],
             'tp'    => ['fill' => ['type' => 'solid','color' => ['rgb' => '00CCFF']]],
+
+            'intlPrice' => [
+                'fill'      => ['type' => 'solid', 'color' => ['rgb' => 'ccff66']],
+                'font'      => ['bold' => true],
+                'alignment' => ['horizontal' => 'center','vertical'   => 'center',],
+            ],
         ];
 
     }
@@ -1748,32 +1737,35 @@ class ApiReport {
      * @param String    $fileName   User Detailed Report file name
      * @param Mixed     $userIds    Single User id or list of User id
      */
-    private function saveSummary($fileName, $userIds) {
+    private function saveSummary($fileName, $userIds, &$billingProfile)
+    {
+        $fReport        = new PHPExcel();
+        $startRow       = 1;
+        $userNames      = [];
         $dirFinal       = $this->reportDir.'/'. self::DIR_FINAL_REPORT;
         $finalReport    = $dirFinal.       '/'.$fileName.$this->periodSuffix.self::SUFFIX_SUMMARY_FINAL_REPORT.'.xlsx';
+        $userIds        = is_array($userIds) ? $userIds : [$userIds];
 
-        $fReport        = new PHPExcel();
-        $startRow       = 20;
-        $userNames      = [];
 
-        foreach(is_array($userIds) ? $userIds : [$userIds] as $userId) {
+        foreach ($userIds as $userId)
+        {
             $userNames[]= $this->getUserDetail($userId)['USER_NAME'];
         }
 
         //  set Summary Header
-        $this->setSummaryReportHeader($fReport, $userNames, $this->finalReportSummary);
+        $this->setSummaryReportHeader($fReport, $userNames, $this->finalReportSummary, $billingProfile, $startRow);
 
 
         //  insert Sender Summary
-        $this->insertSummaryByCategory('SENDER',   $fReport, $this->finalReportSummary   ['senderId'], $startRow);
+        $this->insertSummaryByCategory('SENDER',   $fReport, $this->finalReportSummary['senderId'], $startRow);
 
 
         //  insert Operator Summary
-        $this->insertSummaryByCategory('OPERATOR', $fReport, $this->finalReportSummary   ['operator'], $startRow +37);
+        $this->insertSummaryByCategory('OPERATOR', $fReport, $this->finalReportSummary['operator'], $startRow +37);
 
 
         //  insert UserId Summary
-        $this->insertSummaryByCategory('USER NAME', $fReport, $this->finalReportSummary   ['userId'], $startRow +74);
+        $this->insertSummaryByCategory('USER NAME', $fReport, $this->finalReportSummary['userId'], $startRow +74);
 
 
         //  set Summary report to auto size column
@@ -1820,8 +1812,10 @@ class ApiReport {
      * @param PHPExcel  $excel      PHP Excel Object
      * @param Mixed     $userName   UserId
      * @param Array     $data
+     * @param Int       $startRow
      */
-    private function setSummaryReportHeader(&$excel, $userName, &$data) {
+    private function setSummaryReportHeader(&$excel, $userName, &$data, &$billingProfile, &$startRow)
+    {
         $sheet     = $excel->setActiveSheetIndex(0);
         $lastCol   = 'G';
         $userNames = is_array($userName) ? implode(', ', $userName) : $userName;
@@ -1836,7 +1830,9 @@ class ApiReport {
             'tp'   => 0
         ];
 
-        foreach($data['userId'] as &$traffics) {
+        // Calculate Summary
+        foreach($data['userId'] as &$traffics)
+        {
             $sum['d']    += array_sum(array_column($traffics,'d'));
             $sum['udC']  += array_sum(array_column($traffics,'udC'));
             $sum['udUc'] += array_sum(array_column($traffics,'udUc'));
@@ -1852,43 +1848,186 @@ class ApiReport {
                     ->setTitle('Billing Report '.$userNames.' on '.date('M_Y', strtotime($this->year.'-'.$this->month)))
                     ->setSubject('Billing Report');
 
+        // Billing and User Information
+        $useInternationalPrice = $billingProfile['USE_INTERNATIONAL_PRICE'] == 1 && $billingProfile['BILLING_TYPE'] === self::BILLING_TIERING_BASE ? "YES" : "NO";
         $sheet
-            ->setCellValue('A1',  'Last Update Date')       ->setCellValue('B1', $date)                         ->mergeCells('B1:'  . $lastCol.'1')
-            ->setCellValue('A2',  'User Name')              ->setCellValue('B2', $userNames)                    ->mergeCells('B2:'  . $lastCol.'2')
+            ->setCellValue('A'.$startRow,       'Last Update Date')     ->setCellValue('B'.$startRow, $date)                                                   ->mergeCells('B'.$startRow.':'  . $lastCol.$startRow)
+            ->setCellValue('A'.($startRow+=1),  'Billing Profile Name') ->setCellValue('B'.$startRow, $billingProfile['NAME'])                                 ->mergeCells('B'.$startRow.':'  . $lastCol.$startRow)
+            ->setCellValue('A'.($startRow+=1),  'Profile Type')         ->setCellValue('B'.$startRow, ucfirst(strtolower($billingProfile['BILLING_TYPE'])))    ->mergeCells('B'.$startRow.':'  . $lastCol.$startRow)
+            ->setCellValue('A'.($startRow+=1),  'International Price')  ->setCellValue('B'.$startRow, $useInternationalPrice)                                  ->mergeCells('B'.$startRow.':'  . $lastCol.$startRow)
+            ->setCellValue('A'.($startRow+=1),  'User Name')            ->setCellValue('B'.$startRow, $userNames)                                              ->mergeCells('B'.$startRow.':'  . $lastCol.$startRow)
+        ;
 
-            ->setCellValue('A4',  'Delivered')              ->setCellValue('B4', number_format($sum['d']))      ->mergeCells('B4:'  . $lastCol.'4')
-            ->setCellValue('A5',  'Undelivered (charged)')  ->setCellValue('B5', number_format($sum['udC']))    ->mergeCells('B5:'  . $lastCol.'5')
-            ->setCellValue('A6',  'Undelivered (uncharged)')->setCellValue('B6', number_format($sum['udUc']))   ->mergeCells('B6:'  . $lastCol.'6')
-            ->setCellValue('A7',  'Total SMS')              ->setCellValue('B7', number_format($sum['ts']))     ->mergeCells('B7:'  . $lastCol.'7')
-            ->setCellValue('A8',  'Total SMS Charged')      ->setCellValue('B8', number_format($sum['tsC']))    ->mergeCells('B8:'  . $lastCol.'8')
-            ->setCellValue('A9',  'Total Price')            ->setCellValue('B9', $this->formatPrice($sum['tp']))->mergeCells('B9:'  . $lastCol.'9')
+        // Add Empty Row
+        $startRow++;
 
-             // Legend
-            ->setCellValue('A11', 'Legend')                 ->mergeCells('A11:' . $lastCol.'11')
-            ->setCellValue('A12', 'D')                      ->setCellValue('B12', 'Delivered')                  ->mergeCells('B12:' . $lastCol.'12')
-            ->setCellValue('A13', 'UD_C')                   ->setCellValue('B13', 'Undelivered (Charged)')      ->mergeCells('B13:' . $lastCol.'13')
-            ->setCellValue('A14', 'UD_UC')                  ->setCellValue('B14', 'Undelivered (Uncharged)')    ->mergeCells('B14:' . $lastCol.'14')
-            ->setCellValue('A15', 'TS')                     ->setCellValue('B15', 'Total SMS')                  ->mergeCells('B15:' . $lastCol.'15')
-            ->setCellValue('A16', 'TS_C')                   ->setCellValue('B16', 'Total SMS Charged')          ->mergeCells('B16:' . $lastCol.'16')
-            ->setCellValue('A17', 'TP')                     ->setCellValue('B17', 'Total Price')                ->mergeCells('B17:' . $lastCol.'17')
+        // Summary Total Messages count
+        $sheet
+            ->setCellValue('A'.($startRow+=1),  'Delivered')              ->setCellValue('B'.$startRow, number_format($sum['d']))      ->mergeCells('B'.$startRow.':'  . $lastCol.$startRow)
+            ->setCellValue('A'.($startRow+=1),  'Undelivered (charged)')  ->setCellValue('B'.$startRow, number_format($sum['udC']))    ->mergeCells('B'.$startRow.':'  . $lastCol.$startRow)
+            ->setCellValue('A'.($startRow+=1),  'Undelivered (uncharged)')->setCellValue('B'.$startRow, number_format($sum['udUc']))   ->mergeCells('B'.$startRow.':'  . $lastCol.$startRow)
+            ->setCellValue('A'.($startRow+=1),  'Total SMS')              ->setCellValue('B'.$startRow, number_format($sum['ts']))     ->mergeCells('B'.$startRow.':'  . $lastCol.$startRow)
+            ->setCellValue('A'.($startRow+=1),  'Total SMS Charged')      ->setCellValue('B'.$startRow, number_format($sum['tsC']))    ->mergeCells('B'.$startRow.':'  . $lastCol.$startRow)
+            ->setCellValue('A'.($startRow+=1),  'Total Price')            ->setCellValue('B'.$startRow, $this->formatPrice($sum['tp']))->mergeCells('B'.$startRow.':'  . $lastCol.$startRow)
+            ->getStyle('B'.($startRow-5).':B'.$startRow)
+            ->getAlignment()
+            ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        ;
+
+        // Add Empty Row
+        $startRow+=3;
+
+        // International Price Summary
+        if (!empty($data['intl']))
+        {
+            $this->setInternationalPriceSummaryFile($sheet, $data['intl'], $startRow, $lastCol, $style);
+        }
+
+         // Legend Information
+        $sheet
+            ->setCellValue('A'.($startRow), static::LEGEND_SUMMARY_TITLE)   ->mergeCells('A'.($startRow).':' . $lastCol.$startRow)
+            ->setCellValue('A'.($startRow+1), 'D')          ->setCellValue('B'.($startRow+1), 'Delivered')                  ->mergeCells('B'.($startRow+1).':' . $lastCol.($startRow+1))
+            ->setCellValue('A'.($startRow+2), 'UD_C')       ->setCellValue('B'.($startRow+2), 'Undelivered (Charged)')      ->mergeCells('B'.($startRow+2).':' . $lastCol.($startRow+2))
+            ->setCellValue('A'.($startRow+3), 'UD_UC')      ->setCellValue('B'.($startRow+3), 'Undelivered (Uncharged)')    ->mergeCells('B'.($startRow+3).':' . $lastCol.($startRow+3))
+            ->setCellValue('A'.($startRow+4), 'TS')         ->setCellValue('B'.($startRow+4), 'Total SMS')                  ->mergeCells('B'.($startRow+4).':' . $lastCol.($startRow+4))
+            ->setCellValue('A'.($startRow+5), 'TS_C')       ->setCellValue('B'.($startRow+5), 'Total SMS Charged')          ->mergeCells('B'.($startRow+5).':' . $lastCol.($startRow+5))
+            ->setCellValue('A'.($startRow+6), 'TP')         ->setCellValue('B'.($startRow+6), 'Total Price')                ->mergeCells('B'.($startRow+6).':' . $lastCol.($startRow+6))
 
             // Set cell alignment to right
-            ->getStyle('B4:B9')
+            ->getStyle('B'.$startRow.':B'.($startRow+6))
             ->getAlignment()
             ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
         // Set legend color
-        $sheet->getStyle('A11') ->applyFromArray($style->center);
-        $sheet->getStyle('A11') ->applyFromArray($style->black);
-        $sheet->getStyle('A12') ->applyFromArray($style->d);
-        $sheet->getStyle('A13') ->applyFromArray($style->udC);
-        $sheet->getStyle('A14') ->applyFromArray($style->udUc);
-        $sheet->getStyle('A15') ->applyFromArray($style->ts);
-        $sheet->getStyle('A16') ->applyFromArray($style->tsC);
-        $sheet->getStyle('A17') ->applyFromArray($style->tp);
+        $sheet->getStyle('A'.$startRow)        ->applyFromArray($style->center);
+        $sheet->getStyle('A'.$startRow)        ->applyFromArray($style->black);
+        $sheet->getStyle('A'.($startRow+=1))   ->applyFromArray($style->d);
+        $sheet->getStyle('A'.($startRow+=1))   ->applyFromArray($style->udC);
+        $sheet->getStyle('A'.($startRow+=1))   ->applyFromArray($style->udUc);
+        $sheet->getStyle('A'.($startRow+=1))   ->applyFromArray($style->ts);
+        $sheet->getStyle('A'.($startRow+=1))   ->applyFromArray($style->tsC);
+        $sheet->getStyle('A'.($startRow+=1))   ->applyFromArray($style->tp);
+
+        // Add Empty Row
+        $startRow+=3;
     }
 
 
+    /**
+     * insert international Price to summary file
+     *
+     * @param PHPExcel_Worksheet &$sheet
+     * @param array $data
+     * @param integer &$startRow
+     * @param string $lastCol
+     * @param array &$style
+     */
+    protected function setInternationalPriceSummaryFile(&$sheet, $data, &$startRow, $lastCol, &$style)
+    {
+        // International Price Title
+        $sheet
+            ->setCellValue('A'.$startRow, static::INTL_PRICE_SUMMARY_TITLE)
+            ->mergeCells('A'.$startRow.':'.$lastCol.$startRow)
+            ->getRowDimension($startRow)->setRowHeight(30)
+        ;
+        $sheet
+            ->getStyle('A'.$startRow)
+            ->applyFromArray($style->intlPrice)
+        ;
+
+        // International Price Header Column
+        $sheet
+            ->setCellValue('A'.($startRow+=1), "Country")
+            ->setCellValue('B'.$startRow, "Qty")        ->mergeCells('B'.$startRow.':C'.$startRow)
+            ->setCellValue('D'.$startRow, "Price")      ->mergeCells('D'.$startRow.':E'.$startRow)
+            ->setCellValue('F'.$startRow, "Sub Total")  ->mergeCells('F'.$startRow.':G'.$startRow)
+            ;
+
+        $sheet
+            ->getStyle('A'.$startRow.':F'.$startRow)
+            ->applyFromArray($style->center)
+            ->applyFromArray($style->black)
+        ;
+
+        $startRow++;
+        $total          = ['qty' => 0, 'price' => 0];
+        $endRow         = $startRow + count($data);
+
+        $sheet
+            ->getStyle('B'.$startRow.':F'.$endRow)
+            ->getAlignment()
+            ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+        ;
+
+        // Print Local Service to first row
+        if (isset($data[static::INTL_LOCAL_SERVICE_CODE]))
+        {
+            $localService = $data[static::INTL_LOCAL_SERVICE_CODE];
+            $sheet
+                ->mergeCells('D'.$startRow.':E'.$startRow)
+                ->mergeCells('B'.$startRow.':C'.$startRow)
+                ->mergeCells('F'.$startRow.':G'.$startRow)
+                ->setCellValue('A'.$startRow, static::INTL_LOCAL_SERVICE)
+                ->setCellValue('B'.$startRow, number_format($localService['qty']))
+                ->setCellValue('D'.$startRow, $this->formatPrice($localService['price']/$localService['qty']))
+                ->setCellValue('F'.$startRow, $this->formatPrice($localService['price']))
+            ;
+            $startRow++;
+            $total['qty']   += $localService['qty'];
+            $total['price'] += $localService['price'];
+            unset($data[static::INTL_LOCAL_SERVICE_CODE]);
+        }
+
+        // Print Others Country and put it in last
+        if (isset($data[static::INTL_OTHER_COUNTRY]))
+        {
+            $otherCountry = $data[static::INTL_OTHER_COUNTRY];
+            $sheet
+                ->mergeCells('B'.($endRow - 1).':C'.($endRow - 1))
+                ->mergeCells('D'.($endRow - 1).':E'.($endRow - 1))
+                ->mergeCells('F'.($endRow - 1).':G'.($endRow - 1))
+                ->setCellValue('A'.($endRow - 1), static::INTL_OTHER_COUNTRY)
+                ->setCellValue('B'.($endRow - 1), number_format($otherCountry['qty']))
+                ->setCellValue('D'.($endRow - 1), $this->formatPrice($otherCountry['price'] / $otherCountry['qty']))
+                ->setCellValue('F'.($endRow - 1), $this->formatPrice($otherCountry['price']))
+            ;
+            $total['qty']   += $otherCountry['qty'];
+            $total['price'] += $otherCountry['price'];
+            unset($data[static::INTL_OTHER_COUNTRY]);
+        }
+
+        foreach ($data as $country => $value)
+        {
+            $price = $value['price'] / $value['qty'];
+            $sheet
+                ->mergeCells('B'.$startRow.':C'.$startRow)
+                ->mergeCells('D'.$startRow.':E'.$startRow)
+                ->mergeCells('F'.$startRow.':G'.$startRow)
+                ->setCellValue('A'.$startRow, $this->internationalPrices['PRICES'][$country]['COUNTRY_NAME'] ?? $country)
+                ->setCellValue('B'.$startRow, number_format($value['qty']))
+                ->setCellValue('D'.$startRow, $this->formatPrice($price))
+                ->setCellValue('F'.$startRow, $this->formatPrice($value['price']))
+            ;
+
+            $total['qty']   += $value['qty'];
+            $total['price'] += $value['price'];
+            $startRow++;
+        }
+
+        $sheet
+            ->mergeCells('B'.$endRow.':C'.$endRow)
+            ->mergeCells('D'.$endRow.':E'.$endRow)
+            ->mergeCells('F'.$endRow.':G'.$endRow)
+            ->setCellValue('A'.$endRow, static::INTL_PRICE_SUMMARY_TOTAL)
+            ->setCellValue('B'.$endRow, number_format($total['qty']))
+            ->setCellValue('D'.$endRow, '')
+            ->setCellValue('F'.$endRow,  $this->formatPrice($total['price']))
+            ->getStyle('A'.$endRow.':F'.$endRow)
+            ->applyFromArray($style->black)
+        ;
+
+        $startRow = $endRow + 3;
+    }
 
 
     /**
@@ -1897,7 +2036,8 @@ class ApiReport {
      *
      * @param String    $fileName   Report file name
      */
-    private function createReportPackage($fileName = '*') {
+    private function createReportPackage($fileName = '*')
+    {
         $dirFinal         = $this->reportDir.'/'. self::DIR_FINAL_REPORT;
         $finalReport      = $dirFinal.       '/'.$fileName.$this->periodSuffix.'.xlsx';
         $finalSummary     = $dirFinal.       '/'.$fileName.$this->periodSuffix.self::SUFFIX_SUMMARY_FINAL_REPORT.'.xlsx';
@@ -1905,12 +2045,8 @@ class ApiReport {
 
         if ($fileName === '*')
         {
-            if (date('Ym') !== $this->year.$this->month && date('d') > 4)
-            {
-                $optionCommand = '-m';
-            }
-
-            $fileName = self::ALL_REPORT_PACKAGE;
+            $optionCommand = '-m';
+            $fileName      = self::ALL_REPORT_PACKAGE;
         }
 
         $finalPackage     = $dirFinal.       '/'.$fileName.$this->periodSuffix.'.zip';
@@ -1920,7 +2056,28 @@ class ApiReport {
     }
 
 
+    /**
+     * Get report package fileName
+     *
+     * @param  string $fileNamePrefix
+     * @return string
+     */
+    protected function reportPackageFileName($fileNamePrefix)
+    {
+        return $this->reportDir .'/' . self::DIR_FINAL_REPORT . '/' . $fileNamePrefix . $this->periodSuffix . '.zip';
+    }
 
+
+    /**
+     * Checking the report package exist or not
+     *
+     * @param string $fileNamePrefix
+     * @return  bool
+     */
+    protected function isReportPackageExists($fileNamePrefix)
+    {
+        return file_exists($this->reportPackageFileName($fileNamePrefix));
+    }
 
     /**
      * Debuging helper,
@@ -1930,6 +2087,7 @@ class ApiReport {
      *      $this->debug(get_defined_vars());
      *      $this->debug(compact('fileName','appliedPrice','trafficCount'));
      *
+     * @codeCoverageIgnore
      * @param Mixed     Any known variable
      */
     private function debug($var = []) {
@@ -1977,23 +2135,34 @@ class ApiReport {
      * for example:
      *      BILLING_REPORT_May_2017.zip
      */
-    public function generate() {
+    public function generate()
+    {
         echo "\033[1;32m-------------------[ START GENERATE REPORT ".$this->periodSuffix.']-------------------'.PHP_EOL;
         echo "\033[1;97mPERIOD\tSTATUS\tPROFILE ID\tTYPE\t\tREPORT NAME".PHP_EOL;
-        $scriptRunningTime = $this->getMicroTime();
-        if($this->lastFinalStatusDate !== false) {
 
-            $this->unchargedDeliveryStatus = implode('\',\'', array_keys($this->getDeliveryStatus(self::SMS_STATUS_UNCHARGED)));
-            $users                       = $this->getUserDetail();
-            $prevBillingProfileId        = null;
-            $excludedUser                = [];
-            $newUserLastSendDate         = [];
-            $needRegenerate              = [];
+        $scriptRunningTime = $this->getMicroTime();
+
+        if ($this->lastFinalStatusDate !== false)
+        {
+            $statusArray = array_map(
+                function($item) {
+                    return "'$item'";
+                },
+                array_keys(
+                    $this->getDeliveryStatus(self::SMS_STATUS_UNCHARGED)
+                )
+            );
+
+            $this->unchargedDeliveryStatus  = implode(',', $statusArray);
+            $this->internationalPrices      = $this->getInternationalPrices();
+            $users                          = $this->getUserDetail();
+            $excludedUser                   = [];
 
             /**
              * Start Generate user's report
              */
-            foreach($users as &$user) {
+            foreach($users as &$user)
+            {
                 $fileName              = $user['USER_NAME'];
                 $userName              = $user['USER_NAME'];
                 $userId                = $user['USER_ID'];
@@ -2005,37 +2174,40 @@ class ApiReport {
                 $getByGroup            = false;
                 $hasEmptyStatus        = false;
                 $userReportGroupDates  = [];
-
-                if(is_null($userId) || in_array($userId, $excludedUser)) continue;
-
-                $this->log->debug('Validate Billing Profile for User "'.$userName.'"');
-                $this->log->debug('Load last message date');
-
-                $userLastSendDate      = $this->loadRegenerateCache($fileName) ? $this->firstDateOfMonth : $this->loadLastMessageDate($userId);
-                $this->log->debug('got '.$userLastSendDate);
                 $counter               = 0;
+
+
+                if (is_null($userId) || in_array($userId, $excludedUser))
+                {
+                    continue;
+                }
 
 
                 /* =======================================
                  *  Get User billing information
                  * ======================================= */
-                $this->log->debug('check user billing information');
-                if(is_null($userBillingProfileId)) {
+                $this->log->debug('Validate Billing Profile for User : "'.$userName.'" ('.$userId.')');
+                $this->log->debug('Check user billing information');
+
+                if (is_null($userBillingProfileId))
+                {
                     $this->log->warn('User '.$userName.' was not assigned to any Billing Profile.');
                     $this->log->info('Skip generate report for user '.$userName);
                     continue;
                 }
 
-                $this->log->debug('get user billing information');
+                $this->log->debug('Get user billing information');
+
                 $userBillingProfile    = $this->loadBillingProfileCache($userBillingProfileId);
 
-                $this->log->debug('check user billing detail');
-                if(is_null($userBillingProfile)) {
+                $this->log->debug('Check user billing detail');
+
+                if (is_null($userBillingProfile))
+                {
                     $this->log->warn('User '.$userName.' was assigned to Billing Profile '.$userBillingProfileId.' but not found on any detail on '.DB_BILL_PRICELIST.'.BILLING_PROFILE');
                     $this->log->info('Skip generate report for user '.$userName);
                     continue;
                 }
-
                 /* =======================================
                  *  End Of Get User billing information
                  * ======================================= */
@@ -2044,11 +2216,14 @@ class ApiReport {
                 /*=======================================
                  * Get Report Group information
                  *=======================================*/
-                $this->log->debug('check user report group');
-                if(!empty($userReportGroupId)) {
-                    $this->log->debug('get user report group information '.$userReportGroupId);
+                $this->log->debug('Check user report group');
+                if (!empty($userReportGroupId))
+                {
+                    $this->log->debug('Get user report group information '.$userReportGroupId);
                     $userReportGroup = $this->loadReportGroupCache($userReportGroupId);
-                    if(is_null($userReportGroup)) {
+
+                    if (is_null($userReportGroup))
+                    {
                         $this->log->warn('User '.$userName.' was assigned to Billing Profile "'.$userReportGroupId.'" but not found billing profile detail on '.DB_BILL_PRICELIST.'.BILLING_REPORT_GROUP');
                         $this->log->info('Skip generate report for user '.$userName);
                         continue;
@@ -2056,19 +2231,28 @@ class ApiReport {
 
                     $getByGroup   = true;
                     $fileName     = $userReportGroup['NAME'];
+
                     $this->log->debug('get list of user on report group '.$fileName);
-                    $userGroups   = $this->getReportGroupUserList($userReportGroupId);
-                    $isRegenerate = $this->loadRegenerateCache($fileName);
-                    $userId       = array_merge([$userId], array_column($userGroups, 'USER_ID'));
-                    $excludedUser = array_merge($excludedUser, $userId);
-                    foreach($userId as $id) {
-                        $userReportGroupDates[$id] = $isRegenerate ? $this->firstDateOfMonth : $this->loadLastMessageDate($id);
-                    }
+
+                    $userGroups             = $this->getReportGroupUserList($userReportGroupId);
+                    $userId                 = array_merge([$userId], array_column($userGroups, 'USER_ID'));
+                    $excludedUser           = array_merge($excludedUser, $userId);
+                    $userReportGroupDates   = array_fill_keys($userId, $this->firstDateOfMonth);
                 }
                 /* =======================================
                  *  End of Get report Group information
                  * ======================================= */
 
+                /* =======================================
+                 * Checking the report file are already
+                 * exist or not for the last month report
+                 * ======================================= */
+                if ($this->currentMonth === false && $this->isReportPackageExists($fileName))
+                {
+                    $this->log->debug('Report file already exists for '. $fileName);
+                    echo "\033[1;31m".$this->year.'-'.$this->month."\tSkipped  \t".$userBillingProfileId."\t".$userBillingProfile['BILLING_TYPE']." \t".$fileName.PHP_EOL;
+                    continue;
+                }
 
                 /* =============================================================
                  *  Start get User messages and insert into report file
@@ -2077,178 +2261,98 @@ class ApiReport {
                 $hasNewMessage = !empty(
                                     $getByGroup
                                     ? $this->getGroupMessageStatus($userReportGroupDates, $this->lastFinalStatusDate, 1, 0)
-                                    : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, 1, 0)
+                                    : $this->getUserMessageStatus ($userId, $this->firstDateOfMonth, $this->lastFinalStatusDate, 1, 0)
                                 );
 
-                if($hasNewMessage) {
+                if ($hasNewMessage)
+                {
                     echo "\033[1;32m".$this->year.'-'.$this->month."\tGenerate\t".$userBillingProfileId."\t".$userBillingProfile['BILLING_TYPE']." \t".$fileName.PHP_EOL;
 
-                    if(strtoupper($userBillingProfile['BILLING_TYPE']) == self::BILLING_OPERATOR_BASE) {
+                    if (strtoupper($userBillingProfile['BILLING_TYPE']) == self::BILLING_OPERATOR_BASE)
+                    {
                         $operatorPrice  = &$userBillingProfile['PRICING'];
                         $operatorPrefix = &$userBillingProfile['PREFIX'];
 
                         /**
                          * OPERATOR BASE - Final status messages
                          */
-                        $lastSendDate = $this->firstDateOfMonth;
-                        $this->createReportFile($fileName, $isNewFile);
-
-                        /**
-                         * If the final status report doesn't exists
-                         * $userLastSendDate or $userReportGroup change to the firstDateOfMonth
-                         */
-                        if($isNewFile){
-                            if($getByGroup){
-                                foreach($userReportGroupDates as &$date){
-                                    $date = $this->firstDateOfMonth;
-                                }
-                            } else {
-                                $userLastSendDate = $this->firstDateOfMonth;
-                            }
-                        }
+                        $this->createReportFile($fileName);
 
                         do {
                             $this->log->debug('Get '.$fileName.' messages from '.$counter .' to '.($counter + REPORT_PER_BATCH_SIZE));
                             $messages = $getByGroup
                                             ? $this->getGroupMessageStatus($userReportGroupDates,      $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter)
-                                            : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter);
-
-                            $messagesTotal = $messages === false ? 0 : count($messages);
+                                            : $this->getUserMessageStatus ($userId, $this->firstDateOfMonth, $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter);
+                            $messagesTotal = is_array($messages) ? count($messages) : 0;
 
                             if ($messagesTotal > 0)
                             {
-                                $lastSendDate  = $messages[$messagesTotal - 1]['RECEIVE_DATETIME'];
-                                $this->assignMessagePrice(self::BILLING_OPERATOR_BASE, $messages, $operatorPrice, $operatorPrefix, $hasEmptyStatus);
+                                $this->formatMessages(self::BILLING_OPERATOR_BASE, $messages, $operatorPrice, $operatorPrefix);
                                 $counter      += REPORT_PER_BATCH_SIZE;
                             }
                         } while ($messagesTotal > 0 && $messagesTotal === REPORT_PER_BATCH_SIZE);
-
-
-                        /**
-                         * OPERATOR BASE - Update user last send date time
-                         */
-                        if($getByGroup) {
-                            $userReportGroupDates = $this->getGroupLastSendDate($userId);
-                            foreach($userReportGroupDates as $userId => $lastSendDate) {
-                                $newUserLastSendDate[$userId] = $lastSendDate;
-                            }
-                        }
-                        else {
-                            $newUserLastSendDate[$userId] = $lastSendDate;
-                        }
-
-
-                        $needRegenerate[$fileName] = $hasEmptyStatus;
                     }
-                    else if(strtoupper($userBillingProfile['BILLING_TYPE']) == self::BILLING_TIERING_BASE) {
-
+                    elseif (strtoupper($userBillingProfile['BILLING_TYPE']) == self::BILLING_TIERING_BASE)
+                    {
                         /**
                          * Get TIERING Traffics
                          */
-                        if(is_null($userTieringGroupId))
+                        if (is_null($userTieringGroupId))
                         {
-                            $finalTieringTraffic    = $this->getTieringTraffic($userId);
+                            $finalTieringTraffic    = $this->getTieringTraffic($userId, $userBillingProfile['USE_INTERNATIONAL_PRICE']);
                         }
                         else
                         {
                             $tieringGroupUserList   = $this->getTieringGroupUserList($userTieringGroupId);
-                            $finalTieringTraffic    = $this->getTieringTraffic($tieringGroupUserList);
+                            $finalTieringTraffic    = $this->getTieringTraffic($tieringGroupUserList, $userBillingProfile['USE_INTERNATIONAL_PRICE']);
                         }
 
                         $this->log->debug('Got '.$fileName.' tiering traffic on '.$this->year.'-'.$this->month.' with status final: '.$finalTieringTraffic);
 
                         $finalPrice     = $this->getTieringPriceByTraffic($userBillingProfile['PRICING'], $finalTieringTraffic);
                         $operatorPrefix = $this->getOperatorDialPrefix(self::OPERATOR_INDONESIA);
+
                         $this->log->debug('Applied Price: Final = '.json_encode($finalPrice));
 
-                        $this->createReportFile($fileName, $isNewFile, compact('finalPrice'));
-
-                        /**
-                         * If the final status report doesn't exists
-                         * $userLastSendDate or $userReportGroup change to the firstDateOfMonth
-                         */
-                        if($isNewFile){
-                            if($getByGroup){
-                                foreach($userReportGroupDates as &$date){
-                                    $date = $this->firstDateOfMonth;
-                                }
-                            } else {
-                                $userLastSendDate = $this->firstDateOfMonth;
-                            }
-                        }
+                        $this->createReportFile($fileName, $userBillingProfile['USE_INTERNATIONAL_PRICE'] == 1);
 
                         /**
                          * TIERING BASE - Dump Final SMS
                          */
                         do {
                             $this->log->debug('Get '.$fileName.' messages from '.$counter .' to '.($counter + REPORT_PER_BATCH_SIZE));
-                            $messages = $getByGroup
-                                            ? $this->getGroupMessageStatus($userReportGroupDates,      $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter)
-                                            : $this->getUserMessageStatus ($userId, $userLastSendDate, $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter);
 
-                            $messagesTotal = $messages === false ? 0 : count($messages);
+                            $messages = $getByGroup
+                                            ? $this->getGroupMessageStatus($userReportGroupDates, $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter)
+                                            : $this->getUserMessageStatus ($userId, $this->firstDateOfMonth, $this->lastFinalStatusDate, REPORT_PER_BATCH_SIZE, $counter);
+
+                            $messagesTotal = is_array($messages) ? count($messages) : 0;
 
                             if ($messagesTotal > 0)
                             {
-                                $lastSendDate  = $messages[$messagesTotal - 1]['RECEIVE_DATETIME'];
-                                // TIERING BASE - Final
-                                $this->assignMessagePrice(self::BILLING_TIERING_BASE, $messages, $finalPrice, $operatorPrefix, $hasEmptyStatus);
+                                $this->formatMessages(self::BILLING_TIERING_BASE, $messages, $finalPrice, $operatorPrefix, $userBillingProfile['USE_INTERNATIONAL_PRICE'] == 1);
                                 $counter      += REPORT_PER_BATCH_SIZE;
                             }
                         } while ($messagesTotal > 0 && $messagesTotal === REPORT_PER_BATCH_SIZE);
-
-                        /**
-                         * TIERING BASE - Update user last send date time
-                         */
-                        if ($getByGroup)
-                        {
-                            $userReportGroupDates = $this->getGroupLastSendDate($userId);
-                            foreach($userReportGroupDates as $userId => $lastSendDate) {
-                                $newUserLastSendDate[$userId] = $lastSendDate;
-                            }
-                        }
-                        else
-                        {
-                            $newUserLastSendDate[$userId] = $lastSendDate;
-                        }
-
-                        $needRegenerate[$fileName] = $hasEmptyStatus;
                     }
 
-                    if(in_array(
+                    if (in_array(
                             strtoupper($userBillingProfile['BILLING_TYPE']),
                             [self::BILLING_OPERATOR_BASE, self::BILLING_TIERING_BASE]
                         )
                     ) {
-                        $userId = $getByGroup ? array_keys($userReportGroupDates) : $userId;
                         $this->saveReportFile();
-
-                        $getByGroup
-                                ? $this->saveSummary($fileName, array_keys($userReportGroupDates))
-                                : $this->saveSummary($fileName, $userId);
-
+                        $this->saveSummary($fileName, $userId, $userBillingProfile);
                         $this->createReportPackage($fileName);
                     }
                 }
-                else {
+                else
+                {
                     echo "\033[1;31m".$this->year.'-'.$this->month."\tSkipped  \t".$userBillingProfileId."\t".$userBillingProfile['BILLING_TYPE']." \t".$fileName.PHP_EOL;
                     $this->log->info('Skip generate report for '.$fileName.', No new messages found.');
                 }
 
                 $this->createReportPackage();
-
-                /* =============================================================
-                 *  End Of get User messages and insert into report file
-                 * =============================================================*/
-
-                // Update last message send date time
-                $this->saveLastMessageDate($newUserLastSendDate);
-
-                if (date('Ym') === $this->year.$this->month || date('d') < 5) {
-                    $this->saveRegenerateCache($needRegenerate);
-                } else {
-                    $this->saveRegenerateCache([]);
-                }
             }
 
             $this->log->info('Finish generate report for '.$this->year.'-'.$this->month.' period');
@@ -2287,7 +2391,7 @@ class ApiReport {
      * @param   Int     $userId     User Id if want to download for specific user, or set to null for download all report
      * @return  String
      */
-    private function getReportFileName($awaiting = false, $userId = null) {
+    protected function getReportFileName($userId = null) {
         $dir      = $this->reportDir;
         $fileName = self::ALL_REPORT_PACKAGE;
 
@@ -2307,14 +2411,7 @@ class ApiReport {
         }
 
         $fileName     .= $this->periodSuffix;
-
-        if($awaiting) {
-            $dir      .= '/'.self::DIR_AWAITING_REPORT;
-            $fileName .= self::SUFFIX_AWAITING_REPORT;
-        }
-        else {
-            $dir      .= '/'.self::DIR_FINAL_REPORT;
-        }
+        $dir          .= '/'.self::DIR_FINAL_REPORT;
 
         return preg_replace('/ +/','_', $dir.'/'.$fileName.'.zip');
     }
@@ -2343,11 +2440,29 @@ class ApiReport {
     * @param int $billingID
     * @return  array
     */
-    public function getUserByBilling($billingID){
-         return $this->query(
-                         ' SELECT   USER_ID,USER_NAME,BILLING_TIERING_GROUP_ID '
+    public function getUserByBilling($billingID,$type){
+        $andOperator = ($type === self::BILLING_TIERING_BASE) ? ' AND BILLING_TIERING_GROUP_ID IS NOT NULL' : null;
+
+        return $this->query(
+                         ' SELECT   USER_ID,USER_NAME,BILLING_TIERING_GROUP_ID,BILLING_PROFILE_ID '
                         .' FROM     '.DB_SMS_API_V2.'.USER'
                         .' WHERE    BILLING_PROFILE_ID = '.$billingID.''
+                        . $andOperator .''
+                    );
+    }
+
+    /**
+    * Function to get user data based on BILLING_PROFILE_ID where BILLING_TIERING_GROUP_ID is not null
+    * @param int $billingID
+    * @return  array
+    */
+    public function getUserByBillingAndTiering($billingID)
+    {
+        return $this->query(
+                         ' SELECT   USER_ID,USER_NAME,BILLING_TIERING_GROUP_ID '
+                        .' FROM     '.DB_SMS_API_V2.'.USER'
+                        .' WHERE    BILLING_PROFILE_ID = '.$billingID.' '
+                        .' AND      BILLING_TIERING_GROUP_ID IS NOT NULL '
                     );
     }
 
@@ -2388,16 +2503,17 @@ class ApiReport {
     /**
      * Function to insert new Billing Profile into Table BILLING_PROFILE
      *
-     * @param String $name
-     * @param String $billingType
-     * @param String $description
+     * @param String  $name
+     * @param String  $billingType
+     * @param String  $description
+     * @param Integer $useInternationalPrice
      * @return Array
      */
-    public function insertToBillingProfile($name, $billingType, $description){
+    public function insertToBillingProfile($name, $billingType, $description, $useInternationalPrice = 0){
         return $this->exec_query(
                      ' INSERT INTO '.DB_BILL_PRICELIST.'.BILLING_PROFILE '
-                    .' (BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, CREATED_AT, UPDATED_AT) '
-                    .' VALUES (NULL, "'.$name.'", "'.$billingType.'", "'.$description.'", now(), now()) '
+                    .' (BILLING_PROFILE_ID, NAME, BILLING_TYPE, DESCRIPTION, USE_INTERNATIONAL_PRICE, CREATED_AT, UPDATED_AT) '
+                    .' VALUES (NULL, "'.$name.'", "'.$billingType.'", "'.$description.'",'.$useInternationalPrice.', now(), now()) '
                 );
     }
 
@@ -2441,15 +2557,16 @@ class ApiReport {
      * Function to update existing Billing Profile based on updated column
      *
      * @param Int $id
-     * @param String $name
-     * @param String $billingType
-     * @param String $description
+     * @param String  $name
+     * @param String  $billingType
+     * @param String  $description
+     * @param Integer $useInternationalPrice
      * @return Array
      */
-    public function updateBillingProfile($id, $name, $billingType, $description){
+    public function updateBillingProfile($id, $name, $billingType, $description, $useInternationalPrice = 0){
         return $this->exec_query(
                      ' UPDATE '.DB_BILL_PRICELIST.'.BILLING_PROFILE '
-                    .' SET NAME = "'.$name.'", BILLING_TYPE = "'.$billingType.'", DESCRIPTION = "'.$description.'", UPDATED_AT = now()'
+                    .' SET NAME = "'.$name.'", BILLING_TYPE = "'.$billingType.'", DESCRIPTION = "'.$description.'", USE_INTERNATIONAL_PRICE = '.$useInternationalPrice.', UPDATED_AT = now()'
                     .' WHERE BILLING_PROFILE_ID = '.$id.''
                 );
     }
@@ -2580,7 +2697,7 @@ class ApiReport {
      * @return  Bool
      */
     public function isReportExist($awaiting = false, $userId = null) {
-        $fileName = $this->getReportFileName($awaiting, $userId);
+        $fileName = $this->getReportFileName($userId);
         $this->log->debug('check report file: '.$fileName);
         return !is_null($fileName)
                     ? file_exists($fileName)
@@ -2597,7 +2714,7 @@ class ApiReport {
      * @param   Int   $userId     User Id if want to download for specific user, or set to null for download all report
      */
     public function downloadReport($awaiting = false, $userId = null) {
-        $fileName = $this->getReportFileName($awaiting, $userId);
+        $fileName = $this->getReportFileName($userId);
         $this->log->debug('downloading '.$fileName);
         if($this->isReportExist($awaiting, $userId)) {
 

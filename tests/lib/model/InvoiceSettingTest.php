@@ -1,5 +1,7 @@
 <?php
 
+namespace Firstwap\SmsApiAdmin\Test\lib\model;
+
 use Firstwap\SmsApiAdmin\Test\TestCase;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceHistory;
 use Firstwap\SmsApiAdmin\lib\model\InvoiceSetting;

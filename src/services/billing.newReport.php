@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -20,9 +20,8 @@ try {
             $page->assign('user', $apiReport->getReportGroupUserList($reportGroupID));
             $page->assign('mode', $_POST['mode']);
         }
-        
-        $page->assign('billingList', $apiReport->getBilingProfileDetail());
-	$page->display('billing.newReport.tpl');
+        $page->assign('billingList', $apiReport->getAllBillingProfile());
+	    $page->display('billing.newReport.tpl');
 } catch (Exception $e) {
 	SmsApiAdmin::returnError($e->getMessage());
 }

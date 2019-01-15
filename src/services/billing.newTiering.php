@@ -32,9 +32,9 @@ try {
             $page->assign('mode',$_POST['mode']);
         }
 
-        $page->assign('billingList', $billingList);
-        $page->assign('userTiering', $userGroupByTiering);
-        $page->assign('tieringGroupList',$apiReport->getTieringGroupDetail());
+    $page->assign('billingList', $billingList);
+    $page->assign('userTiering', $userGroupByTiering);
+    $page->assign('tieringGroupList',$apiReport->getTieringGroupDetail());
 	$page->display('billing.newTiering.tpl');
 } catch (Exception $e) {
 	SmsApiAdmin::returnError($e->getMessage());

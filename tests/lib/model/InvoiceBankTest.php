@@ -1,5 +1,7 @@
 <?php
 
+namespace Firstwap\SmsApiAdmin\Test\lib\model;
+
 use Firstwap\SmsApiAdmin\lib\model\InvoiceBank;
 use Firstwap\SmsApiAdmin\Test\TestCase;
 
@@ -43,6 +45,7 @@ class InvoiceBankTest extends TestCase
     protected function initialData()
     {
         $this->model->select("DELETE FROM {$this->model->tableName()}")->execute();
+
         $data = [
             'bankName' => "BCA",
             'address' => "address",

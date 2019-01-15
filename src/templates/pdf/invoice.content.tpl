@@ -65,10 +65,14 @@
                         {$i+1}
                     </td>
                     <td class="desc">
-                        {if $product.isPeriod eq '1'}
-                        {$product.productName} period {$product->period|date_format:"1 - %e %B %Y"}
+                        {if $product.productId eq null}
+                            {$product.productName}
                         {else}
-                        {$product.productName} on {$product->period|date_format:" jS F, Y"}
+                             {if $product.isPeriod eq '1'}
+                                {$product.productName} period {$product->period|date_format:"1 - %e %B %Y"}
+                            {else}
+                                {$product.productName} on {$product->period|date_format:"F jS, Y"}
+                            {/if}
                         {/if}
                     </td>
                     <td class="qty">

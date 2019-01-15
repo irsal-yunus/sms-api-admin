@@ -27,5 +27,40 @@
         <label>Approved Position</label>
         <input name="approvedPosition" value="" type="text" maxlength="45" />
         <span class="ui-helper-clearfix"></span>
+        <!--minimum commitment setting-->
+        <label>Commitment Setting</label>
+        <select name="useMinCommitment" id ="useCommitment" size="1" class="flexible-width ">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+        <!--it will appear if commitment setting is yes, otherwise it'll dissapear-->
+        <div class="commitmentSetting">
+            <span class="ui-helper-clearfix"></span>
+            <label>Based On</label>
+            <select name="minCommitmentType" id="commitmentType" size="1" class="flexible-width" >
+                <option value="PRICE">Price</option>
+                <option value="QUANTITY">Quantity</option>
+            </select>
+            <span class="ui-helper-clearfix"></span>
+            <label id="minimumLabel"></label>
+            <input name="minCommitmentAmount" id="minAmount" data-mask="###,###,###,###,###,###" value="" type="text" maxlength="15" class="" />
+            <div>
+                <span class="ui-helper-clearfix"></span>
+                <div class="combine">
+                    <label >Use Combine</label>
+                    <select name="combinedMinCommitment" id="useCombine" size="1" class="flexible-width ">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+            </div>
+            <!--if qty-->
+            <div class="quantity">
+                <span class="ui-helper-clearfix"></span>
+                <label> Minimum Charge</label>
+                <input name="minCharge" data-mask="000,000,000,000,000.00" value="" type="text" maxlength="15" />
+            </div>
+            <!--end qty-->
+        </div>
     </fieldset>
 </form>
