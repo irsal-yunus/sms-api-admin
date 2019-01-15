@@ -566,7 +566,29 @@
             }
         };
 
-
+        mod.activeAllButton = function(clientID) {
+            try {
+                options = {
+                            clientID           : clientID,
+                           onlySpecifiedClient : true,};
+                $app.confirm("Do you want to Activate all user?","Confirm",
+                    function() {
+                        $app.call('apiuser.activateAll',options, function(reply) {
+                            try {
+                                var success = $app.form.checkServiceReply(reply, false, title);
+                                if (success)
+                                    mod.showUserList(options);
+                            }
+                            catch (ex) {
+                                $1.error("[mod:apiuser.activateAll@ajaxsuccess] Error.", ex);
+                            }
+                        });
+                    });
+            }
+            catch (ex) {
+                $1.error("[mod:apiuser.activateAll] Error.", ex);
+            }
+        }
 
         try {
             $app.registerModule(mod, MODULE_NAME);
